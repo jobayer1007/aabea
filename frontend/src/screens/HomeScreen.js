@@ -1,0 +1,141 @@
+import React from 'react';
+import {
+  Col,
+  Row,
+  Card,
+  ListGroupItem,
+  ListGroup,
+  Button,
+  Carousel,
+} from 'react-bootstrap';
+
+const HomeScreen = () => {
+  return (
+    <>
+      <Row>
+        <Col md={6} lg={3}>
+          <Card>
+            <Card.Body>
+              <Card.Title>Announcements</Card.Title>
+              <Card.Text>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
+                officiis facilis beatae consequatur reiciendis dicta quia
+                voluptatem, ab, voluptatum eligendi ullam libero facere impedit
+                molestiae repudiandae ipsa, necessitatibus numquam velit?
+              </Card.Text>
+            </Card.Body>
+            <Card.Body>
+              <Card.Title>Events:</Card.Title>
+              <Card.Text>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
+                officiis facilis beatae consequatur reiciendis dicta quia
+                voluptatem, ab, voluptatum eligendi ullam libero facere impedit
+                molestiae repudiandae ipsa, necessitatibus numquam velit?
+              </Card.Text>
+            </Card.Body>
+
+            <Card.Body>
+              <Card.Link href='#'>Card Link</Card.Link>
+              <Card.Link href='#'>Another Link</Card.Link>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col lg={6}>
+          <Card className='text-center mb-2'>
+            <Card.Header>Mission</Card.Header>
+            <Card.Body>
+              <Card.Title>Special title treatment</Card.Title>
+              <Card.Text>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
+                ipsa amet, optio mollitia rem hic odit aliquam quaerat dolor
+                minus molestias iusto sint, quia, quis laudantium ducimus animi
+                possimus inventore!
+              </Card.Text>
+            </Card.Body>
+          </Card>
+
+          <Card className='text-center mb-2'>
+            <Card.Header>Vission</Card.Header>
+            <Card.Body>
+              <Card.Title>Vission title </Card.Title>
+              <Card.Text>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
+                ipsa amet, optio mollitia rem hic odit aliquam quaerat dolor
+                minus molestias iusto sint, quia, quis laudantium ducimus animi
+                possimus inventore!
+              </Card.Text>
+            </Card.Body>
+          </Card>
+
+          <Card className='text-center mb-2'>
+            <Card.Header>History</Card.Header>
+            <Card.Body>
+              <Card.Title>History Title</Card.Title>
+              <Card.Text>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
+                ipsa amet, optio mollitia rem hic odit aliquam quaerat dolor
+                minus molestias iusto sint, quia, quis laudantium ducimus animi
+                possimus inventore!
+              </Card.Text>
+            </Card.Body>
+          </Card>
+
+          <Card className='text-center mb-2'>
+            <Card.Header>Any other Main Topic</Card.Header>
+            <Card.Body>
+              <Card.Title>Topic Title</Card.Title>
+              <Card.Text>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
+                ipsa amet, optio mollitia rem hic odit aliquam quaerat dolor
+                minus molestias iusto sint, quia, quis laudantium ducimus animi
+                possimus inventore!
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        <Col md={6} lg={3}>
+          <Card>
+            <Card.Body>
+              <Card.Title>Quick Links</Card.Title>
+              <Card.Link href='#'>Link 1</Card.Link>
+              <Card.Link href='#'>Link 2</Card.Link>
+              <Card.Link href='#'>Link 3</Card.Link>
+              <Card.Link href='#'>Link 4</Card.Link>
+            </Card.Body>
+            <Card.Body>
+              <Card.Title>Current Committee:</Card.Title>
+
+              <Carousel controls={false} indicators={false}>
+                <Carousel.Item>
+                  <img
+                    className='d-block w-100'
+                    src='https://source.unsplash.com/random/?building'
+                    alt='First slide'
+                  />
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img
+                    className='d-block w-100'
+                    src='https://source.unsplash.com/random/?nature'
+                    alt='Third slide'
+                  />
+                </Carousel.Item>
+                <Carousel.Item>
+                  <img
+                    className='d-block w-100'
+                    src='https://source.unsplash.com/random/?people'
+                    alt='Third slide'
+                  />
+                </Carousel.Item>
+              </Carousel>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </>
+  );
+};
+
+export default HomeScreen;
