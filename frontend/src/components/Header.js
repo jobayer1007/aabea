@@ -1,5 +1,5 @@
 import React from 'react';
-import aabealogoSmall from '../aabealogoSmall.jpg';
+import { LinkContainer } from 'react-router-bootstrap';
 import {
   Navbar,
   Nav,
@@ -57,17 +57,29 @@ const Header = () => {
         collapseOnSelect
       >
         <Container>
-          <Navbar.Brand href='/'>AABEA</Navbar.Brand>
+          <LinkContainer to='/'>
+            <Navbar.Brand>AABEA</Navbar.Brand>
+          </LinkContainer>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='mr-auto'>
-              <Nav.Link href='/home'>Home</Nav.Link>
-              <Nav.Link href='/about'>About</Nav.Link>
+              <LinkContainer to='/home'>
+                <Nav.Link>Home</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to='/about'>
+                <Nav.Link>About</Nav.Link>
+              </LinkContainer>
             </Nav>
             <Nav className='ml-auto'>
-              <Nav.Link href='/donate'>Donate</Nav.Link>
-              <Nav.Link href='/registration'>Registration</Nav.Link>
-              <Nav.Link href='/login'>Login</Nav.Link>
+              <LinkContainer to='/donate'>
+                <Nav.Link>Donate</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to='/registration'>
+                <Nav.Link>Registration</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to='/login'>
+                <Nav.Link>Login</Nav.Link>
+              </LinkContainer>
             </Nav>
           </Navbar.Collapse>
         </Container>
