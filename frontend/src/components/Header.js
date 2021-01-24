@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import {
   Navbar,
@@ -8,9 +9,19 @@ import {
   Row,
   Col,
   Image,
+  NavDropdown,
 } from 'react-bootstrap';
+import { logout } from '../actions/userActions';
 
 const Header = () => {
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const logoutHandler = () => {
+    dispatch(logout());
+  };
   return (
     <header>
       {/* First */}
@@ -63,23 +74,62 @@ const Header = () => {
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='mr-auto'>
-              <LinkContainer to='/home'>
+              <LinkContainer to='/'>
                 <Nav.Link>Home</Nav.Link>
               </LinkContainer>
-              <LinkContainer to='/about'>
-                <Nav.Link>About</Nav.Link>
-              </LinkContainer>
+              {userInfo ? (
+                <LinkContainer to='/dashboard'>
+                  <Nav.Link>Dashboard</Nav.Link>
+                </LinkContainer>
+              ) : (
+                <LinkContainer to='/about'>
+                  <Nav.Link>About</Nav.Link>
+                </LinkContainer>
+              )}
             </Nav>
             <Nav className='ml-auto'>
+              {userInfo && (
+                <>
+                  <LinkContainer to='/committees'>
+                    <Nav.Link>Committees</Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer to='/training'>
+                    <Nav.Link>Training</Nav.Link>
+                  </LinkContainer>
+                </>
+              )}
+
               <LinkContainer to='/donate'>
                 <Nav.Link>Donate</Nav.Link>
               </LinkContainer>
-              <LinkContainer to='/registration'>
-                <Nav.Link>Registration</Nav.Link>
-              </LinkContainer>
-              <LinkContainer to='/login'>
-                <Nav.Link>Login</Nav.Link>
-              </LinkContainer>
+
+              {userInfo ? (
+                <>
+                  <LinkContainer to='/payment'>
+                    <Nav.Link>Payment</Nav.Link>
+                  </LinkContainer>
+                  <NavDropdown title={userInfo.username} id='username'>
+                    <LinkContainer to='/profile'>
+                      <NavDropdown.Item>Profile</NavDropdown.Item>
+                    </LinkContainer>
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      Logout
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                </>
+              ) : (
+                <>
+                  <LinkContainer to='/register'>
+                    <Nav.Link>Registration</Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer to='/login'>
+                    <Nav.Link>
+                      <i className='fas fa-user'></i>
+                      Login
+                    </Nav.Link>
+                  </LinkContainer>{' '}
+                </>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>

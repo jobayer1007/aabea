@@ -18,6 +18,7 @@ import {
   USER_LOGOUT,
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
+  USER_REGISTER_RESET,
   USER_REGISTER_SUCCESS,
   USER_UPDATE_FAIL,
   USER_UPDATE_PROFILE_FAIL,
@@ -65,12 +66,12 @@ export const login = (email, password) => async (dispatch) => {
 export const logout = () => (dispatch) => {
   localStorage.removeItem('userInfo');
   dispatch({ type: USER_LOGOUT });
-  dispatch({ type: USER_DETAILS_RESET });
-
+  dispatch({ type: USER_REGISTER_RESET });
   dispatch({ type: USER_LIST_RESET });
+  dispatch({ type: USER_DETAILS_RESET });
 };
 
-export const register = (name, email, password) => async (dispatch) => {
+export const register = (username, email, password) => async (dispatch) => {
   try {
     dispatch({
       type: USER_REGISTER_REQUEST,
@@ -83,8 +84,8 @@ export const register = (name, email, password) => async (dispatch) => {
     };
 
     const { data } = await axios.post(
-      '/api/users',
-      { name, email, password },
+      '/api/users/register',
+      { username, email, password },
       config
     );
 
@@ -195,7 +196,7 @@ export const listUsers = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/users`, config);
+    const { data } = await axios.get(`/api/users/dashboard`, config);
 
     dispatch({
       type: USER_LIST_SUCCESS,
@@ -257,7 +258,7 @@ export const updateUser = (user) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.put(`/api/users/${user._id}`, user, config);
+    const { data } = await axios.put(`/api/users/${user.id}`, user, config);
 
     dispatch({ type: USER_UPDATE_SUCCESS });
 

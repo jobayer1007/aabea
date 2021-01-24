@@ -8,7 +8,7 @@ import Message from '../components/Message';
 import Loader from '../components/Loader';
 
 const RegisterScreen = ({ location, history }) => {
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -35,7 +35,7 @@ const RegisterScreen = ({ location, history }) => {
       setMessage('password do not match');
     } else {
       // Dispatch Register
-      dispatch(register(name, email, password));
+      dispatch(register(username, email, password));
     }
   };
 
@@ -46,13 +46,13 @@ const RegisterScreen = ({ location, history }) => {
       {error && <Message variant='danger'>{error}</Message>}
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
-        <Form.Group controlId='name'>
-          <Form.Label>Name</Form.Label>
+        <Form.Group controlId='username'>
+          <Form.Label>User Name</Form.Label>
           <Form.Control
-            type='name'
-            placeholder='Enter Name..'
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            type='username'
+            placeholder='Enter User Name..'
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           ></Form.Control>
         </Form.Group>
 
