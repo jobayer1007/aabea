@@ -2,3 +2,61 @@ main {
   min-height: 80vh;
 }
 
+header {
+  
+  border-top: 3px solid #ced4da;
+}
+
+footer {
+  
+  border-top: 1px solid #ced4da;
+}
+
+button.btn.btn-outline-primary.btn-block.btn-lg,
+button.btn.btn-outline-secondary.btn-block.btn-lg {
+  border-radius: 50%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+button.btn.btn-outline-success.btn-block.btn-lg,
+button.btn.btn-outline-warning.btn-block.btn-lg 
+ {
+  border-radius: 40%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.col-sm-3 {
+ 
+  background: aliceblue;
+}
+
+.col-sm-9 {
+  background: antiquewhite;
+}
+
+footer {
+  background: teal;
+}
+
+.text-center.py-3.m-5.col {
+  color: white;
+}
+
+footer {
+  background: teal;
+}
+
+.text-center.py-3.m-5.col {
+  color: white;
+}
+
+.container-fluid {
+  margin-top: 15px;
+}
+
+img.d-block.w-100 {
+  border: 2px solid thistle;
+}
+

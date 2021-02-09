@@ -1,10 +1,7 @@
-import express from 'express';
-import asyncHandler from 'express-async-handler';
-import bcrypt from 'bcryptjs';
+const express = require('express');
 const router = express.Router();
-import User from '../models/User.js';
-import { protect, admin } from '../middleware/authMiddleware.js';
-import {
+const { protect, admin } = require('../middleware/authMiddleware');
+const {
   getUsers,
   getUserById,
   authUser,
@@ -13,7 +10,7 @@ import {
   deleteUser,
   updateUserProfile,
   updateUser,
-} from '../controllers/userController.js';
+} = require('../controllers/userController');
 
 router.post('/login', authUser);
 router
@@ -35,4 +32,4 @@ router.route('/:id').delete(protect, admin, deleteUser);
 
 // Delete an User//////////////////////////////////////////
 
-export default router;
+module.exports = router;

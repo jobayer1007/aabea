@@ -1,12 +1,16 @@
-import asyncHandler from 'express-async-handler';
-import bcrypt from 'bcryptjs';
-import User from '../models/User.js';
-import generateToken from '../utils/generateToken.js';
+const asyncHandler = require('express-async-handler');
+// import asyncHandler from 'express-async-handler';
+const bcrypt = require('bcryptjs');
+// import bcrypt from 'bcryptjs';
+const User = require('../models/User');
+// import User from '../models/User.js';
+const generateToken = require('../utils/generateToken');
+// import generateToken from '../utils/generateToken.js';
 
 // @desc    Auth User & get Token     ///////////////////////////////////////////////
 // @route   POST /api/users/login
 // @access  Public
-const authUser = asyncHandler(async (req, res) => {
+exports.authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ where: { email: email } });
@@ -25,6 +29,7 @@ const authUser = asyncHandler(async (req, res) => {
         username: user.username,
         email: user.email,
         isAdmin: user.isAdmin,
+        image: user.image,
         token: generateToken(user.id),
       });
     }
@@ -37,7 +42,7 @@ const authUser = asyncHandler(async (req, res) => {
 // @desc    Get loggedIn user Profile     ///////////////////////////////////////////////
 // @route   GET /api/users/profile
 // @access  Private
-const getUserProfile = asyncHandler(async (req, res) => {
+exports.getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findOne({ where: { id: req.user.id } });
 
   if (user) {
@@ -45,6 +50,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
       id: user.id,
       username: user.username,
       email: user.email,
+      image: user.image,
       isAdmin: user.isAdmin,
     });
   } else {
@@ -56,15 +62,29 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @desc    Register a new User     ///////////////////////////////////////////////
 // @route   POST /api/users/register
 // @access  Public
-const registerUser = asyncHandler(async (req, res) => {
-  // const data = {
-  //   username: req.body.username,
-  //   email: req.body.email,
-  //   password: bcrypt.hashSync(req.body.password, 10),
-  //   isAdmin: req.body.isAdmin,
-  // };
-
-  const { username, email, password } = req.body;
+exports.registerUser = asyncHandler(async (req, res) => {
+  const {
+    email,
+    password,
+    userRole,
+    firstName,
+    mInit,
+    lastName,
+    address1,
+    address2,
+    city,
+    state,
+    zipcode,
+    alternateEmail,
+    primaryPhone,
+    alternatePhone,
+    degree,
+    degreeYear,
+    major,
+    collegeName,
+    status,
+    balance,
+  } = req.body;
 
   const userExists = await User.findOne({ where: { email: email } });
 
@@ -73,38 +93,63 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('User Already Exists');
   } else {
+    const member = await Member.create({
+      firstName,
+      mInit,
+      lastName,
+      address1,
+      address2,
+      city,
+      state,
+      zipcode,
+      primaryEmail: email,
+      alternateEmail,
+      primaryPhone,
+      alternatePhone,
+      degree,
+      degreeYear,
+      major,
+      collegeName,
+      status,
+      balance,
+    });
+
+    if (member) {
+      res.status(201).json({
+        message: 'member created successfully.',
+      });
+    } else {
+      res.status(400);
+      throw new Error('Invalid Member Data');
+    }
+
     const user = await User.create({
-      username,
+      userRole,
       email,
+      // image: '/images/sample.jpg',
       password: bcrypt.hashSync(password, 10),
     });
 
     if (user) {
       res.status(201).json({
-        id: user.id,
-        username: user.username,
+        id: user.userId,
+
         email: user.email,
-        isAdmin: user.isAdmin,
-        token: generateToken(user.id),
+        userRole: user.userRole,
+        image: user.image,
+        token: generateToken(user.userId),
       });
     } else {
       res.status(400);
       throw new Error('Invalid User Data');
     }
   }
-  // Insert Into Table
-  // User.create({
-  //   username,
-  //   email,
-  //   password,
-  //   isAdmin,
-  // }).catch((err) => console.log(err));
 });
 
 // @desc    GET all Users     ///////////////////////////////////////////////
 // @route   GET /api/users
 // @access  Private/Admin
-const getUsers = asyncHandler(async (req, res) => {
+exports.getUsers = asyncHandler(async (req, res) => {
   const users = await User.findAll();
 
   res.json(users);
@@ -113,7 +158,7 @@ const getUsers = asyncHandler(async (req, res) => {
 // @desc    Get a  User by Id     ///////////////////////////////////////////////
 // @route   GET /api/users/:id
 // @access  Private/Admin
-const getUserById = asyncHandler(async (req, res) => {
+exports.getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const user = await User.findByPk(id);
@@ -123,6 +168,7 @@ const getUserById = asyncHandler(async (req, res) => {
       id: user.id,
       username: user.username,
       email: user.email,
+      image: user.image,
       isAdmin: user.isAdmin,
     });
   } else {
@@ -134,19 +180,19 @@ const getUserById = asyncHandler(async (req, res) => {
 // @desc    Update User Profile     ///////////////////////////////////////////////
 // @route   PUT /api/users/profile
 // @access  Private
-const updateUserProfile = asyncHandler(async (req, res) => {
+exports.updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findOne({ where: { id: req.user.id } });
 
   if (user) {
     const data = {
       username: req.body.username || user.username,
       email: req.body.email || user.email,
-
+      image: req.body.image || user.image,
       password: bcrypt.hashSync(req.body.password, 10) || user.password,
       isAdmin: user.isAdmin,
     };
 
-    let { username, email, password, isAdmin } = data;
+    let { username, email, password, isAdmin, image } = data;
 
     const updatedUser = await User.update(
       {
@@ -154,6 +200,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         email,
         password,
         isAdmin,
+        image,
       },
       { where: { id: req.user.id } }
     );
@@ -172,25 +219,25 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @desc    Update User      ///////////////////////////////////////////////
 // @route   PUT /api/users/:id
 // @access  Private/Admin
-const updateUser = asyncHandler(async (req, res) => {
+exports.updateUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ where: { id: req.params.id } });
 
   if (user) {
     const data = {
       username: req.body.username || user.username,
       email: req.body.email || user.email,
-
+      image: req.body.image || user.image,
       // password: bcrypt.hashSync(req.body.password, 10) || user.password,
       isAdmin: req.body.isAdmin,
     };
 
-    let { username, email, isAdmin } = data;
+    let { username, email, isAdmin, image } = data;
 
     const updatedUser = await User.update(
       {
         username,
         email,
-
+        image,
         isAdmin,
       },
       { where: { id: req.params.id } }
@@ -210,7 +257,7 @@ const updateUser = asyncHandler(async (req, res) => {
 // @desc    Delete User     ///////////////////////////////////////////////
 // @route   DELETE /api/users/:id
 // @access  Private
-const deleteUser = asyncHandler(async (req, res) => {
+exports.deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   User.destroy({ where: { id: id } })
@@ -224,13 +271,13 @@ const deleteUser = asyncHandler(async (req, res) => {
     .catch((err) => console.log(err));
 });
 
-export {
-  authUser,
-  getUserProfile,
-  updateUserProfile,
-  getUsers,
-  getUserById,
-  updateUser,
-  registerUser,
-  deleteUser,
-};
+// export {
+//   authUser,
+//   getUserProfile,
+//   updateUserProfile,
+//   getUsers,
+//   getUserById,
+//   updateUser,
+//   registerUser,
+//   deleteUser,
+// };

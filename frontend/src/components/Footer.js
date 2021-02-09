@@ -6,8 +6,9 @@ const Footer = () => {
     <footer>
       <Container>
         <Row>
-          <Col className='text-center py-3'>
-            Copyright &copy; AABEA. All Rights Reserved. Designed by Jobayer
+          <Col className='text-center py-3 m-5 '>
+            Copyright &copy; {new Date().getFullYear()} : AABEA. All Rights
+            Reserved. Designed by Jobayer
           </Col>
         </Row>
       </Container>

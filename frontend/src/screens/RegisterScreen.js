@@ -20,7 +20,9 @@ const RegisterScreen = ({ location, history }) => {
 
   const { loading, error, userInfo } = userRegister;
 
-  const redirect = location.search ? location.search.split('=')[1] : '/';
+  const redirect = location.search
+    ? location.search.split('=')[1]
+    : '/dashboard';
 
   useEffect(() => {
     if (userInfo) {

@@ -1,6 +1,6 @@
--- CREATE DATABASE aabea
+-- CREATE DATABASE aabeav1
 
---\c aabea
+--\c aabeav1
 
 CREATE TABLE users(
 

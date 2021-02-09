@@ -1,13 +1,21 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import * as pge from 'pg';
-import path from 'path';
-import db from './config/db.js';
-import userRoutes from './routes/userRoutes.js';
-import {
-  errorHandler,
-  // notFound
-} from './middleware/errorMiddleware.js';
+const express = require('express');
+const dotenv = require('dotenv');
+const path = require('path');
+const colors = require('colors');
+const db = require('./config/db');
+// import db from './config/db.js';
+const userRoutes = require('./routes/userRoutes');
+// import userRoutes from './routes/userRoutes.js';
+const uploadRoutes = require('./routes/uploadRoutes');
+// import uploadRoutes from './routes/uploadRoutes.js';
+const { errorHandler, notFound } = require('./middleware/errorMiddleware');
+const User = require('./models/User');
+const users = require('./data/users');
+const { Sequelize } = require('./config/db');
+// import {
+//   errorHandler,
+//   // notFound
+// } from './middleware/errorMiddleware.js';
 
 dotenv.config();
 
@@ -16,37 +24,27 @@ app.use(express.json());
 
 // User Routes
 app.use('/api/users', userRoutes);
+app.use('/api/upload', uploadRoutes);
 
-// app.use(notFound);
+app.use(notFound);
 app.use(errorHandler);
 
-const __dirname = path.resolve();
+// const syncStatus = false;
+
+// db.sequelize.sync({ force: syncStatus }).then(() => {
+//   //if  (syncStatus) {
+//   //defaultValueManager.Generate(syncStatus);
+//   // }
+
+//   console.log('initial synced'.yellow);
+// });
+
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
-
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '/frontend/build')));
-
-  app.get('*', (req, res) =>
-    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
-  );
-} else {
-  // Test DB
-  db.authenticate()
-    .then(() => console.log('Database Connected...'))
-    .catch((err) => console.error(err.message));
-}
-
-// app.use(express.static(path.join(__dirname, '/frontend/build')));
-// app.get('*', (req, res) =>
-//   res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
-// );
-
-console.log(__dirname);
-console.log(path.join(__dirname, 'frontend/build'));
-console.log(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
 
 const PORT = process.env.PORT || 5000;
 app.listen(
   PORT,
-  console.log(`Server runing in ${process.env.NODE_ENV} mode on port ${PORT}`)
+  console.log(
+    `Server runing in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
+  )
 );

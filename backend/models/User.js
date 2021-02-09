@@ -1,44 +1,48 @@
-import Sequelize from 'sequelize';
-import bcrypt from 'bcryptjs';
-import db from '../config/db.js';
+const { Sequelize } = require('sequelize');
+const bcrypt = require('bcryptjs');
+const db = require('../config/db');
 
-const User = db.define('user', {
-  username: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true,
-    validate: {
-      isEmail: {
-        msg: 'Must be a valid email address',
+const userTypes = ['admin', 'member', 'systemAdmin'];
+
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('user', {
+    userId: {
+      type: DataTypes.UUID,
+      defaultValue: Sequelize.UUIDV4,
+      allowNull: false,
+      notEmpty: true,
+      primaryKey: true,
+      required: true,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      required: true,
+      unique: true,
+      validate: {
+        isEmail: {
+          msg: 'Must be a valid email address',
+        },
       },
     },
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  isAdmin: {
-    type: Sequelize.BOOLEAN,
-    // required: true,
-    defaultValue: false,
-    // allowNull: false,
-  },
-  createdAt: {
-    type: Sequelize.DATE,
-    defaultValue: Sequelize.NOW,
-  },
-  updatedAt: {
-    type: Sequelize.DATE,
-    defaultValue: Sequelize.NOW,
-  },
-});
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      notEmpty: true,
+      required: true,
+    },
+    userRole: {
+      type: DataTypes.STRING,
+      required: true,
+      defaultValue: 'member',
+      allowNull: false,
+      validate: {
+        isIn: { userTypes },
+      },
+    },
+  });
 
-// User.methods.matchPassword = async function (enteredPassword) {
-//   return await bcrypt.compare(enteredPassword, this.password);
-// };
+  // User.sync({ force: true });
 
-export default User;
+  return User;
+};
