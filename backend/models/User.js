@@ -1,14 +1,16 @@
-const { Sequelize } = require('sequelize');
-const bcrypt = require('bcryptjs');
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = new Sequelize(
+  'postgres://postgres:1007Jobayer@localhost:5432/aabeav2'
+);
 const db = require('../config/db');
 
 const userTypes = ['admin', 'member', 'systemAdmin'];
 
-module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define('user', {
+const User = (sequelize, DataTypes) =>
+  sequelize.define('user', {
     userId: {
       type: DataTypes.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       notEmpty: true,
       primaryKey: true,
@@ -36,13 +38,16 @@ module.exports = (sequelize, DataTypes) => {
       required: true,
       defaultValue: 'member',
       allowNull: false,
-      validate: {
-        isIn: { userTypes },
-      },
+      // validate: {
+      //   isIn: { userTypes },
+      // },
+    },
+    last_login: {
+      type: DataTypes.DATE,
+      defaultValue: Sequelize.NOW,
     },
   });
 
-  // User.sync({ force: true });
+// User.sync({ force: true });
 
-  return User;
-};
+module.exports = User;

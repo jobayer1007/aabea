@@ -1,11 +1,9 @@
 const asyncHandler = require('express-async-handler');
-// import asyncHandler from 'express-async-handler';
 const bcrypt = require('bcryptjs');
-// import bcrypt from 'bcryptjs';
 const User = require('../models/User');
-// import User from '../models/User.js';
+const Member = require('../models/Member');
+const models = require('../models/index');
 const generateToken = require('../utils/generateToken');
-// import generateToken from '../utils/generateToken.js';
 
 // @desc    Auth User & get Token     ///////////////////////////////////////////////
 // @route   POST /api/users/login
@@ -85,15 +83,15 @@ exports.registerUser = asyncHandler(async (req, res) => {
     status,
     balance,
   } = req.body;
-
-  const userExists = await User.findOne({ where: { email: email } });
-
+  console.log(email);
+  const userExists = await models.User.findOne({ where: { email: email } });
+  // console.log(userExists);
   // let { username, email, password, isAdmin } = data;
   if (userExists) {
     res.status(400);
     throw new Error('User Already Exists');
   } else {
-    const member = await Member.create({
+    const member = await models.Member.create({
       firstName,
       mInit,
       lastName,
@@ -114,23 +112,25 @@ exports.registerUser = asyncHandler(async (req, res) => {
       balance,
     });
 
-    if (member) {
-      res.status(201).json({
-        message: 'member created successfully.',
-      });
-    } else {
-      res.status(400);
-      throw new Error('Invalid Member Data');
-    }
+    // if (member) {
+    //   res.status(201).json({
+    //     message: 'member created successfully.',
+    //   });
+    // } else {
+    //   res.status(400);
+    //   throw new Error('Invalid Member Data');
+    // }
 
-    const user = await User.create({
+    const user = await models.User.create({
       userRole,
       email,
       // image: '/images/sample.jpg',
       password: bcrypt.hashSync(password, 10),
     });
 
-    if (user) {
+    await member.addUser(user);
+
+    if (user && member) {
       res.status(201).json({
         id: user.userId,
 

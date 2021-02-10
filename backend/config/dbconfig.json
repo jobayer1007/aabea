@@ -1,0 +1,11 @@
+
+{
+  "dev": {
+      "hostName" : "localhost",
+      "dbName" : "aabeav2",
+      "uid" : "postgres",
+      "pwd" : "1007Jobayer",
+      "port" : "5432"
+     
+  }
+}

@@ -1,11 +1,14 @@
-const db = require('../config/db');
-const { Sequelize } = require('Sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
+// const sequelize = new Sequelize('sqlite::memory:');
+const sequelize = new Sequelize(
+  'postgres://postgres:1007Jobayer@localhost:5432/aabeav2'
+);
 
-module.exports = (sequelize, DataTypes) => {
-  const Payment = sequelize.define('payment', {
+const Payment = (sequelize, DataTypes) =>
+  sequelize.define('payment', {
     memberId: {
       type: DataTypes.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       unique: 'compositeIndex',
     },
@@ -51,7 +54,6 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  // Payment.sync({ force: true });
+// Payment.sync({ force: true });
 
-  return Payment;
-};
+module.exports = Payment;

@@ -1,26 +1,21 @@
 const express = require('express');
-const dotenv = require('dotenv');
 const path = require('path');
+const bodyParser = require('body-parser');
 const colors = require('colors');
-const db = require('./config/db');
-// import db from './config/db.js';
+// const db = require('./config/db');
+const db = require('./models/index');
 const userRoutes = require('./routes/userRoutes');
-// import userRoutes from './routes/userRoutes.js';
 const uploadRoutes = require('./routes/uploadRoutes');
-// import uploadRoutes from './routes/uploadRoutes.js';
 const { errorHandler, notFound } = require('./middleware/errorMiddleware');
 const User = require('./models/User');
 const users = require('./data/users');
-const { Sequelize } = require('./config/db');
-// import {
-//   errorHandler,
-//   // notFound
-// } from './middleware/errorMiddleware.js';
-
-dotenv.config();
+const { sequelize } = require('./models/index');
 
 const app = express();
 app.use(express.json());
+
+//body parser middleware
+app.use(bodyParser.json());
 
 // User Routes
 app.use('/api/users', userRoutes);
@@ -29,14 +24,14 @@ app.use('/api/upload', uploadRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-// const syncStatus = false;
+// const syncStatus = true;
 
-// db.sequelize.sync({ force: syncStatus }).then(() => {
-//   //if  (syncStatus) {
-//   //defaultValueManager.Generate(syncStatus);
-//   // }
+// sequelize.sync({ force: syncStatus }).then(() => {
+//   //   //if  (syncStatus) {
+//   //   //defaultValueManager.Generate(syncStatus);
+//   //   // }
 
-//   console.log('initial synced'.yellow);
+//   console.log('initial synced'.yellow.inverse);
 // });
 
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));

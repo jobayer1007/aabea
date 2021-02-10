@@ -1,15 +1,20 @@
-const db = require('../config/db');
-const { Sequelize } = require('Sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
+// const sequelize = new Sequelize('sqlite::memory:');
+const sequelize = new Sequelize(
+  'postgres://postgres:1007Jobayer@localhost:5432/aabeav2'
+);
 
 //member schema
 const validStatus = ['Active', 'Pending', 'Inactive'];
 
-module.exports = (sequelize, DataTypes) => {
-  const Member = sequelize.define('member', {
+const Member = (sequelize, DataTypes) =>
+  sequelize.define('member', {
     memberId: {
       //email will be used as member id
       type: DataTypes.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      defaultValue: DataTypes.UUIDV4,
+
+      // defaultValue: Sequelize.literal('uuid_generate_v4()'),
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
@@ -91,7 +96,7 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.STRING,
       defaultValue: 'Pending',
-      validate: { isIn: [validStatus] },
+      // validate: { isIn: [validStatus] },
     },
 
     balance: {
@@ -105,7 +110,6 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  // Member.sync({ force: true });
+// Member.sync({ force: true });
 
-  return Member;
-};
+module.exports = Member;
