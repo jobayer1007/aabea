@@ -11,7 +11,7 @@ const generateToken = require('../utils/generateToken');
 exports.authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ where: { email: email } });
+  const user = await models.User.findOne({ where: { email: email } });
 
   if (user) {
     const passwordIsValid = bcrypt.compareSync(password, user.password);
@@ -23,12 +23,13 @@ exports.authUser = asyncHandler(async (req, res) => {
       });
     } else {
       res.json({
-        id: user.id,
-        username: user.username,
+        userId: user.userId,
+
         email: user.email,
-        isAdmin: user.isAdmin,
+        userRole: user.userRole,
         image: user.image,
-        token: generateToken(user.id),
+        memberId: user.memberId,
+        token: generateToken(user.userId),
       });
     }
   } else {
@@ -41,16 +42,20 @@ exports.authUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users/profile
 // @access  Private
 exports.getUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findOne({ where: { id: req.user.id } });
-
+  const user = await models.User.findOne({
+    where: { memberId: req.user.memberId },
+  });
+  // console.log(user);
   if (user) {
-    res.json({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      image: user.image,
-      isAdmin: user.isAdmin,
+    const member = await models.Member.findOne({
+      where: { memberId: req.user.memberId },
     });
+    if (member) {
+      res.json(member);
+    } else {
+      res.status(401);
+      throw new Error('Member not found');
+    }
   } else {
     res.status(401);
     throw new Error('User not found');
@@ -132,7 +137,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
 
     if (user && member) {
       res.status(201).json({
-        id: user.userId,
+        userId: user.userId,
 
         email: user.email,
         userRole: user.userRole,
@@ -150,7 +155,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users
 // @access  Private/Admin
 exports.getUsers = asyncHandler(async (req, res) => {
-  const users = await User.findAll();
+  const users = await models.User.findAll();
 
   res.json(users);
 });
@@ -160,20 +165,26 @@ exports.getUsers = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 exports.getUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-
-  const user = await User.findByPk(id);
+  console.log(id);
+  const user = await models.User.findOne({
+    where: { userId: id },
+  });
+  console.log(user.userId);
+  console.log(user.memberId);
 
   if (user) {
-    res.json({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      image: user.image,
-      isAdmin: user.isAdmin,
+    const member = await models.Member.findOne({
+      where: { memberId: user.memberId },
     });
+    if (member) {
+      res.json(member);
+    } else {
+      res.status(401);
+      throw new Error('Member not found');
+    }
   } else {
-    res.status(404);
-    throw new Error('User Not Found');
+    res.status(401);
+    throw new Error('User not found');
   }
 });
 
@@ -181,34 +192,109 @@ exports.getUserById = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/profile
 // @access  Private
 exports.updateUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findOne({ where: { id: req.user.id } });
+  // res.send('success');
+  const user = await models.User.findOne({
+    where: { userId: req.user.userId },
+  });
 
   if (user) {
-    const data = {
-      username: req.body.username || user.username,
-      email: req.body.email || user.email,
-      image: req.body.image || user.image,
-      password: bcrypt.hashSync(req.body.password, 10) || user.password,
-      isAdmin: user.isAdmin,
-    };
+    const member = await models.Member.findOne({
+      where: { memberId: req.user.memberId },
+    });
+    if (member) {
+      const data = {
+        firstName: req.body.firstName || member.firstName,
+        mInit: req.body.mInit || member.mInit,
+        lastName: req.body.lastName || member.lastName,
+        address1: req.body.address1 || member.address1,
+        address2: req.body.address2 || member.address2,
+        city: req.body.city || member.city,
+        state: req.body.state || member.state,
+        zipcode: req.body.zipcode || member.zipcode,
+        primaryEmail: member.primaryEmail,
+        alternateEmail: req.body.alternateEmail || member.alternateEmail,
+        primaryPhone: req.body.primaryPhone || member.primaryPhone,
+        alternatePhone: req.body.alternatePhone || member.alternatePhone,
+        degree: req.body.degree || member.degree,
+        degreeYear: req.body.degreeYear || member.degreeYear,
+        major: req.body.major || member.major,
+        collegeName: req.body.collegeName || member.collegeName,
+        status: req.body.status || member.status,
+        balance: req.body.balance || member.balance,
 
-    let { username, email, password, isAdmin, image } = data;
+        // image: req.body.image || user.image,
+        password: bcrypt.hashSync(req.body.password, 10) || user.password,
+        userRole: req.body.userRole || user.userRole,
+      };
 
-    const updatedUser = await User.update(
-      {
-        username,
-        email,
+      let {
+        primaryEmail,
         password,
-        isAdmin,
-        image,
-      },
-      { where: { id: req.user.id } }
-    );
+        userRole,
+        firstName,
+        mInit,
+        lastName,
+        address1,
+        address2,
+        city,
+        state,
+        zipcode,
+        alternateEmail,
+        primaryPhone,
+        alternatePhone,
+        degree,
+        degreeYear,
+        major,
+        collegeName,
+        status,
+        balance,
+      } = data;
+      const updatedMember = await models.Member.update(
+        {
+          primaryEmail,
 
-    if (updatedUser == 1) {
-      res.json({ message: 'User updated successfully' });
+          firstName,
+          mInit,
+          lastName,
+          address1,
+          address2,
+          city,
+          state,
+          zipcode,
+          alternateEmail,
+          primaryPhone,
+          alternatePhone,
+          degree,
+          degreeYear,
+          major,
+          collegeName,
+          status,
+          balance,
+        },
+        { where: { memberId: req.user.memberId } }
+      );
+
+      if (updatedMember == 1) {
+        const updatedUser = await models.User.update(
+          {
+            password,
+            userRole,
+            // image,
+          },
+          { where: { userId: req.user.userId } }
+        );
+
+        if (updatedUser == 1) {
+          res.json({ message: 'User updated successfully' });
+        } else {
+          res.send({ message: 'User update unsuccessful' });
+        }
+      } else {
+        res.send({ message: 'Member update unsuccessful' });
+      }
     } else {
-      res.send({ message: 'User update unsuccessful' });
+      res.status(401);
+      throw new Error('Member not found');
     }
   } else {
     res.status(404);
@@ -220,33 +306,106 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/:id
 // @access  Private/Admin
 exports.updateUser = asyncHandler(async (req, res) => {
-  const user = await User.findOne({ where: { id: req.params.id } });
+  const user = await models.User.findOne({ where: { userId: req.params.id } });
 
   if (user) {
-    const data = {
-      username: req.body.username || user.username,
-      email: req.body.email || user.email,
-      image: req.body.image || user.image,
-      // password: bcrypt.hashSync(req.body.password, 10) || user.password,
-      isAdmin: req.body.isAdmin,
-    };
+    const member = await models.Member.findOne({
+      where: { memberId: user.memberId },
+    });
+    if (member) {
+      const data = {
+        firstName: req.body.firstName || member.firstName,
+        mInit: req.body.mInit || member.mInit,
+        lastName: req.body.lastName || member.lastName,
+        address1: req.body.address1 || member.address1,
+        address2: req.body.address2 || member.address2,
+        city: req.body.city || member.city,
+        state: req.body.state || member.state,
+        zipcode: req.body.zipcode || member.zipcode,
+        primaryEmail: member.primaryEmail,
+        alternateEmail: req.body.alternateEmail || member.alternateEmail,
+        primaryPhone: req.body.primaryPhone || member.primaryPhone,
+        alternatePhone: req.body.alternatePhone || member.alternatePhone,
+        degree: req.body.degree || member.degree,
+        degreeYear: req.body.degreeYear || member.degreeYear,
+        major: req.body.major || member.major,
+        collegeName: req.body.collegeName || member.collegeName,
+        status: req.body.status || member.status,
+        balance: req.body.balance || member.balance,
 
-    let { username, email, isAdmin, image } = data;
+        // image: req.body.image || user.image,
+        // password: bcrypt.hashSync(req.body.password, 10) || user.password,
+        userRole: req.body.userRole || user.userRole,
+      };
 
-    const updatedUser = await User.update(
-      {
-        username,
-        email,
-        image,
-        isAdmin,
-      },
-      { where: { id: req.params.id } }
-    );
-    console.log(updatedUser);
-    if (updatedUser == 1) {
-      res.json({ message: 'User updated successfully' });
+      let {
+        primaryEmail,
+        // password,
+        userRole,
+        firstName,
+        mInit,
+        lastName,
+        address1,
+        address2,
+        city,
+        state,
+        zipcode,
+        alternateEmail,
+        primaryPhone,
+        alternatePhone,
+        degree,
+        degreeYear,
+        major,
+        collegeName,
+        status,
+        balance,
+      } = data;
+      const updatedMember = await models.Member.update(
+        {
+          primaryEmail,
+
+          firstName,
+          mInit,
+          lastName,
+          address1,
+          address2,
+          city,
+          state,
+          zipcode,
+          alternateEmail,
+          primaryPhone,
+          alternatePhone,
+          degree,
+          degreeYear,
+          major,
+          collegeName,
+          status,
+          balance,
+        },
+        { where: { memberId: user.memberId } }
+      );
+
+      if (updatedMember == 1) {
+        const updatedUser = await models.User.update(
+          {
+            // password,
+            userRole,
+            // image,
+          },
+          { where: { userId: user.userId } }
+        );
+
+        if (updatedUser == 1) {
+          res.json({ message: 'User updated successfully' });
+        } else {
+          res.send({ message: 'User update unsuccessful' });
+        }
+      } else {
+        res.send({ message: 'Member update unsuccessful' });
+      }
     } else {
-      res.send({ message: 'User update unsuccessful' });
+      res.status(401);
+      throw new Error('Member not found');
     }
   } else {
     res.status(404);
@@ -259,16 +418,37 @@ exports.updateUser = asyncHandler(async (req, res) => {
 // @access  Private
 exports.deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  console.log(id);
+  const user = await models.User.findOne({
+    where: { userId: id },
+  });
+  console.log(user.userId);
+  console.log(user.memberId);
 
-  User.destroy({ where: { id: id } })
-    .then((num) => {
-      if (num == 1) {
-        res.json({ message: 'User has been deleted successfully' });
-      } else {
-        res.json({ message: 'Cannot delet the user' });
-      }
+  if (user) {
+    models.Member.destroy({
+      where: { memberId: user.memberId },
     })
-    .catch((err) => console.log(err));
+      .then((num) => {
+        if (num == 1) {
+          models.User.destroy({ where: { userId: id } })
+            .then((des) => {
+              if (des == 1) {
+                res.json({ message: 'User has been deleted successfully' });
+              } else {
+                res.json({ message: 'Cannot delete the user' });
+              }
+            })
+            .catch((err) => console.log(err));
+        } else {
+          res.json({ message: 'Cannot delete the member' });
+        }
+      })
+      .catch((err) => console.log(err));
+  } else {
+    res.status(401);
+    throw new Error('User not found');
+  }
 });
 
 // export {

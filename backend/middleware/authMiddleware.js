@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 // import asyncHandler from 'express-async-handler';
 const User = require('../models/User');
+const models = require('../models/index');
+
 // import User from '../models/User.js';
 
 exports.protect = asyncHandler(async (req, res, next) => {
@@ -16,7 +18,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       console.log(decoded);
-      req.user = await User.findByPk(decoded.id);
+      req.user = await models.User.findByPk(decoded.id);
       next();
     } catch (error) {
       console.error(error);
@@ -31,7 +33,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
 });
 
 exports.admin = (req, res, next) => {
-  if (req.user && req.user.isAdmin) {
+  if (req.user && req.user.userRole === 'admin') {
     next();
   } else {
     res.status(401);
