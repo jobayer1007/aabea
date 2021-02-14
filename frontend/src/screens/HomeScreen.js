@@ -13,10 +13,10 @@ const HomeScreen = () => {
   return (
     <>
       <Row>
-        <Col md={6} lg={3}>
+        <Col md={{ span: 6, order: 1 }} lg={{ span: 3, order: 1 }}>
           <Card>
             <Card.Body>
-              <Card.Title>Announcements</Card.Title>
+              <Card.Title as='h4'>Announcements</Card.Title>
               <Card.Text>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
                 officiis facilis beatae consequatur reiciendis dicta quia
@@ -25,7 +25,7 @@ const HomeScreen = () => {
               </Card.Text>
             </Card.Body>
             <Card.Body>
-              <Card.Title>Events:</Card.Title>
+              <Card.Title as='h4'>Events:</Card.Title>
               <Card.Text>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
                 officiis facilis beatae consequatur reiciendis dicta quia
@@ -41,9 +41,9 @@ const HomeScreen = () => {
           </Card>
         </Col>
 
-        <Col lg={6}>
+        <Col md={{ order: 12 }} lg={{ span: 6, order: 2 }}>
           <Card className='text-center mb-2'>
-            <Card.Header>Mission</Card.Header>
+            <Card.Header as='h2'>Mission</Card.Header>
             <Card.Body>
               <Card.Title>Special title treatment</Card.Title>
               <Card.Text>
@@ -56,7 +56,7 @@ const HomeScreen = () => {
           </Card>
 
           <Card className='text-center mb-2'>
-            <Card.Header>Vission</Card.Header>
+            <Card.Header as='h2'>Vission</Card.Header>
             <Card.Body>
               <Card.Title>Vission title </Card.Title>
               <Card.Text>
@@ -69,7 +69,7 @@ const HomeScreen = () => {
           </Card>
 
           <Card className='text-center mb-2'>
-            <Card.Header>History</Card.Header>
+            <Card.Header as='h2'>History</Card.Header>
             <Card.Body>
               <Card.Title>History Title</Card.Title>
               <Card.Text>
@@ -82,7 +82,7 @@ const HomeScreen = () => {
           </Card>
 
           <Card className='text-center mb-2'>
-            <Card.Header>Any other Main Topic</Card.Header>
+            <Card.Header as='h2'>Any other Main Topic</Card.Header>
             <Card.Body>
               <Card.Title>Topic Title</Card.Title>
               <Card.Text>
@@ -95,7 +95,7 @@ const HomeScreen = () => {
           </Card>
         </Col>
 
-        <Col md={6} lg={3}>
+        <Col md={{ span: 6, order: 2 }} lg={{ span: 3, order: 12 }}>
           <Card>
             <Card.Body>
               <Card.Title>Quick Links</Card.Title>

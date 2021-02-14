@@ -22,6 +22,8 @@ const Member = (sequelize, DataTypes) =>
     firstName: {
       type: DataTypes.STRING,
       required: true,
+      allowNull: false,
+      notEmpty: true,
     },
     mInit: {
       type: DataTypes.STRING,
@@ -108,6 +110,15 @@ const Member = (sequelize, DataTypes) =>
       type: DataTypes.DATE,
       defaultValue: Sequelize.NOW,
     },
+    // userName: {
+    //   type: DataTypes.VIRTUAL,
+    //   get() {
+    //     return `${this.firstName} ${this.lastName}`;
+    //   },
+    //   set(value) {
+    //     throw new Error('Do not try to set the `userName` value!');
+    //   },
+    // },
   });
 
 // Member.sync({ force: true });

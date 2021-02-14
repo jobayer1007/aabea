@@ -24,7 +24,7 @@ exports.authUser = asyncHandler(async (req, res) => {
     } else {
       res.json({
         userId: user.userId,
-
+        userName: user.userName,
         email: user.email,
         userRole: user.userRole,
         image: user.image,
@@ -69,24 +69,24 @@ exports.registerUser = asyncHandler(async (req, res) => {
   const {
     email,
     password,
-    userRole,
+    // userRole,
     firstName,
     mInit,
     lastName,
     address1,
-    address2,
+    // address2,
     city,
     state,
     zipcode,
-    alternateEmail,
+    // alternateEmail,
     primaryPhone,
-    alternatePhone,
+    // alternatePhone,
     degree,
     degreeYear,
     major,
     collegeName,
-    status,
-    balance,
+    // status,
+    // balance,
   } = req.body;
   console.log(email);
   const userExists = await models.User.findOne({ where: { email: email } });
@@ -97,24 +97,24 @@ exports.registerUser = asyncHandler(async (req, res) => {
     throw new Error('User Already Exists');
   } else {
     const member = await models.Member.create({
+      primaryEmail: email,
       firstName,
       mInit,
       lastName,
       address1,
-      address2,
+      // address2,
       city,
       state,
       zipcode,
-      primaryEmail: email,
-      alternateEmail,
+      // alternateEmail,
       primaryPhone,
-      alternatePhone,
+      // alternatePhone,
       degree,
       degreeYear,
       major,
       collegeName,
-      status,
-      balance,
+      // status,
+      // balance,
     });
 
     // if (member) {
@@ -125,9 +125,13 @@ exports.registerUser = asyncHandler(async (req, res) => {
     //   res.status(400);
     //   throw new Error('Invalid Member Data');
     // }
-
+    // const username = () => {
+    //   return `${firstName} ${lastName}`;
+    // };
+    // console.log(member.userName);
     const user = await models.User.create({
-      userRole,
+      // userRole,
+      userName: firstName + ' ' + lastName,
       email,
       // image: '/images/sample.jpg',
       password: bcrypt.hashSync(password, 10),
@@ -156,8 +160,9 @@ exports.registerUser = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 exports.getUsers = asyncHandler(async (req, res) => {
   const users = await models.User.findAll();
-
   res.json(users);
+  // const members = await models.Member.findAll();
+  // res.json(members);
 });
 
 // @desc    Get a  User by Id     ///////////////////////////////////////////////
@@ -277,6 +282,7 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
       if (updatedMember == 1) {
         const updatedUser = await models.User.update(
           {
+            userName: firstName + ' ' + lastName,
             password,
             userRole,
             // image,
@@ -322,7 +328,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
         city: req.body.city || member.city,
         state: req.body.state || member.state,
         zipcode: req.body.zipcode || member.zipcode,
-        primaryEmail: member.primaryEmail,
+        // primaryEmail: member.primaryEmail,
         alternateEmail: req.body.alternateEmail || member.alternateEmail,
         primaryPhone: req.body.primaryPhone || member.primaryPhone,
         alternatePhone: req.body.alternatePhone || member.alternatePhone,
@@ -339,7 +345,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
       };
 
       let {
-        primaryEmail,
+        // primaryEmail,
         // password,
         userRole,
         firstName,
@@ -362,7 +368,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
       } = data;
       const updatedMember = await models.Member.update(
         {
-          primaryEmail,
+          // primaryEmail,
 
           firstName,
           mInit,
@@ -380,7 +386,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
           major,
           collegeName,
           status,
-          balance,
+          // balance,
         },
         { where: { memberId: user.memberId } }
       );
@@ -389,6 +395,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
         const updatedUser = await models.User.update(
           {
             // password,
+            userName: firstName + ' ' + lastName,
             userRole,
             // image,
           },
@@ -413,7 +420,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Delete User     ///////////////////////////////////////////////
+// @desc    Delete User     /////////////////////////////////////////////// pending
 // @route   DELETE /api/users/:id
 // @access  Private
 exports.deleteUser = asyncHandler(async (req, res) => {

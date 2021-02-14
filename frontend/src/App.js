@@ -9,16 +9,20 @@ import RegisterScreen from './screens/RegisterScreen';
 import DashboardScreen from './screens/DashboardScreen';
 import UserListScreen from './screens/UserListScreen';
 import UserEditScreen from './screens/UserEditScreen';
+import Sidebar from './components/sidebar';
 
 const App = () => {
+  // const HideSidebar = window.location.pathname === '/home' ? null : <Sidebar />;
   return (
     <Router>
       <Header />
       <main className='py-3'>
         <Container>
+          <Sidebar />
+          {/* {HideSidebar} */}
           <Route path='/login' component={LoginScreen} />
           <Route path='/register' component={RegisterScreen} />
-          {/* <Route path='/dashboard' component={DashboardScreen} /> */}
+          <Route path='/dashboardScreen' component={DashboardScreen} />
           <Route path='/dashboard' component={UserListScreen} />
           <Route path='/users/:id/edit' component={UserEditScreen} />
           <Route path='/' component={HomeScreen} exact />

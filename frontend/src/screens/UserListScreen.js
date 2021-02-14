@@ -1,6 +1,14 @@
 import React, { useEffect } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Table, Button, Image, Row, Col } from 'react-bootstrap';
+import {
+  Table,
+  Button,
+  Image,
+  Row,
+  Col,
+  Card,
+  CardDeck,
+} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
@@ -34,93 +42,122 @@ const UserListScreen = ({ history }) => {
   };
 
   return (
-    <Row>
-      <Col sm={3}  >
-        <Button variant='outline-primary' size={'lg'} block>
-          Payment
-        </Button>{' '}
-        <Button variant='outline-secondary' size={'lg'} block>
-          Donate
-        </Button>{' '}
-        <Button variant='outline-success' size={'lg'} block>
-          Training
-        </Button>{' '}
-        <Button variant='outline-warning' size={'lg'} block>
-          Committiees
-        </Button>{' '}
-        <Button variant='outline-info' block>
-          Any other button
-        </Button>{' '}
-        <Link
-          className='btn btn-outline-warning btn-sm btn-block my-5 rounded'
-          to=''
-        >
-          another button
-        </Link>
-      </Col>
-      <Col sm={9}>
-        <h1>Users</h1>
-        {loading ? (
-          <Loader />
-        ) : error ? (
-          <Message variant='danger'>{error}</Message>
-        ) : (
-          <Table striped bordered hover responsive className='table-sm'>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>IMAGE</th>
-                <th>NAME</th>
-                <th>EMAIL</th>
-                <th>ADMIN</th>
-                {userInfo && userInfo.isAdmin && <th>EDIT/DELETE</th>}
-              </tr>
-            </thead>
+    <Row className='content'>
+      {/* <Col
+        md={{ span: 3, order: 1 }}
+        lg={{ span: 3, order: 1 }}
+        // id='sidebar-wrapper'
+      >
+        <Card className='text-center' border='primary'>
+          <Card.Body>
+            <Card.Title>
+              <Button variant='outline-info' block>
+                Payment
+              </Button>
+            </Card.Title>
+            <Card.Title>
+              <Button variant='outline-info' block>
+                Donate
+              </Button>
+            </Card.Title>
+            <Card.Title>
+              <Button variant='outline-info' block>
+                Training
+              </Button>
+            </Card.Title>
+            <Card.Title>
+              <Button variant='outline-info' block>
+                Committiees
+              </Button>
+            </Card.Title>
+          </Card.Body>
+          <Card.Footer className='text-muted'>
+            <Link
+              className='btn btn-outline-warning btn-sm btn-block my-5 rounded'
+              to=''
+            >
+              another button
+            </Link>
+          </Card.Footer>
+        </Card>{' '}
+      </Col> */}
+      <Col
+        md={{ span: 12, order: 12 }}
+        lg={{ span: 12, order: 12 }}
+        // id='page-content-wrapper'
+      >
+        <Card className='text-center' border='primary'>
+          <Card.Header as='h2'>Users</Card.Header>
 
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>
-                    {' '}
-                    <Image src={user.image} thumbnail />
-                  </td>
-                  <td>{user.username}</td>
-                  <td>
-                    <a href={`mailto: ${user.email}`}> {user.email}</a>
-                  </td>
-                  <td>
-                    {user.isAdmin ? (
-                      <i
-                        className='fas fa-check'
-                        style={{ color: 'green' }}
-                      ></i>
-                    ) : (
-                      <i className='fas fa-times' style={{ color: 'red' }}></i>
+          <Card.Body>
+            {loading ? (
+              <Loader />
+            ) : error ? (
+              <Message variant='danger'>{error}</Message>
+            ) : (
+              <Table striped bordered hover responsive className='table-sm'>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>IMAGE</th>
+                    <th>NAME</th>
+                    <th>EMAIL</th>
+                    <th>ADMIN</th>
+                    {userInfo && userInfo.userRole === 'admin' && (
+                      <th>EDIT/DELETE</th>
                     )}
-                  </td>
-                  {userInfo.isAdmin && (
-                    <td>
-                      <LinkContainer to={`/users/${user.id}/edit`}>
-                        <Button variant='light' className='btn-sm'>
-                          <i className='fas fa-edit'></i>
-                        </Button>
-                      </LinkContainer>
+                  </tr>
+                </thead>
 
-                      <Button
-                        variant='danger'
-                        className='btn-sm'
-                        onClick={() => deleteHandler(user.id)}
-                      >
-                        <i className='fas fa-trash'></i>
-                      </Button>
-                    </td>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
+                <tbody>
+                  {users.map((user) => (
+                    <tr key={user.userId}>
+                      <td>{user.userId}</td>
+                      <td>
+                        {' '}
+                        <Image src={user.image} thumbnail />
+                      </td>
+                      <td> {user.userName}</td>
+                      <td>
+                        <a href={`mailto: ${user.email}`}> {user.email}</a>
+                      </td>
+                      <td>
+                        {user.userRole === 'admin' ? (
+                          <i
+                            className='fas fa-check'
+                            style={{ color: 'green' }}
+                          ></i>
+                        ) : (
+                          <i
+                            className='fas fa-times'
+                            style={{ color: 'red' }}
+                          ></i>
+                        )}
+                      </td>
+                      {userInfo.userRole === 'admin' && (
+                        <td>
+                          <LinkContainer to={`/users/${user.userId}/edit`}>
+                            <Button variant='light' className='btn-sm'>
+                              <i className='fas fa-edit'></i>
+                            </Button>
+                          </LinkContainer>
+
+                          <Button
+                            variant='danger'
+                            className='btn-sm'
+                            onClick={() => deleteHandler(user.id)}
+                          >
+                            <i className='fas fa-trash'></i>
+                          </Button>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            )}
+          </Card.Body>
+        </Card>
       </Col>
     </Row>
   );

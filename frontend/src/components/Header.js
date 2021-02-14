@@ -60,11 +60,13 @@ const Header = () => {
       </Container>
 
       {/* Second */}
+      {/* NEW */}
+      {/* OLD */}
       <Navbar
-        bg='light'
-        variant='light'
+        bg='dark'
+        variant='dark'
         expand='lg'
-        sticky='top'
+        // sticky='top'
         collapseOnSelect
       >
         <Container>
@@ -108,7 +110,10 @@ const Header = () => {
                   <LinkContainer to='/payment'>
                     <Nav.Link>Payment</Nav.Link>
                   </LinkContainer>
-                  <NavDropdown title={userInfo.username} id='username'>
+                  <NavDropdown
+                    title={userInfo.userName.toUpperCase()}
+                    id='userName'
+                  >
                     <LinkContainer to='/profile'>
                       <NavDropdown.Item>Profile</NavDropdown.Item>
                     </LinkContainer>

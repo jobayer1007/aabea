@@ -12,20 +12,7 @@ footer {
   border-top: 1px solid #ced4da;
 }
 
-button.btn.btn-outline-primary.btn-block.btn-lg,
-button.btn.btn-outline-secondary.btn-block.btn-lg {
-  border-radius: 50%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
 
-button.btn.btn-outline-success.btn-block.btn-lg,
-button.btn.btn-outline-warning.btn-block.btn-lg 
- {
-  border-radius: 40%;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
 
 .col-sm-3 {
  
@@ -33,20 +20,20 @@ button.btn.btn-outline-warning.btn-block.btn-lg
 }
 
 .col-sm-9 {
-  background: antiquewhite;
+  background: aliceblue;
 }
 
-footer {
+/* footer {
   background: teal;
-}
+} */
 
 .text-center.py-3.m-5.col {
   color: white;
 }
 
-footer {
+/* footer {
   background: teal;
-}
+} */
 
 .text-center.py-3.m-5.col {
   color: white;
@@ -60,3 +47,26 @@ img.d-block.w-100 {
   border: 2px solid thistle;
 }
 
+/* changes for sidebar */
+
+/* .flex-column.nav {
+  width: 20%;
+} */
+
+main.py-3 {
+  display: flex;
+}
+
+.sideBar.row {
+  width: 20%;
+}
+
+.container {
+  /* width: 80%; */
+  display: flex;
+}
+
+.content.row {
+  width: 80%;
+  margin-left: 10px;
+}
