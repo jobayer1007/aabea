@@ -1,6 +1,15 @@
 import React from 'react';
-import { Nav, Button, Card, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import {
+  Navbar,
+  Nav,
+  Button, 
+  Card,
+  Row,
+  Col,
+  Image,
+  NavDropdown,
+} from 'react-bootstrap';
 
 import { withRouter } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -8,7 +17,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 const Side = (props) => {
   return (
     <>
-      {/* <Nav className='flex-column'>
+      <Nav className='flex-column'>
         <Nav.Item>
           <LinkContainer to='/dashboard'>
             <Nav.Link>
@@ -37,7 +46,7 @@ const Side = (props) => {
             <Nav.Link>Login</Nav.Link>
           </LinkContainer>
         </Nav.Item>
-      </Nav> */}
+      </Nav>
       <Row className='sideBar'>
         <Col>
           <Card className='text-center' border='primary'>

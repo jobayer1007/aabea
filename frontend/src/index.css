@@ -1,3 +1,11 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+h1, h2,h3, h4,h5,h6,p {margin: 0;}
+
 main {
   min-height: 80vh;
 }
@@ -49,24 +57,3 @@ img.d-block.w-100 {
 
 /* changes for sidebar */
 
-/* .flex-column.nav {
-  width: 20%;
-} */
-
-main.py-3 {
-  display: flex;
-}
-
-.sideBar.row {
-  width: 20%;
-}
-
-.container {
-  /* width: 80%; */
-  display: flex;
-}
-
-.content.row {
-  width: 80%;
-  margin-left: 10px;
-}
