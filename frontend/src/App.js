@@ -13,10 +13,19 @@ import UserEditScreen from './screens/UserEditScreen';
 // imort for sidebar experiment
 import Sidebar from './components/Sidebar/Sidebar';
 import MainScreen from './screens/MainScreen';
+import PaymentScreen from './screens/PaymentScreen/PaymentScreen';
+import DonateScreen from './screens/DonateScreen/DonateScreen';
+import TrainingScreen from './screens/TrainingScreen/TrainingScreen';
+import CommittieesScreen from './screens/CommitteesScreen/CommitteesScreen';
+import Navbar from './components/Navbar/Navbar';
 
 const App = () => {
   const backgroundImage = 'images/mountain.jpg';
-  const sidebarHeader = 'AABEA';
+  const logoImage = 'images/logoImage.png';
+  const sidebarHeader = {
+    fullName: 'AABEA',
+    shortName: 'aabea',
+  };
   const menuItems = [
     {
       name: 'Payment',
@@ -73,6 +82,7 @@ const App = () => {
       <Router>
         {/* Experiment Start */}
         <S.App>
+          <Navbar logoImage={logoImage} />
           <Sidebar
             backgroundImage={backgroundImage}
             sidebarHeader={sidebarHeader}
@@ -89,8 +99,12 @@ const App = () => {
             {/* {HideSidebar} */}
             <Route path='/login' component={LoginScreen} />
             <Route path='/register' component={RegisterScreen} />
-            <Route path='/dashboardScreen' component={DashboardScreen} />
-            <Route path='/dashboard' component={UserListScreen} />
+            <Route path='/dashboardScreen' component={UserListScreen} />
+            <Route path='/dashboard' component={DashboardScreen} />
+            <Route path='/payment' component={PaymentScreen} />
+            <Route path='/donate' component={DonateScreen} />
+            <Route path='/training' component={TrainingScreen} />
+            <Route path='/committiees' component={CommittieesScreen} />
             <Route path='/users/:id/edit' component={UserEditScreen} />
             <Route path='/' component={HomeScreen} exact />
           </Container>

@@ -55,14 +55,14 @@ const UserListScreen = ({ history }) => {
               <Card.Title>
                 <Button variant='outline-info' block>
                   <LinkContainer to='/'>
-                    <Nav.Link>Home</Nav.Link>
+                    <Nav.Link>Dashboard</Nav.Link>
                   </LinkContainer>
                 </Button>
               </Card.Title>
               <Card.Title>
                 <Button variant='outline-info' block>
-                  <LinkContainer to='/about'>
-                    <Nav.Link>About</Nav.Link>
+                  <LinkContainer to='/dashboardScreen'>
+                    <Nav.Link>DashboardScreen</Nav.Link>
                   </LinkContainer>
                 </Button>
               </Card.Title>

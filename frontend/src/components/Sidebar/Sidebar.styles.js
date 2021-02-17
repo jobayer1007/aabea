@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
 
 export const SidebarContainer = styled.div`
-  width: 20%;
+  width: ${(p) => (p.isSidebarOpen ? '20%' : '5%')};
+  top: 20%;
+  height: 80%;
   max-width: 280px;
   min-width: 80px;
   background-image: linear-gradient(
@@ -14,7 +16,8 @@ export const SidebarContainer = styled.div`
   background-repeat: no-repeat;
   background-position: center center;
   color: #fff;
-  position: relative; // Toggler
+  position: relative; // TogglerContaianer
+  transition: 0.2s ease-in all;
 `;
 
 export const SidebarHeader = styled.h3`
@@ -26,15 +29,25 @@ export const SidebarHeader = styled.h3`
   color: #fff;
 `;
 
+export const ItemContainer = styled.div``;
 export const MenuItemContainer = styled.div``;
 
+// Menu Items ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 export const MenuItem = styled.div`
-  /* text-align: center; */
+  ${(p) =>
+    !p.isSidebarOpen &&
+    `
+    text-align: center;
+    ${(p = p.selected && 'background-color: rgba(0 ,0 ,0 ,0.6)')};
+    
+    `};
   padding: 6px 20px;
   font-weight: 600;
-  /* color: rgba(19, 15, 64); */
   color: ${(p) => (p.selected ? 'rgba(255, 255, 255)' : 'rgba(19, 15, 64)')};
   font-family: ${(p) => p.fonts};
+  white-space: nowrap;
+  position: relative; // Dropdown Icon
+  transition: 0.2s ease-in all;
 
   &:hover {
     color: rgba(255, 255, 255);
@@ -43,11 +56,13 @@ export const MenuItem = styled.div`
 
   &:after {
     content: '';
-    border: 1px solid
+    border: 0.1px solid
       ${(p) => (p.selected ? 'rgba(255, 255, 255)' : 'rgba(255, 112, 85)')};
 
-    display: block;
+    display: ${(p) =>
+      p.isSidebarOpen && p.selected && p.isOpen ? 'none' : 'block'};
     margin: 8px 0 4px;
+    transition: 0.1s ease-in all;
   }
 
   ${(p) =>
@@ -63,19 +78,51 @@ export const MenuItem = styled.div`
 `;
 
 export const Text = styled.p`
-  display: inline;
-  padding-left: 20px;
+  display: ${(p) => (p.isSidebarOpen ? 'inline' : 'none')};
+  /* padding-left: 20px; */
+  /* transition: 0.2s ease-in display; */
 `;
 
 export const Icon = styled.img`
+  ${(p) =>
+    p.isSidebarOpen &&
+    `margin-right: 20px; transition: .2s ease-in margin-right`};
+
   height: 16px;
   width: 16px;
-  /* padding-right: 20px; */
+`;
+
+// SubMenu Item ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+export const SubMenuItemContainer = styled.div`
+  font-size: 14px;
+  ${(p) => p.isSidebarOpen && 'padding-left: 20%'};
+  ${(p) => !p.isSidebarOpen && 'text-align: center'};
+`;
+
+export const SubMenuItem = styled.p`
+  color: rgba(19, 15, 64);
+
+  &:hover {
+    color: rgba(255, 255, 255);
+  }
+`;
+
+// Dropdown Icon ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+export const DropDownIcon = styled.span`
+  position: absolute;
+  top: ${(p) => (p.isOpen ? '16px' : '13px')};
+  right: 24px;
+  border: solid
+    ${(p) => (p.selected ? 'rgba(255, 255, 255)' : 'rgba(19, 15, 64)')};
+  border-width: 0 1px 1px 0;
+  padding: 3px;
+  transform: ${(p) => (p.isOpen ? 'rotate(-135deg)' : 'rotate(45deg)')};
+  transition: 0.2s ease-in all;
 `;
 
 // Toggler ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 export const TogglerContainer = styled.div`
-  position: absolute;
+  position: absolute; // SidebarContainer
   width: 30%;
   bottom: 10%;
   left: 0;

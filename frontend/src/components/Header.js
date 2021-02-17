@@ -1,4 +1,6 @@
 import React from 'react';
+// import * as S from './Header/Header.Styles';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import {
@@ -92,8 +94,8 @@ const Header = () => {
             <Nav className='ml-auto'>
               {userInfo && (
                 <>
-                  <LinkContainer to='/committees'>
-                    <Nav.Link>Committees</Nav.Link>
+                  <LinkContainer to='/committiees'>
+                    <Nav.Link>Committiees</Nav.Link>
                   </LinkContainer>
                   <LinkContainer to='/training'>
                     <Nav.Link>Training</Nav.Link>
