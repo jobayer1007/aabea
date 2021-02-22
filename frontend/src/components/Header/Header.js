@@ -13,7 +13,7 @@ import {
   Image,
   NavDropdown,
 } from 'react-bootstrap';
-import { logout } from '../actions/userActions';
+import { logout } from '../../actions/userActions';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -100,6 +100,9 @@ const Header = () => {
                   <LinkContainer to='/training'>
                     <Nav.Link>Training</Nav.Link>
                   </LinkContainer>
+                  <LinkContainer to='/payment'>
+                    <Nav.Link>Payment</Nav.Link>
+                  </LinkContainer>
                 </>
               )}
 
@@ -109,9 +112,6 @@ const Header = () => {
 
               {userInfo ? (
                 <>
-                  <LinkContainer to='/payment'>
-                    <Nav.Link>Payment</Nav.Link>
-                  </LinkContainer>
                   <NavDropdown
                     title={userInfo.userName.toUpperCase()}
                     id='userName'
@@ -131,8 +131,7 @@ const Header = () => {
                   </LinkContainer>
                   <LinkContainer to='/login'>
                     <Nav.Link>
-                      <i className='fas fa-user'></i>
-                      Login
+                      <i className='fas fa-user'> </i> Login
                     </Nav.Link>
                   </LinkContainer>{' '}
                 </>

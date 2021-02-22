@@ -11,7 +11,10 @@ const generateToken = require('../utils/generateToken');
 exports.authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await models.User.findOne({ where: { email: email } });
+  const user = await models.User.findOne({
+    where: { email: email },
+    include: models.Member,
+  });
 
   if (user) {
     const passwordIsValid = bcrypt.compareSync(password, user.password);
@@ -22,6 +25,7 @@ exports.authUser = asyncHandler(async (req, res) => {
         message: 'Invalid Password!',
       });
     } else {
+      console.log(JSON.stringify(user));
       res.json({
         userId: user.userId,
         userName: user.userName,
@@ -29,6 +33,7 @@ exports.authUser = asyncHandler(async (req, res) => {
         userRole: user.userRole,
         image: user.image,
         memberId: user.memberId,
+        status: user.member.status,
         token: generateToken(user.userId),
       });
     }
@@ -159,7 +164,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users
 // @access  Private/Admin
 exports.getUsers = asyncHandler(async (req, res) => {
-  const users = await models.User.findAll();
+  const users = await models.User.findAll({ include: models.Member });
   res.json(users);
   // const members = await models.Member.findAll();
   // res.json(members);
