@@ -6,35 +6,35 @@ const sequelize = new Sequelize(
 
 const Payment = (sequelize, DataTypes) =>
   sequelize.define('payment', {
-    memberId: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
-      unique: 'compositeIndex',
-    },
-    year: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: 'compositeIndex',
-      validate: {
-        isNumeric: true,
-        notEmpty: true,
-      },
+    // memberId: {
+    //   type: DataTypes.UUID,
+    //   defaultValue: DataTypes.UUIDV4,
+    //   allowNull: false,
+    //   unique: 'compositeIndex',
+    // },
+    // year: {
+    //   type: DataTypes.STRING,
+    //   // allowNull: false,
+    //   unique: 'compositeIndex',
+    //   validate: {
+    //     isNumeric: true,
+    //     notEmpty: true,
+    //   },
+    // },
+
+    // month: {
+    //   type: DataTypes.STRING,
+    //   // allowNull: false,
+    //   unique: 'compositeIndex',
+    // },
+
+    paymentType: {
+      type: DataTypes.ENUM,
+      defaultValue: 'dues',
+      values: ['dues', 'nominationFee', 'donation'],
     },
 
-    month: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: 'compositeIndex',
-    },
-
-    feeAmount: {
-      type: DataTypes.FLOAT,
-      required: true,
-      isFloat: true,
-    },
-
-    fineAmount: {
+    amount: {
       type: DataTypes.FLOAT,
       required: false,
       isFloat: true,
@@ -47,10 +47,16 @@ const Payment = (sequelize, DataTypes) =>
     },
 
     payerId: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING, // email_address from Paypal
     },
     paymentId: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING, // id from Paypal
+    },
+    paymentStatus: {
+      type: DataTypes.STRING, // status from Paypal
+    },
+    paymentTime: {
+      type: DataTypes.STRING, //update_time from Paypal
     },
   });
 

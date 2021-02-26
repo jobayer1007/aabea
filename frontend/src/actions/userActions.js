@@ -8,6 +8,9 @@ import {
   USER_DETAILS_REQUEST,
   USER_DETAILS_RESET,
   USER_DETAILS_SUCCESS,
+  USER_EMAIL_VERIFY_FAIL,
+  USER_EMAIL_VERIFY_REQUEST,
+  USER_EMAIL_VERIFY_SUCCESS,
   USER_LIST_FAIL,
   USER_LIST_REQUEST,
   USER_LIST_RESET,
@@ -16,6 +19,13 @@ import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT,
+  USER_PAYMENT_DETAILS_FAIL,
+  USER_PAYMENT_DETAILS_REQUEST,
+  USER_PAYMENT_DETAILS_RESET,
+  USER_PAYMENT_DETAILS_SUCCESS,
+  USER_PAY_FAIL,
+  USER_PAY_REQUEST,
+  USER_PAY_SUCCESS,
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_RESET,
@@ -124,12 +134,12 @@ export const register = (
       payload: data,
     });
 
-    dispatch({
-      type: USER_LOGIN_SUCCESS,
-      payload: data,
-    });
+    // dispatch({
+    //   type: USER_LOGIN_SUCCESS,
+    //   payload: data,
+    // });
 
-    localStorage.setItem('userInfo', JSON.stringify(data));
+    // localStorage.setItem('userInfo', JSON.stringify(data));
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
@@ -228,6 +238,7 @@ export const listUsers = () => async (dispatch, getState) => {
 
     const { data } = await axios.get(`/api/users/dashboard`, config);
     dispatch({ type: USER_DETAILS_RESET });
+
     dispatch({
       type: USER_LIST_SUCCESS,
       payload: data,
@@ -296,6 +307,108 @@ export const updateUser = (user) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getUserPaymentDetails = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_PAYMENT_DETAILS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/users/payment`, config);
+
+    dispatch({
+      type: USER_PAYMENT_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_PAYMENT_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const payUser = (id, paymentResult) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_PAY_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(
+      `/api/users/${id}/pay`,
+      paymentResult,
+      config
+    );
+
+    dispatch({
+      type: USER_PAY_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_PAY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const verifyUserEmail = (hash, email) => async (dispatch) => {
+  try {
+    dispatch({
+      type: USER_EMAIL_VERIFY_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const { data } = await axios.post(
+      `/api/users/activate/${hash}`,
+      { email },
+      config
+    );
+
+    dispatch({
+      type: USER_EMAIL_VERIFY_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_EMAIL_VERIFY_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

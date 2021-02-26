@@ -4,8 +4,11 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import {
   userDeleteReducer,
   userDetailsReducer,
+  userEmailVerificationReducer,
   userListReducer,
   userLoginReducer,
+  userPaymentDetailsReducer,
+  userPayReducer,
   userRegisterReducer,
   userUpdateProfileReducer,
   userUptadeReducer,
@@ -15,11 +18,15 @@ const reducer = combineReducers({
   userLogin: userLoginReducer,
   userList: userListReducer,
   userRegister: userRegisterReducer,
+  userEmailVerify: userEmailVerificationReducer,
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
 
   userDelete: userDeleteReducer,
   userUpdate: userUptadeReducer,
+
+  userPaymentDetails: userPaymentDetailsReducer,
+  userPay: userPayReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

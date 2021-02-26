@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes, NOW } = require('sequelize');
 // const sequelize = new Sequelize('sqlite::memory:');
 const sequelize = new Sequelize(
   'postgres://postgres:1007Jobayer@localhost:5432/aabeav2'
@@ -96,18 +96,28 @@ const Member = (sequelize, DataTypes) =>
     },
 
     status: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM,
       defaultValue: 'Pending',
-      // validate: { isIn: [validStatus] },
+      values: ['Active', 'Pending', 'Inactive'],
+    },
+
+    isPaid: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
 
     balance: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.FLOAT,
       defaultValue: 0.0,
     },
 
     startDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
+      defaultValue: Sequelize.NOW,
+    },
+
+    NextPaymentDueIn: {
+      type: DataTypes.DATEONLY,
       defaultValue: Sequelize.NOW,
     },
     // userName: {

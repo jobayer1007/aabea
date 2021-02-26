@@ -37,9 +37,13 @@ const LoginScreen = ({ location, history }) => {
   return (
     <FormContainer>
       {/* Card start */}
-      <Card border='primary'>
-        <Card.Header className='text-center' as='h2'>
-          LogIn
+      <Card border='info'>
+        <Card.Header
+          className='text-center'
+          as='h2'
+          style={{ color: '#033c73' }}
+        >
+          LOGIN
         </Card.Header>
         <Card.Body>
           {error && <Message variant='danger'>{error}</Message>}
@@ -65,7 +69,7 @@ const LoginScreen = ({ location, history }) => {
               ></Form.Control>
             </Form.Group>
 
-            <Button type='submit' variant='primary' block>
+            <Button type='submit' variant='info' block>
               Log In
             </Button>
           </Form>

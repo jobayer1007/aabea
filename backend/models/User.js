@@ -4,7 +4,7 @@ const sequelize = new Sequelize(
 );
 const db = require('../config/db');
 
-const userTypes = ['admin', 'member', 'systemAdmin'];
+// const userTypes = ['admin', 'member', 'systemAdmin'];
 
 const User = (sequelize, DataTypes) =>
   sequelize.define('user', {
@@ -40,13 +40,11 @@ const User = (sequelize, DataTypes) =>
       required: true,
     },
     userRole: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM,
       required: true,
       defaultValue: 'member',
       allowNull: false,
-      // validate: {
-      //   isIn: { userTypes },
-      // },
+      values: ['admin', 'member', 'systemAdmin'],
     },
     last_login: {
       type: DataTypes.DATE,

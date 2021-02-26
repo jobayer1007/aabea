@@ -1,4 +1,6 @@
 const express = require('express');
+const { Sequelize, DataTypes } = require('sequelize');
+
 const path = require('path');
 const bodyParser = require('body-parser');
 const colors = require('colors');
@@ -20,6 +22,10 @@ app.use(bodyParser.json());
 // User Routes
 app.use('/api/users', userRoutes);
 app.use('/api/upload', uploadRoutes);
+
+app.get('/api/config/paypal', (req, res) =>
+  res.send(process.env.PAYPAL_CLIENT_ID)
+);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -6,6 +6,10 @@ import {
   USER_DETAILS_REQUEST,
   USER_DETAILS_RESET,
   USER_DETAILS_SUCCESS,
+  USER_EMAIL_VERIFY_FAIL,
+  USER_EMAIL_VERIFY_REQUEST,
+  USER_EMAIL_VERIFY_RESET,
+  USER_EMAIL_VERIFY_SUCCESS,
   USER_LIST_FAIL,
   USER_LIST_REQUEST,
   USER_LIST_RESET,
@@ -14,6 +18,14 @@ import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT,
+  USER_PAYMENT_DETAILS_FAIL,
+  USER_PAYMENT_DETAILS_REQUEST,
+  USER_PAYMENT_DETAILS_RESET,
+  USER_PAYMENT_DETAILS_SUCCESS,
+  USER_PAY_FAIL,
+  USER_PAY_REQUEST,
+  USER_PAY_RESET,
+  USER_PAY_SUCCESS,
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_RESET,
@@ -47,7 +59,7 @@ export const userRegisterReducer = (state = {}, action) => {
     case USER_REGISTER_REQUEST:
       return { loading: true };
     case USER_REGISTER_SUCCESS:
-      return { loading: false, userInfo: action.payload };
+      return { loading: false, success: action.payload };
     case USER_REGISTER_FAIL:
       return { loading: false, error: action.payload };
     case USER_REGISTER_RESET:
@@ -131,6 +143,57 @@ export const userUptadeReducer = (state = { user: {} }, action) => {
       return {
         user: {},
       };
+    default:
+      return state;
+  }
+};
+
+export const userPaymentDetailsReducer = (state = { payments: [] }, action) => {
+  switch (action.type) {
+    case USER_PAYMENT_DETAILS_REQUEST:
+      return { loading: true };
+    case USER_PAYMENT_DETAILS_SUCCESS:
+      return { loading: false, payments: action.payload };
+
+    case USER_PAYMENT_DETAILS_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_PAYMENT_DETAILS_RESET:
+      return {
+        payments: [],
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const userPayReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_PAY_REQUEST:
+      return { loading: true };
+    case USER_PAY_SUCCESS:
+      return { loading: false, success: true };
+
+    case USER_PAY_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_PAY_RESET:
+      return {};
+
+    default:
+      return state;
+  }
+};
+
+export const userEmailVerificationReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_EMAIL_VERIFY_REQUEST:
+      return { loading: true };
+    case USER_EMAIL_VERIFY_SUCCESS:
+      return { loading: false, success: action.payload };
+    case USER_EMAIL_VERIFY_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_EMAIL_VERIFY_RESET:
+      return {};
     default:
       return state;
   }

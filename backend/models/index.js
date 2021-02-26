@@ -71,6 +71,7 @@ sequelize
 db.User = require('../models/User')(sequelize, Sequelize);
 db.Member = require('../models/Member')(sequelize, Sequelize);
 db.Payment = require('../models/Payment')(sequelize, Sequelize);
+db.PendingRegister = require('../models/PendingRegister')(sequelize, Sequelize);
 
 // //Model relationships
 db.User.belongsTo(db.Member, { foreignKey: 'memberId' });

@@ -1,6 +1,5 @@
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
-const { sendConfirmationEmail } = require('./mailer');
 const User = require('../models/User');
 const Member = require('../models/Member');
 const models = require('../models/index');
@@ -94,142 +93,74 @@ exports.registerUser = asyncHandler(async (req, res) => {
     // status,
     // balance,
   } = req.body;
-  // console.log(email);
-  const userExists = await models.User.findOne({ where: { email: email } }); // Check if the user already registered
-
+  console.log(email);
+  const userExists = await models.User.findOne({ where: { email: email } });
+  // console.log(userExists);
+  // let { username, email, password, isAdmin } = data;
   if (userExists) {
     res.status(400);
     throw new Error('User Already Exists');
   } else {
-    const userExistsInPendingRegister = await models.PendingRegister.findOne({
-      where: { email: email },
-    }); // // Check if the user already registered but email not verified
+    const member = await models.Member.create({
+      primaryEmail: email,
+      firstName,
+      mInit,
+      lastName,
+      address1,
+      // address2,
+      city,
+      state,
+      zipcode,
+      // alternateEmail,
+      primaryPhone,
+      // alternatePhone,
+      degree,
+      degreeYear,
+      major,
+      collegeName,
+      // status,
+      // balance,
+    });
 
-    if (userExistsInPendingRegister) {
-      res.status(400);
-      throw new Error(
-        'Please visit your email address and activate your account'
-      );
-    } else {
-      const pendingUserRegister = await models.PendingRegister.create({
-        email,
-        firstName,
-        mInit,
-        lastName,
-        address1,
-        city,
-        state,
-        zipcode,
-        primaryPhone,
-        degree,
-        degreeYear,
-        major,
-        collegeName,
-        password: bcrypt.hashSync(password, 10),
+    // if (member) {
+    //   res.status(201).json({
+    //     message: 'member created successfully.',
+    //   });
+    // } else {
+    //   res.status(400);
+    //   throw new Error('Invalid Member Data');
+    // }
+    // const username = () => {
+    //   return `${firstName} ${lastName}`;
+    // };
+    // console.log(member.userName);
+    const user = await models.User.create({
+      // userRole,
+      userName: firstName + ' ' + lastName,
+      email,
+      // image: '/images/sample.jpg',
+      password: bcrypt.hashSync(password, 10),
+    });
+
+    const userLinkedMember = await member.addUser(user);
+
+    
+    if (user && member) {
+      res.status(201).json({
+        userId: user.userId,
+        userName: user.userName,
+        email: user.email,
+        userRole: user.userRole,
+        image: user.image,
+        memberId: userLinkedMember.memberId,
+        status: member.status,
+        isPaid: member.isPaid,
+        token: generateToken(user.userId),
       });
-
-      if (pendingUserRegister) {
-        const sendVerificationEmail = await sendConfirmationEmail({
-          toUserEmail: pendingUserRegister.email,
-          toUser: pendingUserRegister.firstName,
-          hash: pendingUserRegister.pendingId,
-        });
-
-        if (sendVerificationEmail) {
-          res.json(
-            'Just one more step! Please visit your email address and activate your account'
-          );
-        } else {
-          res.status(400);
-          throw new Error(
-            'Something Went Wrong with verification Email sending, Please contact the Administrator'
-          );
-        }
-      } else {
-        res.status(400);
-        throw new Error(
-          'Something Went Wrong, Please contact the Administrator'
-        );
-      }
-    }
-  }
-});
-
-// @desc    Verify a new User Email     ///////////////////////////////////////////////
-// @route   POST /api/users/activate/:hash
-// @access  Public
-exports.verifyUserEmail = asyncHandler(async (req, res) => {
-  const { hash } = req.params;
-  const { email } = req.body;
-  console.log(hash);
-  const pendingUser = await models.PendingRegister.findOne({
-    where: { email: email },
-  });
-
-  if (pendingUser) {
-    if (pendingUser.pendingId === hash) {
-      const member = await models.Member.create({
-        primaryEmail: email,
-        firstName: pendingUser.firstName,
-        mInit: pendingUser.mInit,
-        lastName: pendingUser.lastName,
-        address1: pendingUser.address1,
-        // address2,
-        city: pendingUser.city,
-        state: pendingUser.state,
-        zipcode: pendingUser.zipcode,
-        // alternateEmail,
-        primaryPhone: pendingUser.primaryPhone,
-        // alternatePhone,
-        degree: pendingUser.degree,
-        degreeYear: pendingUser.degreeYear,
-        major: pendingUser.major,
-        collegeName: pendingUser.collegeName,
-        // status,
-        // balance,
-      });
-
-      // if (member) {
-      //   res.status(201).json({
-      //     message: 'member created successfully.',
-      //   });
-      // } else {
-      //   res.status(400);
-      //   throw new Error('Invalid Member Data');
-      // }
-      // const username = () => {
-      //   return `${firstName} ${lastName}`;
-      // };
-      // console.log(member.userName);
-      const user = await models.User.create({
-        // userRole,
-        userName: pendingUser.firstName + ' ' + pendingUser.lastName,
-        email: pendingUser.email,
-        // image: '/images/sample.jpg',
-        // password: bcrypt.hashSync(password, 10),
-        password: pendingUser.password,
-      });
-
-      const userLinkedMember = await member.addUser(user);
-
-      if (user && member) {
-        await pendingUser.destroy();
-        res
-          .status(201)
-          .json(
-            'Your account has been Activated Successfully, Please login to access youraccount'
-          );
-      } else {
-        res.status(400);
-        throw new Error('Invalid User Data');
-      }
     } else {
       res.status(400);
-      throw new Error('Activation Link is Invalid');
+      throw new Error('Invalid User Data');
     }
-  } else {
-    res.status(400);
-    throw new Error('Cannot Validate User Email');
   }
 });
 
@@ -535,3 +466,14 @@ exports.deleteUser = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 });
+
+// export {
+//   authUser,
+//   getUserProfile,
+//   updateUserProfile,
+//   getUsers,
+//   getUserById,
+//   updateUser,
+//   registerUser,
+//   deleteUser,
+// };

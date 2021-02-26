@@ -6,6 +6,7 @@ import FormContainer from '../components/FormContainer';
 import { register } from '../actions/userActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
+import { USER_REGISTER_RESET } from '../constants/userConstants';
 
 const RegisterScreen = ({ location, history }) => {
   // const [username, setUsername] = useState('');
@@ -32,17 +33,16 @@ const RegisterScreen = ({ location, history }) => {
 
   const userRegister = useSelector((state) => state.userRegister);
 
-  const { loading, error, userInfo } = userRegister;
+  const { loading, error, success } = userRegister;
 
-  const redirect = location.search
-    ? location.search.split('=')[1]
-    : '/dashboard';
+  const redirect = location.search ? location.search.split('=')[1] : '/';
 
   useEffect(() => {
-    if (userInfo) {
+    if (success) {
+      dispatch({ type: USER_REGISTER_RESET });
       history.push(redirect);
     }
-  }, [history, userInfo, redirect]);
+  }, [history, success, redirect]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -81,11 +81,14 @@ const RegisterScreen = ({ location, history }) => {
           Sign Up
         </Card.Header>
         <Card.Body>
-          {message && <Message variant='danger'>{message}</Message>}
+          {/* {message && <Message variant='danger'>{message}</Message>} */}
           {error && <Message variant='danger'>{error}</Message>}
           {loading && <Loader />}
-          <Form onSubmit={submitHandler}>
-            {/* <Form.Group controlId='username'>
+          {success ? (
+            <Message variant='success'>{success}</Message>
+          ) : (
+            <Form onSubmit={submitHandler}>
+              {/* <Form.Group controlId='username'>
               <Form.Label>User Name</Form.Label>
               <Form.Control
                 type='username'
@@ -95,160 +98,161 @@ const RegisterScreen = ({ location, history }) => {
               ></Form.Control>
             </Form.Group> */}
 
-            <Form.Group controlId='firstName'>
-              <Form.Label>First Name</Form.Label>
-              <Form.Control
-                type='firstName'
-                placeholder='Please Enter Your First Name..'
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='firstName'>
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  type='firstName'
+                  placeholder='Please Enter Your First Name..'
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='mInit'>
-              <Form.Label>M. Initial</Form.Label>
-              <Form.Control
-                type='mInit'
-                placeholder=' Please Enter Your M. Initial: Mr / Ms'
-                value={mInit}
-                onChange={(e) => setMInit(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='mInit'>
+                <Form.Label>M. Initial</Form.Label>
+                <Form.Control
+                  type='mInit'
+                  placeholder=' Please Enter Your M. Initial: Mr / Ms'
+                  value={mInit}
+                  onChange={(e) => setMInit(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='lastName'>
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                type='lastName'
-                placeholder='Please Enter Your Last Name..'
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='lastName'>
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                  type='lastName'
+                  placeholder='Please Enter Your Last Name..'
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='address1'>
-              <Form.Label>Address</Form.Label>
-              <Form.Control
-                type='address1'
-                placeholder='Please Enter Address..'
-                value={address1}
-                onChange={(e) => setAddress1(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='address1'>
+                <Form.Label>Address</Form.Label>
+                <Form.Control
+                  type='address1'
+                  placeholder='Please Enter Address..'
+                  value={address1}
+                  onChange={(e) => setAddress1(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='city'>
-              <Form.Label>City</Form.Label>
-              <Form.Control
-                type='city'
-                placeholder='Enter City..'
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='city'>
+                <Form.Label>City</Form.Label>
+                <Form.Control
+                  type='city'
+                  placeholder='Enter City..'
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='state'>
-              <Form.Label>State</Form.Label>
-              <Form.Control
-                type='state'
-                placeholder='Enter State..'
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='state'>
+                <Form.Label>State</Form.Label>
+                <Form.Control
+                  type='state'
+                  placeholder='Enter State..'
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='zipcode'>
-              <Form.Label>Zipcode</Form.Label>
-              <Form.Control
-                type='zipcode'
-                placeholder='Enter Zipcode..'
-                value={zipcode}
-                onChange={(e) => setZipcode(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='zipcode'>
+                <Form.Label>Zipcode</Form.Label>
+                <Form.Control
+                  type='zipcode'
+                  placeholder='Enter Zipcode..'
+                  value={zipcode}
+                  onChange={(e) => setZipcode(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='primaryPhone'>
-              <Form.Label>Phone Number</Form.Label>
-              <Form.Control
-                type='primaryPhone'
-                placeholder='Enter Your Phone Number..'
-                value={primaryPhone}
-                onChange={(e) => setPrimaryPhone(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='primaryPhone'>
+                <Form.Label>Phone Number</Form.Label>
+                <Form.Control
+                  type='primaryPhone'
+                  placeholder='Enter Your Phone Number..'
+                  value={primaryPhone}
+                  onChange={(e) => setPrimaryPhone(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='degree'>
-              <Form.Label>Degree</Form.Label>
-              <Form.Control
-                type='degree'
-                placeholder='Enter Your Last Degree Received..'
-                value={degree}
-                onChange={(e) => setDegree(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='degree'>
+                <Form.Label>Degree</Form.Label>
+                <Form.Control
+                  type='degree'
+                  placeholder='Enter Your Last Degree Received..'
+                  value={degree}
+                  onChange={(e) => setDegree(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='degreeYear'>
-              <Form.Label>Degree Year</Form.Label>
-              <Form.Control
-                type='degreeYear'
-                placeholder='Enter The Year of Degree Awarded..'
-                value={degreeYear}
-                onChange={(e) => setDegreeYear(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='degreeYear'>
+                <Form.Label>Degree Year</Form.Label>
+                <Form.Control
+                  type='degreeYear'
+                  placeholder='Enter The Year of Degree Awarded..'
+                  value={degreeYear}
+                  onChange={(e) => setDegreeYear(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='major'>
-              <Form.Label>Major</Form.Label>
-              <Form.Control
-                type='major'
-                placeholder='Enter Your Major..'
-                value={major}
-                onChange={(e) => setMajor(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='major'>
+                <Form.Label>Major</Form.Label>
+                <Form.Control
+                  type='major'
+                  placeholder='Enter Your Major..'
+                  value={major}
+                  onChange={(e) => setMajor(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='collegeName'>
-              <Form.Label>College Name</Form.Label>
-              <Form.Control
-                type='collegeName'
-                placeholder='Enter Your University/College Name..'
-                value={collegeName}
-                onChange={(e) => setCollegeName(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='collegeName'>
+                <Form.Label>College Name</Form.Label>
+                <Form.Control
+                  type='collegeName'
+                  placeholder='Enter Your University/College Name..'
+                  value={collegeName}
+                  onChange={(e) => setCollegeName(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='email'>
-              <Form.Label>Email Address</Form.Label>
-              <Form.Control
-                type='email'
-                placeholder='Enter Email..'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='email'>
+                <Form.Label>Email Address</Form.Label>
+                <Form.Control
+                  type='email'
+                  placeholder='Enter Email..'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='password'>
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type='password'
-                placeholder='Enter password..'
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='password'>
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type='password'
+                  placeholder='Enter password..'
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Form.Group controlId='confirmPassword'>
-              <Form.Label>Confirm Password</Form.Label>
-              <Form.Control
-                type='password'
-                placeholder='Confirm password..'
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+              <Form.Group controlId='confirmPassword'>
+                <Form.Label>Confirm Password</Form.Label>
+                <Form.Control
+                  type='password'
+                  placeholder='Confirm password..'
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
-            <Button type='submit' variant='primary' block>
-              Register
-            </Button>
-          </Form>
+              <Button type='submit' variant='primary' block>
+                Register
+              </Button>
+            </Form>
+          )}
         </Card.Body>
         <Card.Footer className='text-muted'>
           <Row className='py-3'>

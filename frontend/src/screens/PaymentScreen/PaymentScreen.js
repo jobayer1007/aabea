@@ -1,4 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { PayPalButton } from 'react-paypal-button-v2';
+
 import { LinkContainer } from 'react-router-bootstrap';
 import {
   Table,
@@ -9,14 +12,73 @@ import {
   Card,
   CardDeck,
   Nav,
+  ListGroup,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
+import { getUserPaymentDetails, payUser } from '../../actions/userActions';
+import {
+  USER_PAYMENT_DETAILS_RESET,
+  USER_PAY_RESET,
+} from '../../constants/userConstants';
 // import { listUsers, deleteUser } from '../actions/userActions';
 
-const PaymentScreen = ({ history }) => {
+const PaymentScreen = ({ location, history }) => {
+  const [sdkReady, setSdkReady] = useState(false);
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const userPaymentDetails = useSelector((state) => state.userPaymentDetails);
+  const {
+    loading: paymentLoading,
+    error: paymentErrors,
+    payments,
+  } = userPaymentDetails;
+
+  const userPay = useSelector((state) => state.userPay);
+  const { loading: loadingPay, success: successPay } = userPay;
+
+  useEffect(() => {
+    if (!userInfo) {
+      history.push('/login');
+    } else {
+      // dispatch(getUserPaymentDetails());
+      // dispatch({ type: USER_PAYMENT_DETAILS_RESET });
+
+      const addPaypalScript = async () => {
+        const { data: clientId } = await axios.get('/api/config/paypal');
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+        script.async = true;
+        script.onload = () => {
+          setSdkReady(true);
+        };
+        document.body.appendChild(script);
+      };
+
+      if (!payments || successPay) {
+        dispatch({ type: USER_PAY_RESET });
+        dispatch(getUserPaymentDetails());
+        // dispatch({ type: USER_PAYMENT_DETAILS_RESET });
+      }
+      if (!window.paypal) {
+        addPaypalScript();
+      } else {
+        setSdkReady(true);
+      }
+    }
+  }, [history, dispatch, userInfo, successPay, payments]);
+
+  const successPaymentHandler = (paymentResult) => {
+    console.log(paymentResult);
+    dispatch(payUser(userInfo.memberId, paymentResult));
+  };
+
   return (
     <>
       <Row className='content'>
@@ -80,6 +142,46 @@ const PaymentScreen = ({ history }) => {
         >
           <Card className='text-center' border='primary'>
             <Card.Header as='h2'>Payment Screen</Card.Header>
+            {paymentLoading ? (
+              <Loader />
+            ) : paymentErrors ? (
+              <Message variant='danger'>{paymentErrors}</Message>
+            ) : (
+              <Table striped bordered hover responsive className='table-sm'>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Payment Type</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {payments.map((payment) => (
+                    <tr key={payment.id}>
+                      <td>{payment.id}</td>
+                      <td>{payment.paymentType}</td>
+                      <td>{payment.amount}</td>
+                      <td>{payment.paymentDate.substring(0, 10)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            )}
+
+            <ListGroup variant='flush'>
+              <ListGroup.Item>
+                {loadingPay && <Loader />}
+                {!sdkReady ? (
+                  <Loader />
+                ) : (
+                  <PayPalButton
+                    amount={25.0}
+                    onSuccess={successPaymentHandler}
+                  />
+                )}
+              </ListGroup.Item>
+            </ListGroup>
           </Card>
         </Col>
       </Row>

@@ -7,10 +7,15 @@ const {
   authUser,
   getUserProfile,
   registerUser,
+  verifyUserEmail,
   deleteUser,
   updateUserProfile,
   updateUser,
 } = require('../controllers/userController');
+const {
+  getUserPaymentDetails,
+  updatePaymentToPaid,
+} = require('../controllers/paymentController');
 
 router.post('/login', authUser);
 router
@@ -18,7 +23,12 @@ router
   .get(protect, getUserProfile)
   .put(protect, updateUserProfile);
 
+// USER's Payment
+router.route('/payment').get(protect, getUserPaymentDetails);
+router.route('/:id/pay').post(protect, updatePaymentToPaid);
+
 router.route('/register').post(registerUser);
+router.route('/activate/:hash').post(verifyUserEmail);
 router.route('/dashboard').get(protect, getUsers);
 router
   .route('/:id')

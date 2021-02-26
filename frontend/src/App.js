@@ -11,77 +11,79 @@ import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
 import UserListScreen from './screens/UserListScreen';
 import UserEditScreen from './screens/UserEditScreen';
 // imort for sidebar experiment
-import Sidebar from './components/Sidebar/Sidebar';
-import MainScreen from './screens/MainScreen';
+// import Sidebar from './components/Sidebar/Sidebar';
+// import MainScreen from './screens/MainScreen';
 import PaymentScreen from './screens/PaymentScreen/PaymentScreen';
 import DonateScreen from './screens/DonateScreen/DonateScreen';
 import TrainingScreen from './screens/TrainingScreen/TrainingScreen';
 import CommittieesScreen from './screens/CommitteesScreen/CommitteesScreen';
-import Navbar from './components/Navbar/Navbar';
+// import Navbar from './components/Navbar/Navbar';
+import EmailActivationScreen from './screens/EmailActivationScreen/EmailActivationScreen';
+import verifyUserEmail from './screens/EmailActivationScreen/[hash]';
 
 const App = () => {
-  const backgroundImage = 'images/mountain.jpg';
-  const logoImage = 'images/logoImage.png';
-  const sidebarHeader = {
-    fullName: 'AABEA',
-    shortName: 'aabea',
-  };
-  const menuItems = [
-    {
-      name: 'Payment',
-      to: '/payment',
-      icon: 'icons/home.svg',
-      subMenuItems: [],
-    },
-    {
-      name: 'Donate',
-      to: '/donate',
-      icon: 'icons/about.svg',
-      subMenuItems: [],
-    },
-    {
-      name: 'Training',
-      to: '/training',
-      icon: 'icons/blog.svg',
-      subMenuItems: [],
-    },
-    {
-      name: 'Committiees',
-      to: '/committiees',
-      icon: 'icons/services.svg',
-      subMenuItems: [],
-    },
-    {
-      name: 'Destinations',
-      to: '/destinations',
-      icon: 'icons/destinations.svg',
-      subMenuItems: [
-        { name: 'Canada', to: '/canada' },
-        { name: 'Brazil', to: '/brazil' },
-        { name: 'India', to: '/India' },
-        { name: 'Aunstralia', to: '/australia' },
-        { name: 'Bangladesh', to: '/bangladesh' },
-        { name: 'china', to: '/china' },
-      ],
-    },
-    {
-      name: 'Contacts',
-      to: '/contacts',
-      icon: 'icons/contacts.svg',
-      subMenuItems: [],
-    },
-  ];
+  // const backgroundImage = 'images/mountain.jpg';
+  // const logoImage = 'images/logoImage.png';
+  // const sidebarHeader = {
+  //   fullName: 'AABEA',
+  //   shortName: 'aabea',
+  // };
+  // const menuItems = [
+  //   {
+  //     name: 'Payment',
+  //     to: '/payment',
+  //     icon: 'icons/home.svg',
+  //     subMenuItems: [],
+  //   },
+  //   {
+  //     name: 'Donate',
+  //     to: '/donate',
+  //     icon: 'icons/about.svg',
+  //     subMenuItems: [],
+  //   },
+  //   {
+  //     name: 'Training',
+  //     to: '/training',
+  //     icon: 'icons/blog.svg',
+  //     subMenuItems: [],
+  //   },
+  //   {
+  //     name: 'Committiees',
+  //     to: '/committiees',
+  //     icon: 'icons/services.svg',
+  //     subMenuItems: [],
+  //   },
+  //   {
+  //     name: 'Destinations',
+  //     to: '/destinations',
+  //     icon: 'icons/destinations.svg',
+  //     subMenuItems: [
+  //       { name: 'Canada', to: '/canada' },
+  //       { name: 'Brazil', to: '/brazil' },
+  //       { name: 'India', to: '/India' },
+  //       { name: 'Aunstralia', to: '/australia' },
+  //       { name: 'Bangladesh', to: '/bangladesh' },
+  //       { name: 'china', to: '/china' },
+  //     ],
+  //   },
+  //   {
+  //     name: 'Contacts',
+  //     to: '/contacts',
+  //     icon: 'icons/contacts.svg',
+  //     subMenuItems: [],
+  //   },
+  // ];
 
-  const fonts = {
-    header: 'Reggae One',
-    menu: 'Poppins',
-  };
+  // const fonts = {
+  //   header: 'Reggae One',
+  //   menu: 'Poppins',
+  // };
 
   return (
     <>
       <Router>
         {/* Experiment Start */}
-        <S.App>
+        {/* <S.App>
           <Navbar logoImage={logoImage} />
           <Sidebar
             backgroundImage={backgroundImage}
@@ -90,7 +92,7 @@ const App = () => {
             fonts={fonts}
           />
           <MainScreen />
-        </S.App>
+        </S.App> */}
         {/* Experiment above */}
         <Header />
         <main className='py-3'>
@@ -99,6 +101,8 @@ const App = () => {
             {/* {HideSidebar} */}
             <Route path='/login' component={LoginScreen} />
             <Route path='/register' component={RegisterScreen} />
+            {/* <Route path='/users/activate/:hash' component={verifyUserEmail} /> */}
+            <Route path='/activate/:hash' component={EmailActivationScreen} />
             <Route path='/dashboardScreen' component={UserListScreen} />
             <Route path='/dashboard' component={DashboardScreen} />
             <Route path='/payment' component={PaymentScreen} />
