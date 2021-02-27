@@ -15,6 +15,8 @@ const {
 const {
   getUserPaymentDetails,
   updatePaymentToPaid,
+  memberDonation,
+  getUserDonationDetails,
 } = require('../controllers/paymentController');
 
 router.post('/login', authUser);
@@ -26,6 +28,8 @@ router
 // USER's Payment
 router.route('/payment').get(protect, getUserPaymentDetails);
 router.route('/:id/pay').post(protect, updatePaymentToPaid);
+router.route('/donate').get(protect, getUserDonationDetails);
+router.route('/:id/donate').post(protect, memberDonation);
 
 router.route('/register').post(registerUser);
 router.route('/activate/:hash').post(verifyUserEmail);

@@ -70,8 +70,9 @@ sequelize
 // //Models/tables
 db.User = require('../models/User')(sequelize, Sequelize);
 db.Member = require('../models/Member')(sequelize, Sequelize);
-db.Payment = require('../models/Payment')(sequelize, Sequelize);
 db.PendingRegister = require('../models/PendingRegister')(sequelize, Sequelize);
+db.Payment = require('../models/Payment')(sequelize, Sequelize);
+db.Donation = require('../models/Donation')(sequelize, Sequelize);
 
 // //Model relationships
 db.User.belongsTo(db.Member, { foreignKey: 'memberId' });
@@ -80,21 +81,7 @@ db.Member.hasMany(db.User, { foreignKey: 'memberId' });
 db.Payment.belongsTo(db.Member, { foreignKey: 'memberId' });
 db.Member.hasMany(db.Payment, { foreignKey: 'memberId' });
 
-// //Model relationships
-// User.belongsTo(Member, { foreignKey: 'userId' });
-// Member.hasMany(User, { foreignKey: 'userId' });
-
-// Payment.belongsTo(Member, { foreignKey: 'memberId' });
-// Member.hasMany(Payment, { foreignKey: 'memberId' });
-
-// const syncStatus = true;
-
-// db.sync({ force: syncStatus }).then(() => {
-//   //   //if  (syncStatus) {
-//   //   //defaultValueManager.Generate(syncStatus);
-//   //   // }
-
-//   console.log('initial synced'.yellow.underline);
-// });
+db.Donation.belongsTo(db.Member, { foreignKey: 'memberId' });
+db.Member.hasMany(db.Donation, { foreignKey: 'memberId' });
 
 module.exports = db;

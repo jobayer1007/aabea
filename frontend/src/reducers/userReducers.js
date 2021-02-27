@@ -6,6 +6,14 @@ import {
   USER_DETAILS_REQUEST,
   USER_DETAILS_RESET,
   USER_DETAILS_SUCCESS,
+  USER_DONATE_FAIL,
+  USER_DONATE_REQUEST,
+  USER_DONATE_RESET,
+  USER_DONATE_SUCCESS,
+  USER_DONATION_DETAILS_FAIL,
+  USER_DONATION_DETAILS_REQUEST,
+  USER_DONATION_DETAILS_RESET,
+  USER_DONATION_DETAILS_SUCCESS,
   USER_EMAIL_VERIFY_FAIL,
   USER_EMAIL_VERIFY_REQUEST,
   USER_EMAIL_VERIFY_RESET,
@@ -194,6 +202,45 @@ export const userEmailVerificationReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case USER_EMAIL_VERIFY_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const userDonateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_DONATE_REQUEST:
+      return { loading: true };
+    case USER_DONATE_SUCCESS:
+      return { loading: false, success: true };
+
+    case USER_DONATE_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_DONATE_RESET:
+      return {};
+
+    default:
+      return state;
+  }
+};
+
+export const userDonationDetailsReducer = (
+  state = { donations: [] },
+  action
+) => {
+  switch (action.type) {
+    case USER_DONATION_DETAILS_REQUEST:
+      return { loading: true };
+    case USER_DONATION_DETAILS_SUCCESS:
+      return { loading: false, donations: action.payload };
+
+    case USER_DONATION_DETAILS_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_DONATION_DETAILS_RESET:
+      return {
+        donations: [],
+      };
+
     default:
       return state;
   }

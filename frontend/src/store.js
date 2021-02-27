@@ -4,6 +4,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import {
   userDeleteReducer,
   userDetailsReducer,
+  userDonateReducer,
+  userDonationDetailsReducer,
   userEmailVerificationReducer,
   userListReducer,
   userLoginReducer,
@@ -27,6 +29,8 @@ const reducer = combineReducers({
 
   userPaymentDetails: userPaymentDetailsReducer,
   userPay: userPayReducer,
+  userDonate: userDonateReducer,
+  userDonateDetails: userDonationDetailsReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

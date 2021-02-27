@@ -8,6 +8,12 @@ import {
   USER_DETAILS_REQUEST,
   USER_DETAILS_RESET,
   USER_DETAILS_SUCCESS,
+  USER_DONATE_FAIL,
+  USER_DONATE_REQUEST,
+  USER_DONATE_SUCCESS,
+  USER_DONATION_DETAILS_FAIL,
+  USER_DONATION_DETAILS_REQUEST,
+  USER_DONATION_DETAILS_SUCCESS,
   USER_EMAIL_VERIFY_FAIL,
   USER_EMAIL_VERIFY_REQUEST,
   USER_EMAIL_VERIFY_SUCCESS,
@@ -409,6 +415,75 @@ export const verifyUserEmail = (hash, email) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_EMAIL_VERIFY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const donateUser = (id, paymentResult) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_DONATE_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(
+      `/api/users/${id}/donate`,
+      paymentResult,
+      config
+    );
+
+    dispatch({
+      type: USER_DONATE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_DONATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getUserDonationDetails = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_DONATION_DETAILS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/users/donate`, config);
+
+    dispatch({
+      type: USER_DONATION_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_DONATION_DETAILS_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
