@@ -1,12 +1,5 @@
 const Sequelize = require('sequelize');
-const fs = require('fs');
-const path = require('path');
 const dotenv = require('dotenv');
-const basename = path.basename(module.filename);
-
-const User = require('../models/User');
-const Member = require('../models/Member');
-const Payment = require('../models/Payment');
 
 dotenv.config();
 

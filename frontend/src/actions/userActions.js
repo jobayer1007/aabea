@@ -1,6 +1,9 @@
 import axios from 'axios';
 
 import {
+  USER_APPROVE_FAIL,
+  USER_APPROVE_REQUEST,
+  USER_APPROVE_SUCCESS,
   USER_DELETE_FAIL,
   USER_DELETE_REQUEST,
   USER_DELETE_SUCCESS,
@@ -32,6 +35,12 @@ import {
   USER_PAY_FAIL,
   USER_PAY_REQUEST,
   USER_PAY_SUCCESS,
+  USER_PENDING_DETAILS_FAIL,
+  USER_PENDING_DETAILS_REQUEST,
+  USER_PENDING_DETAILS_SUCCESS,
+  USER_PENDING_LIST_FAIL,
+  USER_PENDING_LIST_REQUEST,
+  USER_PENDING_LIST_SUCCESS,
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_RESET,
@@ -484,6 +493,108 @@ export const getUserDonationDetails = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_DONATION_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listPendingUsers = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_PENDING_LIST_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/users/pending`, config);
+    dispatch({ type: USER_DETAILS_RESET });
+
+    dispatch({
+      type: USER_PENDING_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_PENDING_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getPendingUserDetails = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_PENDING_DETAILS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(
+      `/api/users/${id}/pending`,
+
+      config
+    );
+
+    dispatch({
+      type: USER_PENDING_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_PENDING_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const approveUser = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_APPROVE_REQUEST,
+    });
+    console.log(id);
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(`/api/users/${id}/pending`, config);
+
+    dispatch({ type: USER_APPROVE_SUCCESS });
+
+    dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_APPROVE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

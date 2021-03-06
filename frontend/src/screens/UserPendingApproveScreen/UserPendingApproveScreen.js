@@ -3,14 +3,22 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import FormContainer from '../components/FormContainer';
-import { getUserDetails, updateUser } from '../actions/userActions';
-import { USER_UPDATE_RESET } from '../constants/userConstants';
-import Message from '../components/Message';
-import Loader from '../components/Loader';
+import FormContainer from '../../components/FormContainer';
+import {
+  approveUser,
+  getPendingUserDetails,
+  getUserDetails,
+  updateUser,
+} from '../../actions/userActions';
+import {
+  USER_APPROVE_RESET,
+  USER_UPDATE_RESET,
+} from '../../constants/userConstants';
+import Message from '../../components/Message';
+import Loader from '../../components/Loader';
 
-const UserEditScreen = ({ match, history }) => {
-  const memberId = match.params.id;
+const UserPendingApproveScreen = ({ match, history }) => {
+  const pendingId = match.params.id;
 
   const [firstName, setFirstName] = useState('');
   const [mInit, setMInit] = useState('');
@@ -35,50 +43,50 @@ const UserEditScreen = ({ match, history }) => {
 
   const dispatch = useDispatch();
 
-  const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails;
+  const userPendingDetails = useSelector((state) => state.userPendingDetails);
+  const { loading, error, pendingUser } = userPendingDetails;
 
-  const userUpdate = useSelector((state) => state.userUpdate);
+  const userApprove = useSelector((state) => state.userApprove);
   const {
-    loading: loadingUpdate,
-    error: errorUpdate,
-    success: successUpdate,
-  } = userUpdate;
+    loading: loadingApprove,
+    error: errorApprove,
+    success: successApprove,
+  } = userApprove;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    if (successUpdate) {
-      dispatch({ type: USER_UPDATE_RESET });
-      history.push('/dashboard');
+    if (successApprove) {
+      dispatch({ type: USER_APPROVE_RESET });
+      history.push('/systemAdmin');
     } else {
-      if (!user.memberId) {
-        console.log(memberId);
-        dispatch(getUserDetails(memberId));
+      if (!pendingUser.pendingId) {
+        console.log(pendingId);
+        dispatch(getPendingUserDetails(pendingId));
       } else {
-        setFirstName(user.firstName);
-        setMInit(user.mInit);
-        setLastName(user.lastName);
-        setAddress1(user.address1);
-        setAddress2(user.address2);
-        setCity(user.city);
-        setState(user.state);
-        setZipcode(user.zipcode);
-        setPrimaryPhone(user.primaryPhone);
-        setAlternatePhone(user.alternatePhone);
-        setDegree(user.degree);
-        setDegreeYear(user.degreeYear);
-        setMajor(user.major);
-        setCollegeName(user.collegeName);
-        setEmail(user.primaryEmail);
-        setAlternateEmail(user.alternateEmail);
-        setImage(user.image);
-        setUserRole(user.userRole);
-        setStatus(user.status);
+        setFirstName(pendingUser.firstName);
+        setMInit(pendingUser.mInit);
+        setLastName(pendingUser.lastName);
+        setAddress1(pendingUser.address1);
+        setAddress2(pendingUser.address2);
+        setCity(pendingUser.city);
+        setState(pendingUser.state);
+        setZipcode(pendingUser.zipcode);
+        setPrimaryPhone(pendingUser.primaryPhone);
+        setAlternatePhone(pendingUser.alternatePhone);
+        setDegree(pendingUser.degree);
+        setDegreeYear(pendingUser.degreeYear);
+        setMajor(pendingUser.major);
+        setCollegeName(pendingUser.collegeName);
+        setEmail(pendingUser.primaryEmail);
+        setAlternateEmail(pendingUser.alternateEmail);
+        setImage(pendingUser.image);
+        setUserRole(pendingUser.userRole);
+        setStatus(pendingUser.status);
       }
     }
-  }, [dispatch, history, user, memberId, successUpdate]);
+  }, [dispatch, history, pendingUser, pendingId, successApprove]);
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
@@ -105,29 +113,8 @@ const UserEditScreen = ({ match, history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    dispatch(
-      updateUser({
-        id: memberId,
-        image,
-        userRole,
-        firstName,
-        mInit,
-        lastName,
-        address1,
-        address2,
-        city,
-        state,
-        zipcode,
-        alternateEmail,
-        primaryPhone,
-        alternatePhone,
-        degree,
-        degreeYear,
-        major,
-        collegeName,
-        status,
-      })
-    );
+    dispatch(approveUser(pendingId));
+    // history.push('/systemAdmin');
   };
 
   return (
@@ -151,11 +138,11 @@ const UserEditScreen = ({ match, history }) => {
       <FormContainer>
         <Card border='primary'>
           <Card.Header className='text-center' as='h2'>
-            Edit User
+            Approve User
           </Card.Header>
           <Card.Body>
-            {loadingUpdate && <Loader />}
-            {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
+            {loadingApprove && <Loader />}
+            {errorApprove && <Message variant='danger'>{errorApprove}</Message>}
             {loading ? (
               <Loader />
             ) : error ? (
@@ -169,6 +156,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Please Enter Your First Name..'
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -179,6 +167,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder=' Please Enter Your M. Initial: Mr / Ms'
                     value={mInit}
                     onChange={(e) => setMInit(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -189,6 +178,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Please Enter Your Last Name..'
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -199,6 +189,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Please Enter Address..'
                     value={address1}
                     onChange={(e) => setAddress1(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -209,6 +200,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Please Enter Address..'
                     value={address2}
                     onChange={(e) => setAddress2(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -219,6 +211,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Enter City..'
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -229,6 +222,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Enter State..'
                     value={state}
                     onChange={(e) => setState(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -239,6 +233,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Enter Zipcode..'
                     value={zipcode}
                     onChange={(e) => setZipcode(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -249,6 +244,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Enter Your Phone Number..'
                     value={primaryPhone}
                     onChange={(e) => setPrimaryPhone(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -259,6 +255,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Enter additional Phone Number..'
                     value={alternatePhone}
                     onChange={(e) => setAlternatePhone(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -269,6 +266,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Enter Your Last Degree Received..'
                     value={degree}
                     onChange={(e) => setDegree(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -279,6 +277,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Enter The Year of Degree Awarded..'
                     value={degreeYear}
                     onChange={(e) => setDegreeYear(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -289,6 +288,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Enter Your Major..'
                     value={major}
                     onChange={(e) => setMajor(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -299,6 +299,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Enter Your University/College Name..'
                     value={collegeName}
                     onChange={(e) => setCollegeName(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -320,6 +321,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Enter another Email..'
                     value={alternateEmail}
                     onChange={(e) => setAlternateEmail(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -330,6 +332,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Enter image url..'
                     value={image}
                     onChange={(e) => setImage(e.target.value)}
+                    readOnly
                   ></Form.Control>
                   <Form.File
                     id='image-file'
@@ -347,6 +350,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='Member Status: active/inactive/pending'
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -357,6 +361,7 @@ const UserEditScreen = ({ match, history }) => {
                     placeholder='User Role: admin/member/systemAdmin'
                     value={userRole}
                     onChange={(e) => setUserRole(e.target.value)}
+                    readOnly
                   ></Form.Control>
                 </Form.Group>
 
@@ -371,7 +376,7 @@ const UserEditScreen = ({ match, history }) => {
                 {/* </Form.Group> */}
 
                 <Button type='submit' variant='primary' block>
-                  Update
+                  APPROVE
                 </Button>
               </Form>
             )}
@@ -383,4 +388,4 @@ const UserEditScreen = ({ match, history }) => {
   );
 };
 
-export default UserEditScreen;
+export default UserPendingApproveScreen;

@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const generateUniqueId = require('generate-unique-id');
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
@@ -44,11 +45,17 @@ fs.readdirSync(__dirname)
   });
 
 Object.keys(db).forEach((modelName) => {
-  console.log('Model name :', modelName);
+  console.log('Model name :'.cyan.underline, modelName.green.underline);
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
+
+const id = generateUniqueId({
+  length: 32,
+  useLetters: false,
+});
+console.log(id);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
@@ -68,15 +75,27 @@ sequelize
 // db.sequelize = sequelize;
 
 // //Models/tables
+db.Chapter = require('../models/Chapter')(sequelize, Sequelize);
+db.Role = require('../models/Role')(sequelize, Sequelize);
 db.User = require('../models/User')(sequelize, Sequelize);
 db.Member = require('../models/Member')(sequelize, Sequelize);
 db.PendingRegister = require('../models/PendingRegister')(sequelize, Sequelize);
 db.Payment = require('../models/Payment')(sequelize, Sequelize);
 db.Donation = require('../models/Donation')(sequelize, Sequelize);
 
-// //Model relationships
+//Model relationships
+
+// CHAPTER RELATION
+db.Chapter.hasMany(db.Member, { foreignKey: 'chapterId' });
+db.Member.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+// ROLE RELATION
+db.Chapter.hasMany(db.Role, { foreignKey: 'chapterId' });
+db.Role.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+// // db.User.belongsTo(db.Member);
 db.User.belongsTo(db.Member, { foreignKey: 'memberId' });
 db.Member.hasMany(db.User, { foreignKey: 'memberId' });
+// // db.Member.hasMany(db.User);
 
 db.Payment.belongsTo(db.Member, { foreignKey: 'memberId' });
 db.Member.hasMany(db.Payment, { foreignKey: 'memberId' });

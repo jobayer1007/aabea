@@ -7,6 +7,8 @@ import FormContainer from '../../components/FormContainer';
 import { verifyUserEmail } from '../../actions/userActions';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
+import swal from 'sweetalert';
+import { USER_EMAIL_VERIFY_RESET } from '../../constants/userConstants';
 
 const EmailActivationScreen = ({ location, match, history }) => {
   const { hash } = match.params;
@@ -16,7 +18,6 @@ const EmailActivationScreen = ({ location, match, history }) => {
   const dispatch = useDispatch();
 
   const userEmailVerify = useSelector((state) => state.userEmailVerify);
-
   const { loading, error, success } = userEmailVerify;
 
   const redirect = location.search
@@ -27,8 +28,18 @@ const EmailActivationScreen = ({ location, match, history }) => {
     if (!hash) {
       history.push(redirect);
     } else {
+      // if (success) {
+      //   history.push(redirect);
+      // }
       if (success) {
-        history.push(redirect);
+        console.log(success);
+        swal('Success!', success, 'success').then((value) => {
+          dispatch({ type: USER_EMAIL_VERIFY_RESET });
+          history.push(redirect);
+        });
+      } else if (error) {
+        console.log(error);
+        swal('Error!', error, 'error');
       }
     }
   }, [history, hash, success, redirect]);
@@ -50,7 +61,7 @@ const EmailActivationScreen = ({ location, match, history }) => {
           as='h2'
           style={{ color: '#033c73' }}
         >
-          Activate Your Account
+          Verify Your Account
         </Card.Header>
         <Card.Body>
           {error && <Message variant='danger'>{error}</Message>}

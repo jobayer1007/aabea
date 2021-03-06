@@ -11,6 +11,10 @@ const {
   deleteUser,
   updateUserProfile,
   updateUser,
+  getPendingUsers,
+  getPendingUserById,
+  approveUser,
+  registerSystemAdmin,
 } = require('../controllers/userController');
 const {
   getUserPaymentDetails,
@@ -33,11 +37,10 @@ router.route('/:id/donate').post(protect, memberDonation);
 
 router.route('/register').post(registerUser);
 router.route('/activate/:hash').post(verifyUserEmail);
+router.route('/pending').get(getPendingUsers);
+router.route('/:id/pending').get(getPendingUserById).post(approveUser);
 router.route('/dashboard').get(protect, getUsers);
-router
-  .route('/:id')
-  .get(protect, admin, getUserById)
-  .put(protect, admin, updateUser);
+router.route('/:id').get(getUserById).put(updateUser);
 router.route('/:id').delete(protect, admin, deleteUser);
 
 // Add a User/////////////////////////////////////////////////
@@ -45,5 +48,8 @@ router.route('/:id').delete(protect, admin, deleteUser);
 // Update a User///////////////////////////////////////////////////////
 
 // Delete an User//////////////////////////////////////////
+
+// DEV Only: Register SystemAdmin////////////////////////////
+router.route('/register/systemAdmin').post(registerSystemAdmin);
 
 module.exports = router;

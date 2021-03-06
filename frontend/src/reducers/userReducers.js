@@ -1,4 +1,8 @@
 import {
+  USER_APPROVE_FAIL,
+  USER_APPROVE_REQUEST,
+  USER_APPROVE_RESET,
+  USER_APPROVE_SUCCESS,
   USER_DELETE_FAIL,
   USER_DELETE_REQUEST,
   USER_DELETE_SUCCESS,
@@ -34,6 +38,14 @@ import {
   USER_PAY_REQUEST,
   USER_PAY_RESET,
   USER_PAY_SUCCESS,
+  USER_PENDING_DETAILS_FAIL,
+  USER_PENDING_DETAILS_REQUEST,
+  USER_PENDING_DETAILS_RESET,
+  USER_PENDING_DETAILS_SUCCESS,
+  USER_PENDING_LIST_FAIL,
+  USER_PENDING_LIST_REQUEST,
+  USER_PENDING_LIST_RESET,
+  USER_PENDING_LIST_SUCCESS,
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_RESET,
@@ -241,6 +253,63 @@ export const userDonationDetailsReducer = (
         donations: [],
       };
 
+    default:
+      return state;
+  }
+};
+
+export const userPendingListReducer = (
+  state = { pendingUsers: [] },
+  action
+) => {
+  switch (action.type) {
+    case USER_PENDING_LIST_REQUEST:
+      return { loading: true };
+    case USER_PENDING_LIST_SUCCESS:
+      return { loading: false, pendingUsers: action.payload };
+    case USER_PENDING_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_PENDING_LIST_RESET:
+      return { pendingUsers: [] };
+    default:
+      return state;
+  }
+};
+
+export const userPendingDetailsReducer = (
+  state = { pendingUser: {} },
+  action
+) => {
+  switch (action.type) {
+    case USER_PENDING_DETAILS_REQUEST:
+      return { ...state, loading: true };
+    case USER_PENDING_DETAILS_SUCCESS:
+      return { loading: false, pendingUser: action.payload };
+
+    case USER_PENDING_DETAILS_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_PENDING_DETAILS_RESET:
+      return {
+        pendingUser: {},
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const userApproveReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case USER_APPROVE_REQUEST:
+      return { loading: true };
+    case USER_APPROVE_SUCCESS:
+      return { loading: false, success: true };
+    case USER_APPROVE_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_APPROVE_RESET:
+      return {
+        user: {},
+      };
     default:
       return state;
   }

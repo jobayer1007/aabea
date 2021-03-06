@@ -20,6 +20,8 @@ import CommittieesScreen from './screens/CommitteesScreen/CommitteesScreen';
 // import Navbar from './components/Navbar/Navbar';
 import EmailActivationScreen from './screens/EmailActivationScreen/EmailActivationScreen';
 import verifyUserEmail from './screens/EmailActivationScreen/[hash]';
+import SystemAdminScreen from './screens/SystemAdminScreen/SystemAdminScreen';
+import UserPendingApproveScreen from './screens/UserPendingApproveScreen/UserPendingApproveScreen';
 
 const App = () => {
   // const backgroundImage = 'images/mountain.jpg';
@@ -105,10 +107,15 @@ const App = () => {
             <Route path='/activate/:hash' component={EmailActivationScreen} />
             <Route path='/dashboardScreen' component={UserListScreen} />
             <Route path='/dashboard' component={DashboardScreen} />
+            <Route path='/systemAdmin' component={SystemAdminScreen} />
             <Route path='/payment' component={PaymentScreen} />
             <Route path='/donate' component={DonateScreen} />
             <Route path='/training' component={TrainingScreen} />
             <Route path='/committiees' component={CommittieesScreen} />
+            <Route
+              path='/users/:id/pending'
+              component={UserPendingApproveScreen}
+            />
             <Route path='/users/:id/edit' component={UserEditScreen} />
             <Route path='/' component={HomeScreen} exact />
           </Container>

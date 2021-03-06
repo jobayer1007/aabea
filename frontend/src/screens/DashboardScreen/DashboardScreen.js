@@ -116,7 +116,7 @@ const DashboardScreen = ({ history }) => {
                 <Card className='text-center' border='primary'>
                   <Card.Header as='h5' className='text-info'>
                     {userInfo ? (
-                      userInfo.status === 'active' ? (
+                      userInfo.status == 'active' ? (
                         <span>
                           Memeber Status:{' '}
                           <i
@@ -228,8 +228,8 @@ const DashboardScreen = ({ history }) => {
 
                         <tbody>
                           {users.map((user) => (
-                            <tr key={user.userId}>
-                              <td>{user.userId}</td>
+                            <tr key={user.memberId}>
+                              <td>{user.memberId}</td>
                               <td>
                                 {' '}
                                 <Image src={user.image} thumbnail />
@@ -242,7 +242,8 @@ const DashboardScreen = ({ history }) => {
                                 </a>
                               </td>
                               <td>
-                                {user.userRole === 'admin' ? (
+                                {user.userRole === 'admin' ||
+                                user.userRole === 'systemAdmin' ? (
                                   <i
                                     className='fas fa-check'
                                     style={{ color: 'green' }}
@@ -270,7 +271,7 @@ const DashboardScreen = ({ history }) => {
                               {userInfo.userRole === 'admin' && (
                                 <td>
                                   <LinkContainer
-                                    to={`/users/${user.userId}/edit`}
+                                    to={`/users/${user.memberId}/edit`}
                                   >
                                     <Button variant='light' className='btn-sm'>
                                       <i className='fas fa-edit'></i>

@@ -7,6 +7,7 @@ import { register } from '../actions/userActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { USER_REGISTER_RESET } from '../constants/userConstants';
+import swal from 'sweetalert';
 
 const RegisterScreen = ({ location, history }) => {
   // const [username, setUsername] = useState('');
@@ -38,11 +39,22 @@ const RegisterScreen = ({ location, history }) => {
   const redirect = location.search ? location.search.split('=')[1] : '/';
 
   useEffect(() => {
+    // if (success) {
+    //   dispatch({ type: USER_REGISTER_RESET });
+    //   history.push(redirect);
+    // }
+
     if (success) {
-      dispatch({ type: USER_REGISTER_RESET });
-      history.push(redirect);
+      console.log(success);
+      swal('Success!', success, 'success').then((value) => {
+        dispatch({ type: USER_REGISTER_RESET });
+        history.push(redirect);
+      });
+    } else if (error) {
+      console.log(error);
+      swal('Error!', error, 'error');
     }
-  }, [history, success, redirect]);
+  }, [history, success, redirect, error]);
 
   const submitHandler = (e) => {
     e.preventDefault();

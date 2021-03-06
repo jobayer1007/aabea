@@ -3,18 +3,28 @@ const sequelize = new Sequelize(
   'postgres://postgres:1007Jobayer@localhost:5432/aabeav2'
 );
 const db = require('../config/db');
+const Member = require('./Member');
 
 // const userTypes = ['admin', 'member', 'systemAdmin'];
 
 const User = (sequelize, DataTypes) =>
   sequelize.define('user', {
-    userId: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+    // userId: {
+    //   type: DataTypes.UUID,
+    //   defaultValue: DataTypes.UUIDV4,
+    //   allowNull: false,
+    //   notEmpty: true,
+    //   primaryKey: true,
+    //   required: true,
+    // },
+    memberId: {
+      //email will be used as member id
+      type: DataTypes.BIGINT,
+
+      // defaultValue: Sequelize.literal('uuid_generate_v4()'),
       allowNull: false,
-      notEmpty: true,
       primaryKey: true,
-      required: true,
+      notEmpty: true,
     },
     userName: {
       type: DataTypes.STRING,
@@ -28,9 +38,7 @@ const User = (sequelize, DataTypes) =>
       required: true,
       unique: true,
       validate: {
-        isEmail: {
-          msg: 'Must be a valid email address',
-        },
+        isEmail: true,
       },
     },
     password: {
@@ -44,6 +52,7 @@ const User = (sequelize, DataTypes) =>
       required: true,
       defaultValue: 'member',
       allowNull: false,
+      unique: 'compositeKey',
       values: ['admin', 'member', 'systemAdmin'],
     },
     last_login: {

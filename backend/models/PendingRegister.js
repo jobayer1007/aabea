@@ -73,9 +73,7 @@ const PendingRegister = (sequelize, DataTypes) =>
       required: true,
       unique: true,
       validate: {
-        isEmail: {
-          msg: 'Must be a valid email address',
-        },
+        isEmail: true,
       },
     },
     password: {

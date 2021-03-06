@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import {
+  userApproveReducer,
   userDeleteReducer,
   userDetailsReducer,
   userDonateReducer,
@@ -11,10 +12,17 @@ import {
   userLoginReducer,
   userPaymentDetailsReducer,
   userPayReducer,
+  userPendingDetailsReducer,
+  userPendingListReducer,
   userRegisterReducer,
   userUpdateProfileReducer,
   userUptadeReducer,
 } from './reducers/userReducers';
+import {
+  chapterDeleteReducer,
+  chapterListReducer,
+  chapterRegisterReducer,
+} from './reducers/chapterReducers';
 
 const reducer = combineReducers({
   userLogin: userLoginReducer,
@@ -24,6 +32,10 @@ const reducer = combineReducers({
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
 
+  userPendingList: userPendingListReducer,
+  userPendingDetails: userPendingDetailsReducer,
+  userApprove: userApproveReducer,
+
   userDelete: userDeleteReducer,
   userUpdate: userUptadeReducer,
 
@@ -31,6 +43,10 @@ const reducer = combineReducers({
   userPay: userPayReducer,
   userDonate: userDonateReducer,
   userDonateDetails: userDonationDetailsReducer,
+
+  chapterRegister: chapterRegisterReducer,
+  chapterList: chapterListReducer,
+  chapterDelete: chapterDeleteReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

@@ -1,4 +1,5 @@
 const { Sequelize, DataTypes, NOW } = require('sequelize');
+const User = require('./User');
 // const sequelize = new Sequelize('sqlite::memory:');
 const sequelize = new Sequelize(
   'postgres://postgres:1007Jobayer@localhost:5432/aabeav2'
@@ -11,13 +12,18 @@ const Member = (sequelize, DataTypes) =>
   sequelize.define('member', {
     memberId: {
       //email will be used as member id
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-
+      type: DataTypes.BIGINT,
+      // defaultValue: 123456,
+      autoIncrement: true,
       // defaultValue: Sequelize.literal('uuid_generate_v4()'),
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
+
+      // references: {
+      //   model: User,
+      //   key: User.userId,
+      // },
     },
     firstName: {
       type: DataTypes.STRING,
@@ -57,17 +63,13 @@ const Member = (sequelize, DataTypes) =>
       required: true,
       unique: true,
       validate: {
-        isEmail: {
-          msg: 'Must be a valid email address',
-        },
+        isEmail: true,
       },
     },
     alternateEmail: {
       type: DataTypes.STRING,
       validate: {
-        isEmail: {
-          msg: 'Must be a valid email address',
-        },
+        isEmail: true,
       },
     },
     primaryPhone: {
@@ -97,8 +99,8 @@ const Member = (sequelize, DataTypes) =>
 
     status: {
       type: DataTypes.ENUM,
-      defaultValue: 'Pending',
-      values: ['Active', 'Pending', 'Inactive'],
+      defaultValue: 'inactive',
+      values: ['active', 'pending', 'inactive'],
     },
 
     isPaid: {

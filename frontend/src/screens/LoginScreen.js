@@ -6,6 +6,8 @@ import FormContainer from '../components/FormContainer';
 import { login } from '../actions/userActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
+import swal from 'sweetalert';
+import { USER_LOGOUT } from '../constants/userConstants';
 
 const LoginScreen = ({ location, history }) => {
   const [email, setEmail] = useState('');
@@ -22,10 +24,16 @@ const LoginScreen = ({ location, history }) => {
     : '/dashboard';
 
   useEffect(() => {
-    if (userInfo) {
+    if (userInfo && userInfo.userRole !== 'systemAdmin') {
       history.push(redirect);
+    } else if (userInfo && userInfo.userRole === 'systemAdmin') {
+      history.push('/systemAdmin');
+    } else if (error) {
+      console.log(error);
+      swal('Error!', error, 'error');
+      dispatch({ type: USER_LOGOUT });
     }
-  }, [history, userInfo, redirect]);
+  }, [history, userInfo, redirect, error]);
 
   const submitHandler = (e) => {
     e.preventDefault();

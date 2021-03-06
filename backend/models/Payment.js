@@ -6,11 +6,13 @@ const sequelize = new Sequelize(
 
 const Payment = (sequelize, DataTypes) =>
   sequelize.define('payment', {
-    // memberId: {
+    // Id: {
     //   type: DataTypes.UUID,
     //   defaultValue: DataTypes.UUIDV4,
     //   allowNull: false,
-    //   unique: 'compositeIndex',
+    //   notEmpty: true,
+    //   primaryKey: true,
+    //   required: true,
     // },
     // year: {
     //   type: DataTypes.STRING,

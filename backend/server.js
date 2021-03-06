@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const colors = require('colors');
 // const db = require('./config/db');
 const db = require('./models/index');
+const chapterRoutes = require('./routes/chapterRoutes');
 const userRoutes = require('./routes/userRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const { errorHandler, notFound } = require('./middleware/errorMiddleware');
@@ -18,6 +19,9 @@ app.use(express.json());
 
 //body parser middleware
 app.use(bodyParser.json());
+
+// Chapter Routes
+app.use('/api/chapters', chapterRoutes);
 
 // User Routes
 app.use('/api/users', userRoutes);
