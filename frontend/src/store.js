@@ -3,6 +3,8 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import {
   userApproveReducer,
+  userCreateAdminReducer,
+  userDeleteAdminReducer,
   userDeleteReducer,
   userDetailsReducer,
   userDonateReducer,
@@ -12,6 +14,7 @@ import {
   userLoginReducer,
   userPaymentDetailsReducer,
   userPayReducer,
+  userPendingDeleteReducer,
   userPendingDetailsReducer,
   userPendingListReducer,
   userRegisterReducer,
@@ -35,6 +38,10 @@ const reducer = combineReducers({
   userPendingList: userPendingListReducer,
   userPendingDetails: userPendingDetailsReducer,
   userApprove: userApproveReducer,
+  userPendingDelete: userPendingDeleteReducer,
+
+  userCreateAdmin: userCreateAdminReducer,
+  userDeleteAdmin: userDeleteAdminReducer,
 
   userDelete: userDeleteReducer,
   userUpdate: userUptadeReducer,

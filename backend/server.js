@@ -34,15 +34,15 @@ app.get('/api/config/paypal', (req, res) =>
 app.use(notFound);
 app.use(errorHandler);
 
-// const syncStatus = true;
+const syncStatus = false;
 
-// sequelize.sync({ force: syncStatus }).then(() => {
-//   //   //if  (syncStatus) {
-//   //   //defaultValueManager.Generate(syncStatus);
-//   //   // }
+sequelize.sync({ force: syncStatus }).then(() => {
+  //   //if  (syncStatus) {
+  //   //defaultValueManager.Generate(syncStatus);
+  //   // }
 
-//   console.log('initial synced'.yellow.inverse);
-// });
+  console.log('initial synced'.yellow.inverse);
+});
 
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 

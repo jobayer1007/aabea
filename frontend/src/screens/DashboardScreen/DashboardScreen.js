@@ -281,7 +281,7 @@ const DashboardScreen = ({ history }) => {
                                   <Button
                                     variant='danger'
                                     className='btn-sm'
-                                    onClick={() => deleteHandler(user.id)}
+                                    onClick={() => deleteHandler(user.memberId)}
                                   >
                                     <i className='fas fa-trash'></i>
                                   </Button>

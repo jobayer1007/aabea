@@ -47,7 +47,7 @@ const DonateScreen = ({ history }) => {
     if (!userInfo) {
       history.push('/login');
     } else {
-      // dispatch(getUserPaymentDetails());
+      dispatch(getUserDonationDetails());
       // dispatch({ type: USER_PAYMENT_DETAILS_RESET });
 
       const addPaypalScript = async () => {
@@ -64,7 +64,6 @@ const DonateScreen = ({ history }) => {
 
       if (!donations || successDonate) {
         dispatch({ type: USER_DONATE_RESET });
-        dispatch(getUserDonationDetails());
         // dispatch({ type: USER_PAYMENT_DETAILS_RESET });
       }
       if (!window.paypal) {
@@ -73,7 +72,7 @@ const DonateScreen = ({ history }) => {
         setSdkReady(true);
       }
     }
-  }, [history, dispatch, userInfo, successDonate, donations]);
+  }, [history, dispatch, userInfo, successDonate]);
 
   const successDonationHandler = (paymentResult) => {
     console.log(paymentResult);

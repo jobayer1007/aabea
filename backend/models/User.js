@@ -36,7 +36,7 @@ const User = (sequelize, DataTypes) =>
       type: DataTypes.STRING,
       allowNull: false,
       required: true,
-      unique: true,
+      unique: 'compositeIndex',
       validate: {
         isEmail: true,
       },
@@ -52,7 +52,7 @@ const User = (sequelize, DataTypes) =>
       required: true,
       defaultValue: 'member',
       allowNull: false,
-      unique: 'compositeKey',
+      unique: 'compositeIndex',
       values: ['admin', 'member', 'systemAdmin'],
     },
     last_login: {

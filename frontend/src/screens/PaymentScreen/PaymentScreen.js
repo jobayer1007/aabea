@@ -46,7 +46,7 @@ const PaymentScreen = ({ location, history }) => {
     if (!userInfo) {
       history.push('/login');
     } else {
-      // dispatch(getUserPaymentDetails());
+      dispatch(getUserPaymentDetails());
       // dispatch({ type: USER_PAYMENT_DETAILS_RESET });
 
       const addPaypalScript = async () => {
@@ -63,7 +63,7 @@ const PaymentScreen = ({ location, history }) => {
 
       if (!payments || successPay) {
         dispatch({ type: USER_PAY_RESET });
-        dispatch(getUserPaymentDetails());
+        // dispatch(getUserPaymentDetails());
         // dispatch({ type: USER_PAYMENT_DETAILS_RESET });
       }
       if (!window.paypal) {
@@ -72,7 +72,7 @@ const PaymentScreen = ({ location, history }) => {
         setSdkReady(true);
       }
     }
-  }, [history, dispatch, userInfo, successPay, payments]);
+  }, [history, dispatch, userInfo, successPay]);
 
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);

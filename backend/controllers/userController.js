@@ -704,6 +704,47 @@ exports.deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Create Admin User      ///////////////////////////////////////////////
+// @route   POST /api/users/:id/admin
+// @access  Private/SystemAdmin
+exports.createAdminUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const user = await models.User.findOne({
+    where: { memberId: id },
+  });
+  console.log(user.memberId);
+  if (user) {
+    const member = await models.Member.findOne({
+      where: { memberId: user.memberId },
+    });
+
+    if (member) {
+      const newAdmin = await models.User.create({
+        userRole: 'admin',
+        memberId: member.memberId,
+        userName: member.firstName + ' ' + member.lastName,
+        email: member.primaryEmail,
+        // image: '/images/sample.jpg',
+        // password: bcrypt.hashSync(password, 10),
+        password: user.password,
+      });
+      if (newAdmin) {
+        res.status(201).json('Admin User Created Successfully.');
+      } else {
+        res.status(401);
+        throw new Error('Could not Create Admin User');
+      }
+    } else {
+      res.status(401);
+      throw new Error('Member not found');
+    }
+  } else {
+    res.status(404);
+    throw new Error('User Not Found');
+  }
+});
+
 ///////////////////////////////////////////DEV ONLY////////////////////////////////////
 
 const sequelize = new Sequelize(

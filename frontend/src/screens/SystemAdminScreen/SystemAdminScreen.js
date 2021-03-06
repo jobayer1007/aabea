@@ -18,6 +18,9 @@ import {
   listUsers,
   deleteUser,
   listPendingUsers,
+  deletePendingUser,
+  createAdminUser,
+  deleteAdminUser,
 } from '../../actions/userActions';
 import * as S from './SystemAdminScreen.Styles';
 import { deleteChapter, listChapters } from '../../actions/chapterActions';
@@ -54,9 +57,33 @@ const SystemAdminScreen = ({ history }) => {
     }
   }, [dispatch, history, userInfo, successDelete]);
 
-  const deleteHandler = (chapterId) => {
+  const deleteChapterHandler = (chapterId) => {
     if (window.confirm('Are You Sure?')) {
       dispatch(deleteChapter(chapterId));
+    }
+  };
+
+  const deleteUserHandler = (id) => {
+    if (window.confirm('Are You Sure?')) {
+      dispatch(deleteUser(id));
+    }
+  };
+
+  const deletePendingUserHandler = (id) => {
+    if (window.confirm('Are You Sure?')) {
+      dispatch(deletePendingUser(id));
+    }
+  };
+
+  const createAdminHandler = (memberId) => {
+    if (window.confirm('Are You Sure?')) {
+      dispatch(createAdminUser(memberId));
+    }
+  };
+
+  const deleteAdminHandler = (memberId) => {
+    if (window.confirm('Are You Sure?')) {
+      dispatch(deleteAdminUser(memberId));
     }
   };
   return (
@@ -301,7 +328,7 @@ const SystemAdminScreen = ({ history }) => {
                                     variant='danger'
                                     className='btn-sm'
                                     onClick={() =>
-                                      deleteHandler(chapter.chapterId)
+                                      deleteChapterHandler(chapter.chapterId)
                                     }
                                   >
                                     <i className='fas fa-trash'></i>
@@ -423,7 +450,9 @@ const SystemAdminScreen = ({ history }) => {
                                       variant='danger'
                                       className='btn-sm'
                                       onClick={() =>
-                                        deleteHandler(pendingUser.pendingId)
+                                        deletePendingUserHandler(
+                                          pendingUser.pendingId
+                                        )
                                       }
                                     >
                                       <i className='fas fa-trash'></i>
@@ -476,6 +505,11 @@ const SystemAdminScreen = ({ history }) => {
                               (userInfo.userRole === 'systemAdmin' ||
                                 userInfo.userRole === 'admin') && (
                                 <th>EDIT/DELETE</th>
+                              )}
+
+                            {userInfo &&
+                              userInfo.userRole === 'systemAdmin' && (
+                                <th>Assign As Admin</th>
                               )}
                           </tr>
                         </thead>
@@ -536,10 +570,42 @@ const SystemAdminScreen = ({ history }) => {
                                   <Button
                                     variant='danger'
                                     className='btn-sm'
-                                    onClick={() => deleteHandler(user.id)}
+                                    onClick={() =>
+                                      deleteUserHandler(user.memberId)
+                                    }
                                   >
                                     <i className='fas fa-trash'></i>
                                   </Button>
+                                </td>
+                              )}
+
+                              {userInfo.userRole === 'systemAdmin' && (
+                                <td>
+                                  {user.userRole === 'member' ? (
+                                    <Button
+                                      variant='danger'
+                                      className='btn-sm'
+                                      onClick={() =>
+                                        createAdminHandler(user.memberId)
+                                      }
+                                    >
+                                      {' '}
+                                      Set As ADMIN
+                                      {/* <i className='fas fa-trash'></i> */}
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      variant='success'
+                                      className='btn-sm'
+                                      onClick={() =>
+                                        deleteAdminHandler(user.memberId)
+                                      }
+                                    >
+                                      {' '}
+                                      Set As Member
+                                      {/* <i className='fas fa-trash'></i> */}
+                                    </Button>
+                                  )}
                                 </td>
                               )}
                             </tr>

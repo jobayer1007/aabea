@@ -3,6 +3,13 @@ import {
   USER_APPROVE_REQUEST,
   USER_APPROVE_RESET,
   USER_APPROVE_SUCCESS,
+  USER_CREATE_ADMIN_FAIL,
+  USER_CREATE_ADMIN_REQUEST,
+  USER_CREATE_ADMIN_RESET,
+  USER_CREATE_ADMIN_SUCCESS,
+  USER_DELETE_ADMIN_FAIL,
+  USER_DELETE_ADMIN_REQUEST,
+  USER_DELETE_ADMIN_SUCCESS,
   USER_DELETE_FAIL,
   USER_DELETE_REQUEST,
   USER_DELETE_SUCCESS,
@@ -38,6 +45,9 @@ import {
   USER_PAY_REQUEST,
   USER_PAY_RESET,
   USER_PAY_SUCCESS,
+  USER_PENDING_DELETE_FAIL,
+  USER_PENDING_DELETE_REQUEST,
+  USER_PENDING_DELETE_SUCCESS,
   USER_PENDING_DETAILS_FAIL,
   USER_PENDING_DETAILS_REQUEST,
   USER_PENDING_DETAILS_RESET,
@@ -298,6 +308,20 @@ export const userPendingDetailsReducer = (
   }
 };
 
+export const userPendingDeleteReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_PENDING_DELETE_REQUEST:
+      return { loading: true };
+    case USER_PENDING_DELETE_SUCCESS:
+      return { loading: false, success: true };
+    case USER_PENDING_DELETE_FAIL:
+      return { loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
 export const userApproveReducer = (state = { user: {} }, action) => {
   switch (action.type) {
     case USER_APPROVE_REQUEST:
@@ -310,6 +334,37 @@ export const userApproveReducer = (state = { user: {} }, action) => {
       return {
         user: {},
       };
+    default:
+      return state;
+  }
+};
+
+export const userCreateAdminReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case USER_CREATE_ADMIN_REQUEST:
+      return { loading: true };
+    case USER_CREATE_ADMIN_SUCCESS:
+      return { loading: false, success: true };
+    case USER_CREATE_ADMIN_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_CREATE_ADMIN_RESET:
+      return {
+        user: {},
+      };
+    default:
+      return state;
+  }
+};
+
+export const userDeleteAdminReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_DELETE_ADMIN_REQUEST:
+      return { loading: true };
+    case USER_DELETE_ADMIN_SUCCESS:
+      return { loading: false, success: true };
+    case USER_DELETE_ADMIN_FAIL:
+      return { loading: false, error: action.payload };
+
     default:
       return state;
   }

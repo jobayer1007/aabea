@@ -15,6 +15,7 @@ const {
   getPendingUserById,
   approveUser,
   registerSystemAdmin,
+  createAdminUser,
 } = require('../controllers/userController');
 const {
   getUserPaymentDetails,
@@ -39,6 +40,7 @@ router.route('/register').post(registerUser);
 router.route('/activate/:hash').post(verifyUserEmail);
 router.route('/pending').get(getPendingUsers);
 router.route('/:id/pending').get(getPendingUserById).post(approveUser);
+router.route('/:id/admin').post(createAdminUser);
 router.route('/dashboard').get(protect, getUsers);
 router.route('/:id').get(getUserById).put(updateUser);
 router.route('/:id').delete(protect, admin, deleteUser);
