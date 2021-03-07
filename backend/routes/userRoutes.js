@@ -16,6 +16,7 @@ const {
   approveUser,
   registerSystemAdmin,
   createAdminUser,
+  deleteAdminUser,
 } = require('../controllers/userController');
 const {
   getUserPaymentDetails,
@@ -44,6 +45,7 @@ router.route('/:id/admin').post(createAdminUser);
 router.route('/dashboard').get(protect, getUsers);
 router.route('/:id').get(getUserById).put(updateUser);
 router.route('/:id').delete(protect, admin, deleteUser);
+router.route('/:id/admin').delete(deleteAdminUser);
 
 // Add a User/////////////////////////////////////////////////
 

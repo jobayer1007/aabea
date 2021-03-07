@@ -24,6 +24,7 @@ import {
 } from '../../actions/userActions';
 import * as S from './SystemAdminScreen.Styles';
 import { deleteChapter, listChapters } from '../../actions/chapterActions';
+import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
 
 const SystemAdminScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -47,6 +48,12 @@ const SystemAdminScreen = ({ history }) => {
   const chapterDelete = useSelector((state) => state.chapterDelete);
   const { success: successDelete } = chapterDelete;
 
+  const userCreateAdmin = useSelector((state) => state.userCreateAdmin);
+  const { success: successAdmin } = userCreateAdmin;
+
+  const userDeleteAdmin = useSelector((state) => state.userDeleteAdmin);
+  const { success: successDeleteAdmin } = userDeleteAdmin;
+
   useEffect(() => {
     if (userInfo) {
       dispatch(listChapters());
@@ -55,7 +62,14 @@ const SystemAdminScreen = ({ history }) => {
     } else {
       history.push('/login');
     }
-  }, [dispatch, history, userInfo, successDelete]);
+  }, [
+    dispatch,
+    history,
+    userInfo,
+    successDelete,
+    successAdmin,
+    successDeleteAdmin,
+  ]);
 
   const deleteChapterHandler = (chapterId) => {
     if (window.confirm('Are You Sure?')) {
@@ -81,65 +95,22 @@ const SystemAdminScreen = ({ history }) => {
     }
   };
 
-  const deleteAdminHandler = (memberId) => {
+  const deleteAdminHandler = (userId) => {
     if (window.confirm('Are You Sure?')) {
-      dispatch(deleteAdminUser(memberId));
+      dispatch(deleteAdminUser(userId));
     }
   };
   return (
     <>
       <Row className='content'>
+        {/* Sidebar */}
         <Col
           md={{ span: 3, order: 1 }}
           lg={{ span: 3, order: 1 }}
           id='sidebar-wrapper'
           className='mb-2'
         >
-          <Card className='text-center' border='primary'>
-            <Card.Body>
-              <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/chapter'>
-                    <Nav.Link>Chapter</Nav.Link>
-                  </LinkContainer>
-                </Button>
-              </Card.Title>
-              <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/members'>
-                    <Nav.Link>Members</Nav.Link>
-                  </LinkContainer>
-                </Button>
-              </Card.Title>
-              <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/training'>
-                    <Nav.Link>Training</Nav.Link>
-                  </LinkContainer>
-                </Button>
-              </Card.Title>
-              <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/committiees'>
-                    <Nav.Link>Committiees</Nav.Link>
-                  </LinkContainer>
-                </Button>
-              </Card.Title>
-              <Card.Title>
-                <Button variant='outline-info' block>
-                  Committiees
-                </Button>
-              </Card.Title>
-            </Card.Body>
-            <Card.Footer className='text-muted'>
-              <Link
-                className='btn btn-outline-warning btn-sm btn-block my-5 rounded'
-                to=''
-              >
-                another button
-              </Link>
-            </Card.Footer>
-          </Card>{' '}
+          <AdminSidebar />
         </Col>
         <Col
           md={{ span: 9, order: 12 }}
@@ -579,33 +550,34 @@ const SystemAdminScreen = ({ history }) => {
                                 </td>
                               )}
 
-                              {userInfo.userRole === 'systemAdmin' && (
+                              {userInfo.userRole === 'systemAdmin' &&
+                              user.userRole === 'member' ? (
                                 <td>
-                                  {user.userRole === 'member' ? (
-                                    <Button
-                                      variant='danger'
-                                      className='btn-sm'
-                                      onClick={() =>
-                                        createAdminHandler(user.memberId)
-                                      }
-                                    >
-                                      {' '}
-                                      Set As ADMIN
-                                      {/* <i className='fas fa-trash'></i> */}
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      variant='success'
-                                      className='btn-sm'
-                                      onClick={() =>
-                                        deleteAdminHandler(user.memberId)
-                                      }
-                                    >
-                                      {' '}
-                                      Set As Member
-                                      {/* <i className='fas fa-trash'></i> */}
-                                    </Button>
-                                  )}
+                                  <Button
+                                    variant='danger'
+                                    className='btn-sm'
+                                    onClick={() =>
+                                      createAdminHandler(user.memberId)
+                                    }
+                                  >
+                                    {' '}
+                                    Set As ADMIN
+                                    {/* <i className='fas fa-trash'></i> */}
+                                  </Button>{' '}
+                                </td>
+                              ) : (
+                                <td>
+                                  <Button
+                                    variant='success'
+                                    className='btn-sm'
+                                    onClick={() =>
+                                      deleteAdminHandler(user.userId)
+                                    }
+                                  >
+                                    {' '}
+                                    Set As Member
+                                    {/* <i className='fas fa-trash'></i> */}
+                                  </Button>
                                 </td>
                               )}
                             </tr>

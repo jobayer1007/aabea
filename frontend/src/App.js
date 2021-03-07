@@ -22,6 +22,8 @@ import EmailActivationScreen from './screens/EmailActivationScreen/EmailActivati
 import verifyUserEmail from './screens/EmailActivationScreen/[hash]';
 import SystemAdminScreen from './screens/SystemAdminScreen/SystemAdminScreen';
 import UserPendingApproveScreen from './screens/UserPendingApproveScreen/UserPendingApproveScreen';
+import ChapterScreen from './screens/ChapterScreen/ChapterScreen';
+import PaymentTypeScreen from './screens/PaymentTypeScreen/PaymentTypeScreen';
 
 const App = () => {
   // const backgroundImage = 'images/mountain.jpg';
@@ -108,6 +110,8 @@ const App = () => {
             <Route path='/dashboardScreen' component={UserListScreen} />
             <Route path='/dashboard' component={DashboardScreen} />
             <Route path='/systemAdmin' component={SystemAdminScreen} />
+            <Route path='/chapter' component={ChapterScreen} />
+            <Route path='/paymentType' component={PaymentTypeScreen} />
             <Route path='/payment' component={PaymentScreen} />
             <Route path='/donate' component={DonateScreen} />
             <Route path='/training' component={TrainingScreen} />

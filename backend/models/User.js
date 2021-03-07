@@ -9,23 +9,23 @@ const Member = require('./Member');
 
 const User = (sequelize, DataTypes) =>
   sequelize.define('user', {
-    // userId: {
-    //   type: DataTypes.UUID,
-    //   defaultValue: DataTypes.UUIDV4,
-    //   allowNull: false,
-    //   notEmpty: true,
-    //   primaryKey: true,
-    //   required: true,
-    // },
-    memberId: {
-      //email will be used as member id
-      type: DataTypes.BIGINT,
-
-      // defaultValue: Sequelize.literal('uuid_generate_v4()'),
+    userId: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
-      primaryKey: true,
       notEmpty: true,
+      primaryKey: true,
+      required: true,
     },
+    // memberId: {
+    //   //email will be used as member id
+    //   type: DataTypes.BIGINT,
+
+    //   // defaultValue: Sequelize.literal('uuid_generate_v4()'),
+    //   allowNull: false,
+    //   primaryKey: true,
+    //   notEmpty: true,
+    // },
     userName: {
       type: DataTypes.STRING,
       required: true,

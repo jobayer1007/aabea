@@ -26,6 +26,11 @@ import {
   chapterListReducer,
   chapterRegisterReducer,
 } from './reducers/chapterReducers';
+import {
+  paymentTypeDeleteReducer,
+  paymenttypeListReducer,
+  paymentTypeRegisterReducer,
+} from './reducers/paymentTypeReducers';
 
 const reducer = combineReducers({
   userLogin: userLoginReducer,
@@ -54,6 +59,10 @@ const reducer = combineReducers({
   chapterRegister: chapterRegisterReducer,
   chapterList: chapterListReducer,
   chapterDelete: chapterDeleteReducer,
+
+  paymentTypeRegister: paymentTypeRegisterReducer,
+  paymentTypeList: paymenttypeListReducer,
+  paymentTypeDelete: paymentTypeDeleteReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

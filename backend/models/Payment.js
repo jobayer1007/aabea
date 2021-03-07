@@ -14,15 +14,15 @@ const Payment = (sequelize, DataTypes) =>
     //   primaryKey: true,
     //   required: true,
     // },
-    // year: {
-    //   type: DataTypes.STRING,
-    //   // allowNull: false,
-    //   unique: 'compositeIndex',
-    //   validate: {
-    //     isNumeric: true,
-    //     notEmpty: true,
-    //   },
-    // },
+    year: {
+      type: DataTypes.REAL,
+      // allowNull: false,
+      unique: 'compositeIndex',
+      validate: {
+        isNumeric: true,
+        notEmpty: true,
+      },
+    },
 
     // month: {
     //   type: DataTypes.STRING,
@@ -33,7 +33,8 @@ const Payment = (sequelize, DataTypes) =>
     paymentType: {
       type: DataTypes.ENUM,
       defaultValue: 'dues',
-      values: ['dues', 'nominationFee', 'donation'],
+      unique: 'compositeIndex',
+      values: ['dues', 'nominationFee'],
     },
 
     amount: {

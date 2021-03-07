@@ -13,6 +13,8 @@ import {
   CardDeck,
   Nav,
   ListGroup,
+  Dropdown,
+  DropdownButton,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -73,6 +75,12 @@ const PaymentScreen = ({ location, history }) => {
       }
     }
   }, [history, dispatch, userInfo, successPay]);
+
+  const duesHandler = (e) => {
+    e.preventDefault();
+
+    console.log('dues selected');
+  };
 
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);
@@ -135,13 +143,76 @@ const PaymentScreen = ({ location, history }) => {
             </Card.Footer>
           </Card>{' '}
         </Col>
+
+        {/* Payment Start */}
+        {/* Payment End */}
+        {/* Payment  History start */}
         <Col
           md={{ span: 9, order: 12 }}
           lg={{ span: 9, order: 12 }}
           id='page-content-wrapper'
         >
+          <Row>
+            <Col md={{ span: 6, order: 1 }} lg={{ span: 6, order: 1 }}>
+              <Card className='text-center' border='primary'>
+                <Card.Header as='h2'>Payment Screen 1</Card.Header>
+                <Dropdown>
+                  <Dropdown.Toggle variant='info' id='dropdown-basic'>
+                    Please Select Your Payment Type
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item eventKey={duesHandler}>Dues</Dropdown.Item>
+                    <Dropdown.Item eventKey='2'>Nomination Fee</Dropdown.Item>
+                    <Dropdown.Item eventKey='3'>Something else</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+
+                <DropdownButton
+                  id='dropdown-basic-button'
+                  title='Dropdown button'
+                >
+                  <Dropdown.Item href='#/action-1'>Action</Dropdown.Item>
+                  <Dropdown.Item eventKey={duesHandler}>
+                    Another action
+                  </Dropdown.Item>
+                  <Dropdown.Item href='#/action-3'>
+                    Something else
+                  </Dropdown.Item>
+                </DropdownButton>
+
+                <DropdownButton
+                  id='dropdown-item-button'
+                  title='Dropdown button'
+                >
+                  <Dropdown.ItemText>Dropdown item text</Dropdown.ItemText>
+                  <Dropdown.Item as='button'>Action</Dropdown.Item>
+                  <Dropdown.Item as='button'>Another action</Dropdown.Item>
+                  <Dropdown.Item as='button'>Something else</Dropdown.Item>
+                </DropdownButton>
+              </Card>
+            </Col>
+            <Col md={{ span: 6, order: 2 }} lg={{ span: 6, order: 2 }}>
+              <Card className='text-center' border='primary'>
+                <Card.Header as='h2'>Payment Screen 2</Card.Header>
+                <ListGroup variant='flush'>
+                  <ListGroup.Item>
+                    {loadingPay && <Loader />}
+                    {!sdkReady ? (
+                      <Loader />
+                    ) : (
+                      <PayPalButton
+                        amount={25.0}
+                        onSuccess={successPaymentHandler}
+                      />
+                    )}
+                  </ListGroup.Item>
+                </ListGroup>
+              </Card>
+            </Col>
+          </Row>
           <Card className='text-center' border='primary'>
-            <Card.Header as='h2'>Payment Screen</Card.Header>
+            <Card.Header as='h2'>Payment History</Card.Header>
             {paymentLoading ? (
               <Loader />
             ) : paymentErrors ? (
@@ -168,22 +239,9 @@ const PaymentScreen = ({ location, history }) => {
                 </tbody>
               </Table>
             )}
-
-            <ListGroup variant='flush'>
-              <ListGroup.Item>
-                {loadingPay && <Loader />}
-                {!sdkReady ? (
-                  <Loader />
-                ) : (
-                  <PayPalButton
-                    amount={25.0}
-                    onSuccess={successPaymentHandler}
-                  />
-                )}
-              </ListGroup.Item>
-            </ListGroup>
           </Card>
         </Col>
+        {/* Payment History End */}
       </Row>
     </>
   );

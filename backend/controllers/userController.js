@@ -33,14 +33,14 @@ exports.authUser = asyncHandler(async (req, res) => {
     } else {
       console.log(JSON.stringify(user));
       res.json({
-        // memberId: user.memberId,
+        userId: user.userId,
         userName: user.userName,
         email: user.email,
         userRole: user.userRole,
         image: user.image,
         memberId: user.memberId,
         status: user.member.status,
-        token: generateToken(user.memberId),
+        token: generateToken(user.userId),
       });
     }
   } else {
@@ -742,6 +742,33 @@ exports.createAdminUser = asyncHandler(async (req, res) => {
   } else {
     res.status(404);
     throw new Error('User Not Found');
+  }
+});
+
+exports.deleteAdminUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const user = await models.User.findOne({
+    where: { userId: id },
+  });
+  console.log(user.userId);
+  console.log(user.memberId);
+
+  if (user) {
+    models.User.destroy({
+      where: { userId: user.userId },
+    })
+      .then((num) => {
+        if (num == 1) {
+          res.json({ message: 'Admin User has been deleted successfully' });
+        } else {
+          res.json({ message: 'Cannot delete the Admin User' });
+        }
+      })
+      .catch((err) => console.log(err));
+  } else {
+    res.status(401);
+    throw new Error('User not found');
   }
 });
 
