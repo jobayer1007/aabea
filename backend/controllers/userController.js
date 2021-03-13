@@ -33,14 +33,15 @@ exports.authUser = asyncHandler(async (req, res) => {
     } else {
       console.log(JSON.stringify(user));
       res.json({
-        userId: user.userId,
+        // userId: user.userId,
         userName: user.userName,
         email: user.email,
         userRole: user.userRole,
         image: user.image,
         memberId: user.memberId,
         status: user.member.status,
-        token: generateToken(user.userId),
+        memberSince: user.member.startDate,
+        token: generateToken(user.memberId),
       });
     }
   } else {
@@ -358,6 +359,7 @@ exports.approveUser = asyncHandler(async (req, res) => {
           degreeYear: pendingUser.degreeYear,
           major: pendingUser.major,
           collegeName: pendingUser.collegeName,
+          NextPaymentDueIn: new Date().getFullYear(),
           // status: 'inactive'
           // balance,
         },
@@ -383,7 +385,7 @@ exports.approveUser = asyncHandler(async (req, res) => {
       // If the execution reaches this line, no errors were thrown.
       // We commit the transaction.
       await t.commit();
-      res.status(201).json('account has been Activated Successfully.');
+      res.status(201).json('account has been Approved Successfully.');
     } catch (error) {
       // If the execution reaches this line, an error was thrown.
       // We rollback the transaction.
@@ -749,14 +751,14 @@ exports.deleteAdminUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
   console.log(id);
   const user = await models.User.findOne({
-    where: { userId: id },
+    where: { memberId: id, userRole: 'admin' },
   });
   console.log(user.userId);
   console.log(user.memberId);
 
   if (user) {
     models.User.destroy({
-      where: { userId: user.userId },
+      where: { memberId: user.memberId, userRole: 'admin' },
     })
       .then((num) => {
         if (num == 1) {
@@ -814,6 +816,7 @@ exports.registerSystemAdmin = asyncHandler(async (req, res) => {
     major,
     collegeName,
     status,
+    chapterId,
     // balance,
   } = req.body;
   // console.log(email);
@@ -847,6 +850,8 @@ exports.registerSystemAdmin = asyncHandler(async (req, res) => {
           major,
           collegeName,
           status,
+          chapterId,
+          NextPaymentDueIn: new Date().getFullYear(),
           // balance,
         },
         { transaction: t }
@@ -862,6 +867,7 @@ exports.registerSystemAdmin = asyncHandler(async (req, res) => {
           // image: '/images/sample.jpg',
           // password: bcrypt.hashSync(password, 10),
           password: bcrypt.hashSync(password, 10),
+          chapterId,
         },
         { transaction: t }
       );

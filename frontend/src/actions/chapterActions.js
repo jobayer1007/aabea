@@ -77,7 +77,7 @@ export const listChapters = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/chapters/systemAdmin`, config);
+    const { data } = await axios.get(`/api/chapters`, config);
     dispatch({ type: CHAPTER_DETAILS_RESET });
 
     dispatch({
@@ -110,7 +110,7 @@ export const deleteChapter = (id) => async (dispatch, getState) => {
       },
     };
 
-    await axios.delete(`/api/chapter/${id}`, config);
+    await axios.delete(`/api/chapters/${id}`, config);
 
     dispatch({ type: CHAPTER_DELETE_SUCCESS });
   } catch (error) {

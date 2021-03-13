@@ -27,7 +27,7 @@ export const paymentTypeRegisterReducer = (state = {}, action) => {
   }
 };
 
-export const paymenttypeListReducer = (
+export const paymentTypeListReducer = (
   state = { paymentTypes: [] },
   action
 ) => {

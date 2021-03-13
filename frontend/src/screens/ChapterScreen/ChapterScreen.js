@@ -1,75 +1,63 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import {
-  Table,
-  Button,
-  Image,
-  Row,
-  Col,
-  Card,
-  CardColumns,
-  Nav,
-} from 'react-bootstrap';
+import { Table, Button, Row, Col, Card, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import {
-  listUsers,
-  deleteUser,
-  listPendingUsers,
-  deletePendingUser,
-  createAdminUser,
-  deleteAdminUser,
-} from '../../actions/userActions';
 import * as S from './ChapterScreen.Styles';
-import { deleteChapter, listChapters } from '../../actions/chapterActions';
+import {
+  deleteChapter,
+  listChapters,
+  registerChapter,
+} from '../../actions/chapterActions';
 import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
+import {
+  CHAPTER_LIST_RESET,
+  CHAPTER_REGISTER_RESET,
+} from '../../constants/chapterConstants';
 
 const ChapterScreen = ({ history }) => {
   const dispatch = useDispatch();
 
+  const [addChapter, setAddChapter] = useState(false);
+  const [chapterName, setChapterName] = useState('');
+  const [chapterEmail, setChapterEmail] = useState('');
+  const [chapterAddress, setChapterAddress] = useState('');
+  const [chapterPhone, setChapterPhone] = useState('');
+
   const chapterList = useSelector((state) => state.chapterList);
   const { loading, error, chapters } = chapterList;
-
-  const userPendingList = useSelector((state) => state.userPendingList);
-  const {
-    loading: pendingUsersLoading,
-    error: pendingUsersError,
-    pendingUsers,
-  } = userPendingList;
-
-  const userList = useSelector((state) => state.userList);
-  const { loading: userListLoading, error: userListError, users } = userList;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const chapterRegister = useSelector((state) => state.chapterRegister);
+  const {
+    loading: registerLoading,
+    error: registerError,
+    success,
+  } = chapterRegister;
+
   const chapterDelete = useSelector((state) => state.chapterDelete);
   const { success: successDelete } = chapterDelete;
-
-  const userCreateAdmin = useSelector((state) => state.userCreateAdmin);
-  const { success: successAdmin } = userCreateAdmin;
-
-  const userDeleteAdmin = useSelector((state) => state.userDeleteAdmin);
-  const { success: successDeleteAdmin } = userDeleteAdmin;
 
   useEffect(() => {
     if (userInfo) {
       dispatch(listChapters());
-      dispatch(listPendingUsers());
-      dispatch(listUsers());
+      dispatch({ type: CHAPTER_LIST_RESET });
+      dispatch({ type: CHAPTER_REGISTER_RESET });
     } else {
       history.push('/login');
     }
-  }, [
-    dispatch,
-    history,
-    userInfo,
-    successDelete,
-    successAdmin,
-    successDeleteAdmin,
-  ]);
+    if (success) {
+      setAddChapter(!addChapter);
+      setChapterName('');
+      setChapterEmail('');
+      setChapterAddress('');
+      setChapterPhone('');
+    }
+  }, [dispatch, history, userInfo, success, successDelete]);
 
   const deleteChapterHandler = (chapterId) => {
     if (window.confirm('Are You Sure?')) {
@@ -77,29 +65,14 @@ const ChapterScreen = ({ history }) => {
     }
   };
 
-  const deleteUserHandler = (id) => {
-    if (window.confirm('Are You Sure?')) {
-      dispatch(deleteUser(id));
-    }
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    dispatch(
+      registerChapter(chapterEmail, chapterName, chapterAddress, chapterPhone)
+    );
   };
 
-  const deletePendingUserHandler = (id) => {
-    if (window.confirm('Are You Sure?')) {
-      dispatch(deletePendingUser(id));
-    }
-  };
-
-  const createAdminHandler = (memberId) => {
-    if (window.confirm('Are You Sure?')) {
-      dispatch(createAdminUser(memberId));
-    }
-  };
-
-  const deleteAdminHandler = (userId) => {
-    if (window.confirm('Are You Sure?')) {
-      dispatch(deleteAdminUser(userId));
-    }
-  };
   return (
     <>
       <Row className='content'>
@@ -128,15 +101,84 @@ const ChapterScreen = ({ history }) => {
                 // style={{ padding: 0 }}
                 className='mb-2'
               >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5' className='text-info'>
+                <Card border='primary'>
+                  <Card.Header className='text-center' as='h2'>
                     <Link
-                      className='btn btn-outline-info btn-sm btn-block  rounded'
-                      to=''
+                      className='btn btn-outline-info btn-sm btn-block rounded'
+                      onClick={() => setAddChapter(!addChapter)}
                     >
                       Add New Chapter
                     </Link>
                   </Card.Header>
+                  <Card.Body>
+                    {addChapter
+                      ? (registerError && (
+                          <Message variant='danger'>{registerError}</Message>
+                        )) ||
+                        (registerLoading && <Loader />) ||
+                        (success ? (
+                          <Message variant='success'>{success}</Message>
+                        ) : (
+                          <Form onSubmit={submitHandler}>
+                            <Form.Group controlId='chapterName'>
+                              <Form.Label>Chapter Name</Form.Label>
+                              <Form.Control
+                                type='chapterName'
+                                placeholder='Please Enter New Chapter Name..'
+                                value={chapterName}
+                                onChange={(e) => setChapterName(e.target.value)}
+                              ></Form.Control>
+                            </Form.Group>
+
+                            <Form.Group controlId='chapterEmail'>
+                              <Form.Label>Chapter Email</Form.Label>
+                              <Form.Control
+                                type='chapterEmail'
+                                placeholder='Please Enter Admin Email Address for the New Chapter'
+                                value={chapterEmail}
+                                onChange={(e) =>
+                                  setChapterEmail(e.target.value)
+                                }
+                              ></Form.Control>
+                            </Form.Group>
+
+                            <Form.Group controlId='chapterAddress'>
+                              <Form.Label>Chapter Address</Form.Label>
+                              <Form.Control
+                                type='chapterAddress'
+                                placeholder='Please Enter Address..'
+                                value={chapterAddress}
+                                onChange={(e) =>
+                                  setChapterAddress(e.target.value)
+                                }
+                              ></Form.Control>
+                            </Form.Group>
+
+                            <Form.Group controlId='chapterPhone'>
+                              <Form.Label>Chapter Phone</Form.Label>
+                              <Form.Control
+                                type='chapterPhone'
+                                placeholder='Please Enter Phone..'
+                                value={chapterPhone}
+                                onChange={(e) =>
+                                  setChapterPhone(e.target.value)
+                                }
+                              ></Form.Control>
+                            </Form.Group>
+
+                            <Button type='submit' variant='info' block>
+                              <i className='fas fa-plus' /> Add
+                            </Button>
+                          </Form>
+                        ))
+                      : null}
+                    {/* {message && <Message variant='danger'>{message}</Message>} */}
+                    {/* {registerError && (
+                        <Message variant='danger'>{registerError}</Message>
+                      )}
+                      {registerLoading && <Loader />}
+                      {} */}
+                  </Card.Body>
                 </Card>
               </Col>
               {/* 1st card section end~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}

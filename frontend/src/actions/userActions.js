@@ -375,7 +375,10 @@ export const getUserPaymentDetails = () => async (dispatch, getState) => {
   }
 };
 
-export const payUser = (id, paymentResult) => async (dispatch, getState) => {
+export const payUser = (id, paymentTypeName, qty, paymentResult) => async (
+  dispatch,
+  getState
+) => {
   try {
     dispatch({
       type: USER_PAY_REQUEST,
@@ -393,9 +396,10 @@ export const payUser = (id, paymentResult) => async (dispatch, getState) => {
 
     const { data } = await axios.post(
       `/api/users/${id}/pay`,
-      paymentResult,
+      { paymentTypeName, qty, paymentResult },
       config
     );
+    console.log('qty value: ' + qty);
 
     dispatch({
       type: USER_PAY_SUCCESS,

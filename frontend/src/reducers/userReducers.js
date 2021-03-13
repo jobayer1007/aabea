@@ -202,7 +202,7 @@ export const userPayReducer = (state = {}, action) => {
     case USER_PAY_REQUEST:
       return { loading: true };
     case USER_PAY_SUCCESS:
-      return { loading: false, success: true };
+      return { loading: false, success: action.payload };
 
     case USER_PAY_FAIL:
       return { loading: false, error: action.payload };

@@ -40,6 +40,8 @@ import {
 const PaymentTypeScreen = ({ history }) => {
   const dispatch = useDispatch();
 
+  const [addPaymentType, setAddPaymentType] = useState(false);
+
   const [paymentTypeName, setPaymentTypeName] = useState('');
   const [paymentTypeAmount, setPaymentTypeAmount] = useState('');
   const [paymentTypeDescription, setPaymentTypeDescription] = useState('');
@@ -68,6 +70,12 @@ const PaymentTypeScreen = ({ history }) => {
     } else {
       history.push('/login');
     }
+    if (success) {
+      setAddPaymentType(!addPaymentType);
+      setPaymentTypeName('');
+      setPaymentTypeAmount('');
+      setPaymentTypeDescription('');
+    }
   }, [
     dispatch,
     history,
@@ -94,6 +102,7 @@ const PaymentTypeScreen = ({ history }) => {
       )
     );
   };
+  // console.log(addPaymentType);
 
   return (
     <S.CardDeck>
@@ -138,57 +147,71 @@ const PaymentTypeScreen = ({ history }) => {
                   {/* Card Start */}
                   <Card border='primary'>
                     <Card.Header className='text-center' as='h2'>
-                      Add New Payment Type
+                      <Link
+                        className='btn btn-outline-info btn-sm btn-block rounded'
+                        onClick={() => setAddPaymentType(!addPaymentType)}
+                      >
+                        Add New Payment Type
+                      </Link>
                     </Card.Header>
                     <Card.Body>
+                      {addPaymentType
+                        ? (registerError && (
+                            <Message variant='danger'>{registerError}</Message>
+                          )) ||
+                          (registerLoading && <Loader />) ||
+                          (success ? (
+                            <Message variant='success'>{success}</Message>
+                          ) : (
+                            <Form onSubmit={submitHandler}>
+                              <Form.Group controlId='firstName'>
+                                <Form.Label>Payment type</Form.Label>
+                                <Form.Control
+                                  type='paymentTypeName'
+                                  placeholder='Please Enter Payment Type Name..'
+                                  value={paymentTypeName}
+                                  onChange={(e) =>
+                                    setPaymentTypeName(e.target.value)
+                                  }
+                                ></Form.Control>
+                              </Form.Group>
+
+                              <Form.Group controlId='lastName'>
+                                <Form.Label>Amount</Form.Label>
+                                <Form.Control
+                                  type='paymentTypeAmount'
+                                  placeholder='Please Enter an amount for this payment type'
+                                  value={paymentTypeAmount}
+                                  onChange={(e) =>
+                                    setPaymentTypeAmount(e.target.value)
+                                  }
+                                ></Form.Control>
+                              </Form.Group>
+
+                              <Form.Group controlId='Description'>
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control
+                                  type='paymentTypeDescription'
+                                  placeholder='Please Enter Description..'
+                                  value={paymentTypeDescription}
+                                  onChange={(e) =>
+                                    setPaymentTypeDescription(e.target.value)
+                                  }
+                                ></Form.Control>
+                              </Form.Group>
+
+                              <Button type='submit' variant='info' block>
+                                <i className='fas fa-plus' /> Add
+                              </Button>
+                            </Form>
+                          ))
+                        : null}
                       {/* {message && <Message variant='danger'>{message}</Message>} */}
-                      {error && <Message variant='danger'>{error}</Message>}
-                      {loading && <Loader />}
-                      {success ? (
-                        <Message variant='success'>{success}</Message>
-                      ) : (
-                        <Form onSubmit={submitHandler}>
-                          <Form.Group controlId='firstName'>
-                            <Form.Label>Payment type</Form.Label>
-                            <Form.Control
-                              type='paymentTypeName'
-                              placeholder='Please Enter Payment Type Name..'
-                              value={paymentTypeName}
-                              onChange={(e) =>
-                                setPaymentTypeName(e.target.value)
-                              }
-                            ></Form.Control>
-                          </Form.Group>
-
-                          <Form.Group controlId='lastName'>
-                            <Form.Label>Amount</Form.Label>
-                            <Form.Control
-                              type='paymentTypeAmount'
-                              placeholder='Please Enter an amount for this payment type'
-                              value={paymentTypeAmount}
-                              onChange={(e) =>
-                                setPaymentTypeAmount(e.target.value)
-                              }
-                            ></Form.Control>
-                          </Form.Group>
-
-                          <Form.Group controlId='address1'>
-                            <Form.Label>Description</Form.Label>
-                            <Form.Control
-                              type='paymentTypeDescription'
-                              placeholder='Please Enter Address..'
-                              value={paymentTypeDescription}
-                              onChange={(e) =>
-                                setPaymentTypeDescription(e.target.value)
-                              }
-                            ></Form.Control>
-                          </Form.Group>
-
-                          <Button type='submit' variant='info' block>
-                            Add New Payment Type
-                          </Button>
-                        </Form>
+                      {/* {registerError && (
+                        <Message variant='danger'>{registerError}</Message>
                       )}
+                      {registerLoading && <Loader />}
+                      {} */}
                     </Card.Body>
                   </Card>
                   {/* Card End */}

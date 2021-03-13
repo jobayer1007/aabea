@@ -87,11 +87,29 @@ db.Donation = require('../models/Donation')(sequelize, Sequelize);
 //Model relationships
 
 // CHAPTER RELATION
+// CHAPTER TO MEMBER
 db.Chapter.hasMany(db.Member, { foreignKey: 'chapterId' });
 db.Member.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
-// PAYMENT TYPE RELATION
+
+// CHAPTER TO USER
+db.Chapter.hasMany(db.User, { foreignKey: 'chapterId' });
+db.User.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+// CHAPTER TO PAYMENT
+db.Chapter.hasMany(db.Payment, { foreignKey: 'chapterId' });
+db.Payment.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+// CHAPTER TO PAYMENT TYPE
 db.Chapter.hasMany(db.PaymentType, { foreignKey: 'chapterId' });
 db.PaymentType.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+// CHAPTER TO DONATION
+db.Chapter.hasMany(db.Donation, { foreignKey: 'chapterId' });
+db.Donation.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+// PAYMENT TYPE RELATION
+// db.Chapter.hasMany(db.PaymentType, { foreignKey: 'chapterId' });
+// db.PaymentType.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 // ROLE RELATION
 db.Chapter.hasMany(db.Role, { foreignKey: 'chapterId' });
 db.Role.belongsTo(db.Chapter, { foreignKey: 'chapterId' });

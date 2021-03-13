@@ -28,7 +28,7 @@ import {
 } from './reducers/chapterReducers';
 import {
   paymentTypeDeleteReducer,
-  paymenttypeListReducer,
+  paymentTypeListReducer,
   paymentTypeRegisterReducer,
 } from './reducers/paymentTypeReducers';
 
@@ -61,7 +61,7 @@ const reducer = combineReducers({
   chapterDelete: chapterDeleteReducer,
 
   paymentTypeRegister: paymentTypeRegisterReducer,
-  paymentTypeList: paymenttypeListReducer,
+  paymentTypeList: paymentTypeListReducer,
   paymentTypeDelete: paymentTypeDeleteReducer,
 });
 

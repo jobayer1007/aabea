@@ -107,7 +107,7 @@ export const deletePaymentType = (id) => async (dispatch, getState) => {
       },
     };
 
-    await axios.delete(`/api/chapter/paymenttype/${id}`, config);
+    await axios.delete(`/api/chapters/paymentType/${id}`, config);
 
     dispatch({ type: PAYMENT_TYPE_DELETE_SUCCESS });
   } catch (error) {

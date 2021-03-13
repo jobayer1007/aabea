@@ -27,17 +27,10 @@ exports.createNewChapter = asyncHandler(async (req, res) => {
         chapterPhone,
       });
       if (newChapter) {
-        res.json({
-          success: true,
-
-          msg: 'New Chapter Created Successfully',
-        });
+        res.json('New Chapter Created Successfully');
       } else {
         res.status(400);
-        throw new Error({
-          success: false,
-          msg: 'Encountered problem while creating new chapter',
-        });
+        throw new Error('Encountered problem while creating new chapter');
       }
     } else {
       res.status(400);
@@ -67,6 +60,34 @@ exports.getChapters = asyncHandler(async (req, res) => {
   res.json(chapters);
   // const members = await models.Member.findAll();
   // res.json(members);
+});
+
+// @desc    Delete a PaymentType     /////////////////////////////////////////////// pending
+// @route   DELETE /api/chapters/:id
+// @access  Private/Admin
+exports.deleteChapter = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const chapter = await models.Chapter.findOne({
+    where: { chapterId: id },
+  });
+
+  if (chapter) {
+    models.Chapter.destroy({
+      where: { chapterId: id },
+    })
+      .then((num) => {
+        if (num == 1) {
+          res.json('Chapter has been deleted successfully');
+        } else {
+          res.json('Cannot delete the Chapter');
+        }
+      })
+      .catch((err) => console.log(err));
+  } else {
+    res.status(401);
+    throw new Error('Chapter not found');
+  }
 });
 
 // @desc    Create a new Payment Type     ///////////////////////////////////////////////
@@ -111,7 +132,13 @@ exports.createNewPaymentType = asyncHandler(async (req, res) => {
 // @access  Private
 exports.getPaymentTypes = asyncHandler(async (req, res) => {
   const paymentTypes = await models.PaymentType.findAll();
-  res.json(paymentTypes);
+
+  if (paymentTypes && paymentTypes.length !== 0) {
+    res.json(paymentTypes);
+  } else {
+    res.status(404);
+    throw new Error('No Payment Types Found');
+  }
   // const members = await models.Member.findAll();
   // res.json(members);
 });

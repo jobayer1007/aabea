@@ -285,7 +285,7 @@ const SystemAdminScreen = ({ history }) => {
                                   ></i>
                                 )}
                               </td> */}
-                              {userInfo.userRole === 'systemAdmin' && (
+                              {userInfo && userInfo.userRole === 'systemAdmin' && (
                                 <td>
                                   <LinkContainer
                                     to={`/chapter/${chapter.chapterId}/edit`}
@@ -571,7 +571,7 @@ const SystemAdminScreen = ({ history }) => {
                                     variant='success'
                                     className='btn-sm'
                                     onClick={() =>
-                                      deleteAdminHandler(user.userId)
+                                      deleteAdminHandler(user.memberId)
                                     }
                                   >
                                     {' '}

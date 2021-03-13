@@ -119,8 +119,12 @@ const Member = (sequelize, DataTypes) =>
     },
 
     NextPaymentDueIn: {
-      type: DataTypes.DATEONLY,
-      defaultValue: Sequelize.NOW,
+      type: DataTypes.REAL,
+      allowNull: false,
+      validate: {
+        isNumeric: true,
+        notEmpty: true,
+      },
     },
     // userName: {
     //   type: DataTypes.VIRTUAL,

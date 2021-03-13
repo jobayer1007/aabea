@@ -9,23 +9,20 @@ const Member = require('./Member');
 
 const User = (sequelize, DataTypes) =>
   sequelize.define('user', {
-    userId: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
-      notEmpty: true,
-      primaryKey: true,
-      required: true,
-    },
-    // memberId: {
-    //   //email will be used as member id
-    //   type: DataTypes.BIGINT,
-
-    //   // defaultValue: Sequelize.literal('uuid_generate_v4()'),
+    // userId: {
+    //   type: DataTypes.UUID,
+    //   defaultValue: DataTypes.UUIDV4,
     //   allowNull: false,
-    //   primaryKey: true,
     //   notEmpty: true,
+    //   primaryKey: true,
+    //   required: true,
     // },
+    memberId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true,
+      notEmpty: true,
+    },
     userName: {
       type: DataTypes.STRING,
       required: true,
@@ -36,7 +33,9 @@ const User = (sequelize, DataTypes) =>
       type: DataTypes.STRING,
       allowNull: false,
       required: true,
-      unique: 'compositeIndex',
+      // unique: 'compositeIndex',
+      primaryKey: true,
+
       validate: {
         isEmail: true,
       },
@@ -52,7 +51,8 @@ const User = (sequelize, DataTypes) =>
       required: true,
       defaultValue: 'member',
       allowNull: false,
-      unique: 'compositeIndex',
+      // unique: 'compositeIndex',
+      primaryKey: true,
       values: ['admin', 'member', 'systemAdmin'],
     },
     last_login: {

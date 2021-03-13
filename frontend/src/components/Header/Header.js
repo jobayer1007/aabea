@@ -78,8 +78,8 @@ const Header = () => {
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='mr-auto'>
-              <LinkContainer to='/'>
-                <Nav.Link>Home</Nav.Link>
+              <LinkContainer to='/systemAdmin'>
+                <Nav.Link>System Admin</Nav.Link>
               </LinkContainer>
               {userInfo ? (
                 <LinkContainer to='/dashboard'>
