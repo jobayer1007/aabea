@@ -24,93 +24,29 @@ import SystemAdminScreen from './screens/SystemAdminScreen/SystemAdminScreen';
 import UserPendingApproveScreen from './screens/UserPendingApproveScreen/UserPendingApproveScreen';
 import ChapterScreen from './screens/ChapterScreen/ChapterScreen';
 import PaymentTypeScreen from './screens/PaymentTypeScreen/PaymentTypeScreen';
+import AnnouncementScreen from './screens/AnnouncementScreen/AnnouncementScreen';
+import MissionScreen from './screens/MissionScreen/MissionScreen';
+import VissionScreen from './screens/VissionScreen/VissionScreen';
+import HistoryScreen from './screens/HistoryScreen/HistoryScreen';
 
 const App = () => {
-  // const backgroundImage = 'images/mountain.jpg';
-  // const logoImage = 'images/logoImage.png';
-  // const sidebarHeader = {
-  //   fullName: 'AABEA',
-  //   shortName: 'aabea',
-  // };
-  // const menuItems = [
-  //   {
-  //     name: 'Payment',
-  //     to: '/payment',
-  //     icon: 'icons/home.svg',
-  //     subMenuItems: [],
-  //   },
-  //   {
-  //     name: 'Donate',
-  //     to: '/donate',
-  //     icon: 'icons/about.svg',
-  //     subMenuItems: [],
-  //   },
-  //   {
-  //     name: 'Training',
-  //     to: '/training',
-  //     icon: 'icons/blog.svg',
-  //     subMenuItems: [],
-  //   },
-  //   {
-  //     name: 'Committiees',
-  //     to: '/committiees',
-  //     icon: 'icons/services.svg',
-  //     subMenuItems: [],
-  //   },
-  //   {
-  //     name: 'Destinations',
-  //     to: '/destinations',
-  //     icon: 'icons/destinations.svg',
-  //     subMenuItems: [
-  //       { name: 'Canada', to: '/canada' },
-  //       { name: 'Brazil', to: '/brazil' },
-  //       { name: 'India', to: '/India' },
-  //       { name: 'Aunstralia', to: '/australia' },
-  //       { name: 'Bangladesh', to: '/bangladesh' },
-  //       { name: 'china', to: '/china' },
-  //     ],
-  //   },
-  //   {
-  //     name: 'Contacts',
-  //     to: '/contacts',
-  //     icon: 'icons/contacts.svg',
-  //     subMenuItems: [],
-  //   },
-  // ];
-
-  // const fonts = {
-  //   header: 'Reggae One',
-  //   menu: 'Poppins',
-  // };
-
   return (
     <>
       <Router>
-        {/* Experiment Start */}
-        {/* <S.App>
-          <Navbar logoImage={logoImage} />
-          <Sidebar
-            backgroundImage={backgroundImage}
-            sidebarHeader={sidebarHeader}
-            menuItems={menuItems}
-            fonts={fonts}
-          />
-          <MainScreen />
-        </S.App> */}
-        {/* Experiment above */}
         <Header />
         <main className='py-3'>
           <Container>
-            {/* <Sidebar /> */}
-            {/* {HideSidebar} */}
             <Route path='/login' component={LoginScreen} />
             <Route path='/register' component={RegisterScreen} />
-            {/* <Route path='/users/activate/:hash' component={verifyUserEmail} /> */}
             <Route path='/activate/:hash' component={EmailActivationScreen} />
             <Route path='/dashboardScreen' component={UserListScreen} />
             <Route path='/dashboard' component={DashboardScreen} />
             <Route path='/systemAdmin' component={SystemAdminScreen} />
             <Route path='/chapter' component={ChapterScreen} />
+            <Route path='/announcement' component={AnnouncementScreen} />
+            <Route path='/mission' component={MissionScreen} />
+            <Route path='/vission' component={VissionScreen} />
+            <Route path='/history' component={HistoryScreen} />
             <Route path='/paymentType' component={PaymentTypeScreen} />
             <Route path='/payment' component={PaymentScreen} />
             <Route path='/donate' component={DonateScreen} />

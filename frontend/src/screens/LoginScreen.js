@@ -10,6 +10,7 @@ import swal from 'sweetalert';
 import { USER_LOGOUT } from '../constants/userConstants';
 
 const LoginScreen = ({ location, history }) => {
+  const [userRole, setUserRole] = useState('member');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -39,7 +40,7 @@ const LoginScreen = ({ location, history }) => {
     e.preventDefault();
 
     // Dispatch Login
-    dispatch(login(email, password));
+    dispatch(login(userRole, email, password));
   };
 
   return (
@@ -57,6 +58,19 @@ const LoginScreen = ({ location, history }) => {
           {error && <Message variant='danger'>{error}</Message>}
           {loading && <Loader />}
           <Form onSubmit={submitHandler}>
+            <Form.Group controlId='userRole'>
+              <Form.Label>Sign In As: </Form.Label>
+              <Form.Control
+                as='select'
+                // onChange={qtyChangeHandler}
+                onChange={(e) => setUserRole(e.target.value)}
+              >
+                <option value='member'>Member</option>
+                <option value='admin'>Admin</option>
+                <option value='systemAdmin'>System Admin</option>
+              </Form.Control>
+            </Form.Group>
+
             <Form.Group controlId='email'>
               <Form.Label>Email Address</Form.Label>
               <Form.Control

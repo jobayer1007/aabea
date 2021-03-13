@@ -11,11 +11,11 @@ import {
   listChapters,
   registerChapter,
 } from '../../actions/chapterActions';
-import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
 import {
   CHAPTER_LIST_RESET,
   CHAPTER_REGISTER_RESET,
 } from '../../constants/chapterConstants';
+import Sidebar from '../../components/Sidebar/Sidebar';
 
 const ChapterScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -83,7 +83,7 @@ const ChapterScreen = ({ history }) => {
           id='sidebar-wrapper'
           className='mb-2'
         >
-          <AdminSidebar />
+          <Sidebar />
         </Col>
         {/* Sidebar End */}
         <Col

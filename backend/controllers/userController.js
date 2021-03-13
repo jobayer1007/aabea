@@ -5,7 +5,7 @@ dotenv.config();
 
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
-const { sendConfirmationEmail } = require('./mailer');
+const { sendConfirmationEmail, sendCongratulationsEmail } = require('./mailer');
 const User = require('../models/User');
 const Member = require('../models/Member');
 const models = require('../models/index');
@@ -15,10 +15,10 @@ const generateToken = require('../utils/generateToken');
 // @route   POST /api/users/login
 // @access  Public
 exports.authUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { userRole, email, password } = req.body;
 
   const user = await models.User.findOne({
-    where: { email: email },
+    where: { email: email, userRole: userRole },
     include: models.Member,
   });
 
@@ -77,30 +77,6 @@ exports.authUser = asyncHandler(async (req, res) => {
       res.status(401);
       throw new Error('Invalid User');
     }
-  }
-});
-
-// @desc    Get loggedIn user Profile     ///////////////////////////////////////////////
-// @route   GET /api/users/profile
-// @access  Private
-exports.getUserProfile = asyncHandler(async (req, res) => {
-  const user = await models.User.findOne({
-    where: { memberId: req.user.memberId },
-  });
-  // console.log(user);
-  if (user) {
-    const member = await models.Member.findOne({
-      where: { memberId: req.user.memberId },
-    });
-    if (member) {
-      res.json(member);
-    } else {
-      res.status(401);
-      throw new Error('Member not found');
-    }
-  } else {
-    res.status(401);
-    throw new Error('User not found');
   }
 });
 
@@ -298,8 +274,6 @@ exports.getPendingUsers = asyncHandler(async (req, res) => {
     where: { emailVerified: true },
   });
   res.json(pendingUsers);
-  // const members = await models.Member.findAll();
-  // res.json(members);
 });
 
 // @desc    Get a  Pending User by Id     ///////////////////////////////////////////////
@@ -385,6 +359,10 @@ exports.approveUser = asyncHandler(async (req, res) => {
       // If the execution reaches this line, no errors were thrown.
       // We commit the transaction.
       await t.commit();
+      await sendCongratulationsEmail({
+        toUserEmail: member.primaryEmail,
+        toUser: member.firstName,
+      });
       res.status(201).json('account has been Approved Successfully.');
     } catch (error) {
       // If the execution reaches this line, an error was thrown.
@@ -407,9 +385,12 @@ exports.approveUser = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 exports.getUsers = asyncHandler(async (req, res) => {
   const users = await models.User.findAll({ include: models.Member });
-  res.json(users);
-  // const members = await models.Member.findAll();
-  // res.json(members);
+  if (users && users.length !== 0) {
+    res.json(users);
+  } else {
+    res.status(404);
+    throw new Error('No User');
+  }
 });
 
 // @desc    Get a  User by Id     ///////////////////////////////////////////////
@@ -426,6 +407,30 @@ exports.getUserById = asyncHandler(async (req, res) => {
   if (user) {
     const member = await models.Member.findOne({
       where: { memberId: user.memberId },
+    });
+    if (member) {
+      res.json(member);
+    } else {
+      res.status(401);
+      throw new Error('Member not found');
+    }
+  } else {
+    res.status(401);
+    throw new Error('User not found');
+  }
+});
+
+// @desc    Get loggedIn user Profile     ///////////////////////////////////////////////
+// @route   GET /api/users/profile
+// @access  Private
+exports.getUserProfile = asyncHandler(async (req, res) => {
+  const user = await models.User.findOne({
+    where: { memberId: req.user.memberId },
+  });
+  // console.log(user);
+  if (user) {
+    const member = await models.Member.findOne({
+      where: { memberId: req.user.memberId },
     });
     if (member) {
       res.json(member);

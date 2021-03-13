@@ -24,7 +24,8 @@ import {
 } from '../../actions/userActions';
 import * as S from './SystemAdminScreen.Styles';
 import { deleteChapter, listChapters } from '../../actions/chapterActions';
-import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
+import Sidebar from '../../components/Sidebar/Sidebar';
+import { USER_PENDING_LIST_RESET } from '../../constants/userConstants';
 
 const SystemAdminScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -110,7 +111,7 @@ const SystemAdminScreen = ({ history }) => {
           id='sidebar-wrapper'
           className='mb-2'
         >
-          <AdminSidebar />
+          <Sidebar />
         </Col>
         <Col
           md={{ span: 9, order: 12 }}
@@ -193,6 +194,7 @@ const SystemAdminScreen = ({ history }) => {
               </Col>
               {/* 3rd card section : Last Donation End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
               {/* 4th card section : Training Taken ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
+
               <Col
                 md={{ span: 6, order: 4 }}
                 lg={{ span: 6, order: 4 }}
@@ -204,134 +206,23 @@ const SystemAdminScreen = ({ history }) => {
                 </Card>
               </Col>
               {/* 4th card section : Training Taken End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-              {/* 5th card section : All Chapter List ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-              <Col
-                md={{ span: 12, order: 12 }}
-                lg={{ span: 12, order: 12 }}
-                className='mb-2'
-                id='all-chapter'
-              >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>All Chapter List</Card.Header>
-
-                  <Card.Body>
-                    {loading ? (
-                      <Loader />
-                    ) : error ? (
-                      <Message variant='danger'>{error}</Message>
-                    ) : (
-                      <Table
-                        striped
-                        bordered
-                        hover
-                        responsive
-                        className='table-sm'
-                      >
-                        <thead>
-                          <tr>
-                            <th>ID</th>
-                            {/* <th>IMAGE</th> */}
-                            <th>CHAPTER NAME</th>
-                            <th>CHAPTER EMAIL</th>
-                            <th>CHAPTER PHONE</th>
-                            <th>CHAPTER ADDRESS</th>
-                            {userInfo &&
-                              userInfo.userRole === 'systemAdmin' && (
-                                <th>EDIT/DELETE</th>
-                              )}
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          {chapters.map((chapter) => (
-                            <tr key={chapter.chapterId}>
-                              <td>{chapter.chapterId}</td>
-                              {/* <td>
-                                {' '}
-                                <Image src={user.image} thumbnail />
-                              </td> */}
-                              <td> {chapter.chapterName}</td>
-                              <td>
-                                <a href={`mailto: ${chapter.chapterEmail}`}>
-                                  {' '}
-                                  {chapter.chapterEmail}
-                                </a>
-                              </td>
-                              <td> {chapter.chapterPhone}</td>
-                              <td> {chapter.chapterAddress}</td>
-                              {/* <td>
-                                {user.userRole === 'systemAdmin' ? (
-                                  <i
-                                    className='fas fa-check'
-                                    style={{ color: 'green' }}
-                                  ></i>
-                                ) : (
-                                  <i
-                                    className='fas fa-times'
-                                    style={{ color: 'red' }}
-                                  ></i>
-                                )}
-                              </td> */}
-                              {/* <td>
-                                {user.member.status === 'active' ? (
-                                  <i
-                                    className='fas fa-check'
-                                    style={{ color: 'green' }}
-                                  ></i>
-                                ) : (
-                                  <i
-                                    className='fas fa-times'
-                                    style={{ color: 'red' }}
-                                  ></i>
-                                )}
-                              </td> */}
-                              {userInfo && userInfo.userRole === 'systemAdmin' && (
-                                <td>
-                                  <LinkContainer
-                                    to={`/chapter/${chapter.chapterId}/edit`}
-                                  >
-                                    <Button variant='light' className='btn-sm'>
-                                      <i className='fas fa-edit'></i>
-                                    </Button>
-                                  </LinkContainer>
-
-                                  <Button
-                                    variant='danger'
-                                    className='btn-sm'
-                                    onClick={() =>
-                                      deleteChapterHandler(chapter.chapterId)
-                                    }
-                                  >
-                                    <i className='fas fa-trash'></i>
-                                  </Button>
-                                </td>
-                              )}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                    )}
-                  </Card.Body>
-                </Card>
-              </Col>
-              {/* 5th card section : All Chapter List End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
 
               {/* 6th card section : All Pending User List ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-              <Col
-                md={{ span: 12, order: 12 }}
-                lg={{ span: 12, order: 12 }}
-                className='mb-2'
-                id='all-chapter'
-              >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>Member Pending List</Card.Header>
+              {pendingUsersLoading ? (
+                <Loader />
+              ) : pendingUsersError ? (
+                <Message variant='danger'>{pendingUsersError}</Message>
+              ) : pendingUsers && pendingUsers.length !== 0 ? (
+                <Col
+                  md={{ span: 12, order: 12 }}
+                  lg={{ span: 12, order: 12 }}
+                  className='mb-2'
+                  id='all-chapter'
+                >
+                  <Card className='text-center' border='primary'>
+                    <Card.Header as='h5'>Member Pending List</Card.Header>
 
-                  <Card.Body>
-                    {pendingUsersLoading ? (
-                      <Loader />
-                    ) : pendingUsersError ? (
-                      <Message variant='danger'>{pendingUsersError}</Message>
-                    ) : (
+                    <Card.Body>
                       <Table
                         striped
                         bordered
@@ -388,19 +279,6 @@ const SystemAdminScreen = ({ history }) => {
                               </td>
                               <td> {pendingUser.primaryPhone}</td>
 
-                              {/* <td>
-                                {user.member.status === 'active' ? (
-                                  <i
-                                    className='fas fa-check'
-                                    style={{ color: 'green' }}
-                                  ></i>
-                                ) : (
-                                  <i
-                                    className='fas fa-times'
-                                    style={{ color: 'red' }}
-                                  ></i>
-                                )}
-                              </td> */}
                               {(userInfo.userRole === 'systemAdmin' ||
                                 userInfo.userRole === 'admin') && (
                                 <>
@@ -435,10 +313,10 @@ const SystemAdminScreen = ({ history }) => {
                           ))}
                         </tbody>
                       </Table>
-                    )}
-                  </Card.Body>
-                </Card>
-              </Col>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ) : null}
               {/* 6th card section : All Pending User List End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
 
               {/* 7th card section : All Member List ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}

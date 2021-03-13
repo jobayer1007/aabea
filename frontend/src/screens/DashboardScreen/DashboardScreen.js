@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import {
   Table,
@@ -7,15 +8,18 @@ import {
   Row,
   Col,
   Card,
-  CardColumns,
-  Nav,
+  ListGroup,
 } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import { listUsers, deleteUser } from '../../actions/userActions';
+import {
+  listUsers,
+  deleteUser,
+  getUserProfile,
+} from '../../actions/userActions';
 import * as S from './DashboardScreen.Styles';
+import Sidebar from '../../components/Sidebar/Sidebar';
 
 const DashboardScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -26,12 +30,16 @@ const DashboardScreen = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const userDetails = useSelector((state) => state.userDetails);
+  const { loading: userLoading, user, error: userError } = userDetails;
+
   const userDelete = useSelector((state) => state.userDelete);
   const { success: successDelete } = userDelete;
 
   useEffect(() => {
     if (userInfo) {
       dispatch(listUsers());
+      dispatch(getUserProfile());
     } else {
       history.push('/login');
     }
@@ -51,51 +59,7 @@ const DashboardScreen = ({ history }) => {
           id='sidebar-wrapper'
           className='mb-2'
         >
-          <Card className='text-center' border='primary'>
-            <Card.Body>
-              <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/payment'>
-                    <Nav.Link>Payment</Nav.Link>
-                  </LinkContainer>
-                </Button>
-              </Card.Title>
-              <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/donate'>
-                    <Nav.Link>Donate</Nav.Link>
-                  </LinkContainer>
-                </Button>
-              </Card.Title>
-              <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/training'>
-                    <Nav.Link>Training</Nav.Link>
-                  </LinkContainer>
-                </Button>
-              </Card.Title>
-              <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/committiees'>
-                    <Nav.Link>Committiees</Nav.Link>
-                  </LinkContainer>
-                </Button>
-              </Card.Title>
-              <Card.Title>
-                <Button variant='outline-info' block>
-                  Committiees
-                </Button>
-              </Card.Title>
-            </Card.Body>
-            <Card.Footer className='text-muted'>
-              <Link
-                className='btn btn-outline-warning btn-sm btn-block my-5 rounded'
-                to=''
-              >
-                another button
-              </Link>
-            </Card.Footer>
-          </Card>{' '}
+          <Sidebar />
         </Col>
         <Col
           md={{ span: 9, order: 12 }}
@@ -115,40 +79,45 @@ const DashboardScreen = ({ history }) => {
               >
                 <Card className='text-center' border='primary'>
                   <Card.Header as='h5' className='text-info'>
-                    {userInfo ? (
-                      userInfo.status == 'active' ? (
-                        <span>
-                          Memeber Status:{' '}
-                          <i
-                            className='fas fa-user'
-                            style={{ color: '#63D471' }}
-                          ></i>{' '}
-                          {userInfo.status.toUpperCase()}
-                        </span>
-                      ) : userInfo.status === 'pending' ? (
-                        <span>
-                          Memeber Status:{' '}
-                          <i
-                            className='fas fa-user'
-                            style={{ color: '29539B' }}
-                          ></i>{' '}
-                          {userInfo.status}
-                        </span>
+                    {userInfo &&
+                      (userLoading ? (
+                        <Loader />
+                      ) : userError ? (
+                        <Message variant='danger'>{userError}</Message>
+                      ) : user && user.length !== 0 ? (
+                        user.status === 'active' ? (
+                          <span>
+                            Memeber Status:{' '}
+                            <i
+                              className='fas fa-user'
+                              style={{ color: '#63D471' }}
+                            ></i>{' '}
+                            {user.status.toUpperCase()}
+                          </span>
+                        ) : user.status === 'pending' ? (
+                          <span>
+                            Memeber Status:{' '}
+                            <i
+                              className='fas fa-user'
+                              style={{ color: '29539B' }}
+                            ></i>{' '}
+                            {user.status}
+                          </span>
+                        ) : user.status === 'inactive' ? (
+                          <span className='text-danger'>
+                            Memeber Status:{' '}
+                            <i
+                              className='fas fa-user'
+                              style={{ color: '#A40606' }}
+                            >
+                              {' '}
+                            </i>{' '}
+                            {'  '} {user.status}
+                          </span>
+                        ) : null
                       ) : (
-                        <span className='text-danger'>
-                          Memeber Status:{' '}
-                          <i
-                            className='fas fa-user'
-                            style={{ color: '#A40606' }}
-                          >
-                            {' '}
-                          </i>{' '}
-                          {'  '} {userInfo.status.toUpperCase()}
-                        </span>
-                      )
-                    ) : (
-                      <span>No User </span>
-                    )}
+                        <span>No User </span>
+                      ))}
                   </Card.Header>
                 </Card>
               </Col>
@@ -161,7 +130,66 @@ const DashboardScreen = ({ history }) => {
                 id='profile-information'
               >
                 <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>Profile Information </Card.Header>
+                  <Card.Header as='h5'>Profile Summery </Card.Header>
+                  {userInfo ? (
+                    <>
+                      <ListGroup variant='flush'>
+                        <ListGroup.Item>
+                          <Row>
+                            <Col md={4}>Name:</Col>
+                            <Col>{userInfo.userName}</Col>
+                          </Row>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          <Row>
+                            <Col md={4}>User Type:</Col>
+                            <Col>{userInfo.userRole}</Col>
+                          </Row>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          <Row className='text-info'>
+                            <Col md={4}>Status:</Col>
+                            {user && user.status == 'active' ? (
+                              <Col>
+                                <i
+                                  className='fas fa-user'
+                                  style={{ color: '#63D471' }}
+                                ></i>{' '}
+                                {user.status}
+                              </Col>
+                            ) : (
+                              <Col className='text-danger'>
+                                <i
+                                  className='fas fa-user'
+                                  style={{ color: '#A40606' }}
+                                ></i>
+                                {user.status}
+                              </Col>
+                            )}
+                          </Row>
+                        </ListGroup.Item>
+                        {user && user.status !== 'active' && (
+                          <ListGroup.Item>
+                            <Link
+                              className='btn btn-outline-warning btn-sm btn-block rounded'
+                              to='/payment'
+                            >
+                              Please Pay your registration fee to activate your
+                              account
+                            </Link>
+                          </ListGroup.Item>
+                        )}
+                      </ListGroup>
+                      <Card.Footer className='text-muted'>
+                        <Link
+                          className='btn btn-outline-info btn-sm btn-block rounded'
+                          to='/profile'
+                        >
+                          View Full Profile
+                        </Link>
+                      </Card.Footer>
+                    </>
+                  ) : null}
                 </Card>
               </Col>
               {/* 2nd card section : Profile Information ~End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}

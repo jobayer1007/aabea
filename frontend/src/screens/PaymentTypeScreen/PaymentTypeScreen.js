@@ -1,41 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import {
-  Table,
-  Button,
-  Image,
-  Row,
-  Col,
-  Card,
-  CardColumns,
-  Nav,
-  Form,
-} from 'react-bootstrap';
+import { Table, Button, Row, Col, Card, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import {
-  listUsers,
-  deleteUser,
-  listPendingUsers,
-  deletePendingUser,
-  createAdminUser,
-  deleteAdminUser,
-} from '../../actions/userActions';
 import * as S from './PaymentTypeScreen.Styles';
-import { deleteChapter, listChapters } from '../../actions/chapterActions';
 import {
   deletePaymentType,
   listPaymentTypes,
   registerPaymentType,
 } from '../../actions/paymentTypeActions';
-import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
-import FormContainer from '../../components/FormContainer';
 import {
   PAYMENT_TYPE_LIST_RESET,
   PAYMENT_TYPE_REGISTER_RESET,
 } from '../../constants/paymentTypeConstants';
+import Sidebar from '../../components/Sidebar/Sidebar';
 
 const PaymentTypeScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -114,7 +94,7 @@ const PaymentTypeScreen = ({ history }) => {
           id='sidebar-wrapper'
           className='mb-2'
         >
-          <AdminSidebar />
+          <Sidebar />
         </Col>
         {/* Sidebar End */}
         <Col

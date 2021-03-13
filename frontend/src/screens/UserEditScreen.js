@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom';
 import { Form, Button, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import FormContainer from '../components/FormContainer';
-import { getUserDetails, updateUser } from '../actions/userActions';
+import {
+  getUserDetails,
+  getUserDetailsById,
+  updateUser,
+} from '../actions/userActions';
 import { USER_UPDATE_RESET } from '../constants/userConstants';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
@@ -55,7 +59,7 @@ const UserEditScreen = ({ match, history }) => {
     } else {
       if (!user.memberId) {
         console.log(memberId);
-        dispatch(getUserDetails(memberId));
+        dispatch(getUserDetailsById(memberId));
       } else {
         setFirstName(user.firstName);
         setMInit(user.mInit);

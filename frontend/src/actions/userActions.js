@@ -64,7 +64,7 @@ import {
   USER_UPDATE_SUCCESS,
 } from '../constants/userConstants';
 
-export const login = (email, password) => async (dispatch) => {
+export const login = (userRole, email, password) => async (dispatch) => {
   try {
     dispatch({
       type: USER_LOGIN_REQUEST,
@@ -78,7 +78,7 @@ export const login = (email, password) => async (dispatch) => {
 
     const { data } = await axios.post(
       '/api/users/login',
-      { email, password },
+      { userRole, email, password },
       config
     );
 
@@ -179,7 +179,7 @@ export const register = (
   }
 };
 
-export const getUserDetails = (id) => async (dispatch, getState) => {
+export const getUserDetailsById = (id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: USER_DETAILS_REQUEST,
@@ -197,6 +197,43 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
 
     const { data } = await axios.get(
       `/api/users/${id}`,
+
+      config
+    );
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getUserProfile = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_DETAILS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(
+      `/api/users/profile`,
 
       config
     );
@@ -265,7 +302,7 @@ export const listUsers = () => async (dispatch, getState) => {
     };
 
     const { data } = await axios.get(`/api/users/dashboard`, config);
-    dispatch({ type: USER_DETAILS_RESET });
+    // dispatch({ type: USER_DETAILS_RESET });
 
     dispatch({
       type: USER_LIST_SUCCESS,

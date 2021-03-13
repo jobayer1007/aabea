@@ -1,148 +1,126 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
+
+import { LinkContainer } from 'react-router-bootstrap';
+import { Button, Card, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import * as S from './Sidebar.styles';
 
-const Sidebar = (props) => {
-  const {
-    backgroundImage = '',
-    sidebarHeader = {
-      fullName: '',
-      shortName: '',
-    },
-    menuItems = [],
-    fonts = {
-      header: '',
-      menu: '',
-    },
-  } = props;
-
-  // State
-  const [selected, setSelectedMenuItem] = useState(menuItems[0].name);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [header, setHeader] = useState(sidebarHeader.fullName);
-  const [subMenuItemsState, setSubMenuItemsState] = useState({});
-
-  // Effect
-
-  // Update of Header State
-  useEffect(() => {
-    isSidebarOpen
-      ? setTimeout(() => setHeader(sidebarHeader.fullName), 200)
-      : setHeader(sidebarHeader.shortName);
-  }, [isSidebarOpen, sidebarHeader]);
-
-  // Update of Sidebar State
-  useEffect(() => {
-    const updateWindowWidth = () => {
-      if (window.innerWidth < 1280) {
-        setIsSidebarOpen(false);
-      } else {
-        setIsSidebarOpen(true);
-      }
-    };
-    window.addEventListener('resize', updateWindowWidth);
-
-    return () => window.removeEventListener('resize', updateWindowWidth);
-  }, [isSidebarOpen]);
-
-  // Add Index of Menu items with SubMenus to State
-  useEffect(() => {
-    const newSubmenus = {};
-    menuItems.forEach((item, index) => {
-      const hasSubMenus = !!item.subMenuItems.length;
-
-      if (hasSubMenus) {
-        newSubmenus[index] = {};
-        newSubmenus[index]['isOpen'] = false;
-        newSubmenus[index]['isSelected'] = null;
-      }
-    });
-
-    setSubMenuItemsState(newSubmenus);
-  }, [menuItems]);
-
-  const handleMenuItemClick = (name, index) => {
-    setSelectedMenuItem(name);
-    console.log('index:', index);
-
-    const subMenusCopy = JSON.parse(JSON.stringify(subMenuItemsState));
-
-    if (subMenuItemsState.hasOwnProperty(index)) {
-      subMenusCopy[index]['isOpen'] = !subMenuItemsState[index]['isOpen'];
-      setSubMenuItemsState(subMenusCopy);
-    }
-  };
-  console.log(subMenuItemsState);
-
-  const menuItemsJSX = menuItems.map((item, index) => {
-    const isItemSelected = selected === item.name;
-    // console.log(`${item.name} selected? ${isItemSelected} `);
-
-    const hasSubMenus = !!item.subMenuItems.length;
-    const isOpen = subMenuItemsState[index]
-      ? subMenuItemsState[index].isOpen
-      : null;
-
-    const subMenuJSX = item.subMenuItems.map(
-      (subMenuItem, SubMenuItemIndex) => {
-        return (
-          <S.SubMenuItem key={SubMenuItemIndex}>
-            {subMenuItem.name}
-          </S.SubMenuItem>
-        );
-      }
-    );
-
-    return (
-      <S.ItemContainer key={index}>
-        <Link to={item.to} style={{ textDecoration: 'none' }}>
-          <S.MenuItem
-            fonts={fonts.menu}
-            selected={isItemSelected}
-            onClick={() => handleMenuItemClick(item.name, index)}
-            isSidebarOpen={isSidebarOpen}
-            isOpen={isOpen}
-          >
-            <S.Icon isSidebarOpen={isSidebarOpen} src={item.icon} />
-            <S.Text isSidebarOpen={isSidebarOpen}>{item.name}</S.Text>
-            {hasSubMenus && isSidebarOpen && (
-              <S.DropDownIcon selected={isItemSelected} isOpen={isOpen} />
-            )}
-          </S.MenuItem>
-        </Link>
-        {/* // Display Submenus if they exist */}
-        <AnimatePresence>
-          {hasSubMenus && isOpen && (
-            <motion.nav
-              initial={{ opacity: 0, y: -15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35 }}
-              exit={{ opacity: 0, x: -30 }}
-            >
-              <S.SubMenuItemContainer isSidebarOpen={isSidebarOpen}>
-                {subMenuJSX}
-              </S.SubMenuItemContainer>
-            </motion.nav>
-          )}
-        </AnimatePresence>
-      </S.ItemContainer>
-    );
-  });
-
-  console.log(`is it open: ${isSidebarOpen}`);
+const Sidebar = () => {
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   return (
-    <S.SidebarContainer
-      backgroundImage={backgroundImage}
-      isSidebarOpen={isSidebarOpen}
-    >
-      <S.SidebarHeader fonts={fonts.header}>{header}</S.SidebarHeader>
-      <S.MenuItemContainer>{menuItemsJSX}</S.MenuItemContainer>
-      <S.TogglerContainer onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-        <S.Toggler />
-      </S.TogglerContainer>
-    </S.SidebarContainer>
+    <Card className='text-center' border='primary'>
+      <Card.Body>
+        {/* Chapter */}
+        {userInfo && userInfo.userRole === 'systemAdmin' && (
+          <Card.Title>
+            <Button variant='outline-info' block>
+              <LinkContainer to='/chapter'>
+                <Nav.Link>Chapter</Nav.Link>
+              </LinkContainer>
+            </Button>
+          </Card.Title>
+        )}
+
+        {userInfo &&
+          (userInfo.userRole === 'systemAdmin' ||
+            userInfo.userRole === 'admin') && (
+            <>
+              {/* Announcement */}
+              <Card.Title>
+                <Button variant='outline-info' block>
+                  <LinkContainer to='/announcement'>
+                    <Nav.Link>Announcement</Nav.Link>
+                  </LinkContainer>
+                </Button>
+              </Card.Title>
+
+              {/* Mission */}
+              <Card.Title>
+                <Button variant='outline-info' block>
+                  <LinkContainer to='/mission'>
+                    <Nav.Link>Mission</Nav.Link>
+                  </LinkContainer>
+                </Button>
+              </Card.Title>
+
+              {/* Vission */}
+              <Card.Title>
+                <Button variant='outline-info' block>
+                  <LinkContainer to='/vission'>
+                    <Nav.Link>Vission</Nav.Link>
+                  </LinkContainer>
+                </Button>
+              </Card.Title>
+
+              {/* History */}
+              <Card.Title>
+                <Button variant='outline-info' block>
+                  <LinkContainer to='/history'>
+                    <Nav.Link>History</Nav.Link>
+                  </LinkContainer>
+                </Button>
+              </Card.Title>
+
+              {/* Payment types */}
+              <Card.Title>
+                <Button variant='outline-info' block>
+                  <LinkContainer to='/paymentType'>
+                    <Nav.Link>Payment Types</Nav.Link>
+                  </LinkContainer>
+                </Button>
+              </Card.Title>
+            </>
+          )}
+
+        <Card.Title>
+          <Button variant='outline-info' block>
+            <LinkContainer to='/members'>
+              <Nav.Link>Members</Nav.Link>
+            </LinkContainer>
+          </Button>
+        </Card.Title>
+        <Card.Title>
+          <Button variant='outline-info' block>
+            <LinkContainer to='/training'>
+              <Nav.Link>Training</Nav.Link>
+            </LinkContainer>
+          </Button>
+        </Card.Title>
+        <Card.Title>
+          <Button variant='outline-info' block>
+            <LinkContainer to='/committiees'>
+              <Nav.Link>Committiees</Nav.Link>
+            </LinkContainer>
+          </Button>
+        </Card.Title>
+        <Card.Title>
+          <Button variant='outline-info' block>
+            <LinkContainer to='/payment'>
+              <Nav.Link>Payment</Nav.Link>
+            </LinkContainer>
+          </Button>
+        </Card.Title>
+
+        <Card.Title>
+          <Button variant='outline-info' block>
+            <LinkContainer to='/donate'>
+              <Nav.Link>Donation</Nav.Link>
+            </LinkContainer>
+          </Button>
+        </Card.Title>
+      </Card.Body>
+
+      {/* <Card.Footer className='text-muted'>
+        <Link
+          className='btn btn-outline-warning btn-sm btn-block my-5 rounded'
+          to=''
+        >
+          another button
+        </Link>
+      </Card.Footer> */}
+    </Card>
   );
 };
 
