@@ -6,7 +6,7 @@ import Footer from './components/Footer';
 import Header from './components/Header/Header';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
-import RegisterScreen from './screens/RegisterScreen';
+import RegisterScreen from './screens/RegistrationScreen/RegisterScreen';
 import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
 import UserListScreen from './screens/UserListScreen';
 import UserEditScreen from './screens/UserEditScreen';

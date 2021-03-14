@@ -13,5 +13,7 @@ createdAt TIMESTAMP NOT NULL,
 updatedAt TIMESTAMP NOT NULL
 )
 
- 
-        
+-- CHECK CURRENT / LAST SEQUENCE
+ SELECT * FROM "members_memberId_seq";
+        -- CHANGE THE LAST VALUE
+ALTER SEQUENCE "members_memberId_seq" RESTART WITH 1000;

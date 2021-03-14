@@ -315,7 +315,7 @@ const PaymentScreen = ({ location, history }) => {
           <DatePicker /> */}
           {/* PaymentDropdown End */}
           <Card className='text-center' border='primary'>
-            <Card.Header as='h2'>Payment History</Card.Header>
+            <Card.Header as='h2'>Payments</Card.Header>
             {paymentLoading ? (
               <Loader />
             ) : paymentErrors ? (

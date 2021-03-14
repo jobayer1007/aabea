@@ -58,19 +58,6 @@ const LoginScreen = ({ location, history }) => {
           {error && <Message variant='danger'>{error}</Message>}
           {loading && <Loader />}
           <Form onSubmit={submitHandler}>
-            <Form.Group controlId='userRole'>
-              <Form.Label>Sign In As: </Form.Label>
-              <Form.Control
-                as='select'
-                // onChange={qtyChangeHandler}
-                onChange={(e) => setUserRole(e.target.value)}
-              >
-                <option value='member'>Member</option>
-                <option value='admin'>Admin</option>
-                <option value='systemAdmin'>System Admin</option>
-              </Form.Control>
-            </Form.Group>
-
             <Form.Group controlId='email'>
               <Form.Label>Email Address</Form.Label>
               <Form.Control
@@ -89,6 +76,19 @@ const LoginScreen = ({ location, history }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId='userRole'>
+              <Form.Label>Sign In As: </Form.Label>
+              <Form.Control
+                as='select'
+                // onChange={qtyChangeHandler}
+                onChange={(e) => setUserRole(e.target.value)}
+              >
+                <option value='member'>Member</option>
+                <option value='admin'>Admin</option>
+                <option value='systemAdmin'>System Admin</option>
+              </Form.Control>
             </Form.Group>
 
             <Button type='submit' variant='info' block>

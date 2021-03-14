@@ -129,7 +129,7 @@ const DashboardScreen = ({ history }) => {
                 className='mb-2'
                 id='profile-information'
               >
-                <Card className='text-center' border='primary'>
+                <Card border='primary'>
                   <Card.Header as='h5'>Profile Summery </Card.Header>
                   {userInfo ? (
                     <>

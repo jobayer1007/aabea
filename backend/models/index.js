@@ -51,8 +51,10 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
+// MEmber ID Generator
+// var mId = 10200;
 const id = generateUniqueId({
-  length: 32,
+  length: 5,
   useLetters: false,
 });
 console.log(id);
