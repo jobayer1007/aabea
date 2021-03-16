@@ -62,12 +62,17 @@ exports.authUser = asyncHandler(async (req, res) => {
         });
       } else {
         if (userPending.emailVerified === false) {
-          res.status(401);
-          throw new Error(
-            'Please visite your mailbox to verify your Email address.'
-          );
+          // res.status(401);
+          // throw new Error(
+          //   'Please visite your mailbox to verify your Email address.'
+          // );
+          return res.status(401).json({
+            // token: generateToken(userPending.pendingId),
+            message:
+              'Please visite your mailbox to verify your Email address.!!!!!!!!!!',
+          });
         } else {
-          res.status(401);
+          res.status(402);
           throw new Error(
             'Your application is under review. You will be notified once it is reviewed!'
           );
@@ -233,36 +238,80 @@ exports.registerUser = asyncHandler(async (req, res) => {
 // @access  Public
 exports.verifyUserEmail = asyncHandler(async (req, res) => {
   const { hash } = req.params;
-  const { email } = req.body;
+  // const { email } = req.body;
   console.log(hash);
   const pendingUser = await models.PendingRegister.findOne({
+    where: { pendingId: hash },
+  });
+
+  if (pendingUser.emailVerified !== true) {
+    // if (pendingUser.pendingId === hash) {
+    const updateEmailVarified = await models.PendingRegister.update(
+      {
+        emailVerified: true,
+      },
+      { where: { pendingId: hash } }
+    );
+
+    if (updateEmailVarified == 1) {
+      res.json(
+        'Your Email Verification Successfull! An admin will review your application now. Once reviewed, you will be notified! Thank You.'
+      );
+    } else {
+      res.status(400);
+      throw new Error('Email Verification Unsuccessfull!');
+    }
+    // } else {
+    //   res.status(400);
+    //   throw new Error('Activation Link is Invalid');
+    // }
+  } else {
+    res.status(400);
+    throw new Error('Activation Link is Invalid');
+  }
+});
+
+// @desc    Verify Email Resend     ///////////////////////////////////////////////
+// @route   POST /api/users/verifyResend
+// @access  Public
+exports.verifyEmailResend = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const userPending = await models.PendingRegister.findOne({
     where: { email: email },
   });
 
-  if (pendingUser) {
-    if (pendingUser.pendingId === hash) {
-      const updateEmailVarified = await models.PendingRegister.update(
-        {
-          emailVerified: true,
-        },
-        { where: { pendingId: hash } }
-      );
+  if (userPending) {
+    const passwordIsValid = bcrypt.compareSync(password, userPending.password);
 
-      if (updateEmailVarified == 1) {
-        res.json(
-          'Your Email Verification Successfull! An admin will review your application now. Once reviewed, you will be notified! Thank You.'
-        );
-      } else {
-        res.status(400);
-        throw new Error('Email Verification Unsuccessfull!');
-      }
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        token: null,
+        message: 'Invalid Credentials!',
+      });
     } else {
-      res.status(400);
-      throw new Error('Activation Link is Invalid');
+      if (userPending.emailVerified === false) {
+        const sendVerificationEmail = await sendConfirmationEmail({
+          toUserEmail: userPending.email,
+          toUser: userPending.firstName,
+          hash: userPending.pendingId,
+        });
+
+        if (sendVerificationEmail) {
+          res.json(
+            'An Email with verification link has been sent to your inbox! Please visit your email address and activate your account'
+          );
+        } else {
+          res.status(400);
+          throw new Error(
+            'Something Went Wrong with verification Email sending, Please contact the Administrator'
+          );
+        }
+      }
     }
   } else {
-    res.status(400);
-    throw new Error('Cannot Validate User Email');
+    res.status(401);
+    throw new Error('Invalid User');
   }
 });
 

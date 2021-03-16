@@ -20,6 +20,7 @@ import {
   userRegisterReducer,
   userUpdateProfileReducer,
   userUptadeReducer,
+  userVerificationEmailResendReducer,
 } from './reducers/userReducers';
 import {
   chapterDeleteReducer,
@@ -37,6 +38,7 @@ const reducer = combineReducers({
   userList: userListReducer,
   userRegister: userRegisterReducer,
   userEmailVerify: userEmailVerificationReducer,
+  userVerifyEmailResend: userVerificationEmailResendReducer,
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
 

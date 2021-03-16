@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom';
 import { Form, Button, Row, Col, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import FormContainer from '../components/FormContainer';
-import { login } from '../actions/userActions';
+import { login, logout, resendVerifyEmail } from '../actions/userActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import swal from 'sweetalert';
-import { USER_LOGOUT } from '../constants/userConstants';
+import {
+  USER_LOGOUT,
+  USER_VERIFY_EMAIL_RESEND_RESET,
+} from '../constants/userConstants';
 
 const LoginScreen = ({ location, history }) => {
   const [userRole, setUserRole] = useState('member');
@@ -17,8 +20,16 @@ const LoginScreen = ({ location, history }) => {
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
+  const { loading, error: errorLogin, userInfo } = userLogin;
 
-  const { loading, error, userInfo } = userLogin;
+  const userVerifyEmailResend = useSelector(
+    (state) => state.userVerifyEmailResend
+  );
+  const {
+    loading: veResendLoading,
+    error: veResendError,
+    success,
+  } = userVerifyEmailResend;
 
   const redirect = location.search
     ? location.search.split('=')[1]
@@ -29,12 +40,59 @@ const LoginScreen = ({ location, history }) => {
       history.push(redirect);
     } else if (userInfo && userInfo.userRole === 'systemAdmin') {
       history.push('/systemAdmin');
-    } else if (error) {
-      console.log(error);
-      swal('Error!', error, 'error');
-      dispatch({ type: USER_LOGOUT });
+    } else if (errorLogin) {
+      console.log(errorLogin);
+      if (errorLogin === 'Invalid User' || errorLogin === 'Invalid Password!') {
+        swal('Error!', errorLogin, 'error');
+        dispatch({ type: USER_LOGOUT });
+      } else if (
+        errorLogin ===
+        'Your application is under review. You will be notified once it is reviewed!'
+      ) {
+        swal('Error!', errorLogin, 'error');
+        dispatch({ type: USER_LOGOUT });
+      } else if (success) {
+        console.log(success);
+        swal('Success!', success, 'success').then(() => {
+          dispatch(logout());
+        });
+      } else if (veResendError) {
+        console.log(veResendError);
+        swal('Error!', veResendError, 'error').then(() => {
+          dispatch(logout());
+        });
+      } else {
+        swal('Error!', errorLogin, {
+          buttons: {
+            catch: {
+              text: 'Resend Verification Link',
+              value: 'resend',
+            },
+
+            ok: true,
+          },
+        }).then((value) => {
+          switch (value) {
+            case 'ok':
+              swal.close();
+              dispatch(logout());
+              break;
+
+            case 'resend':
+              dispatch(resendVerifyEmail(email, password));
+
+              console.log(email);
+              console.log(password);
+
+              break;
+
+            default:
+              swal.close();
+          }
+        });
+      }
     }
-  }, [history, userInfo, redirect, error]);
+  }, [history, userInfo, success, redirect, errorLogin, veResendError]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -55,7 +113,7 @@ const LoginScreen = ({ location, history }) => {
           LOGIN
         </Card.Header>
         <Card.Body>
-          {error && <Message variant='danger'>{error}</Message>}
+          {errorLogin && <Message variant='danger'>{errorLogin}</Message>}
           {loading && <Loader />}
           <Form onSubmit={submitHandler}>
             <Form.Group controlId='email'>

@@ -25,6 +25,7 @@ import {
   USER_DONATION_DETAILS_SUCCESS,
   USER_EMAIL_VERIFY_FAIL,
   USER_EMAIL_VERIFY_REQUEST,
+  USER_EMAIL_VERIFY_RESET,
   USER_EMAIL_VERIFY_SUCCESS,
   USER_LIST_FAIL,
   USER_LIST_REQUEST,
@@ -62,6 +63,10 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
+  USER_VERIFY_EMAIL_RESEND_FAIL,
+  USER_VERIFY_EMAIL_RESEND_REQUEST,
+  USER_VERIFY_EMAIL_RESEND_RESET,
+  USER_VERIFY_EMAIL_RESEND_SUCCESS,
 } from '../constants/userConstants';
 
 export const login = (userRole, email, password) => async (dispatch) => {
@@ -103,6 +108,7 @@ export const logout = () => (dispatch) => {
   localStorage.removeItem('userInfo');
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_REGISTER_RESET });
+  dispatch({ type: USER_VERIFY_EMAIL_RESEND_RESET });
   dispatch({ type: USER_LIST_RESET });
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: USER_PENDING_LIST_RESET });
@@ -478,6 +484,39 @@ export const verifyUserEmail = (hash, email) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_EMAIL_VERIFY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const resendVerifyEmail = (email, password) => async (dispatch) => {
+  try {
+    dispatch({
+      type: USER_VERIFY_EMAIL_RESEND_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const { data } = await axios.post(
+      '/api/users/verifyResend',
+      { email, password },
+      config
+    );
+
+    dispatch({
+      type: USER_VERIFY_EMAIL_RESEND_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_VERIFY_EMAIL_RESEND_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

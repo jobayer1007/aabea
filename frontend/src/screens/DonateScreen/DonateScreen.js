@@ -160,6 +160,17 @@ const DonateScreen = ({ history }) => {
                           <Row>
                             <Col md={8}>
                               <Form>
+                                <Form.Group controlId='mInit'>
+                                  <Form.Label>Mr / Mrs ? </Form.Label>
+                                  <Form.Control
+                                    as='select'
+                                    onChange={(e) => setMInit(e.target.value)}
+                                  >
+                                    <option value='Mr'>Mr</option>
+                                    <option value='Mrs'>Mrs</option>
+                                  </Form.Control>
+                                </Form.Group>
+
                                 <Form.Group controlId='firstName'>
                                   <Form.Label>First Name</Form.Label>
                                   <Form.Control
@@ -170,17 +181,6 @@ const DonateScreen = ({ history }) => {
                                       setFirstName(e.target.value)
                                     }
                                   ></Form.Control>
-                                </Form.Group>
-
-                                <Form.Group controlId='mInit'>
-                                  <Form.Label>Mr / Mrs ? </Form.Label>
-                                  <Form.Control
-                                    as='select'
-                                    onChange={(e) => setMInit(e.target.value)}
-                                  >
-                                    <option value='Mr'>Mr</option>
-                                    <option value='Mrs'>Mrs</option>
-                                  </Form.Control>
                                 </Form.Group>
 
                                 <Form.Group controlId='lastName'>

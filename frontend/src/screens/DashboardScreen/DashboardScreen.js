@@ -168,18 +168,27 @@ const DashboardScreen = ({ history }) => {
                             )}
                           </Row>
                         </ListGroup.Item>
-                        {user && user.status !== 'active' && (
-                          <ListGroup.Item>
-                            <Link
-                              className='btn btn-outline-warning btn-sm btn-block rounded'
-                              to='/payment'
-                            >
-                              Please Pay your registration fee to activate your
-                              account
-                            </Link>
-                          </ListGroup.Item>
-                        )}
+                        {user &&
+                          (user.status !== 'active' ? (
+                            <ListGroup.Item>
+                              <Link
+                                className='btn btn-outline-warning btn-sm btn-block rounded'
+                                to='/payment'
+                              >
+                                Please Pay your registration fee to activate
+                                your account
+                              </Link>
+                            </ListGroup.Item>
+                          ) : (
+                            <ListGroup.Item>
+                              <Row>
+                                <Col md={4}>Next Payment Due In:</Col>
+                                <Col>{user.NextPaymentDueIn}</Col>
+                              </Row>{' '}
+                            </ListGroup.Item>
+                          ))}
                       </ListGroup>
+
                       <Card.Footer className='text-muted'>
                         <Link
                           className='btn btn-outline-info btn-sm btn-block rounded'

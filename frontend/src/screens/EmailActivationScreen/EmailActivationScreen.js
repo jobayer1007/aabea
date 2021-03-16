@@ -28,7 +28,7 @@ const EmailActivationScreen = ({ location, match, history }) => {
     if (!hash) {
       history.push(redirect);
     } else {
-      // if (success) {
+      dispatch(verifyUserEmail(hash));
       //   history.push(redirect);
       // }
       if (success) {
@@ -40,16 +40,18 @@ const EmailActivationScreen = ({ location, match, history }) => {
       } else if (error) {
         console.log(error);
         swal('Error!', error, 'error');
+        dispatch({ type: USER_EMAIL_VERIFY_RESET });
+        history.push(redirect);
       }
     }
-  }, [history, hash, success, redirect]);
+  }, [history, hash, error, redirect]);
 
   const submitHandler = (e) => {
     e.preventDefault();
 
     // Dispatch Verify
-    dispatch(verifyUserEmail(hash, email));
-    console.log(`hash: ${hash} , email: ${email}`);
+    dispatch(verifyUserEmail(hash));
+    console.log(`hash: ${hash} `);
   };
 
   return (
@@ -68,23 +70,23 @@ const EmailActivationScreen = ({ location, match, history }) => {
           {loading && <Loader />}
           {success ? (
             <Message variant='info'>{success}</Message>
-          ) : (
-            <Form onSubmit={submitHandler}>
-              <Form.Group controlId='email'>
-                <Form.Label>Please Confirm Your Email Address</Form.Label>
-                <Form.Control
-                  type='email'
-                  placeholder='Enter Email..'
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                ></Form.Control>
-              </Form.Group>
+          ) : null
+          // <Form onSubmit={submitHandler}>
+          //   {/* <Form.Group controlId='email'>
+          //     <Form.Label>Please Confirm Your Email Address</Form.Label>
+          //     <Form.Control
+          //       type='email'
+          //       placeholder='Enter Email..'
+          //       value={email}
+          //       onChange={(e) => setEmail(e.target.value)}
+          //     ></Form.Control>
+          //   </Form.Group> */}
 
-              <Button type='submit' variant='info' block>
-                Verify
-              </Button>
-            </Form>
-          )}
+          //   <Button type='submit' variant='info' block>
+          //     Verify
+          //   </Button>
+          // </Form>
+          }
         </Card.Body>
         <Card.Footer className='text-muted'>
           <Row className='py-3'>

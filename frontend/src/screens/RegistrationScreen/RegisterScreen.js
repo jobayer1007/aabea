@@ -16,7 +16,7 @@ const RegisterScreen = ({ location, history }) => {
   const [validated, setValidated] = useState(false);
 
   const [firstName, setFirstName] = useState('');
-  const [mInit, setMInit] = useState('');
+  const [mInit, setMInit] = useState('Mr');
   const [lastName, setLastName] = useState('');
   const [address1, setAddress1] = useState('');
   const [city, setCity] = useState('');

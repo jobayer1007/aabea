@@ -35,6 +35,7 @@ import {
   USER_LIST_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
+  USER_LOGIN_RESET,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT,
   USER_PAYMENT_DETAILS_FAIL,
@@ -67,6 +68,10 @@ import {
   USER_UPDATE_REQUEST,
   USER_UPDATE_RESET,
   USER_UPDATE_SUCCESS,
+  USER_VERIFY_EMAIL_RESEND_FAIL,
+  USER_VERIFY_EMAIL_RESEND_REQUEST,
+  USER_VERIFY_EMAIL_RESEND_RESET,
+  USER_VERIFY_EMAIL_RESEND_SUCCESS,
 } from '../constants/userConstants';
 
 export const userLoginReducer = (state = {}, action) => {
@@ -223,6 +228,21 @@ export const userEmailVerificationReducer = (state = {}, action) => {
     case USER_EMAIL_VERIFY_FAIL:
       return { loading: false, error: action.payload };
     case USER_EMAIL_VERIFY_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const userVerificationEmailResendReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_VERIFY_EMAIL_RESEND_REQUEST:
+      return { loading: true };
+    case USER_VERIFY_EMAIL_RESEND_SUCCESS:
+      return { loading: false, success: action.payload };
+    case USER_VERIFY_EMAIL_RESEND_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_VERIFY_EMAIL_RESEND_RESET:
       return {};
     default:
       return state;

@@ -358,7 +358,7 @@ const SystemAdminScreen = ({ history }) => {
 
                             {userInfo &&
                               userInfo.userRole === 'systemAdmin' && (
-                                <th>Assign As Admin</th>
+                                <th>Assign As Admin / Member</th>
                               )}
                           </tr>
                         </thead>
@@ -429,35 +429,35 @@ const SystemAdminScreen = ({ history }) => {
                               )}
 
                               {userInfo.userRole === 'systemAdmin' &&
-                              user.userRole === 'member' ? (
-                                <td>
-                                  <Button
-                                    variant='danger'
-                                    className='btn-sm'
-                                    onClick={() =>
-                                      createAdminHandler(user.memberId)
-                                    }
-                                  >
-                                    {' '}
-                                    Set As ADMIN
-                                    {/* <i className='fas fa-trash'></i> */}
-                                  </Button>{' '}
-                                </td>
-                              ) : (
-                                <td>
-                                  <Button
-                                    variant='success'
-                                    className='btn-sm'
-                                    onClick={() =>
-                                      deleteAdminHandler(user.memberId)
-                                    }
-                                  >
-                                    {' '}
-                                    Set As Member
-                                    {/* <i className='fas fa-trash'></i> */}
-                                  </Button>
-                                </td>
-                              )}
+                                (user.userRole === 'member' ? (
+                                  <td>
+                                    <Button
+                                      variant='danger'
+                                      className='btn-sm'
+                                      onClick={() =>
+                                        createAdminHandler(user.memberId)
+                                      }
+                                    >
+                                      {' '}
+                                      Set As ADMIN
+                                      {/* <i className='fas fa-trash'></i> */}
+                                    </Button>{' '}
+                                  </td>
+                                ) : (
+                                  <td>
+                                    <Button
+                                      variant='success'
+                                      className='btn-sm'
+                                      onClick={() =>
+                                        deleteAdminHandler(user.memberId)
+                                      }
+                                    >
+                                      {' '}
+                                      Set As Member
+                                      {/* <i className='fas fa-trash'></i> */}
+                                    </Button>
+                                  </td>
+                                ))}
                             </tr>
                           ))}
                         </tbody>

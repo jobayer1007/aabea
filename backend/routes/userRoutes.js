@@ -17,6 +17,7 @@ const {
   registerSystemAdmin,
   createAdminUser,
   deleteAdminUser,
+  verifyEmailResend,
 } = require('../controllers/userController');
 const {
   getUserPaymentDetails,
@@ -38,6 +39,7 @@ router.route('/donate').get(protect, getUserDonationDetails);
 router.route('/:id/donate').post(protect, memberDonation);
 
 router.route('/register').post(registerUser);
+router.route('/verifyResend').post(verifyEmailResend);
 router.route('/activate/:hash').post(verifyUserEmail);
 router.route('/pending').get(getPendingUsers);
 router.route('/:id/pending').get(getPendingUserById).post(approveUser);
