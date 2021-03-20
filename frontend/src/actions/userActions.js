@@ -35,6 +35,13 @@ import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT,
+  USER_PASSWORD_RESET_FAIL,
+  USER_PASSWORD_RESET_REQUEST,
+  USER_PASSWORD_RESET_RESET,
+  USER_PASSWORD_RESET_SUCCESS,
+  USER_PASSWORD_UPDATE_FAIL,
+  USER_PASSWORD_UPDATE_REQUEST,
+  USER_PASSWORD_UPDATE_SUCCESS,
   USER_PAYMENT_DETAILS_FAIL,
   USER_PAYMENT_DETAILS_REQUEST,
   USER_PAYMENT_DETAILS_RESET,
@@ -780,6 +787,71 @@ export const deleteAdminUser = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_DELETE_ADMIN_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const passwordReset = (email) => async (dispatch) => {
+  try {
+    dispatch({
+      type: USER_PASSWORD_RESET_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const { data } = await axios.post(`/api/users/${email}`, config);
+
+    dispatch({
+      type: USER_PASSWORD_RESET_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_PASSWORD_RESET_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const passwordUpdate = (password, id, token) => async (
+  dispatch,
+  getState
+) => {
+  try {
+    dispatch({
+      type: USER_PASSWORD_UPDATE_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/users/newPassword/${id}/${token}`,
+      { password },
+      config
+    );
+
+    dispatch({
+      type: USER_PASSWORD_UPDATE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_PASSWORD_UPDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

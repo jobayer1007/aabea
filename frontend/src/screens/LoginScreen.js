@@ -9,6 +9,7 @@ import Loader from '../components/Loader';
 import swal from 'sweetalert';
 import {
   USER_LOGOUT,
+  USER_PASSWORD_RESET_RESET,
   USER_VERIFY_EMAIL_RESEND_RESET,
 } from '../constants/userConstants';
 
@@ -36,6 +37,8 @@ const LoginScreen = ({ location, history }) => {
     : '/dashboard';
 
   useEffect(() => {
+    dispatch({ type: USER_PASSWORD_RESET_RESET });
+
     if (userInfo && userInfo.userRole !== 'systemAdmin') {
       history.push(redirect);
     } else if (userInfo && userInfo.userRole === 'systemAdmin') {
@@ -163,6 +166,10 @@ const LoginScreen = ({ location, history }) => {
               >
                 Register
               </Link>
+            </Col>
+
+            <Col>
+              <Link to={'/password/recover'}>Forgot your password?</Link>
             </Col>
           </Row>
         </Card.Footer>

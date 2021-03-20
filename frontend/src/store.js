@@ -12,6 +12,8 @@ import {
   userEmailVerificationReducer,
   userListReducer,
   userLoginReducer,
+  userPasswordResetReducer,
+  userPasswordUpdateReducer,
   userPaymentDetailsReducer,
   userPayReducer,
   userPendingDeleteReducer,
@@ -34,13 +36,18 @@ import {
 } from './reducers/paymentTypeReducers';
 
 const reducer = combineReducers({
-  userLogin: userLoginReducer,
-  userList: userListReducer,
   userRegister: userRegisterReducer,
   userEmailVerify: userEmailVerificationReducer,
   userVerifyEmailResend: userVerificationEmailResendReducer,
+
+  userLogin: userLoginReducer,
+  userPasswordReset: userPasswordResetReducer,
+  userPasswordUpdate: userPasswordUpdateReducer,
+
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
+
+  userList: userListReducer,
 
   userPendingList: userPendingListReducer,
   userPendingDetails: userPendingDetailsReducer,

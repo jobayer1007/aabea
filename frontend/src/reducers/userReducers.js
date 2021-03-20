@@ -38,6 +38,14 @@ import {
   USER_LOGIN_RESET,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT,
+  USER_PASSWORD_RESET_FAIL,
+  USER_PASSWORD_RESET_REQUEST,
+  USER_PASSWORD_RESET_RESET,
+  USER_PASSWORD_RESET_SUCCESS,
+  USER_PASSWORD_UPDATE_FAIL,
+  USER_PASSWORD_UPDATE_REQUEST,
+  USER_PASSWORD_UPDATE_RESET,
+  USER_PASSWORD_UPDATE_SUCCESS,
   USER_PAYMENT_DETAILS_FAIL,
   USER_PAYMENT_DETAILS_REQUEST,
   USER_PAYMENT_DETAILS_RESET,
@@ -385,6 +393,36 @@ export const userDeleteAdminReducer = (state = {}, action) => {
     case USER_DELETE_ADMIN_FAIL:
       return { loading: false, error: action.payload };
 
+    default:
+      return state;
+  }
+};
+
+export const userPasswordResetReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_PASSWORD_RESET_REQUEST:
+      return { loading: true };
+    case USER_PASSWORD_RESET_SUCCESS:
+      return { loading: false, success: action.payload };
+    case USER_PASSWORD_RESET_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_PASSWORD_RESET_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const userPasswordUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case USER_PASSWORD_UPDATE_REQUEST:
+      return { loading: true };
+    case USER_PASSWORD_UPDATE_SUCCESS:
+      return { loading: false, success: action.payload };
+    case USER_PASSWORD_UPDATE_FAIL:
+      return { loading: false, error: action.payload };
+    case USER_PASSWORD_UPDATE_RESET:
+      return {};
     default:
       return state;
   }

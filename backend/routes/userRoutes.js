@@ -18,6 +18,8 @@ const {
   createAdminUser,
   deleteAdminUser,
   verifyEmailResend,
+  sendPasswordResetEmail,
+  receiveNewPassword,
 } = require('../controllers/userController');
 const {
   getUserPaymentDetails,
@@ -48,6 +50,10 @@ router.route('/dashboard').get(protect, getUsers);
 router.route('/:id').get(getUserById).put(updateUser);
 router.route('/:id').delete(protect, admin, deleteUser);
 router.route('/:id/admin').delete(deleteAdminUser);
+
+// Password Reset
+router.route('/:email').post(sendPasswordResetEmail);
+router.route('/newPassword/:id/:token').put(receiveNewPassword);
 
 // Add a User/////////////////////////////////////////////////
 

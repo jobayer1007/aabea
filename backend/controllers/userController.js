@@ -4,12 +4,20 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const asyncHandler = require('express-async-handler');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { sendConfirmationEmail, sendCongratulationsEmail } = require('./mailer');
+const {
+  sendConfirmationEmail,
+  sendCongratulationsEmail,
+  getPasswordResetURL,
+  resetPasswordTemplate,
+  transporter,
+} = require('./mailer');
 const User = require('../models/User');
 const Member = require('../models/Member');
 const models = require('../models/index');
-const generateToken = require('../utils/generateToken');
+const { generateToken, passwordResetToken } = require('../utils/generateToken');
+const { where } = require('sequelize');
 
 // @desc    Auth User & get Token     ///////////////////////////////////////////////
 // @route   POST /api/users/login
@@ -178,59 +186,6 @@ exports.registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('User Already Exists');
   }
-  // } else {
-  //   const userExistsInPendingRegister = await models.PendingRegister.findOne({
-  //     where: { email: email },
-  //   }); // // Check if the user already registered but email not verified
-
-  //   if (userExistsInPendingRegister) {
-  //     res.status(400);
-  //     throw new Error(
-  //       'Please visit your email address and activate your account'
-  //     );
-  //   } else {
-  //     const pendingUserRegister = await models.PendingRegister.create({
-  //       email,
-  //       firstName,
-  //       mInit,
-  //       lastName,
-  //       address1,
-  //       city,
-  //       state,
-  //       zipcode,
-  //       primaryPhone,
-  //       degree,
-  //       degreeYear,
-  //       major,
-  //       collegeName,
-  //       password: bcrypt.hashSync(password, 10),
-  //     });
-
-  //     if (pendingUserRegister) {
-  //       const sendVerificationEmail = await sendConfirmationEmail({
-  //         toUserEmail: pendingUserRegister.email,
-  //         toUser: pendingUserRegister.firstName,
-  //         hash: pendingUserRegister.pendingId,
-  //       });
-
-  //       if (sendVerificationEmail) {
-  //         res.json(
-  //           'Just one more step! Please visit your email address and activate your account'
-  //         );
-  //       } else {
-  //         res.status(400);
-  //         throw new Error(
-  //           'Something Went Wrong with verification Email sending, Please contact the Administrator'
-  //         );
-  //       }
-  //     } else {
-  //       res.status(400);
-  //       throw new Error(
-  //         'Something Went Wrong, Please contact the Administrator'
-  //       );
-  //     }
-  //   }
-  // }
 });
 
 // @desc    Verify a new User Email     ///////////////////////////////////////////////
@@ -825,6 +780,130 @@ exports.deleteAdminUser = asyncHandler(async (req, res) => {
   } else {
     res.status(401);
     throw new Error('User not found');
+  }
+});
+
+// @desc    Send Password Reset Email     ///////////////////////////////////////////////
+// @route   POST /api/users/:email
+// @access  Public
+exports.sendPasswordResetEmail = asyncHandler(async (req, res) => {
+  const { email } = req.params;
+
+  const user = await models.User.findOne({ where: { email: email } });
+
+  if (user) {
+    console.log(user.email);
+    // res.json(user);
+
+    const token = passwordResetToken(user);
+    const url = getPasswordResetURL(user, token);
+    const emailTemplate = resetPasswordTemplate(user, url);
+    console.log(token);
+    const sendEmail = () => {
+      transporter.sendMail(emailTemplate, (err, info) => {
+        if (err) {
+          res.status(500).json('Error sending email');
+        }
+        console.log(`** Email sent **`, info.response);
+        res.json(
+          'An email with the password reset link has been sent into your mailbox. Please check your email.'
+        );
+      });
+    };
+    sendEmail();
+  } else {
+    res.status(401);
+    throw new Error('Invalid User / No user with that email');
+  }
+});
+
+// @desc    Send Password Reset Email     ///////////////////////////////////////////////
+// @route   POST /api/users/:userId/:token
+// @access  Public
+exports.receiveNewPassword = asyncHandler(async (req, res) => {
+  const { id, token } = req.params;
+  const { password } = req.body;
+
+  const user = await models.User.findOne({ where: { memberId: id } });
+
+  if (user) {
+    // const matchToken = async function (token) {
+    //   return await bcrypt.compare(token, this.password);
+    // };
+
+    // const tokenToVerify = passwordResetToken(user);
+    // console.log(token);
+    // console.log(tokenToVerify);
+    const secret = user.password + '-' + user.updatedAt;
+    // const secret2 = user.password + '-' + user.createdAt;
+    try {
+      const payload = await jwt.verify(token, secret);
+
+      if (payload.id === user.memberId) {
+        console.log('token verified');
+        models.User.update(
+          { password: bcrypt.hashSync(password, 10) },
+          { where: { memberId: id } }
+        )
+          .then((updatedUser) => {
+            if (updatedUser) {
+              res.status(202).json('Password changed successfull');
+            }
+          })
+          .catch((error) => {
+            res.status(401);
+            throw new Error(
+              'Password change Unsuccessful. Please contact the admin'
+            );
+          });
+      }
+    } catch (error) {
+      console.log(error);
+      // res.json(error);
+      res.status(404);
+      throw new Error('Invalid Token: ' + error);
+    }
+    // await jwt
+    //   .verify(token, secret)
+
+    //   .then(
+    //     (payload) => {
+    //       if (payload.id === user.memberId) {
+    //         console.log('token verified');
+    //         models.User.update(
+    //           { password: bcrypt.hashSync(password, 10) },
+    //           { where: { memberId: id } }
+    //         )
+    //           .then((updatedUser) => {
+    //             if (updatedUser) {
+    //               res.status(202).json('Password changed successfull');
+    //             }
+    //           })
+    //           .catch((error) => {
+    //             res.status(401);
+    //             throw new Error(
+    //               'Password change Unsuccessful. Please contact the admin'
+    //             );
+    //           });
+    //       }
+    //     }
+    //     // else {
+    //     //   res.status(404);
+    //     //   throw new Error('Invalid Token');
+    //     // }
+    //   )
+    //   .catch((error) => {
+    //     console.log(error);
+    //     // res.json(error);
+    //     res.status(404);
+    //     throw new Error('Invalid Token' + error);
+    //   });
+    // const payloadToVerify = jwt.verify(tokenToVerify, secret);
+    // console.log(payload);
+    // console.log(payloadToVerify);
+  } else {
+    res.status(404);
+    throw new Error('Invalid User / No user with that email');
   }
 });
 

@@ -28,6 +28,8 @@ import AnnouncementScreen from './screens/AnnouncementScreen/AnnouncementScreen'
 import MissionScreen from './screens/MissionScreen/MissionScreen';
 import VissionScreen from './screens/VissionScreen/VissionScreen';
 import HistoryScreen from './screens/HistoryScreen/HistoryScreen';
+import PasswordResetScreen from './screens/PasswordResetScreen/PasswordResetScreen';
+import PasswordUpdateScreen from './screens/PasswordUpdateScreen/PasswordUpdateScreen';
 
 const App = () => {
   return (
@@ -37,6 +39,11 @@ const App = () => {
         <main className='py-3'>
           <Container>
             <Route path='/login' component={LoginScreen} />
+            <Route path='/password/recover' component={PasswordResetScreen} />
+            <Route
+              path='/password/reset/:id/:token'
+              component={PasswordUpdateScreen}
+            />
             <Route path='/register' component={RegisterScreen} />
             <Route path='/activate/:hash' component={EmailActivationScreen} />
             <Route path='/dashboardScreen' component={UserListScreen} />

@@ -71,3 +71,34 @@ exports.sendCongratulationsEmail = function ({ toUser }) {
     });
   });
 };
+
+// Password Reset
+
+exports.transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.GOOGLE_USER,
+    pass: process.env.GOOGLE_PASSWORD,
+  },
+});
+
+exports.getPasswordResetURL = (user, token) =>
+  `http://localhost:3000/password/reset/${user.memberId}/${token}`;
+
+exports.resetPasswordTemplate = (user, url) => {
+  const from = process.env.GOOGLE_USER;
+  // to: toUserEmail,
+  const to = process.env.GOOGLE_USER;
+  const subject = '🌻 AABEA Password Reset 🌻';
+  const html = `
+  <p>Hey ${user.name || user.email},</p>
+  <p>We heard that you lost your AABEA password. Sorry about that!</p>
+  <p>But don’t worry! You can use the following link to reset your password:</p>
+  <a href=${url}>${url}</a>
+  <p>If you don’t use this link within 1 hour, it will expire.</p>
+  <p>Do something outside today! </p>
+  <p>–Your friends at AABEA</p>
+  `;
+
+  return { from, to, subject, html };
+};
