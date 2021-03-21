@@ -10,11 +10,18 @@ const validStatus = ['Active', 'Pending', 'Inactive'];
 
 const Member = (sequelize, DataTypes) =>
   sequelize.define('member', {
+    chapterId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true,
+      notEmpty: true,
+    },
+
     memberId: {
       //email will be used as member id
       type: DataTypes.BIGINT,
       // defaultValue: 123456,
-      autoIncrement: true,
+      // autoIncrement: true,
       // defaultValue: Sequelize.literal('uuid_generate_v4()'),
       allowNull: false,
       primaryKey: true,
@@ -26,39 +33,39 @@ const Member = (sequelize, DataTypes) =>
       // },
     },
     firstName: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(20),
       required: true,
       allowNull: false,
       notEmpty: true,
     },
     mInit: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(10),
     },
     lastName: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(20),
       required: true,
     },
     address1: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       required: true,
     },
     address2: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
     },
     city: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(30),
       required: true,
     },
     state: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(20),
       required: true,
     },
     zipcode: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(15),
       required: true,
     },
     primaryEmail: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(30),
       allowNull: false,
       required: true,
       unique: true,
@@ -67,38 +74,38 @@ const Member = (sequelize, DataTypes) =>
       },
     },
     alternateEmail: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(30),
       validate: {
         isEmail: true,
       },
     },
     primaryPhone: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(12),
       required: true,
       allowNull: false,
     },
     alternatePhone: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(12),
     },
     degree: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       required: true,
     },
     degreeYear: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATE(4),
       required: true,
     },
     major: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(30),
       required: true,
     },
     collegeName: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(50),
       required: true,
     },
 
     status: {
-      type: DataTypes.ENUM,
+      type: DataTypes.ENUM(15),
       defaultValue: 'inactive',
       values: ['active', 'pending', 'inactive'],
     },
@@ -108,17 +115,12 @@ const Member = (sequelize, DataTypes) =>
       defaultValue: false,
     },
 
-    balance: {
-      type: DataTypes.FLOAT,
-      defaultValue: 0.0,
-    },
-
     startDate: {
       type: DataTypes.DATEONLY,
       defaultValue: Sequelize.NOW,
     },
 
-    NextPaymentDueIn: {
+    nextPaymentDueIn: {
       type: DataTypes.REAL,
       allowNull: false,
       validate: {
@@ -126,15 +128,9 @@ const Member = (sequelize, DataTypes) =>
         notEmpty: true,
       },
     },
-    // userName: {
-    //   type: DataTypes.VIRTUAL,
-    //   get() {
-    //     return `${this.firstName} ${this.lastName}`;
-    //   },
-    //   set(value) {
-    //     throw new Error('Do not try to set the `userName` value!');
-    //   },
-    // },
+    certificates: {
+      type: DataTypes.STRING,
+    },
   });
 
 // Member.sync({ force: true });

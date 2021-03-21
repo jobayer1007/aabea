@@ -2,6 +2,12 @@
 
 const PaymentType = (sequelize, DataTypes) =>
   sequelize.define('paymentType', {
+    chapterId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true,
+      notEmpty: true,
+    },
     paymentTypeId: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,

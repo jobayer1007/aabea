@@ -132,10 +132,10 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
         const t = await sequelize.transaction();
 
         try {
-          const yearOfPayments = member.NextPaymentDueIn + parseInt(totalYear);
+          const yearOfPayments = member.nextPaymentDueIn + parseInt(totalYear);
           console.log(yearOfPayments);
           for (let i = 0; i < totalYear; i++) {
-            const year = member.NextPaymentDueIn + i;
+            const year = member.nextPaymentDueIn + i;
             console.log(year);
             await models.Payment.create(
               {
@@ -157,7 +157,7 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
             {
               status: 'active',
               isPaid: true,
-              NextPaymentDueIn: yearOfPayments,
+              nextPaymentDueIn: yearOfPayments,
             },
             { where: { memberId: req.user.memberId } },
             { transaction: t }

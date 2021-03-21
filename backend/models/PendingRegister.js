@@ -2,6 +2,12 @@ const { Sequelize } = require('sequelize');
 
 const PendingRegister = (sequelize, DataTypes) =>
   sequelize.define('pendingRegister', {
+    chapterId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true,
+      notEmpty: true,
+    },
     pendingId: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,

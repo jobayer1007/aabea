@@ -149,23 +149,24 @@ const DashboardScreen = ({ history }) => {
                         <ListGroup.Item>
                           <Row className='text-info'>
                             <Col md={4}>Status:</Col>
-                            {user && user.status == 'active' ? (
-                              <Col>
-                                <i
-                                  className='fas fa-user'
-                                  style={{ color: '#63D471' }}
-                                ></i>{' '}
-                                {user.status}
-                              </Col>
-                            ) : (
-                              <Col className='text-danger'>
-                                <i
-                                  className='fas fa-user'
-                                  style={{ color: '#A40606' }}
-                                ></i>
-                                {user.status}
-                              </Col>
-                            )}
+                            {user &&
+                              (user.status == 'active' ? (
+                                <Col>
+                                  <i
+                                    className='fas fa-user'
+                                    style={{ color: '#63D471' }}
+                                  ></i>{' '}
+                                  {user.status}
+                                </Col>
+                              ) : (
+                                <Col className='text-danger'>
+                                  <i
+                                    className='fas fa-user'
+                                    style={{ color: '#A40606' }}
+                                  ></i>
+                                  {user.status}
+                                </Col>
+                              ))}
                           </Row>
                         </ListGroup.Item>
                         {user &&
@@ -183,7 +184,7 @@ const DashboardScreen = ({ history }) => {
                             <ListGroup.Item>
                               <Row>
                                 <Col md={4}>Next Payment Due In:</Col>
-                                <Col>{user.NextPaymentDueIn}</Col>
+                                <Col>{user.nextPaymentDueIn}</Col>
                               </Row>{' '}
                             </ListGroup.Item>
                           ))}

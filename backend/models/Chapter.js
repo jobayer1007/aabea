@@ -6,7 +6,7 @@ const Chapter = (sequelize, DataTypes) =>
   sequelize.define('chapter', {
     chapterId: {
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      defaultValue: Sequelize.UUID4,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
@@ -36,9 +36,11 @@ const Chapter = (sequelize, DataTypes) =>
       // allowNull: false,
     },
 
-    balance: {
-      type: DataTypes.FLOAT,
-      defaultValue: 0.0,
+    subDomain: {
+      // dc.aabea.org
+      type: DataTypes.STRING,
+      // defaultValue: 0.0,
+      required: true,
     },
   });
 

@@ -34,6 +34,32 @@ import {
   paymentTypeListReducer,
   paymentTypeRegisterReducer,
 } from './reducers/paymentTypeReducers';
+import {
+  announcementAllReducer,
+  announcementByIdReducer,
+  announcementDeleteReducer,
+  announcementNewReducer,
+  announcementUpdateReducer,
+} from './reducers/announcementReducers';
+import {
+  missionAllReducer,
+  missionByIdReducer,
+  missionDeleteReducer,
+  missionNewReducer,
+  missionUpdateReducer,
+} from './reducers/missionReducers';
+import {
+  vissionAllReducer,
+  vissionDeleteReducer,
+  vissionNewReducer,
+  vissionUpdateReducer,
+} from './reducers/vissionReducers';
+import {
+  historyAllReducer,
+  historyDeleteReducer,
+  historyNewReducer,
+  historyUpdateReducer,
+} from './reducers/historyReducers';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -68,6 +94,29 @@ const reducer = combineReducers({
   chapterRegister: chapterRegisterReducer,
   chapterList: chapterListReducer,
   chapterDelete: chapterDeleteReducer,
+
+  announcementNew: announcementNewReducer,
+  announcementAll: announcementAllReducer,
+  announcementById: announcementByIdReducer,
+  announcementUpdate: announcementUpdateReducer,
+  announcementDelete: announcementDeleteReducer,
+
+  missionNew: missionNewReducer,
+  missionAll: missionAllReducer,
+  missionById: missionByIdReducer,
+  missionUpdate: missionUpdateReducer,
+  missionDelete: missionDeleteReducer,
+
+  vissionRegister: vissionNewReducer,
+  vissionAll: vissionAllReducer,
+  // vissionById: vissionByIdReducer,
+  vissionUpdate: vissionUpdateReducer,
+  vissionDelete: vissionDeleteReducer,
+
+  historyRegister: historyNewReducer,
+  historyAll: historyAllReducer,
+  historyUpdate: historyUpdateReducer,
+  historyDelete: historyDeleteReducer,
 
   paymentTypeRegister: paymentTypeRegisterReducer,
   paymentTypeList: paymentTypeListReducer,

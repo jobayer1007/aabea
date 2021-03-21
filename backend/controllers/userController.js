@@ -17,7 +17,7 @@ const User = require('../models/User');
 const Member = require('../models/Member');
 const models = require('../models/index');
 const { generateToken, passwordResetToken } = require('../utils/generateToken');
-const { where } = require('sequelize');
+const { generateId } = require('../utils/generateId');
 
 // @desc    Auth User & get Token     ///////////////////////////////////////////////
 // @route   POST /api/users/login
@@ -133,7 +133,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
     if (userExistsInPendingRegister) {
       res.status(400);
       throw new Error(
-        'Please visit your email address and activate your account'
+        'Please check your email address and verify your account'
       );
     } else {
       // const id = generateUniqueId({
@@ -166,9 +166,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
         });
 
         if (sendVerificationEmail) {
-          res.json(
-            'Just one more step! Please visit your email address and activate your account'
-          );
+          res.json('Please check your email to verify your account');
         } else {
           res.status(400);
           throw new Error(
@@ -210,11 +208,11 @@ exports.verifyUserEmail = asyncHandler(async (req, res) => {
 
     if (updateEmailVarified == 1) {
       res.json(
-        'Your Email Verification Successfull! An admin will review your application now. Once reviewed, you will be notified! Thank You.'
+        'Your email verification is successfull! Admin will review your application. Once review is done, you will be notified! Thank You.'
       );
     } else {
       res.status(400);
-      throw new Error('Email Verification Unsuccessfull!');
+      throw new Error('Email verification unsuccessfull!');
     }
     // } else {
     //   res.status(400);
@@ -222,7 +220,7 @@ exports.verifyUserEmail = asyncHandler(async (req, res) => {
     // }
   } else {
     res.status(400);
-    throw new Error('Activation Link is Invalid');
+    throw new Error('Your email is already verified.');
   }
 });
 
@@ -254,7 +252,7 @@ exports.verifyEmailResend = asyncHandler(async (req, res) => {
 
         if (sendVerificationEmail) {
           res.json(
-            'An Email with verification link has been sent to your inbox! Please visit your email address and activate your account'
+            'An email with verification link has been sent! Please check your email to verify your account'
           );
         } else {
           res.status(400);
@@ -318,9 +316,11 @@ exports.approveUser = asyncHandler(async (req, res) => {
 
     try {
       // Then, we do some calls passing this transaction as an option:
-
+      const users = await models.User.findAll();
       const member = await models.Member.create(
         {
+          memberId: generateId(users),
+
           primaryEmail: pendingUser.email,
           firstName: pendingUser.firstName,
           mInit: pendingUser.mInit,
@@ -337,7 +337,7 @@ exports.approveUser = asyncHandler(async (req, res) => {
           degreeYear: pendingUser.degreeYear,
           major: pendingUser.major,
           collegeName: pendingUser.collegeName,
-          NextPaymentDueIn: new Date().getFullYear(),
+          nextPaymentDueIn: new Date().getFullYear(),
           // status: 'inactive'
           // balance,
         },
@@ -960,12 +960,14 @@ exports.registerSystemAdmin = asyncHandler(async (req, res) => {
 
   if (!userExists) {
     const t = await sequelize.transaction();
-
+    const users = await models.User.findAll();
     try {
       // Then, we do some calls passing this transaction as an option:
 
       const member = await models.Member.create(
         {
+          memberId: generateId(users),
+
           primaryEmail: email,
           firstName,
           mInit,
@@ -984,7 +986,7 @@ exports.registerSystemAdmin = asyncHandler(async (req, res) => {
           collegeName,
           status,
           chapterId,
-          NextPaymentDueIn: new Date().getFullYear(),
+          nextPaymentDueIn: new Date().getFullYear(),
           // balance,
         },
         { transaction: t }

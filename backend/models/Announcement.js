@@ -2,31 +2,39 @@ const { Sequelize } = require('sequelize');
 
 //Chapter schema
 
-const Role = (sequelize, DataTypes) =>
-  sequelize.define('role', {
+const Announcement = (sequelize, DataTypes) =>
+  sequelize.define('announcement', {
     chapterId: {
       type: DataTypes.BIGINT,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
     },
-    roleId: {
+    announcementId: {
       type: DataTypes.UUID,
-      defaultValue: Sequelize.UUID,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
     },
-    roleName: {
+    title: {
+      type: DataTypes.TEXT,
+      required: true,
+      allowNull: false,
+      notEmpty: true,
+    },
+    body: {
+      type: DataTypes.TEXT,
+      required: true,
+      allowNull: false,
+      notEmpty: true,
+    },
+    createdby: {
       type: DataTypes.STRING,
       required: true,
       allowNull: false,
       notEmpty: true,
     },
-    roleDescription: {
-      type: DataTypes.STRING,
-      required: true,
-    },
   });
 
-module.exports = Role;
+module.exports = Announcement;

@@ -2,34 +2,46 @@ const { Sequelize } = require('sequelize');
 
 const Donation = (sequelize, DataTypes) =>
   sequelize.define('donation', {
-    firstName: {
-      type: DataTypes.STRING,
-      required: true,
+    chapterId: {
+      type: DataTypes.BIGINT,
       allowNull: false,
+      primaryKey: true,
       notEmpty: true,
     },
-    mInit: {
-      type: DataTypes.STRING,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      required: true,
-    },
-
     email: {
-      type: DataTypes.STRING,
+      //// In case if Member , it will be member email
+      type: DataTypes.STRING(20),
       allowNull: false,
       required: true,
-      // unique: true,
+      primaryKey: true,
       validate: {
         isEmail: {
           msg: 'Must be a valid email address',
         },
       },
     },
+    donationDate: {
+      type: DataTypes.DATE,
+      defaultValue: Sequelize.NOW,
+      primaryKey: true,
+    },
+
+    firstName: {
+      type: DataTypes.STRING(20),
+      required: true,
+      allowNull: false,
+      notEmpty: true,
+    },
+    mInit: {
+      type: DataTypes.STRING(10),
+    },
+    lastName: {
+      type: DataTypes.STRING(20),
+      required: true,
+    },
 
     donationType: {
-      type: DataTypes.ENUM,
+      type: DataTypes.ENUM(30),
       defaultValue: 'general',
       values: ['general', 'flood', 'corona'],
     },
@@ -39,11 +51,6 @@ const Donation = (sequelize, DataTypes) =>
       required: false,
       isFloat: true,
       defaultValue: 0.0,
-    },
-
-    donationDate: {
-      type: DataTypes.DATE,
-      defaultValue: Sequelize.NOW,
     },
 
     payerId: {

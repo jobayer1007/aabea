@@ -172,3 +172,475 @@ exports.deletePaymentType = asyncHandler(async (req, res) => {
     throw new Error('Payment Type not found');
   }
 });
+
+///////////////////////////////////////////ANNOUNCEMENT////////////////////////////////////////////////
+
+// @desc    Create a new Announcement     /////////////////////////////////////////Announcement//////
+// @route   POST /api/chapters/announcement
+// @access  Private/SystemAdmin || Admin
+exports.createNewAnnouncement = asyncHandler(async (req, res) => {
+  const { title, body, id } = req.body;
+
+  const user = await models.User.findOne({ where: { memberId: id } });
+  if (user) {
+    const newAnnouncement = await models.Announcement.create({
+      title,
+      body,
+      chapterId: user.chapterId,
+      createdby: user.memberId,
+    });
+    if (newAnnouncement) {
+      res.json('New Announcement Created Successfully');
+    } else {
+      res.status(400);
+      throw new Error('Encountered problem while creating new Announcement');
+    }
+  } else {
+    res.status(400);
+    throw new Error('Encountered problem while creating new Announcements');
+  }
+});
+
+// @desc    GET all Announcements     ///////////////////////////////////////////////
+// @route   GET /api/chapters/announcements
+// @access  Private/SystemAdmin || Admin
+exports.getAnnouncements = asyncHandler(async (req, res) => {
+  const announcements = await models.Announcement.findAll();
+  res.json(announcements);
+});
+
+// @desc    Get an  announcement by Id     ///////////////////////////////////////////////
+// @route   GET /api/chapters/announcements/:id
+// @access  Private/Admin || SystemAdmin
+exports.getAnnouncementById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const announcement = await models.Announcement.findOne({
+    where: { announcementId: id },
+  });
+
+  if (announcement) {
+    res.json(announcement);
+  } else {
+    res.status(401);
+    throw new Error('Announcement not found');
+  }
+});
+
+// @desc   Update an  announcement by Id      ///////////////////////////////////////////////
+// @route   PUT /api/chapters/announcements/:id
+// @access  Private/Admin || SystemAdmin
+exports.updateAnnouncementById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const announcement = await models.Announcement.findOne({
+    where: { announcementId: id },
+  });
+
+  if (announcement) {
+    const data = {
+      title: req.body.title || announcement.title,
+      body: req.body.body || announcement.body,
+    };
+
+    let { title, body } = data;
+    const updatedAnnouncement = await models.Announcement.update(
+      {
+        title,
+        body,
+      },
+      { where: { announcementId: id } }
+    );
+
+    if (updatedAnnouncement == 1) {
+      res.send('announcement update successful');
+    } else {
+      res.send('announcement update unsuccessful');
+    }
+  } else {
+    res.status(401);
+    throw new Error('announcement not found');
+  }
+});
+
+// @desc    Delete an Announcement     /////////////////////////////////////////////// pending
+// @route   DELETE /api/chapters/announcements/:id
+// @access  Private/Admin
+exports.deleteAnnouncement = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  // console.log(id);
+  const announcement = await models.Announcement.findOne({
+    where: { announcementId: id },
+  });
+
+  if (announcement) {
+    models.Announcement.destroy({
+      where: { announcementId: id },
+    })
+      .then((num) => {
+        if (num == 1) {
+          res.json('Announcement has been deleted successfully');
+        } else {
+          res.json('Cannot delete the Announcement');
+        }
+      })
+      .catch((err) => console.log(err));
+  } else {
+    res.status(401);
+    throw new Error('Announcement not found');
+  }
+});
+
+///////////////////////////////////////////MISSION////////////////////////////////////////////////
+
+// @desc    Create a new MISSION     /////////////////////////////////////////MISSION//////
+// @route   POST /api/chapters/mission
+// @access  Private/SystemAdmin || Admin
+exports.createMission = asyncHandler(async (req, res) => {
+  const { title, body, id } = req.body;
+
+  const user = await models.User.findOne({ where: { memberId: id } });
+  if (user) {
+    const newMission = await models.Mission.create({
+      title,
+      body,
+      chapterId: user.chapterId,
+      createdby: user.memberId,
+    });
+    if (newMission) {
+      res.json('New Mission Created Successfully');
+    } else {
+      res.status(400);
+      throw new Error('Encountered problem while creating new Mission');
+    }
+  } else {
+    res.status(400);
+    throw new Error('Encountered problem while creating new Mission');
+  }
+});
+
+// @desc    GET Mission     ///////////////////////////////////////////////
+// @route   GET /api/chapters/mission
+// @access  Private/SystemAdmin || Admin
+exports.getMission = asyncHandler(async (req, res) => {
+  const mission = await models.Mission.findAll();
+  res.json(mission);
+});
+
+// @desc    Get Mission by Id     ///////////////////////////////////////////////
+// @route   GET /api/chapters/mission/:id
+// @access  Private/Admin || SystemAdmin
+exports.getMissionById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const mission = await models.Mission.findOne({
+    where: { chapterId: id },
+  });
+
+  if (mission) {
+    res.json(mission);
+  } else {
+    res.status(401);
+    throw new Error('mission not found');
+  }
+});
+
+// @desc   Update an  announcement by Id      ///////////////////////////////////////////////
+// @route   PUT /api/chapters/mission/:id
+// @access  Private/Admin || SystemAdmin
+exports.updateMissionById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const mission = await models.Mission.findOne({
+    where: { chapterId: id },
+  });
+
+  if (mission) {
+    const data = {
+      title: req.body.title || mission.title,
+      body: req.body.body || mission.body,
+    };
+
+    let { title, body } = data;
+    const updatedMission = await models.Mission.update(
+      {
+        title,
+        body,
+      },
+      { where: { chapterId: id } }
+    );
+
+    if (updatedMission == 1) {
+      res.send('Mission update successful');
+    } else {
+      res.send('Mission update unsuccessful');
+    }
+  } else {
+    res.status(401);
+    throw new Error('Mission not found');
+  }
+});
+
+// @desc    Delete an Announcement     /////////////////////////////////////////////// pending
+// @route   DELETE /api/chapters/mission/:id
+// @access  Private/Admin
+exports.deleteMission = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  // console.log(id);
+  const mission = await models.Mission.findOne({
+    where: { chapterId: id },
+  });
+
+  if (mission) {
+    models.Mission.destroy({
+      where: { chapterId: id },
+    })
+      .then((num) => {
+        if (num == 1) {
+          res.json('Mission has been deleted successfully');
+        } else {
+          res.json('Cannot delete the Mission');
+        }
+      })
+      .catch((err) => console.log(err));
+  } else {
+    res.status(401);
+    throw new Error('Mission not found');
+  }
+});
+
+///////////////////////////////////////////VISSION////////////////////////////////////////////////
+
+// @desc    Create a new VISSION     /////////////////////////////////////////VISSION//////
+// @route   POST /api/chapters/vission
+// @access  Private/SystemAdmin || Admin
+exports.createVission = asyncHandler(async (req, res) => {
+  const { title, body, id } = req.body;
+
+  const user = await models.User.findOne({ where: { memberId: id } });
+  if (user) {
+    const newVission = await models.Vission.create({
+      title,
+      body,
+      chapterId: user.chapterId,
+      createdby: user.memberId,
+    });
+    if (newVission) {
+      res.json('Vission Created Successfully');
+    } else {
+      res.status(400);
+      throw new Error('Encountered problem while creating Vission');
+    }
+  } else {
+    res.status(400);
+    throw new Error('Encountered problem while creating new Vission');
+  }
+});
+
+// @desc    GET Vission     ///////////////////////////////////////////////
+// @route   GET /api/chapters/vission
+// @access  Private/SystemAdmin || Admin
+exports.getVission = asyncHandler(async (req, res) => {
+  const vission = await models.Vission.findAll();
+  res.json(vission);
+});
+
+// @desc    Get Vission by Id     ///////////////////////////////////////////////
+// @route   GET /api/chapters/vission/:id
+// @access  Private/Admin || SystemAdmin
+exports.getVissionById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const vission = await models.Vission.findOne({
+    where: { chapterId: id },
+  });
+
+  if (vission) {
+    res.json(vission);
+  } else {
+    res.status(401);
+    throw new Error('vission not found');
+  }
+});
+
+// @desc   Update an  vission by Id      ///////////////////////////////////////////////
+// @route   PUT /api/chapters/vission/:id
+// @access  Private/Admin || SystemAdmin
+exports.updateVissionById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const vission = await models.Vission.findOne({
+    where: { chapterId: id },
+  });
+
+  if (vission) {
+    const data = {
+      title: req.body.title || vission.title,
+      body: req.body.body || vission.body,
+    };
+
+    let { title, body } = data;
+    const updatedVission = await models.Vission.update(
+      {
+        title,
+        body,
+      },
+      { where: { chapterId: id } }
+    );
+
+    if (updatedVission == 1) {
+      res.send('Vission update successful');
+    } else {
+      res.send('Vission update unsuccessful');
+    }
+  } else {
+    res.status(401);
+    throw new Error('Vission not found');
+  }
+});
+
+// @desc    Delete an Vission     /////////////////////////////////////////////// pending
+// @route   DELETE /api/chapters/announcements/:id
+// @access  Private/Admin
+exports.deleteVission = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  // console.log(id);
+  const vission = await models.Vission.findOne({
+    where: { chapterId: id },
+  });
+
+  if (vission) {
+    models.Vission.destroy({
+      where: { chapterId: id },
+    })
+      .then((num) => {
+        if (num == 1) {
+          res.json('Vission has been deleted successfully');
+        } else {
+          res.json('Cannot delete the Vission');
+        }
+      })
+      .catch((err) => console.log(err));
+  } else {
+    res.status(401);
+    throw new Error('Vission not found');
+  }
+});
+
+///////////////////////////////////////////HISTORY////////////////////////////////////////////////
+
+// @desc    Create a new HISTORY     /////////////////////////////////////////HISTORY//////
+// @route   POST /api/chapters/history
+// @access  Private/SystemAdmin || Admin
+exports.createHistory = asyncHandler(async (req, res) => {
+  const { title, body, id } = req.body;
+
+  const user = await models.User.findOne({ where: { memberId: id } });
+  if (user) {
+    const newHistory = await models.History.create({
+      title,
+      body,
+      chapterId: user.chapterId,
+      createdby: user.memberId,
+    });
+    if (newHistory) {
+      res.json('History Created Successfully');
+    } else {
+      res.status(400);
+      throw new Error('Encountered problem while creating History');
+    }
+  } else {
+    res.status(400);
+    throw new Error('Encountered problem while creating new History');
+  }
+});
+
+// @desc    GET history     ///////////////////////////////////////////////
+// @route   GET /api/chapters/history
+// @access  Private/SystemAdmin || Admin
+exports.getHistory = asyncHandler(async (req, res) => {
+  const history = await models.History.findAll();
+  res.json(history);
+});
+
+// @desc    Get History by Id     ///////////////////////////////////////////////
+// @route   GET /api/chapters/history/:id
+// @access  Private/Admin || SystemAdmin
+exports.getHistoryById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const history = await models.History.findOne({
+    where: { chapterId: id },
+  });
+
+  if (history) {
+    res.json(history);
+  } else {
+    res.status(401);
+    throw new Error('history not found');
+  }
+});
+
+// @desc   Update history by Id      ///////////////////////////////////////////////
+// @route   PUT /api/chapters/history/:id
+// @access  Private/Admin || SystemAdmin
+exports.updateHistoryById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const history = await models.History.findOne({
+    where: { chapterId: id },
+  });
+
+  if (history) {
+    const data = {
+      title: req.body.title || history.title,
+      body: req.body.body || history.body,
+    };
+
+    let { title, body } = data;
+    const updatedHistory = await models.History.update(
+      {
+        title,
+        body,
+      },
+      { where: { chapterId: id } }
+    );
+
+    if (updatedHistory == 1) {
+      res.send('History update successful');
+    } else {
+      res.send('History update unsuccessful');
+    }
+  } else {
+    res.status(401);
+    throw new Error('History not found');
+  }
+});
+
+// @desc    Delete history     /////////////////////////////////////////////// pending
+// @route   DELETE /api/chapters/history/:id
+// @access  Private/Admin
+exports.deleteHistory = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  // console.log(id);
+  const history = await models.History.findOne({
+    where: { chapterId: id },
+  });
+
+  if (history) {
+    models.History.destroy({
+      where: { chapterId: id },
+    })
+      .then((num) => {
+        if (num == 1) {
+          res.json('History has been deleted successfully');
+        } else {
+          res.json('Cannot delete the History');
+        }
+      })
+      .catch((err) => console.log(err));
+  } else {
+    res.status(401);
+    throw new Error('History not found');
+  }
+});

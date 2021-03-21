@@ -6,14 +6,12 @@ const sequelize = new Sequelize(
 
 const Payment = (sequelize, DataTypes) =>
   sequelize.define('payment', {
-    // Id: {
-    //   type: DataTypes.UUID,
-    //   defaultValue: DataTypes.UUIDV4,
-    //   allowNull: false,
-    //   notEmpty: true,
-    //   primaryKey: true,
-    //   required: true,
-    // },
+    chapterId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true,
+      notEmpty: true,
+    },
     memberId: {
       type: DataTypes.BIGINT,
       allowNull: false,
