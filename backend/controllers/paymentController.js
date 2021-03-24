@@ -110,6 +110,7 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
         req.body.paymentTypeName === 'nominationFee'
       ) {
         const payment = await models.Payment.create({
+          chapterId: member.chapterId,
           memberId: member.memberId,
           amount: req.body.paymentResult.purchase_units[0].amount.value,
           year: new Date().getFullYear(),
@@ -140,6 +141,7 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
             await models.Payment.create(
               {
                 // paymentType,
+                chapterId: member.chapterId,
                 memberId: member.memberId,
                 amount: req.body.paymentResult.purchase_units[0].amount.value,
                 year: year,
@@ -297,6 +299,7 @@ exports.memberDonation = asyncHandler(async (req, res) => {
 
     if (member) {
       const donate = await models.Donation.create({
+        chapterId: member.chapterId,
         firstName: member.firstName,
         mInit: member.mInit,
         lastName: member.lastName,
@@ -339,5 +342,110 @@ exports.getUserDonationDetails = asyncHandler(async (req, res) => {
   } else {
     res.status(404);
     throw new Error('No Donation Found');
+  }
+});
+
+// @desc    Update Donate to Paid   for GUEST  ///////////////////////////////////////////////
+// @route   POST /api/users/donate
+// @access  Public
+exports.guestDonation = asyncHandler(async (req, res) => {
+  const {
+    subDomain,
+    guest,
+    email,
+    firstName,
+    mInit,
+    lastName,
+    paymentResult,
+  } = req.body;
+  console.log(`Domain: ${subDomain}`);
+  console.log(`guest: ${guest}`);
+  console.log(`email: ${email}`);
+  console.log(`firstName: ${firstName}`);
+  console.log(`mInit: ${mInit}`);
+  console.log(`lastName: ${lastName}`);
+  console.log(`amount: ${paymentResult.purchase_units[0].amount.value}`);
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+  // console.log(chapter);
+  if (chapter) {
+    if (guest) {
+      const member = await models.Member.findOne({
+        where: { primaryEmail: email },
+      });
+
+      if (member) {
+        const donate = await models.Donation.create({
+          chapterId: member.chapterId,
+          firstName: member.firstName,
+          mInit: member.mInit,
+          lastName: member.lastName,
+          email: member.primaryEmail,
+          // donationType:
+          amount: paymentResult.purchase_units[0].amount.value,
+          payerId: paymentResult.payer.email_address,
+          paymentId: paymentResult.id,
+          paymentStatus: paymentResult.status,
+          paymentTime: paymentResult.update_time,
+        }); // Create default payment status
+        const donationLinkedMember = await member.addDonation(donate);
+        if (donationLinkedMember) {
+          console.log('Donation linked');
+          res.send('Donation successful');
+        } else {
+          res.status(401);
+          throw new Error('Payment not found');
+        }
+      } else {
+        // res.status(401);
+        // throw new Error('Member not found');
+
+        const donate = await models.Donation.create({
+          chapterId: chapter.chapterId,
+          firstName: firstName,
+          mInit: mInit,
+          lastName: lastName,
+          email: email,
+          // donationType:
+          amount: paymentResult.purchase_units[0].amount.value,
+          payerId: paymentResult.payer.email_address,
+          paymentId: paymentResult.id,
+          paymentStatus: paymentResult.status,
+          paymentTime: paymentResult.update_time,
+        }); // Create default payment status
+        if (donate) {
+          res.send(
+            'Donation successful! Thank you for your donation. However, we counld not find your provided email address to our member list.'
+          );
+        } else {
+          res.status(401);
+          throw new Error('Sorry! The donation was unsuccessful');
+        }
+      }
+    } else {
+      const donate = await models.Donation.create({
+        chapterId: chapter.chapterId,
+        firstName: firstName,
+        mInit: mInit,
+        lastName: lastName,
+        email: email,
+        // donationType:
+        amount: paymentResult.purchase_units[0].amount.value,
+        payerId: paymentResult.payer.email_address,
+        paymentId: paymentResult.id,
+        paymentStatus: paymentResult.status,
+        paymentTime: paymentResult.update_time,
+      }); // Create default payment status
+      if (donate) {
+        res.send('Donation successful! Thank you for your donation.');
+      } else {
+        res.status(401);
+        throw new Error('Sorry! The donation was unsuccessful');
+      }
+    }
+  } else {
+    res.status(401);
+    throw new Error('Sorry Invalid chapter.');
   }
 });

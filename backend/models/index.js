@@ -53,11 +53,11 @@ Object.keys(db).forEach((modelName) => {
 
 // MEmber ID Generator
 // var mId = 10200;
-const id = generateUniqueId({
-  length: 5,
-  useLetters: false,
-});
-console.log(id);
+// const id = generateUniqueId({
+//   length: 5,
+//   useLetters: false,
+// });
+// console.log(id);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
@@ -137,8 +137,8 @@ db.Chapter.hasMany(db.Role, { foreignKey: 'chapterId' });
 db.Role.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 
 // // db.User.belongsTo(db.Member);
-db.User.belongsTo(db.Member, { foreignKey: 'memberId' });
 db.Member.hasMany(db.User, { foreignKey: 'memberId' });
+db.User.belongsTo(db.Member, { foreignKey: 'memberId' });
 // // db.Member.hasMany(db.User);
 
 db.Payment.belongsTo(db.Member, { foreignKey: 'memberId' });

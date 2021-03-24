@@ -5,7 +5,7 @@ const { Sequelize } = require('sequelize');
 const Vission = (sequelize, DataTypes) =>
   sequelize.define('vission', {
     chapterId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,

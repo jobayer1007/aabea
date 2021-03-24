@@ -5,7 +5,7 @@ const { Sequelize } = require('sequelize');
 const Mission = (sequelize, DataTypes) =>
   sequelize.define('mission', {
     chapterId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,

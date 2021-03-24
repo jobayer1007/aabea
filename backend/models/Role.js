@@ -5,7 +5,7 @@ const { Sequelize } = require('sequelize');
 const Role = (sequelize, DataTypes) =>
   sequelize.define('role', {
     chapterId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,

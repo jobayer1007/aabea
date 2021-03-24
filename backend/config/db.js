@@ -54,7 +54,7 @@ sequelize
   .authenticate()
   .then(() =>
     console.log(
-      `Connected to Database : ${process.env.PG_DATABASE} `.cyan.underline
+      `Connected to Database : ${process.env.PG_DATABASE} `.green.underline
     )
   )
   .catch((err) => console.error(err.message.red.underline.bold));

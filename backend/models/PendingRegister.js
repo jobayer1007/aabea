@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize');
 const PendingRegister = (sequelize, DataTypes) =>
   sequelize.define('pendingRegister', {
     chapterId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,

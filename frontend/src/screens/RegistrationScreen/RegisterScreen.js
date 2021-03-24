@@ -307,7 +307,7 @@ const RegisterScreen = ({ location, history }) => {
                     controlId='confirmPassword'
                   >
                     <Form.Control
-                      // required
+                      required
                       type='password'
                       placeholder='Confirm password..'
                       value={confirmPassword}

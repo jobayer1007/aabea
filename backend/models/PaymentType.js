@@ -1,9 +1,11 @@
+const { Sequelize } = require('sequelize');
+
 //PaymentType schema
 
 const PaymentType = (sequelize, DataTypes) =>
   sequelize.define('paymentType', {
     chapterId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,

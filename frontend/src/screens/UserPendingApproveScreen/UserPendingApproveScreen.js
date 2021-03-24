@@ -57,34 +57,38 @@ const UserPendingApproveScreen = ({ match, history }) => {
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    if (successApprove) {
-      dispatch({ type: USER_APPROVE_RESET });
-      history.push('/systemAdmin');
-    } else {
-      if (!pendingUser.pendingId) {
-        console.log(pendingId);
-        dispatch(getPendingUserDetails(pendingId));
+    if (userInfo) {
+      if (successApprove) {
+        dispatch({ type: USER_APPROVE_RESET });
+        history.push('/systemAdmin');
       } else {
-        setFirstName(pendingUser.firstName);
-        setMInit(pendingUser.mInit);
-        setLastName(pendingUser.lastName);
-        setAddress1(pendingUser.address1);
-        setAddress2(pendingUser.address2);
-        setCity(pendingUser.city);
-        setState(pendingUser.state);
-        setZipcode(pendingUser.zipcode);
-        setPrimaryPhone(pendingUser.primaryPhone);
-        setAlternatePhone(pendingUser.alternatePhone);
-        setDegree(pendingUser.degree);
-        setDegreeYear(pendingUser.degreeYear);
-        setMajor(pendingUser.major);
-        setCollegeName(pendingUser.collegeName);
-        setEmail(pendingUser.primaryEmail);
-        setAlternateEmail(pendingUser.alternateEmail);
-        setImage(pendingUser.image);
-        setUserRole(pendingUser.userRole);
-        setStatus(pendingUser.status);
+        if (!pendingUser.pendingId) {
+          console.log(pendingId);
+          dispatch(getPendingUserDetails(pendingId));
+        } else {
+          setFirstName(pendingUser.firstName);
+          setMInit(pendingUser.mInit);
+          setLastName(pendingUser.lastName);
+          setAddress1(pendingUser.address1);
+          setAddress2(pendingUser.address2);
+          setCity(pendingUser.city);
+          setState(pendingUser.state);
+          setZipcode(pendingUser.zipcode);
+          setPrimaryPhone(pendingUser.primaryPhone);
+          setAlternatePhone(pendingUser.alternatePhone);
+          setDegree(pendingUser.degree);
+          setDegreeYear(new Date(pendingUser.degreeYear).getFullYear());
+          setMajor(pendingUser.major);
+          setCollegeName(pendingUser.collegeName);
+          setEmail(pendingUser.email);
+          setAlternateEmail(pendingUser.alternateEmail);
+          setImage(pendingUser.image);
+          setUserRole(pendingUser.userRole);
+          setStatus(pendingUser.status);
+        }
       }
+    } else {
+      history.push('/login');
     }
   }, [dispatch, history, pendingUser, pendingId, successApprove]);
 

@@ -15,15 +15,19 @@ export const registerPaymentType = (
   paymentTypeName,
   paymentTypeAmount,
   paymentTypeDescription
-) => async (dispatch) => {
+) => async (dispatch, getState) => {
   try {
     dispatch({
       type: PAYMENT_TYPE_REGISTER_REQUEST,
     });
 
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
@@ -107,7 +111,7 @@ export const deletePaymentType = (id) => async (dispatch, getState) => {
       },
     };
 
-    await axios.delete(`/api/chapters/paymentType/${id}`, config);
+    await axios.delete(`/api/chapters/paymentType/${id}`, {}, config);
 
     dispatch({ type: PAYMENT_TYPE_DELETE_SUCCESS });
   } catch (error) {

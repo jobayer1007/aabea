@@ -26,6 +26,8 @@ exports.protect = asyncHandler(async (req, res, next) => {
       throw new Error('Not Authorized, Token Failed');
     }
   }
+  // console.log(`token: ${token}`);
+  // console.log(`req.headers.authorization: ${req.headers.authorization}`);
   if (!token) {
     res.status(401);
     throw new Error('Not Authorized, NO token');
@@ -38,6 +40,15 @@ exports.admin = (req, res, next) => {
   } else {
     res.status(401);
     throw new Error('Not authorized as an admin');
+  }
+};
+
+exports.systemAdmin = (req, res, next) => {
+  if (req.user && req.user.userRole === 'systemAdmin') {
+    next();
+  } else {
+    res.status(401);
+    throw new Error('Not authorized as an system admin');
   }
 };
 

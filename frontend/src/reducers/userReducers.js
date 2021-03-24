@@ -262,7 +262,7 @@ export const userDonateReducer = (state = {}, action) => {
     case USER_DONATE_REQUEST:
       return { loading: true };
     case USER_DONATE_SUCCESS:
-      return { loading: false, success: true };
+      return { loading: false, success: true, donateResulte: action.payload };
 
     case USER_DONATE_FAIL:
       return { loading: false, error: action.payload };

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect, admin } = require('../middleware/authMiddleware');
+const { protect, admin, systemAdmin } = require('../middleware/authMiddleware');
 const {
   getUsers,
   getUserById,
@@ -26,6 +26,7 @@ const {
   updatePaymentToPaid,
   memberDonation,
   getUserDonationDetails,
+  guestDonation,
 } = require('../controllers/paymentController');
 
 router.post('/login', authUser);
@@ -39,17 +40,23 @@ router.route('/payment').get(protect, getUserPaymentDetails);
 router.route('/:id/pay').post(protect, updatePaymentToPaid);
 router.route('/donate').get(protect, getUserDonationDetails);
 router.route('/:id/donate').post(protect, memberDonation);
+router.route('/donate').post(guestDonation);
 
 router.route('/register').post(registerUser);
 router.route('/verifyResend').post(verifyEmailResend);
 router.route('/activate/:hash').post(verifyUserEmail);
-router.route('/pending').get(getPendingUsers);
-router.route('/:id/pending').get(getPendingUserById).post(approveUser);
-router.route('/:id/admin').post(createAdminUser);
+router.route('/pending').get(protect, getPendingUsers);
+router
+  .route('/:id/pending')
+  .get(protect, getPendingUserById)
+  .post(protect, admin, approveUser);
+router
+  .route('/:id/admin')
+  .post(protect, systemAdmin, createAdminUser)
+  .delete(protect, systemAdmin, deleteAdminUser);
 router.route('/dashboard').get(protect, getUsers);
 router.route('/:id').get(getUserById).put(updateUser);
 router.route('/:id').delete(protect, admin, deleteUser);
-router.route('/:id/admin').delete(deleteAdminUser);
 
 // Password Reset
 router.route('/:email').post(sendPasswordResetEmail);

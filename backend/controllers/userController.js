@@ -39,15 +39,22 @@ exports.authUser = asyncHandler(async (req, res) => {
         message: 'Invalid Password!',
       });
     } else {
-      console.log(JSON.stringify(user));
+      const loggedInUser = await models.User.update(
+        {
+          last_login: new Date(),
+        },
+        { where: { email: email, userRole: userRole } }
+      );
+      // console.log(JSON.stringify(user));
       res.json({
-        // userId: user.userId,
-        userName: user.userName,
-        email: user.email,
-        userRole: user.userRole,
-        image: user.image,
+        chapterId: user.chapterId,
         memberId: user.memberId,
+        userRole: user.userRole,
+        email: user.email,
         status: user.member.status,
+        userName: user.userName,
+        image: user.image,
+        last_login: user.last_login,
         memberSince: user.member.startDate,
         token: generateToken(user.memberId),
       });
@@ -119,8 +126,15 @@ exports.registerUser = asyncHandler(async (req, res) => {
     // status,
     // balance,
   } = req.body;
-  // console.log(email);
-  // const userrole = await modeks.User.findOne({ where: {userRole:}})
+
+  // Find Chapter
+  const subDomain = 'bd.aabea.org'; // at dev only
+  // const chapterName = 'Bangladesh';
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+  console.log(chapter.chapterId);
+
   const userExists = await models.Member.findOne({
     where: { primaryEmail: email },
   }); // Check if the Member already registered
@@ -142,6 +156,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
       // });
       // console.log(id);
       const pendingUserRegister = await models.PendingRegister.create({
+        chapterId: chapter.chapterId,
         email,
         firstName,
         mInit,
@@ -273,7 +288,7 @@ exports.verifyEmailResend = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 exports.getPendingUsers = asyncHandler(async (req, res) => {
   const pendingUsers = await models.PendingRegister.findAll({
-    where: { emailVerified: true },
+    where: { emailVerified: true, chapterId: req.user.chapterId },
   });
   res.json(pendingUsers);
 });
@@ -320,7 +335,7 @@ exports.approveUser = asyncHandler(async (req, res) => {
       const member = await models.Member.create(
         {
           memberId: generateId(users),
-
+          chapterId: req.user.chapterId,
           primaryEmail: pendingUser.email,
           firstName: pendingUser.firstName,
           mInit: pendingUser.mInit,
@@ -348,6 +363,7 @@ exports.approveUser = asyncHandler(async (req, res) => {
       await models.User.create(
         {
           // userRole,
+          chapterId: req.user.chapterId,
           memberId: member.memberId,
           userName: pendingUser.firstName + ' ' + pendingUser.lastName,
           email: pendingUser.email,
@@ -388,7 +404,12 @@ exports.approveUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users
 // @access  Private/Admin
 exports.getUsers = asyncHandler(async (req, res) => {
-  const users = await models.User.findAll({ include: models.Member });
+  const users = await models.User.findAll(
+    { include: models.Member },
+    {
+      where: { chapterId: req.user.chapterId },
+    }
+  );
   if (users && users.length !== 0) {
     res.json(users);
   } else {
@@ -739,6 +760,7 @@ exports.createAdminUser = asyncHandler(async (req, res) => {
         // image: '/images/sample.jpg',
         // password: bcrypt.hashSync(password, 10),
         password: user.password,
+        chapterId: member.chapterId,
       });
       if (newAdmin) {
         res.status(201).json('Admin User Created Successfully.');
@@ -756,6 +778,9 @@ exports.createAdminUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    DELETE Admin User      ///////////////////////////////////////////////
+// @route   DELETE /api/users/:id/admin
+// @access  Private/SystemAdmin
 exports.deleteAdminUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
   console.log(id);
@@ -930,6 +955,7 @@ const sequelize = new Sequelize(
 // @access  Public
 exports.registerSystemAdmin = asyncHandler(async (req, res) => {
   const {
+    chapterId,
     email,
     password,
     userRole,
@@ -949,8 +975,6 @@ exports.registerSystemAdmin = asyncHandler(async (req, res) => {
     major,
     collegeName,
     status,
-    chapterId,
-    // balance,
   } = req.body;
   // console.log(email);
   // const userrole = await modeks.User.findOne({ where: {userRole:}})
@@ -960,14 +984,16 @@ exports.registerSystemAdmin = asyncHandler(async (req, res) => {
 
   if (!userExists) {
     const t = await sequelize.transaction();
-    const users = await models.User.findAll();
+    // const users = await models.User.findAll();
+    const systemAdminId = '11111';
     try {
       // Then, we do some calls passing this transaction as an option:
 
       const member = await models.Member.create(
         {
-          memberId: generateId(users),
-
+          chapterId,
+          // memberId: generateId(users),
+          memberId: systemAdminId,
           primaryEmail: email,
           firstName,
           mInit,
@@ -985,7 +1011,7 @@ exports.registerSystemAdmin = asyncHandler(async (req, res) => {
           major,
           collegeName,
           status,
-          chapterId,
+          isPaid: true,
           nextPaymentDueIn: new Date().getFullYear(),
           // balance,
         },
@@ -995,6 +1021,7 @@ exports.registerSystemAdmin = asyncHandler(async (req, res) => {
       // await member.addUser(
       await models.User.create(
         {
+          chapterId,
           userRole,
           memberId: member.memberId,
           userName: firstName + ' ' + lastName,
@@ -1002,7 +1029,6 @@ exports.registerSystemAdmin = asyncHandler(async (req, res) => {
           // image: '/images/sample.jpg',
           // password: bcrypt.hashSync(password, 10),
           password: bcrypt.hashSync(password, 10),
-          chapterId,
         },
         { transaction: t }
       );

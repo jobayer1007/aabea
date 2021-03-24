@@ -5,7 +5,7 @@ const { Sequelize } = require('sequelize');
 const Announcement = (sequelize, DataTypes) =>
   sequelize.define('announcement', {
     chapterId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,

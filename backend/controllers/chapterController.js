@@ -57,7 +57,12 @@ exports.createNewChapter = asyncHandler(async (req, res) => {
 // @access  Private/SystemAdmin
 exports.getChapters = asyncHandler(async (req, res) => {
   const chapters = await models.Chapter.findAll();
-  res.json(chapters);
+  if (chapters && chapters.length !== 0) {
+    res.json(chapters);
+  } else {
+    res.status(401);
+    throw new Error('No Chapter found');
+  }
   // const members = await models.Member.findAll();
   // res.json(members);
 });
@@ -108,6 +113,7 @@ exports.createNewPaymentType = asyncHandler(async (req, res) => {
       paymentTypeName,
       paymentTypeAmount,
       paymentTypeDescription,
+      chapterId: req.user.chapterId,
     });
     if (newPaymentType) {
       res.json('New Payment Type Created Successfully');

@@ -569,6 +569,51 @@ export const donateUser = (id, paymentResult) => async (dispatch, getState) => {
   }
 };
 
+export const donateUserGuest = (
+  subDomain,
+  guest,
+  email,
+  firstName,
+  mInit,
+  lastName,
+  paymentResult
+) => async (dispatch) => {
+  try {
+    dispatch({
+      type: USER_DONATE_REQUEST,
+    });
+
+    // const {
+    //   userLogin: { userInfo },
+    // } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        // Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.post(
+      `/api/users/donate`,
+      { subDomain, guest, email, firstName, mInit, lastName, paymentResult },
+      config
+    );
+
+    dispatch({
+      type: USER_DONATE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_DONATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
 export const getUserDonationDetails = () => async (dispatch, getState) => {
   try {
     dispatch({
@@ -676,7 +721,7 @@ export const approveUser = (id) => async (dispatch, getState) => {
     dispatch({
       type: USER_APPROVE_REQUEST,
     });
-    console.log(id);
+
     const {
       userLogin: { userInfo },
     } = getState();
@@ -686,8 +731,10 @@ export const approveUser = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
+    console.log(`id: ${id}`);
+    console.log(`token: ${config.headers.Authorization}`);
 
-    const { data } = await axios.post(`/api/users/${id}/pending`, config);
+    const { data } = await axios.post(`/api/users/${id}/pending`, {}, config);
 
     dispatch({ type: USER_APPROVE_SUCCESS });
 
@@ -749,7 +796,7 @@ export const createAdminUser = (id) => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.post(`/api/users/${id}/admin`, config);
+    const { data } = await axios.post(`/api/users/${id}/admin`, {}, config);
 
     dispatch({ type: USER_CREATE_ADMIN_SUCCESS });
 

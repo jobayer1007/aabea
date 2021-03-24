@@ -10,15 +10,7 @@ const validStatus = ['Active', 'Pending', 'Inactive'];
 
 const Member = (sequelize, DataTypes) =>
   sequelize.define('member', {
-    chapterId: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      primaryKey: true,
-      notEmpty: true,
-    },
-
     memberId: {
-      //email will be used as member id
       type: DataTypes.BIGINT,
       // defaultValue: 123456,
       // autoIncrement: true,
@@ -26,11 +18,9 @@ const Member = (sequelize, DataTypes) =>
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
-
-      // references: {
-      //   model: User,
-      //   key: User.userId,
-      // },
+    },
+    mInit: {
+      type: DataTypes.STRING(5),
     },
     firstName: {
       type: DataTypes.STRING(20),
@@ -38,12 +28,11 @@ const Member = (sequelize, DataTypes) =>
       allowNull: false,
       notEmpty: true,
     },
-    mInit: {
-      type: DataTypes.STRING(10),
-    },
     lastName: {
       type: DataTypes.STRING(20),
       required: true,
+      allowNull: false,
+      notEmpty: true,
     },
     address1: {
       type: DataTypes.STRING(50),
@@ -130,6 +119,15 @@ const Member = (sequelize, DataTypes) =>
     },
     certificates: {
       type: DataTypes.STRING,
+    },
+    profilePicture: {
+      type: DataTypes.STRING,
+    },
+    chapterId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+      notEmpty: true,
     },
   });
 

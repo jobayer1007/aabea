@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize');
 const Donation = (sequelize, DataTypes) =>
   sequelize.define('donation', {
     chapterId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
@@ -26,6 +26,12 @@ const Donation = (sequelize, DataTypes) =>
       primaryKey: true,
     },
 
+    isMember: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+      required: true,
+    },
+
     firstName: {
       type: DataTypes.STRING(20),
       required: true,
@@ -33,7 +39,7 @@ const Donation = (sequelize, DataTypes) =>
       notEmpty: true,
     },
     mInit: {
-      type: DataTypes.STRING(10),
+      type: DataTypes.STRING(5),
     },
     lastName: {
       type: DataTypes.STRING(20),
@@ -42,6 +48,7 @@ const Donation = (sequelize, DataTypes) =>
 
     donationType: {
       type: DataTypes.ENUM(30),
+      required: true,
       defaultValue: 'general',
       values: ['general', 'flood', 'corona'],
     },

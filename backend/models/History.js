@@ -5,7 +5,7 @@ const { Sequelize } = require('sequelize');
 const History = (sequelize, DataTypes) =>
   sequelize.define('history', {
     chapterId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,

@@ -28,6 +28,7 @@ const {
   getVissionById,
   getHistoryById,
 } = require('../controllers/chapterController');
+const { protect, admin } = require('../middleware/authMiddleware');
 
 // Chapter/////////////////////////////////////////////////
 router.route('/new').post(createNewChapter);
@@ -35,7 +36,10 @@ router.route('/').get(getChapters);
 router.route('/:id').delete(deleteChapter);
 
 // PaymentType/////////////////////////////////////////////////
-router.route('/paymentType').post(createNewPaymentType).get(getPaymentTypes);
+router
+  .route('/paymentType')
+  .post(protect, admin, createNewPaymentType)
+  .get(protect, getPaymentTypes);
 router.route('/paymentType/:id').delete(deletePaymentType);
 
 // Announcement/////////////////////////////////////////////////

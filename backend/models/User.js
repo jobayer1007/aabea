@@ -9,12 +9,6 @@ const Member = require('./Member');
 
 const User = (sequelize, DataTypes) =>
   sequelize.define('user', {
-    chapterId: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      primaryKey: true,
-      notEmpty: true,
-    },
     memberId: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -56,6 +50,12 @@ const User = (sequelize, DataTypes) =>
     last_login: {
       type: DataTypes.DATE,
       defaultValue: Sequelize.NOW,
+    },
+    chapterId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+      notEmpty: true,
     },
   });
 
