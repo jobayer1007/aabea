@@ -136,7 +136,8 @@ export const register = (
   degree,
   degreeYear,
   major,
-  collegeName
+  collegeName,
+  certificate
 ) => async (dispatch) => {
   try {
     dispatch({
@@ -166,6 +167,7 @@ export const register = (
         degreeYear,
         major,
         collegeName,
+        certificate,
       },
       config
     );

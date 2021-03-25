@@ -1,38 +1,35 @@
-const express = require('express');
-const { Sequelize, DataTypes } = require('sequelize');
-
 const path = require('path');
+const express = require('express');
+const dotenv = require('dotenv');
+const { sequelize } = require('./models/index');
+
 const bodyParser = require('body-parser');
 const colors = require('colors');
+const morgan = require('morgan');
 // const db = require('./config/db');
-const db = require('./models/index');
+const { errorHandler, notFound } = require('./middleware/errorMiddleware');
 const chapterRoutes = require('./routes/chapterRoutes');
 const userRoutes = require('./routes/userRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
-const { errorHandler, notFound } = require('./middleware/errorMiddleware');
-const User = require('./models/User');
-const users = require('./data/users');
-const { sequelize } = require('./models/index');
+
+dotenv.config();
 
 const app = express();
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 app.use(express.json());
 
 //body parser middleware
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
-// Chapter Routes
 app.use('/api/chapters', chapterRoutes);
-
-// User Routes
 app.use('/api/users', userRoutes);
 app.use('/api/upload', uploadRoutes);
 
 app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
 );
-
-app.use(notFound);
-app.use(errorHandler);
 
 // const syncStatus = true;
 
@@ -54,8 +51,12 @@ app.use(errorHandler);
 //       msg: 'Encountered a problem while Sync Database, error:' + err,
 //     });
 //   });
+// const __dirname = path.resolve();
+// app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')));
 
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(

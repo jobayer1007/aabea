@@ -123,8 +123,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
     degreeYear,
     major,
     collegeName,
-    // status,
-    // balance,
+    certificate,
   } = req.body;
 
   // Find Chapter
@@ -170,6 +169,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
         degreeYear,
         major,
         collegeName,
+        certificate,
         password: bcrypt.hashSync(password, 10),
       });
 
@@ -212,30 +212,35 @@ exports.verifyUserEmail = asyncHandler(async (req, res) => {
     where: { pendingId: hash },
   });
 
-  if (pendingUser.emailVerified !== true) {
-    // if (pendingUser.pendingId === hash) {
-    const updateEmailVarified = await models.PendingRegister.update(
-      {
-        emailVerified: true,
-      },
-      { where: { pendingId: hash } }
-    );
-
-    if (updateEmailVarified == 1) {
-      res.json(
-        'Your email verification is successfull! Admin will review your application. Once review is done, you will be notified! Thank You.'
+  if (pendingUser) {
+    if (pendingUser.emailVerified !== true) {
+      // if (pendingUser.pendingId === hash) {
+      const updateEmailVarified = await models.PendingRegister.update(
+        {
+          emailVerified: true,
+        },
+        { where: { pendingId: hash } }
       );
+
+      if (updateEmailVarified == 1) {
+        res.json(
+          'Your email verification is successfull! Admin will review your application. Once review is done, you will be notified! Thank You.'
+        );
+      } else {
+        res.status(400);
+        throw new Error('Email verification unsuccessfull!');
+      }
+      // } else {
+      //   res.status(400);
+      //   throw new Error('Activation Link is Invalid');
+      // }
     } else {
       res.status(400);
-      throw new Error('Email verification unsuccessfull!');
+      throw new Error('Your email is already verified.');
     }
-    // } else {
-    //   res.status(400);
-    //   throw new Error('Activation Link is Invalid');
-    // }
   } else {
     res.status(400);
-    throw new Error('Your email is already verified.');
+    throw new Error('Invalid link.');
   }
 });
 
@@ -352,9 +357,8 @@ exports.approveUser = asyncHandler(async (req, res) => {
           degreeYear: pendingUser.degreeYear,
           major: pendingUser.major,
           collegeName: pendingUser.collegeName,
+          certificates: pendingUser.certificate,
           nextPaymentDueIn: new Date().getFullYear(),
-          // status: 'inactive'
-          // balance,
         },
         { transaction: t }
       );

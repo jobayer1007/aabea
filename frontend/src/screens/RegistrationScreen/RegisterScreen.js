@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Row, Col, Card, Container } from 'react-bootstrap';
@@ -27,9 +28,11 @@ const RegisterScreen = ({ location, history }) => {
   const [degreeYear, setDegreeYear] = useState('');
   const [major, setMajor] = useState('');
   const [collegeName, setCollegeName] = useState('');
+  const [certificate, setCertificate] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -55,6 +58,28 @@ const RegisterScreen = ({ location, history }) => {
       swal('Error!', error, 'error');
     }
   }, [history, success, redirect, error]);
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+    setUploading(true);
+
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+
+      const { data } = await axios.post('/api/upload', formData, config);
+      setCertificate(data);
+      setUploading(false);
+    } catch (error) {
+      console.error(error);
+      setUploading(false);
+    }
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -85,7 +110,8 @@ const RegisterScreen = ({ location, history }) => {
             degree,
             degreeYear,
             major,
-            collegeName
+            collegeName,
+            certificate
           )
         );
       }
@@ -272,6 +298,26 @@ const RegisterScreen = ({ location, history }) => {
                       value={collegeName}
                       onChange={(e) => setCollegeName(e.target.value)}
                     ></Form.Control>
+                  </Form.Group>
+
+                  <Form.Group as={Col} md='2'>
+                    <Form.Label>Certificate</Form.Label>
+                  </Form.Group>
+                  <Form.Group as={Col} md='10' controlId='certificate'>
+                    <Form.Control
+                      required
+                      type='text'
+                      placeholder='Enter your last certificate url..'
+                      value={certificate}
+                      onChange={(e) => setCertificate(e.target.value)}
+                    ></Form.Control>
+                    <Form.File
+                      id='image-file'
+                      label='Choose File'
+                      custom
+                      onChange={uploadFileHandler}
+                    ></Form.File>
+                    {uploading && <Loader />}
                   </Form.Group>
 
                   <Form.Group as={Col} md='2'>

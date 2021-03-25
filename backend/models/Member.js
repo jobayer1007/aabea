@@ -119,6 +119,7 @@ const Member = (sequelize, DataTypes) =>
     },
     certificates: {
       type: DataTypes.STRING,
+      // required: true,
     },
     profilePicture: {
       type: DataTypes.STRING,

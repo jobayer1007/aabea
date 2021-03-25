@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
 const basename = path.basename(module.filename);
+const colors = require('colors');
 
 const User = require('../models/Member');
 const Member = require('../models/Member');

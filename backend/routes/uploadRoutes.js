@@ -14,6 +14,17 @@ const storage = multer.diskStorage({
       `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
     );
   },
+  // Experiment
+  // filename(req, file, cb) {
+  //   if (path.extname(file.originalname) === 'pdf') {
+  //     cb(null, `${file.fieldname}-${Date.now()}.png`);
+  //   } else {
+  //     cb(
+  //       null,
+  //       `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+  //     );
+  //   }
+  // },
 });
 
 function checkFileType(file, cb) {
@@ -24,7 +35,7 @@ function checkFileType(file, cb) {
   if (extname && mimetype) {
     return cb(null, true);
   } else {
-    cb('Images Only!');
+    cb('Images or pdf Only!');
   }
 }
 
@@ -37,6 +48,7 @@ const upload = multer({
 
 router.post('/', upload.single('image'), (req, res) => {
   res.send(`/${req.file.path}`);
+  console.log(req.file.path);
 });
 
 module.exports = router;

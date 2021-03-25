@@ -1,7 +1,16 @@
 import axios from 'axios';
+import { Document } from 'react-pdf';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button, Card } from 'react-bootstrap';
+import {
+  Form,
+  Button,
+  Card,
+  ListGroup,
+  Row,
+  Col,
+  Image,
+} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import FormContainer from '../../components/FormContainer';
 import {
@@ -65,27 +74,28 @@ const UserPendingApproveScreen = ({ match, history }) => {
         if (!pendingUser.pendingId) {
           console.log(pendingId);
           dispatch(getPendingUserDetails(pendingId));
-        } else {
-          setFirstName(pendingUser.firstName);
-          setMInit(pendingUser.mInit);
-          setLastName(pendingUser.lastName);
-          setAddress1(pendingUser.address1);
-          setAddress2(pendingUser.address2);
-          setCity(pendingUser.city);
-          setState(pendingUser.state);
-          setZipcode(pendingUser.zipcode);
-          setPrimaryPhone(pendingUser.primaryPhone);
-          setAlternatePhone(pendingUser.alternatePhone);
-          setDegree(pendingUser.degree);
-          setDegreeYear(new Date(pendingUser.degreeYear).getFullYear());
-          setMajor(pendingUser.major);
-          setCollegeName(pendingUser.collegeName);
-          setEmail(pendingUser.email);
-          setAlternateEmail(pendingUser.alternateEmail);
-          setImage(pendingUser.image);
-          setUserRole(pendingUser.userRole);
-          setStatus(pendingUser.status);
         }
+        // else {
+        //   setFirstName(pendingUser.firstName);
+        //   setMInit(pendingUser.mInit);
+        //   setLastName(pendingUser.lastName);
+        //   setAddress1(pendingUser.address1);
+        //   setAddress2(pendingUser.address2);
+        //   setCity(pendingUser.city);
+        //   setState(pendingUser.state);
+        //   setZipcode(pendingUser.zipcode);
+        //   setPrimaryPhone(pendingUser.primaryPhone);
+        //   setAlternatePhone(pendingUser.alternatePhone);
+        //   setDegree(pendingUser.degree);
+        //   setDegreeYear(new Date(pendingUser.degreeYear).getFullYear());
+        //   setMajor(pendingUser.major);
+        //   setCollegeName(pendingUser.collegeName);
+        //   setEmail(pendingUser.email);
+        //   setAlternateEmail(pendingUser.alternateEmail);
+        //   setImage(pendingUser.image);
+        //   setUserRole(pendingUser.userRole);
+        //   setStatus(pendingUser.status);
+        // }
       }
     } else {
       history.push('/login');
@@ -123,7 +133,7 @@ const UserPendingApproveScreen = ({ match, history }) => {
 
   return (
     <>
-      {userInfo.userRole === 'systemAdmin' ? (
+      {userInfo && userInfo.userRole === 'systemAdmin' ? (
         <Link
           className='btn btn-light my-3 btn-sm btn-outline-success'
           to='/systemAdmin'
@@ -139,7 +149,7 @@ const UserPendingApproveScreen = ({ match, history }) => {
         </Link>
       )}
 
-      <FormContainer>
+      <>
         <Card border='primary'>
           <Card.Header className='text-center' as='h2'>
             Approve User
@@ -153,245 +163,131 @@ const UserPendingApproveScreen = ({ match, history }) => {
           ) : (
             <>
               <Card.Body>
-                <Form onSubmit={submitHandler}>
-                  <Form.Group controlId='firstName'>
-                    <Form.Label>First Name</Form.Label>
-                    <Form.Control
-                      type='firstName'
-                      placeholder='Please Enter Your First Name..'
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
+                <Row>
+                  <Col md={8}>
+                    <ListGroup variant='flush'>
+                      <ListGroup.Item>
+                        <Row>
+                          <Col md={3}>Name:</Col>
+                          <Col>
+                            {pendingUser.mInit} {pendingUser.firstName}{' '}
+                            {pendingUser.lastName}
+                          </Col>
+                        </Row>
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        <Row>
+                          <Col md={3}>Education:</Col>
+                          <Col>
+                            <ListGroup variant='flush'>
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col md={4}>Highest degree Earned :</Col>
+                                  <Col>{pendingUser.degree}</Col>
+                                </Row>
+                              </ListGroup.Item>
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col md={4}>College/University Name :</Col>
+                                  <Col>{pendingUser.collegeName}</Col>
+                                </Row>{' '}
+                              </ListGroup.Item>
 
-                  <Form.Group controlId='mInit'>
-                    <Form.Label>M. Initial</Form.Label>
-                    <Form.Control
-                      type='mInit'
-                      placeholder=' Please Enter Your M. Initial: Mr / Ms'
-                      value={mInit}
-                      onChange={(e) => setMInit(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col md={4}>Year the Degree Earned :</Col>
+                                  <Col>{pendingUser.degreeYear}</Col>
+                                </Row>{' '}
+                              </ListGroup.Item>
 
-                  <Form.Group controlId='lastName'>
-                    <Form.Label>Last Name</Form.Label>
-                    <Form.Control
-                      type='lastName'
-                      placeholder='Please Enter Your Last Name..'
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col md={4}>Major :</Col>
+                                  <Col>{pendingUser.major}</Col>
+                                </Row>{' '}
+                              </ListGroup.Item>
+                            </ListGroup>
+                          </Col>
+                        </Row>
+                      </ListGroup.Item>
 
-                  <Form.Group controlId='address1'>
-                    <Form.Label>Primary Address</Form.Label>
-                    <Form.Control
-                      type='address1'
-                      placeholder='Please Enter Address..'
-                      value={address1}
-                      onChange={(e) => setAddress1(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
+                      <ListGroup.Item>
+                        <Row>
+                          <Col md={3}>Contact Details:</Col>
+                          <Col>
+                            <ListGroup variant='flush'>
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col md={4}>Address :</Col>
+                                  <Col>{pendingUser.address1}</Col>
+                                </Row>
+                              </ListGroup.Item>
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col md={4}>State :</Col>
+                                  <Col>{pendingUser.state}</Col>
+                                </Row>{' '}
+                              </ListGroup.Item>
 
-                  <Form.Group controlId='address2'>
-                    <Form.Label>Alternative Address</Form.Label>
-                    <Form.Control
-                      type='address2'
-                      placeholder='Please Enter Address..'
-                      value={address2}
-                      onChange={(e) => setAddress2(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col md={4}>City :</Col>
+                                  <Col>{pendingUser.city}</Col>
+                                </Row>{' '}
+                              </ListGroup.Item>
 
-                  <Form.Group controlId='city'>
-                    <Form.Label>City</Form.Label>
-                    <Form.Control
-                      type='city'
-                      placeholder='Enter City..'
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col md={4}>Zipcode :</Col>
+                                  <Col>{pendingUser.zipcode}</Col>
+                                </Row>{' '}
+                              </ListGroup.Item>
 
-                  <Form.Group controlId='state'>
-                    <Form.Label>State</Form.Label>
-                    <Form.Control
-                      type='state'
-                      placeholder='Enter State..'
-                      value={state}
-                      onChange={(e) => setState(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col md={4}>Phone Number :</Col>
+                                  <Col>{pendingUser.primaryPhone}</Col>
+                                </Row>{' '}
+                              </ListGroup.Item>
 
-                  <Form.Group controlId='zipcode'>
-                    <Form.Label>Zipcode</Form.Label>
-                    <Form.Control
-                      type='zipcode'
-                      placeholder='Enter Zipcode..'
-                      value={zipcode}
-                      onChange={(e) => setZipcode(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
-
-                  <Form.Group controlId='primaryPhone'>
-                    <Form.Label>Primary Phone Number</Form.Label>
-                    <Form.Control
-                      type='primaryPhone'
-                      placeholder='Enter Your Phone Number..'
-                      value={primaryPhone}
-                      onChange={(e) => setPrimaryPhone(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
-
-                  <Form.Group controlId='alternatePhone'>
-                    <Form.Label>Alternate Phone Number</Form.Label>
-                    <Form.Control
-                      type='alternatePhone'
-                      placeholder='Enter additional Phone Number..'
-                      value={alternatePhone}
-                      onChange={(e) => setAlternatePhone(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
-
-                  <Form.Group controlId='degree'>
-                    <Form.Label>Degree</Form.Label>
-                    <Form.Control
-                      type='degree'
-                      placeholder='Enter Your Last Degree Received..'
-                      value={degree}
-                      onChange={(e) => setDegree(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
-
-                  <Form.Group controlId='degreeYear'>
-                    <Form.Label>Degree Year</Form.Label>
-                    <Form.Control
-                      type='degreeYear'
-                      placeholder='Enter The Year of Degree Awarded..'
-                      value={degreeYear}
-                      onChange={(e) => setDegreeYear(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
-
-                  <Form.Group controlId='major'>
-                    <Form.Label>Major</Form.Label>
-                    <Form.Control
-                      type='major'
-                      placeholder='Enter Your Major..'
-                      value={major}
-                      onChange={(e) => setMajor(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
-
-                  <Form.Group controlId='collegeName'>
-                    <Form.Label>College Name</Form.Label>
-                    <Form.Control
-                      type='collegeName'
-                      placeholder='Enter Your University/College Name..'
-                      value={collegeName}
-                      onChange={(e) => setCollegeName(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
-
-                  <Form.Group controlId='email'>
-                    <Form.Label>Email Address</Form.Label>
-                    <Form.Control
-                      type='email'
-                      placeholder='Enter Email..'
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
-
-                  <Form.Group controlId='alternateEmail'>
-                    <Form.Label>Alternate Email Address</Form.Label>
-                    <Form.Control
-                      type='alternateEmail'
-                      placeholder='Enter another Email..'
-                      value={alternateEmail}
-                      onChange={(e) => setAlternateEmail(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
-
-                  <Form.Group controlId='image'>
-                    <Form.Label>Image :</Form.Label>
-                    <Form.Control
-                      type='text'
-                      placeholder='Enter image url..'
-                      value={image}
-                      onChange={(e) => setImage(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                    <Form.File
-                      id='image-file'
-                      label='Choose File'
-                      custom
-                      onChange={uploadFileHandler}
-                    ></Form.File>
-                    {uploading && <Loader />}
-                  </Form.Group>
-
-                  <Form.Group controlId='status'>
-                    <Form.Label>Member Status</Form.Label>
-                    <Form.Control
-                      type='status'
-                      placeholder='Member Status: active/inactive/pending'
-                      value={status}
-                      onChange={(e) => setStatus(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
-
-                  <Form.Group controlId='userRole'>
-                    <Form.Label>Member Type</Form.Label>
-                    <Form.Control
-                      type='userRole'
-                      placeholder='User Role: admin/member/systemAdmin'
-                      value={userRole}
-                      onChange={(e) => setUserRole(e.target.value)}
-                      readOnly
-                    ></Form.Control>
-                  </Form.Group>
-
-                  {/* <Form.Group controlId='isAdmin'> */}
-                  {/* <Form.Label>Admin</Form.Label> */}
-                  {/* <Form.Check */}
-                  {/* type='checkbox' */}
-                  {/* label='Is Admin' */}
-                  {/* checked={isAdmin} */}
-                  {/* onChange={(e) => setIsAdmin(e.target.checked)} */}
-                  {/* ></Form.Check> */}
-                  {/* </Form.Group> */}
-
-                  <Button type='submit' variant='primary' block>
-                    APPROVE
-                  </Button>
-                </Form>
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col md={4}>Email :</Col>
+                                  <Col>{pendingUser.email}</Col>
+                                </Row>{' '}
+                              </ListGroup.Item>
+                            </ListGroup>
+                          </Col>
+                        </Row>
+                      </ListGroup.Item>
+                    </ListGroup>
+                  </Col>
+                  <Col md={4}>
+                    <Card.Title>Certificate</Card.Title>
+                    <Card.Img src={pendingUser.certificate} variant='top' />
+                    {/* <Image
+                      src={pendingUser.certificate}
+                      alt={pendingUser.firstName}
+                    /> */}
+                  </Col>
+                </Row>
               </Card.Body>
+
+              <Card.Footer className='text-muted'>
+                <Link
+                  className='btn btn-outline-info btn-sm btn-block rounded'
+                  onClick={submitHandler}
+                >
+                  APPROVE
+                </Link>
+              </Card.Footer>
               <Card.Footer className='text-muted'>
                 Email Verified at: {pendingUser.updatedAt}
               </Card.Footer>
             </>
           )}
         </Card>
-      </FormContainer>
+      </>
     </>
   );
 };

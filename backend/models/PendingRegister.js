@@ -72,6 +72,10 @@ const PendingRegister = (sequelize, DataTypes) =>
       type: DataTypes.STRING,
       defaultValue: 'Pending',
     },
+    certificate: {
+      type: DataTypes.STRING,
+      // required: true,
+    },
 
     email: {
       type: DataTypes.STRING,

@@ -35,7 +35,10 @@ exports.protect = asyncHandler(async (req, res, next) => {
 });
 
 exports.admin = (req, res, next) => {
-  if (req.user && req.user.userRole === 'admin') {
+  if (
+    req.user &&
+    (req.user.userRole === 'admin' || req.user.userRole === 'systemAdmin')
+  ) {
     next();
   } else {
     res.status(401);
