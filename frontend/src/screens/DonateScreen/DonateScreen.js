@@ -23,6 +23,7 @@ import {
   getUserDonationDetails,
   donateUser,
   donateUserGuest,
+  getUserProfile,
 } from '../../actions/userActions';
 import {
   USER_DONATE_RESET,
@@ -68,7 +69,6 @@ const DonateScreen = ({ history }) => {
 
   useEffect(() => {
     if (userInfo) {
-      //   history.push('/login');
       if (addDonation) {
         setFirstName(user.firstName);
         setMInit(user.mInit);
@@ -76,6 +76,7 @@ const DonateScreen = ({ history }) => {
         setEmail(user.primaryEmail);
         setDonateAmount(0);
       }
+      dispatch(getUserProfile());
       dispatch(getUserDonationDetails());
     } else {
       setFirstName('');
@@ -99,11 +100,14 @@ const DonateScreen = ({ history }) => {
     };
 
     if (!donations || successDonate) {
-      console.log(donateResulte);
-      swal('Success!', donateResulte, 'success').then((value) => {
-        dispatch({ type: USER_DONATE_RESET });
-        setDonateAmount(0);
-      });
+      if (successDonate) {
+        console.log(donateResulte);
+        swal('Success!', donateResulte, 'success').then((value) => {
+          dispatch({ type: USER_DONATE_RESET });
+          setDonateAmount(0);
+        });
+      }
+      // dispatch({ type: USER_DONATE_RESET });
 
       // dispatch({ type: USER_PAYMENT_DETAILS_RESET });
     }
@@ -166,7 +170,7 @@ const DonateScreen = ({ history }) => {
                   <Table striped bordered hover responsive className='table-sm'>
                     <thead>
                       <tr>
-                        <th>ID</th>
+                        {/* <th>ID</th> */}
                         <th>Donation Type</th>
                         <th>Amount</th>
                         <th>Date</th>
@@ -174,8 +178,8 @@ const DonateScreen = ({ history }) => {
                     </thead>
                     <tbody>
                       {donations.map((donation) => (
-                        <tr key={donation.id}>
-                          <td>{donation.id}</td>
+                        <tr key={donation.payerId}>
+                          {/* <td>{donation.memberId}</td> */}
                           <td>{donation.donationType}</td>
                           <td>{donation.amount}</td>
                           <td>{donation.donationDate.substring(0, 10)}</td>

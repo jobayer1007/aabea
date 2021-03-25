@@ -71,7 +71,7 @@ const UserPendingApproveScreen = ({ match, history }) => {
         dispatch({ type: USER_APPROVE_RESET });
         history.push('/systemAdmin');
       } else {
-        if (!pendingUser.pendingId) {
+        if (!pendingUser.pendingId || pendingUser.pendingId !== pendingId) {
           console.log(pendingId);
           dispatch(getPendingUserDetails(pendingId));
         }

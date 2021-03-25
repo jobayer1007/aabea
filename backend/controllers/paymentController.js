@@ -86,8 +86,6 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
   const totalYear = req.body.qty;
   console.log(totalYear);
 
-  // const tYear = jsonObj.getInt(totalYear);
-  // console.log(tYear);
   const user = await models.User.findOne({
     where: { memberId: req.params.id },
   });
@@ -130,51 +128,58 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
           );
         }
       } else {
-        const t = await sequelize.transaction();
+        const paymentType = await models.PaymentType.findOne({
+          where: { paymentTypeName: req.body.paymentTypeName },
+        });
+        if (paymentType) {
+          const t = await sequelize.transaction();
 
-        try {
-          const yearOfPayments = member.nextPaymentDueIn + parseInt(totalYear);
-          console.log(yearOfPayments);
-          for (let i = 0; i < totalYear; i++) {
-            const year = member.nextPaymentDueIn + i;
-            console.log(year);
-            await models.Payment.create(
+          try {
+            const yearOfPayments =
+              member.nextPaymentDueIn + parseInt(totalYear);
+            console.log(yearOfPayments);
+            for (let i = 0; i < totalYear; i++) {
+              const year = member.nextPaymentDueIn + i;
+              console.log(year);
+              await models.Payment.create(
+                {
+                  // paymentType,
+                  chapterId: member.chapterId,
+                  memberId: member.memberId,
+                  // amount: req.body.paymentResult.purchase_units[0].amount.value,
+                  amount: paymentType.paymentTypeAmount,
+                  year: year,
+                  payerId: req.body.paymentResult.payer.email_address,
+                  paymentId: req.body.paymentResult.id,
+                  paymentStatus: req.body.paymentResult.status,
+                  paymentTime: req.body.paymentResult.update_time,
+                  // paymentType: req.body.paymentTypeName,
+                },
+                { transaction: t }
+              );
+            }
+
+            await models.Member.update(
               {
-                // paymentType,
-                chapterId: member.chapterId,
-                memberId: member.memberId,
-                amount: req.body.paymentResult.purchase_units[0].amount.value,
-                year: year,
-                payerId: req.body.paymentResult.payer.email_address,
-                paymentId: req.body.paymentResult.id,
-                paymentStatus: req.body.paymentResult.status,
-                paymentTime: req.body.paymentResult.update_time,
-                // paymentType: req.body.paymentTypeName,
+                status: 'active',
+                isPaid: true,
+                nextPaymentDueIn: yearOfPayments,
               },
+              { where: { memberId: req.user.memberId } },
               { transaction: t }
             );
+
+            await t.commit();
+            res.status(201).json('Payment Successfull.');
+          } catch (error) {
+            await t.rollback();
+            res
+              .status(400)
+              .send(
+                'msg: Encountered a problem while making Payments, error:' +
+                  error
+              );
           }
-
-          await models.Member.update(
-            {
-              status: 'active',
-              isPaid: true,
-              nextPaymentDueIn: yearOfPayments,
-            },
-            { where: { memberId: req.user.memberId } },
-            { transaction: t }
-          );
-
-          await t.commit();
-          res.status(201).json('Payment Successfull.');
-        } catch (error) {
-          await t.rollback();
-          res
-            .status(400)
-            .send(
-              'msg: Encountered a problem while approving member, error:' +
-                error
-            );
         }
       }
     } else {
@@ -304,15 +309,15 @@ exports.memberDonation = asyncHandler(async (req, res) => {
         mInit: member.mInit,
         lastName: member.lastName,
         email: member.primaryEmail,
-        // donationType:
+        memberId: member.memberId,
         amount: req.body.purchase_units[0].amount.value,
         payerId: req.body.payer.email_address,
         paymentId: req.body.id,
         paymentStatus: req.body.status,
         paymentTime: req.body.update_time,
       }); // Create default payment status
-      const donationLinkedMember = await member.addDonation(donate);
-      if (donationLinkedMember) {
+
+      if (donate) {
         console.log('Donation linked');
         res.send('Donation successful');
       } else {
@@ -333,6 +338,7 @@ exports.memberDonation = asyncHandler(async (req, res) => {
 // @route   GET /api/users/payment
 // @access  Private
 exports.getUserDonationDetails = asyncHandler(async (req, res) => {
+  // console.log(req.user.memberId);
   const donations = await models.Donation.findAll({
     where: { memberId: req.user.memberId },
   });
@@ -382,15 +388,15 @@ exports.guestDonation = asyncHandler(async (req, res) => {
           mInit: member.mInit,
           lastName: member.lastName,
           email: member.primaryEmail,
-          // donationType:
+          memberId: member.memberId,
           amount: paymentResult.purchase_units[0].amount.value,
           payerId: paymentResult.payer.email_address,
           paymentId: paymentResult.id,
           paymentStatus: paymentResult.status,
           paymentTime: paymentResult.update_time,
         }); // Create default payment status
-        const donationLinkedMember = await member.addDonation(donate);
-        if (donationLinkedMember) {
+
+        if (donate) {
           console.log('Donation linked');
           res.send('Donation successful');
         } else {

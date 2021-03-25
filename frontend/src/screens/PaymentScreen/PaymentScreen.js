@@ -23,7 +23,11 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import { getUserPaymentDetails, payUser } from '../../actions/userActions';
+import {
+  getUserPaymentDetails,
+  getUserProfile,
+  payUser,
+} from '../../actions/userActions';
 import {
   USER_PAYMENT_DETAILS_RESET,
   USER_PAY_RESET,
@@ -46,6 +50,9 @@ const PaymentScreen = ({ location, history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const userDetails = useSelector((state) => state.userDetails);
+  const { loading: userLoading, user, error: userError } = userDetails;
+
   const userPaymentDetails = useSelector((state) => state.userPaymentDetails);
   const {
     loading: paymentLoading,
@@ -67,6 +74,8 @@ const PaymentScreen = ({ location, history }) => {
     if (!userInfo) {
       history.push('/login');
     } else {
+      dispatch(getUserProfile());
+
       // setPaymentTypeAmount('');
       // setPaymentTypeName('');
       // setTotalPayment(paymentTypeAmount * qty);
@@ -107,6 +116,13 @@ const PaymentScreen = ({ location, history }) => {
       } else {
         setSdkReady(true);
       }
+    }
+    if (paymentTypeName === 'nominationFee' && user.status === 'inactive') {
+      swal(
+        'Error!',
+        'Please Pay your registration fee first to activate your account',
+        'error'
+      );
     }
   }, [
     history,
@@ -220,7 +236,7 @@ const PaymentScreen = ({ location, history }) => {
                     ))}{' '}
                   </Form.Control>
 
-                  {paymentTypeName === 'fee' ? (
+                  {paymentTypeName === 'Dues' ? (
                     <>
                       <label>Number of Years</label>
                       <Form.Control
@@ -252,16 +268,25 @@ const PaymentScreen = ({ location, history }) => {
                     </>
                   ) : paymentTypeName === 'nominationFee' ? (
                     <>
-                      <label>Please Select Year</label>
-                      <Form.Control
-                        as='select'
-                        onChange={qtyChangeHandler}
-                        // onChange={(e) => setQty(e.target.value)}
-                      >
-                        <option>Select Number of Years for Payment</option>
+                      {user && user.status === 'inactive' ? (
+                        <Message variant='danger'>
+                          Please Pay your registration fee first to activate
+                          your account
+                        </Message>
+                      ) : (
+                        <>
+                          <label>Please Select Year</label>
+                          <Form.Control
+                            as='select'
+                            onChange={qtyChangeHandler}
+                            // onChange={(e) => setQty(e.target.value)}
+                          >
+                            <option>Select Number of Years for Payment</option>
 
-                        <option value={1}>1</option>
-                      </Form.Control>
+                            <option value={1}>1</option>
+                          </Form.Control>
+                        </>
+                      )}
                     </>
                   ) : null}
                 </>

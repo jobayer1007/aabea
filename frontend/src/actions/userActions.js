@@ -312,6 +312,7 @@ export const listUsers = () => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
@@ -627,6 +628,7 @@ export const getUserDonationDetails = () => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
@@ -659,12 +661,13 @@ export const listPendingUsers = () => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
     const { data } = await axios.get(`/api/users/pending`, config);
-    dispatch({ type: USER_DETAILS_RESET });
+    // dispatch({ type: USER_DETAILS_RESET });
 
     dispatch({
       type: USER_PENDING_LIST_SUCCESS,

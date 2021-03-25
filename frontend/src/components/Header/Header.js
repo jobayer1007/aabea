@@ -31,7 +31,8 @@ const Header = () => {
       <Container fluid>
         <Row>
           <Col xs={2} href='/' className='text-center'>
-            <h1>Logo</h1>
+            <Image src='/uploads/logoImage.png' alt='logo' thumbnail />
+            {/* <h1>Logo</h1> */}
           </Col>
           <Col>
             <Carousel controls={false} indicators={false}>

@@ -21,6 +21,7 @@ import {
   deletePendingUser,
   createAdminUser,
   deleteAdminUser,
+  getUserProfile,
 } from '../../actions/userActions';
 import * as S from './SystemAdminScreen.Styles';
 import { deleteChapter, listChapters } from '../../actions/chapterActions';
@@ -57,6 +58,7 @@ const SystemAdminScreen = ({ history }) => {
 
   useEffect(() => {
     if (userInfo) {
+      dispatch(getUserProfile());
       dispatch(listChapters());
       dispatch(listPendingUsers());
       dispatch(listUsers());

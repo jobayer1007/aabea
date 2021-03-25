@@ -73,6 +73,7 @@ export const listChapters = () => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
@@ -106,6 +107,7 @@ export const deleteChapter = (id) => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
