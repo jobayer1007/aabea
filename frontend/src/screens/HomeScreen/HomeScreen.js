@@ -1,5 +1,6 @@
 import React from 'react';
 import { Col, Row, Card, Carousel } from 'react-bootstrap';
+import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
 
 const HomeScreen = () => {
   return (
@@ -45,6 +46,10 @@ const HomeScreen = () => {
         </Col>
 
         <Col md={{ order: 12 }} lg={{ span: 6, order: 2 }}>
+          <Card className='text-center mb-2 home-carousal'>
+            <ImageCarousel />
+          </Card>
+
           <Card className='text-center mb-2'>
             <Card.Header as='h2'>Mission</Card.Header>
             <Card.Body>

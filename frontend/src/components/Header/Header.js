@@ -13,6 +13,7 @@ import {
   NavDropdown,
 } from 'react-bootstrap';
 import { logout } from '../../actions/userActions';
+import HeaderCarousel from './HeaderCarousel';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -34,29 +35,7 @@ const Header = () => {
             {/* <h1>Logo</h1> */}
           </Col>
           <Col>
-            <Carousel controls={false} indicators={false}>
-              <Carousel.Item>
-                <img
-                  className='d-block w-100'
-                  src='https://source.unsplash.com/random/800x50'
-                  alt='First slide'
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className='d-block w-100'
-                  src='https://source.unsplash.com/random/800x50'
-                  alt='Third slide'
-                />
-              </Carousel.Item>
-              <Carousel.Item>
-                <img
-                  className='d-block w-100'
-                  src='https://source.unsplash.com/random/800x50'
-                  alt='Third slide'
-                />
-              </Carousel.Item>
-            </Carousel>
+            <HeaderCarousel />
           </Col>
         </Row>
       </Container>
