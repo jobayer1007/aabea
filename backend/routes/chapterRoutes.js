@@ -42,15 +42,6 @@ router
   .get(protect, getPaymentTypes);
 router.route('/paymentType/:id').delete(deletePaymentType);
 
-// Announcement/////////////////////////////////////////////////
-router.route('/announcement').post(createNewAnnouncement);
-router.route('/announcements').get(getAnnouncements);
-router
-  .route('/announcements/:id')
-  .get(getAnnouncementById)
-  .put(updateAnnouncementById)
-  .delete(deleteAnnouncement);
-
 // Mission/////////////////////////////////////////////////
 router.route('/mission').post(createMission);
 router.route('/mission').get(getMission);

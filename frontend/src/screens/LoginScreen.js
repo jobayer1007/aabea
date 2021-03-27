@@ -44,7 +44,7 @@ const LoginScreen = ({ location, history }) => {
     } else if (userInfo && userInfo.userRole === 'systemAdmin') {
       history.push('/systemAdmin');
     } else if (errorLogin) {
-      console.log(errorLogin);
+      // console.log(errorLogin);
       if (errorLogin === 'Invalid User' || errorLogin === 'Invalid Password!') {
         swal('Error!', errorLogin, 'error');
         dispatch({ type: USER_LOGOUT });
@@ -107,7 +107,7 @@ const LoginScreen = ({ location, history }) => {
   return (
     <FormContainer>
       {/* Card start */}
-      <Card border='info'>
+      <Card border='success'>
         <Card.Header
           className='text-center'
           as='h2'

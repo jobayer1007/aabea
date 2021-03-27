@@ -9,17 +9,23 @@ import {
   deleteAnnouncement,
   getAnnouncementById,
   newAnnouncement,
+  updateAnnouncementById,
 } from '../../actions/announcementAction';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import { ANNOUNCEMENT_NEW_RESET } from '../../constants/announcementConstants';
+import {
+  ANNOUNCEMENT_BY_ID_RESET,
+  ANNOUNCEMENT_NEW_RESET,
+  ANNOUNCEMENT_UPDATE_BY_ID_RESET,
+} from '../../constants/announcementConstants';
 import { LinkContainer } from 'react-router-bootstrap';
 
 const AnnouncementScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [addAnnouncement, setAddAnnouncement] = useState(false);
+  const [editAnnouncement, setEditAnnouncement] = useState(false);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [id, setId] = useState('');
@@ -67,15 +73,20 @@ const AnnouncementScreen = ({ history }) => {
       history.push('/login');
     }
     if (success || announcementUpdateSuccess) {
-      setAddAnnouncement(!addAnnouncement);
+      setAddAnnouncement(false);
+      setEditAnnouncement(false);
+
       setTitle('');
       setBody('');
-      // setId('');
+      dispatch({ type: ANNOUNCEMENT_BY_ID_RESET });
     }
     if (announcementByIdSuccess) {
       setAddAnnouncement(true);
+      setEditAnnouncement(true);
       setTitle(announcement.title);
       setBody(announcement.body);
+      setId(announcement.announcementId);
+
       // setId(announcement.announcementId);
     }
   }, [
@@ -83,6 +94,7 @@ const AnnouncementScreen = ({ history }) => {
     history,
     userInfo,
     success,
+    // addAnnouncement,
     announcementByIdSuccess,
     announcement,
     announcementUpdateSuccess,
@@ -90,6 +102,8 @@ const AnnouncementScreen = ({ history }) => {
   ]);
 
   const editAnnouncementHandler = (id) => {
+    dispatch({ type: ANNOUNCEMENT_UPDATE_BY_ID_RESET });
+
     dispatch(getAnnouncementById(id));
   };
 
@@ -102,11 +116,17 @@ const AnnouncementScreen = ({ history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    setId(userInfo.memberId);
-    console.log(id);
-    dispatch(newAnnouncement(title, body, id));
+    if (editAnnouncement) {
+      dispatch(updateAnnouncementById(id, title, body));
+    } else {
+      setId(userInfo.memberId);
+      console.log(id);
+      dispatch(newAnnouncement(title, body, id));
+    }
   };
   console.log(addAnnouncement);
+  console.log(title);
+  console.log(body);
 
   return (
     <>
@@ -178,9 +198,24 @@ const AnnouncementScreen = ({ history }) => {
                               ></Form.Control>
                             </Form.Group>
 
-                            <Button type='submit' variant='info' block>
-                              <i className='fas fa-plus' /> Add
-                            </Button>
+                            {editAnnouncement ? (
+                              <Button
+                                type='submit'
+                                variant='info'
+                                block
+                                // onClick={() =>
+                                //   updateAnnouncementHandler(
+                                //     announcement.announcementId
+                                //   )
+                                // }
+                              >
+                                <i className='fas fa-plus' /> Update
+                              </Button>
+                            ) : (
+                              <Button type='submit' variant='info' block>
+                                <i className='fas fa-plus' /> Add
+                              </Button>
+                            )}
                           </Form>
                         ))
                       : null}
@@ -242,7 +277,10 @@ const AnnouncementScreen = ({ history }) => {
                               </td> */}
                               <td> {announcement.title}</td>
                               <td> {announcement.body}</td>
-                              <td> {announcement.createdAt}</td>
+                              <td>
+                                {' '}
+                                {announcement.createdAt.substring(0, 10)}
+                              </td>
                               {userInfo &&
                                 (userInfo.userRole === 'systemAdmin' ||
                                   userInfo.userRole === 'admin') && (

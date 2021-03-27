@@ -1,12 +1,6 @@
-const { Sequelize, DataTypes, NOW } = require('sequelize');
-const User = require('./User');
-// const sequelize = new Sequelize('sqlite::memory:');
-const sequelize = new Sequelize(
-  'postgres://postgres:1007Jobayer@localhost:5432/aabeav2'
-);
+const { Sequelize } = require('sequelize');
 
 //member schema
-const validStatus = ['Active', 'Pending', 'Inactive'];
 
 const Member = (sequelize, DataTypes) =>
   sequelize.define('member', {

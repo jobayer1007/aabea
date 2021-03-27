@@ -10,6 +10,9 @@ const morgan = require('morgan');
 const { errorHandler, notFound } = require('./middleware/errorMiddleware');
 const chapterRoutes = require('./routes/chapterRoutes');
 const userRoutes = require('./routes/userRoutes');
+const committeeRoutes = require('./routes/committeeRoutes');
+const announcementRoutes = require('./routes/announcementRoutes');
+const imageRoutes = require('./routes/imageRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 
 dotenv.config();
@@ -26,6 +29,9 @@ app.use(express.json());
 app.use('/api/chapters', chapterRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/committee', committeeRoutes);
+app.use('/api/announcements', announcementRoutes);
+app.use('/api/image', imageRoutes);
 
 app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
@@ -45,12 +51,8 @@ app.get('/api/config/paypal', (req, res) =>
 
 //     console.log('initial synced'.yellow.inverse);
 //   })
-//   .catch((err) => {
-//     return res.json({
-//       success: false,
-//       msg: 'Encountered a problem while Sync Database, error:' + err,
-//     });
-//   });
+//   .catch((err) => console.log(err));
+
 // const __dirname = path.resolve();
 // app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')));

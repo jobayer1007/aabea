@@ -123,7 +123,7 @@ export const getMissionById = (id) => async (dispatch, getState) => {
   }
 };
 
-export const updateMissionById = (id, mission) => async (
+export const updateMissionById = (id, title, body) => async (
   dispatch,
   getState
 ) => {
@@ -144,7 +144,7 @@ export const updateMissionById = (id, mission) => async (
 
     const { data } = await axios.put(
       `/api/chapters/mission/${id}`,
-      mission,
+      { title, body },
       config
     );
 

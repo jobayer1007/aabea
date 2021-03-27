@@ -90,6 +90,8 @@ db.Announcement = require('../models/Announcement')(sequelize, Sequelize);
 db.Mission = require('../models/Mission')(sequelize, Sequelize);
 db.Vission = require('../models/Vission')(sequelize, Sequelize);
 db.History = require('../models/History')(sequelize, Sequelize);
+db.Committee = require('../models/Committee')(sequelize, Sequelize);
+db.ImageLibrary = require('../models/ImageLibrary')(sequelize, Sequelize);
 
 //Model relationships
 
@@ -147,5 +149,19 @@ db.Member.hasMany(db.Payment, { foreignKey: 'memberId' });
 
 db.Donation.belongsTo(db.Member, { foreignKey: 'memberId' });
 db.Member.hasMany(db.Donation, { foreignKey: 'memberId' });
+
+// COMMITTEE
+db.Chapter.hasMany(db.Committee, { foreignKey: 'chapterId' });
+db.Committee.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+db.Member.hasOne(db.Committee, { foreignKey: 'memberId' });
+db.Committee.belongsTo(db.Member, { foreignKey: 'memberId' });
+
+// Image Library
+db.Chapter.hasMany(db.ImageLibrary, { foreignKey: 'chapterId' });
+db.ImageLibrary.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+db.Member.hasMany(db.ImageLibrary, { foreignKey: 'memberId' });
+db.ImageLibrary.belongsTo(db.Member, { foreignKey: 'memberId' });
 
 module.exports = db;

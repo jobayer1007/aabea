@@ -17,20 +17,27 @@ import {
   ANNOUNCEMENT_DELETE_FAIL,
 } from '../constants/announcementConstants';
 
-export const newAnnouncement = (title, body, id) => async (dispatch) => {
+export const newAnnouncement = (title, body, id) => async (
+  dispatch,
+  getState
+) => {
   try {
     dispatch({
       type: ANNOUNCEMENT_NEW_REQUEST,
     });
 
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
     const { data } = await axios.post(
-      '/api/chapters/announcement',
+      '/api/announcements',
       {
         title,
         body,
@@ -61,22 +68,19 @@ export const newAnnouncement = (title, body, id) => async (dispatch) => {
   }
 };
 
-export const allAnnouncements = () => async (dispatch, getState) => {
+export const allAnnouncements = () => async (dispatch) => {
   try {
     dispatch({
       type: ANNOUNCEMENT_ALL_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        'Content-Type': 'application/json',
       },
     };
 
-    const { data } = await axios.get(`/api/chapters/announcements`, config);
+    const { data } = await axios.get(`/api/announcements`, config);
 
     dispatch({
       type: ANNOUNCEMENT_ALL_SUCCESS,
@@ -93,24 +97,20 @@ export const allAnnouncements = () => async (dispatch, getState) => {
   }
 };
 
-export const getAnnouncementById = (id) => async (dispatch, getState) => {
+export const getAnnouncementById = (id) => async (dispatch) => {
   try {
     dispatch({
       type: ANNOUNCEMENT_BY_ID_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
     const { data } = await axios.get(
-      `/api/chapters/announcements/${id}`,
+      `/api/announcements/${id}`,
 
       config
     );
@@ -130,7 +130,7 @@ export const getAnnouncementById = (id) => async (dispatch, getState) => {
   }
 };
 
-export const updateAnnouncementById = (id, announcement) => async (
+export const updateAnnouncementById = (id, title, body) => async (
   dispatch,
   getState
 ) => {
@@ -150,8 +150,8 @@ export const updateAnnouncementById = (id, announcement) => async (
     };
 
     const { data } = await axios.put(
-      `/api/chapters/announcements/${id}`,
-      announcement,
+      `/api/announcements/${id}`,
+      { title, body },
       config
     );
 
@@ -181,11 +181,12 @@ export const deleteAnnouncement = (id) => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
-    await axios.delete(`/api/chapters/announcements/${id}`, config);
+    await axios.delete(`/api/announcements/${id}`, config);
 
     dispatch({ type: ANNOUNCEMENT_DELETE_SUCCESS });
   } catch (error) {

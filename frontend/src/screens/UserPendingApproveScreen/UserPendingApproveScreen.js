@@ -150,7 +150,7 @@ const UserPendingApproveScreen = ({ match, history }) => {
       )}
 
       <>
-        <Card border='primary'>
+        <Card border='success'>
           <Card.Header className='text-center' as='h2'>
             Approve User
           </Card.Header>

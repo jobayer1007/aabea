@@ -123,7 +123,7 @@ const RegisterScreen = ({ location, history }) => {
   return (
     <Container>
       {/* Card Start */}
-      <Card border=''>
+      <Card border='success'>
         <Card.Header className='text-center text-info' as='h2'>
           Sign Up
         </Card.Header>

@@ -4,6 +4,7 @@ import {
   ANNOUNCEMENT_ALL_SUCCESS,
   ANNOUNCEMENT_BY_ID_FAIL,
   ANNOUNCEMENT_BY_ID_REQUEST,
+  ANNOUNCEMENT_BY_ID_RESET,
   ANNOUNCEMENT_BY_ID_SUCCESS,
   ANNOUNCEMENT_DELETE_FAIL,
   ANNOUNCEMENT_DELETE_REQUEST,
@@ -14,6 +15,7 @@ import {
   ANNOUNCEMENT_NEW_SUCCESS,
   ANNOUNCEMENT_UPDATE_BY_ID_FAIL,
   ANNOUNCEMENT_UPDATE_BY_ID_REQUEST,
+  ANNOUNCEMENT_UPDATE_BY_ID_RESET,
   ANNOUNCEMENT_UPDATE_BY_ID_SUCCESS,
 } from '../constants/announcementConstants';
 
@@ -58,10 +60,10 @@ export const announcementByIdReducer = (
       return { ...state, loading: true };
     case ANNOUNCEMENT_BY_ID_SUCCESS:
       return { loading: false, success: true, announcement: action.payload };
-
     case ANNOUNCEMENT_BY_ID_FAIL:
       return { loading: false, error: action.payload };
-
+    case ANNOUNCEMENT_BY_ID_RESET:
+      return {};
     default:
       return state;
   }
@@ -75,7 +77,8 @@ export const announcementUpdateReducer = (state = {}, action) => {
       return { loading: false, success: true, announcement: action.payload };
     case ANNOUNCEMENT_UPDATE_BY_ID_FAIL:
       return { loading: false, error: action.payload };
-
+    case ANNOUNCEMENT_UPDATE_BY_ID_RESET:
+      return {};
     default:
       return state;
   }

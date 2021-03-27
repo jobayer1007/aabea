@@ -10,16 +10,22 @@ const Sidebar = () => {
   const { userInfo } = userLogin;
 
   return (
-    <Card className='text-center' border='primary'>
+    <Card className='text-center' border='success'>
       <Card.Body>
         {/* Chapter */}
         {userInfo && userInfo.userRole === 'systemAdmin' && (
           <Card.Title>
-            <Button variant='outline-info' block>
-              <LinkContainer to='/chapter'>
-                <Nav.Link>Chapter</Nav.Link>
-              </LinkContainer>
-            </Button>
+            {/* <Button variant='outline-info' block> */}
+            <LinkContainer to='/chapter'>
+              {/* <Nav.Link>Chapter</Nav.Link> */}
+              <Link
+                className='btn btn-outline-info btn-sm btn-block rounded'
+                // onClick={() => setAddChapter(!addChapter)}
+              >
+                Chapter
+              </Link>
+            </LinkContainer>
+            {/* </Button> */}
           </Card.Title>
         )}
 
@@ -29,86 +35,146 @@ const Sidebar = () => {
             <>
               {/* Announcement */}
               <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/announcement'>
-                    <Nav.Link>Announcement</Nav.Link>
-                  </LinkContainer>
-                </Button>
+                {/* <Button variant='outline-info' block> */}
+                <LinkContainer to='/announcement'>
+                  {/* <Nav.Link>Announcement</Nav.Link> */}
+                  <Link
+                    className='btn btn-outline-info btn-sm btn-block rounded'
+                    // onClick={() => setAddChapter(!addChapter)}
+                  >
+                    Announcement
+                  </Link>
+                </LinkContainer>
+                {/* </Button> */}
               </Card.Title>
 
               {/* Mission */}
               <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/mission'>
-                    <Nav.Link>Mission</Nav.Link>
-                  </LinkContainer>
-                </Button>
+                {/* <Button variant='outline-info' block> */}
+                <LinkContainer to='/mission'>
+                  {/* <Nav.Link>Mission</Nav.Link> */}
+                  <Link
+                    className='btn btn-outline-info btn-sm btn-block rounded'
+                    // onClick={() => setAddChapter(!addChapter)}
+                  >
+                    Mission
+                  </Link>
+                </LinkContainer>
+                {/* </Button> */}
               </Card.Title>
 
               {/* Vission */}
               <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/vission'>
-                    <Nav.Link>Vission</Nav.Link>
-                  </LinkContainer>
-                </Button>
+                {/* <Button variant='outline-info' block> */}
+                <LinkContainer to='/vission'>
+                  {/* <Nav.Link>Vission</Nav.Link> */}
+                  <Link
+                    className='btn btn-outline-info btn-sm btn-block rounded'
+                    // onClick={() => setAddChapter(!addChapter)}
+                  >
+                    Vission
+                  </Link>
+                </LinkContainer>
+                {/* </Button> */}
               </Card.Title>
 
               {/* History */}
               <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/history'>
-                    <Nav.Link>History</Nav.Link>
-                  </LinkContainer>
-                </Button>
+                {/* <Button variant='outline-info' block> */}
+                <LinkContainer to='/history'>
+                  {/* <Nav.Link>History</Nav.Link> */}
+                  <Link
+                    className='btn btn-outline-info btn-sm btn-block rounded'
+                    // onClick={() => setAddChapter(!addChapter)}
+                  >
+                    History
+                  </Link>
+                </LinkContainer>
+                {/* </Button> */}
               </Card.Title>
 
               {/* Payment types */}
               <Card.Title>
-                <Button variant='outline-info' block>
-                  <LinkContainer to='/paymentType'>
-                    <Nav.Link>Payment Types</Nav.Link>
-                  </LinkContainer>
-                </Button>
+                {/* <Button variant='outline-info' block> */}
+                <LinkContainer to='/paymentType'>
+                  {/* <Nav.Link>Payment Types</Nav.Link> */}
+                  <Link
+                    className='btn btn-outline-info btn-sm btn-block rounded'
+                    // onClick={() => setAddChapter(!addChapter)}
+                  >
+                    Payment Type
+                  </Link>
+                </LinkContainer>
+                {/* </Button> */}
               </Card.Title>
             </>
           )}
 
         <Card.Title>
-          <Button variant='outline-info' block>
-            <LinkContainer to='/members'>
-              <Nav.Link>Members</Nav.Link>
-            </LinkContainer>
-          </Button>
+          {/* <Button variant='outline-info' block> */}
+          <LinkContainer to='/members'>
+            {/* <Nav.Link>Members</Nav.Link> */}
+            <Link
+              className='btn btn-outline-info btn-sm btn-block rounded'
+              // onClick={() => setAddChapter(!addChapter)}
+            >
+              Members
+            </Link>
+          </LinkContainer>
+          {/* </Button> */}
         </Card.Title>
         <Card.Title>
-          <Button variant='outline-info' block>
-            <LinkContainer to='/training'>
-              <Nav.Link>Training</Nav.Link>
-            </LinkContainer>
-          </Button>
+          {/* <Button variant='outline-info' block> */}
+          <LinkContainer to='/training'>
+            {/* <Nav.Link>Training</Nav.Link> */}
+            <Link
+              className='btn btn-outline-info btn-sm btn-block rounded'
+              // onClick={() => setAddChapter(!addChapter)}
+            >
+              Training
+            </Link>
+          </LinkContainer>
+          {/* </Button> */}
         </Card.Title>
         <Card.Title>
-          <Button variant='outline-info' block>
-            <LinkContainer to='/committiees'>
-              <Nav.Link>Committiees</Nav.Link>
-            </LinkContainer>
-          </Button>
+          {/* <Button variant='outline-info' block> */}
+          <LinkContainer to='/committiees'>
+            {/* <Nav.Link>Committiees</Nav.Link> */}
+            <Link
+              className='btn btn-outline-info btn-sm btn-block rounded'
+              // onClick={() => setAddChapter(!addChapter)}
+            >
+              Committiee
+            </Link>
+          </LinkContainer>
+          {/* </Button> */}
         </Card.Title>
         <Card.Title>
-          <Button variant='outline-info' block>
-            <LinkContainer to='/payment'>
-              <Nav.Link>Payment</Nav.Link>
-            </LinkContainer>
-          </Button>
+          {/* <Button variant='outline-info' block> */}
+          <LinkContainer to='/payment'>
+            {/* <Nav.Link>Payment</Nav.Link> */}
+            <Link
+              className='btn btn-outline-info btn-sm btn-block rounded'
+              // onClick={() => setAddChapter(!addChapter)}
+            >
+              Payment
+            </Link>
+          </LinkContainer>
+          {/* </Button> */}
         </Card.Title>
 
         <Card.Title>
-          <Button variant='outline-info' block>
-            <LinkContainer to='/donate'>
-              <Nav.Link>Donation</Nav.Link>
-            </LinkContainer>
-          </Button>
+          {/* <Button variant='outline-info' block> */}
+          <LinkContainer to='/donate'>
+            {/* <Nav.Link>Donation</Nav.Link> */}
+            <Link
+              className='btn btn-outline-info btn-sm btn-block rounded'
+              // onClick={() => setAddChapter(!addChapter)}
+            >
+              Donation
+            </Link>
+          </LinkContainer>
+          {/* </Button> */}
         </Card.Title>
       </Card.Body>
 

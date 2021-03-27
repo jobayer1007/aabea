@@ -30,6 +30,7 @@ import VissionScreen from './screens/VissionScreen/VissionScreen';
 import HistoryScreen from './screens/HistoryScreen/HistoryScreen';
 import PasswordResetScreen from './screens/PasswordResetScreen/PasswordResetScreen';
 import PasswordUpdateScreen from './screens/PasswordUpdateScreen/PasswordUpdateScreen';
+import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
 
 const App = () => {
   return (
@@ -63,6 +64,7 @@ const App = () => {
               path='/users/:id/pending'
               component={UserPendingApproveScreen}
             />
+            <Route path='/profile' component={ProfileScreen} />
             <Route path='/users/:id/edit' component={UserEditScreen} />
             <Route path='/' component={HomeScreen} exact />
           </Container>

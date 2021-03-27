@@ -14,9 +14,17 @@ const HomeScreen = () => {
     <>
       <Row>
         <Col md={{ span: 6, order: 1 }} lg={{ span: 3, order: 1 }}>
-          <Card>
+          <Card className='mb-2'>
+            <Card.Header as='h4'>Announcements</Card.Header>
             <Card.Body>
-              <Card.Title as='h4'>Announcements</Card.Title>
+              {/* <ListGroup>
+              <ListGroup.Item>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
+                officiis facilis beatae consequatur reiciendis dicta quia
+                voluptatem, ab, voluptatum eligendi ullam libero facere impedit
+                molestiae repudiandae ipsa, necessitatibus numquam velit?
+              </ListGroup.Item>
+            </ListGroup> */}
               <Card.Text>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
                 officiis facilis beatae consequatur reiciendis dicta quia
@@ -24,8 +32,11 @@ const HomeScreen = () => {
                 molestiae repudiandae ipsa, necessitatibus numquam velit?
               </Card.Text>
             </Card.Body>
+          </Card>
+          <Card className='mb-2'>
+            {/* <Card.Title as='h4'>Events:</Card.Title> */}
+            <Card.Header as='h4'>Events :</Card.Header>
             <Card.Body>
-              <Card.Title as='h4'>Events:</Card.Title>
               <Card.Text>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
                 officiis facilis beatae consequatur reiciendis dicta quia

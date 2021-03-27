@@ -13,12 +13,19 @@ import {
   deleteMission,
   getMissionById,
   newMission,
+  updateMissionById,
 } from '../../actions/missionActions';
+import {
+  MISSION_BY_ID_RESET,
+  MISSION_NEW_RESET,
+  MISSION_UPDATE_BY_ID_RESET,
+} from '../../constants/missionConstants';
 
 const MissionScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [addMission, setAddMission] = useState(false);
+  const [editMission, setEditMission] = useState(false);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [id, setId] = useState('');
@@ -61,21 +68,23 @@ const MissionScreen = ({ history }) => {
       console.log(addMission);
       dispatch(allMission());
       // dispatch({ type: CHAPTER_LIST_RESET });
-      // dispatch({ type: ANNOUNCEMENT_NEW_RESET });
+      dispatch({ type: MISSION_NEW_RESET });
     } else {
       history.push('/login');
     }
     if (success || missionUpdateSuccess) {
       setAddMission(!addMission);
+      setEditMission(false);
       setTitle('');
       setBody('');
-      // setId('');
+      dispatch({ type: MISSION_BY_ID_RESET });
     }
     if (missionByIdSuccess) {
       setAddMission(true);
+      setEditMission(true);
       setTitle(mission.title);
       setBody(mission.body);
-      // setId(announcement.announcementId);
+      setId(mission.chapterId);
     }
   }, [
     dispatch,
@@ -89,6 +98,8 @@ const MissionScreen = ({ history }) => {
   ]);
 
   const editMissionHandler = (id) => {
+    dispatch({ type: MISSION_UPDATE_BY_ID_RESET });
+
     dispatch(getMissionById(id));
   };
 
@@ -101,9 +112,13 @@ const MissionScreen = ({ history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    setId(userInfo.memberId);
-    console.log(id);
-    dispatch(newMission(title, body, id));
+    if (editMission) {
+      dispatch(updateMissionById(id, title, body));
+    } else {
+      setId(userInfo.memberId);
+      console.log(id);
+      dispatch(newMission(title, body, id));
+    }
   };
   console.log(addMission);
   return (
@@ -136,12 +151,21 @@ const MissionScreen = ({ history }) => {
               >
                 <Card border='primary'>
                   <Card.Header className='text-center' as='h2'>
-                    <Link
-                      className='btn btn-outline-info btn-sm btn-block rounded'
-                      onClick={() => setAddMission(!addMission)}
-                    >
-                      Update Mission
-                    </Link>
+                    {missions && missions.length !== 0 ? (
+                      <Link
+                        className='btn btn-outline-info btn-sm btn-block rounded'
+                        onClick={() => setAddMission(!addMission)}
+                      >
+                        Update Mission
+                      </Link>
+                    ) : (
+                      <Link
+                        className='btn btn-outline-info btn-sm btn-block rounded'
+                        onClick={() => setAddMission(!addMission)}
+                      >
+                        Add Mission
+                      </Link>
+                    )}
                   </Card.Header>
                   <Card.Body>
                     {addMission
@@ -172,10 +196,15 @@ const MissionScreen = ({ history }) => {
                                 onChange={(e) => setBody(e.target.value)}
                               ></Form.Control>
                             </Form.Group>
-
-                            <Button type='submit' variant='info' block>
-                              <i className='fas fa-plus' /> Add
-                            </Button>
+                            {editMission ? (
+                              <Button type='submit' variant='info' block>
+                                <i className='fas fa-plus' /> Update
+                              </Button>
+                            ) : (
+                              <Button type='submit' variant='info' block>
+                                <i className='fas fa-plus' /> Add
+                              </Button>
+                            )}
                           </Form>
                         ))
                       : null}
