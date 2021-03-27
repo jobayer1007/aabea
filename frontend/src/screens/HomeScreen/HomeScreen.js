@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Col,
-  Row,
-  Card,
-  ListGroupItem,
-  ListGroup,
-  Button,
-  Carousel,
-} from 'react-bootstrap';
+import { Col, Row, Card, Carousel } from 'react-bootstrap';
 
 const HomeScreen = () => {
   return (

@@ -1,55 +1,33 @@
 import axios from 'axios';
-import { Document } from 'react-pdf';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Form,
-  Button,
-  Card,
-  ListGroup,
-  Row,
-  Col,
-  Image,
-} from 'react-bootstrap';
+import { Card, ListGroup, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import FormContainer from '../../components/FormContainer';
-import {
-  approveUser,
-  getPendingUserDetails,
-  getUserDetails,
-  getUserProfile,
-  updateUser,
-} from '../../actions/userActions';
-import {
-  USER_APPROVE_RESET,
-  USER_UPDATE_RESET,
-} from '../../constants/userConstants';
+import { getUserProfile } from '../../actions/userActions';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 
-const ProfileScreen = ({ match, history }) => {
-  const pendingId = match.params.id;
-
-  const [firstName, setFirstName] = useState('');
-  const [mInit, setMInit] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [address1, setAddress1] = useState('');
-  const [address2, setAddress2] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [zipcode, setZipcode] = useState('');
-  const [primaryPhone, setPrimaryPhone] = useState('');
-  const [alternatePhone, setAlternatePhone] = useState('');
-  const [degree, setDegree] = useState('');
-  const [degreeYear, setDegreeYear] = useState('');
-  const [major, setMajor] = useState('');
-  const [collegeName, setCollegeName] = useState('');
-  const [email, setEmail] = useState('');
-  const [alternateEmail, setAlternateEmail] = useState('');
-  const [image, setImage] = useState('');
-  const [userRole, setUserRole] = useState('');
-  const [status, setStatus] = useState('');
-  const [uploading, setUploading] = useState(false);
+const ProfileScreen = ({ history }) => {
+  // const [firstName, setFirstName] = useState('');
+  // const [mInit, setMInit] = useState('');
+  // const [lastName, setLastName] = useState('');
+  // const [address1, setAddress1] = useState('');
+  // const [address2, setAddress2] = useState('');
+  // const [city, setCity] = useState('');
+  // const [state, setState] = useState('');
+  // const [zipcode, setZipcode] = useState('');
+  // const [primaryPhone, setPrimaryPhone] = useState('');
+  // const [alternatePhone, setAlternatePhone] = useState('');
+  // const [degree, setDegree] = useState('');
+  // const [degreeYear, setDegreeYear] = useState('');
+  // const [major, setMajor] = useState('');
+  // const [collegeName, setCollegeName] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [alternateEmail, setAlternateEmail] = useState('');
+  // const [image, setImage] = useState('');
+  // const [userRole, setUserRole] = useState('');
+  // const [status, setStatus] = useState('');
+  // const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -66,28 +44,6 @@ const ProfileScreen = ({ match, history }) => {
       history.push('/login');
     }
   }, [dispatch, history, userInfo]);
-
-  const uploadFileHandler = async (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('image', file);
-    setUploading(true);
-
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      };
-
-      const { data } = await axios.post('/api/upload', formData, config);
-      setImage(data);
-      setUploading(false);
-    } catch (error) {
-      console.error(error);
-      setUploading(false);
-    }
-  };
 
   const submitHandler = (e) => {
     e.preventDefault();

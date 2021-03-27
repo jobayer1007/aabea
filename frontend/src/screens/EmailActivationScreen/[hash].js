@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default async function verifyUserEmail(req, res) {
   const hash = req.query.hash;
   console.log(`hash: ${hash}`);

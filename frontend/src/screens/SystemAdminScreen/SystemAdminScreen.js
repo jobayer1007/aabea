@@ -1,16 +1,6 @@
 import React, { useEffect } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import {
-  Table,
-  Button,
-  Image,
-  Row,
-  Col,
-  Card,
-  CardColumns,
-  Nav,
-} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Table, Button, Image, Row, Col, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
@@ -26,13 +16,9 @@ import {
 import * as S from './SystemAdminScreen.Styles';
 import { deleteChapter, listChapters } from '../../actions/chapterActions';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import { USER_PENDING_LIST_RESET } from '../../constants/userConstants';
 
 const SystemAdminScreen = ({ history }) => {
   const dispatch = useDispatch();
-
-  const chapterList = useSelector((state) => state.chapterList);
-  const { loading, error, chapters } = chapterList;
 
   const userPendingList = useSelector((state) => state.userPendingList);
   const {

@@ -4,22 +4,7 @@ import swal from 'sweetalert';
 
 import { PayPalButton } from 'react-paypal-button-v2';
 
-import { LinkContainer } from 'react-router-bootstrap';
-import {
-  Table,
-  Button,
-  Image,
-  Row,
-  Col,
-  Card,
-  CardDeck,
-  Nav,
-  ListGroup,
-  Form,
-  Dropdown,
-  DropdownButton,
-} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Table, Row, Col, Card, ListGroup, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
@@ -28,17 +13,12 @@ import {
   getUserProfile,
   payUser,
 } from '../../actions/userActions';
-import {
-  USER_PAYMENT_DETAILS_RESET,
-  USER_PAY_RESET,
-} from '../../constants/userConstants';
+import { USER_PAY_RESET } from '../../constants/userConstants';
 // import { listUsers, deleteUser } from '../actions/userActions';
 import { listPaymentTypes } from '../../actions/paymentTypeActions';
-import PaymentDropdown from '../../components/PaymentDropdown/PaymentDropdown';
-import DatePicker from '../../components/PaymentDropdown/DatePicker';
 import Sidebar from '../../components/Sidebar/Sidebar';
 
-const PaymentScreen = ({ location, history }) => {
+const PaymentScreen = ({ history }) => {
   const [sdkReady, setSdkReady] = useState(false);
   const dispatch = useDispatch();
 
@@ -51,7 +31,7 @@ const PaymentScreen = ({ location, history }) => {
   const { userInfo } = userLogin;
 
   const userDetails = useSelector((state) => state.userDetails);
-  const { loading: userLoading, user, error: userError } = userDetails;
+  const { user } = userDetails;
 
   const userPaymentDetails = useSelector((state) => state.userPaymentDetails);
   const {
@@ -68,7 +48,7 @@ const PaymentScreen = ({ location, history }) => {
   } = paymentTypeList;
 
   const userPay = useSelector((state) => state.userPay);
-  const { loading: loadingPay, success: successPay, error: errorPay } = userPay;
+  const { success: successPay, error: errorPay } = userPay;
 
   useEffect(() => {
     if (!userInfo) {
@@ -99,12 +79,12 @@ const PaymentScreen = ({ location, history }) => {
 
       if (!payments || successPay) {
         if (successPay) {
-          swal('Success!', successPay, 'success').then((value) => {
+          swal('Success!', successPay, 'success').then(() => {
             dispatch({ type: USER_PAY_RESET });
           });
         } else if (errorPay) {
           console.log(errorPay);
-          swal('Error!', errorPay, 'error').then((value) => {
+          swal('Error!', errorPay, 'error').then(() => {
             dispatch({ type: USER_PAY_RESET });
           });
         }
@@ -134,12 +114,6 @@ const PaymentScreen = ({ location, history }) => {
     // paymentTypeAmount,
     // paymentTypeName,
   ]);
-
-  const duesHandler = (e) => {
-    e.preventDefault();
-
-    console.log('dues selected');
-  };
 
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);

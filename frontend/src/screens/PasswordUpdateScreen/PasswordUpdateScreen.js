@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
-import * as S from './PasswordUpdateScreen.Styles';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 import FormContainer from '../../components/FormContainer';
-import { passwordReset, passwordUpdate } from '../../actions/userActions';
-import { USER_PASSWORD_RESET_RESET } from '../../constants/userConstants';
-import swal from 'sweetalert';
+import { passwordUpdate } from '../../actions/userActions';
 
 const PasswordUpdateScreen = ({ location, match, history }) => {
   const { id, token } = match.params;

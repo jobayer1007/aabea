@@ -1,28 +1,10 @@
 import axios from 'axios';
-import { Document } from 'react-pdf';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Form,
-  Button,
-  Card,
-  ListGroup,
-  Row,
-  Col,
-  Image,
-} from 'react-bootstrap';
+import { Card, ListGroup, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import FormContainer from '../../components/FormContainer';
-import {
-  approveUser,
-  getPendingUserDetails,
-  getUserDetails,
-  updateUser,
-} from '../../actions/userActions';
-import {
-  USER_APPROVE_RESET,
-  USER_UPDATE_RESET,
-} from '../../constants/userConstants';
+import { approveUser, getPendingUserDetails } from '../../actions/userActions';
+import { USER_APPROVE_RESET } from '../../constants/userConstants';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 

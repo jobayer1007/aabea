@@ -19,7 +19,6 @@ import {
   ANNOUNCEMENT_NEW_RESET,
   ANNOUNCEMENT_UPDATE_BY_ID_RESET,
 } from '../../constants/announcementConstants';
-import { LinkContainer } from 'react-router-bootstrap';
 
 const AnnouncementScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -44,20 +43,10 @@ const AnnouncementScreen = ({ history }) => {
   } = announcementNew;
 
   const announcementById = useSelector((state) => state.announcementById);
-  const {
-    loading: announcementByIdLoading,
-    error: announcementByIdError,
-    success: announcementByIdSuccess,
-    announcement,
-  } = announcementById;
+  const { success: announcementByIdSuccess, announcement } = announcementById;
 
   const announcementUpdate = useSelector((state) => state.announcementUpdate);
-  const {
-    loading: announcementUpdateLoading,
-    error: announcementUpdateError,
-    success: announcementUpdateSuccess,
-    announcement: announcementUpdated,
-  } = announcementUpdate;
+  const { success: announcementUpdateSuccess } = announcementUpdate;
 
   const announcementDelete = useSelector((state) => state.announcementDelete);
   const { success: successDelete } = announcementDelete;
@@ -238,7 +227,7 @@ const AnnouncementScreen = ({ history }) => {
                 <Card className='text-center' border='primary'>
                   <Card.Header as='h5'>Announcements</Card.Header>
 
-                  <Card.Body>
+                  <>
                     {loading ? (
                       <Loader />
                     ) : error ? (
@@ -315,7 +304,7 @@ const AnnouncementScreen = ({ history }) => {
                         </tbody>
                       </Table>
                     )}
-                  </Card.Body>
+                  </>
                 </Card>
               </Col>
             </Row>

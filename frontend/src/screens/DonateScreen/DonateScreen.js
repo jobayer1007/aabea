@@ -160,6 +160,118 @@ const DonateScreen = ({ history }) => {
               lg={{ span: 9, order: 12 }}
               id='page-content-wrapper'
             >
+              <Card border='primary' className='mb-2'>
+                <Card.Header className='text-center' as='h2'>
+                  <Link
+                    className='btn btn-outline-info btn-sm btn-block rounded'
+                    onClick={() => setAddDonation(!addDonation)}
+                  >
+                    Make Donation
+                  </Link>
+                </Card.Header>
+                <Card.Body>
+                  {addDonation
+                    ? (errorDonate && (
+                        <Message variant='danger'>{errorDonate}</Message>
+                      )) ||
+                      (loadingDonate && <Loader />) ||
+                      (successDonate ? (
+                        <Message variant='success'>{successDonate}</Message>
+                      ) : (
+                        <Row>
+                          <Col md={8}>
+                            <Form>
+                              <Form.Group controlId='mInit'>
+                                <Form.Label>Mr / Mrs ? </Form.Label>
+                                <Form.Control
+                                  as='select'
+                                  value={mInit}
+                                  onChange={(e) => setMInit(e.target.value)}
+                                >
+                                  <option value='Mr'>Mr</option>
+                                  <option value='Mrs'>Mrs</option>
+                                </Form.Control>
+                              </Form.Group>
+
+                              <Form.Group controlId='firstName'>
+                                <Form.Label>First Name</Form.Label>
+                                <Form.Control
+                                  type='text'
+                                  placeholder='Please Enter Your First Name..'
+                                  value={firstName}
+                                  onChange={(e) => setFirstName(e.target.value)}
+                                ></Form.Control>
+                              </Form.Group>
+
+                              <Form.Group controlId='lastName'>
+                                <Form.Label>Last Name</Form.Label>
+                                <Form.Control
+                                  type='text'
+                                  placeholder='Please Enter Your Last Name'
+                                  value={lastName}
+                                  onChange={(e) => setLastName(e.target.value)}
+                                ></Form.Control>
+                              </Form.Group>
+
+                              <Form.Group controlId='email'>
+                                <Form.Label>Email</Form.Label>
+                                <Form.Control
+                                  type='email'
+                                  placeholder='Please Enter Address..'
+                                  value={email}
+                                  onChange={(e) => setEmail(e.target.value)}
+                                ></Form.Control>
+                              </Form.Group>
+
+                              <Form.Group controlId='donateAmount'>
+                                <Form.Label>Donate Amount</Form.Label>
+                                <Form.Control
+                                  type='number'
+                                  placeholder='Please Enter Donation Amount'
+                                  value={donateAmount}
+                                  onChange={(e) =>
+                                    setDonateAmount(e.target.value)
+                                  }
+                                ></Form.Control>
+                              </Form.Group>
+
+                              {/* <Button type='submit' variant='info' block>
+                                  <i className='fas fa-plus' /> Add
+                                </Button> */}
+                            </Form>
+                          </Col>
+                          <Col md={4}>
+                            <ListGroup variant='flush'>
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col>Donation Amount</Col>
+                                  <Col>${donateAmount}</Col>
+                                </Row>
+                              </ListGroup.Item>
+                              <ListGroup.Item>
+                                {loadingDonate && <Loader />}
+                                {!sdkReady ? (
+                                  <Loader />
+                                ) : (
+                                  <PayPalButton
+                                    amount={donateAmount}
+                                    onSuccess={successDonationHandler}
+                                  />
+                                )}
+                              </ListGroup.Item>
+                            </ListGroup>
+                          </Col>
+                        </Row>
+                      ))
+                    : null}
+                  {/* {message && <Message variant='danger'>{message}</Message>} */}
+                  {/* {registerError && (
+                        <Message variant='danger'>{registerError}</Message>
+                      )}
+                      {registerLoading && <Loader />}
+                      {} */}
+                </Card.Body>
+              </Card>
               <Card className='text-center' border='primary'>
                 <Card.Header as='h2'>Donation</Card.Header>
                 {donateLoading ? (
@@ -188,123 +300,6 @@ const DonateScreen = ({ history }) => {
                     </tbody>
                   </Table>
                 )}
-
-                <Card border='primary'>
-                  <Card.Header className='text-center' as='h2'>
-                    <Link
-                      className='btn btn-outline-info btn-sm btn-block rounded'
-                      onClick={() => setAddDonation(!addDonation)}
-                    >
-                      Make Donation
-                    </Link>
-                  </Card.Header>
-                  <Card.Body>
-                    {addDonation
-                      ? (errorDonate && (
-                          <Message variant='danger'>{errorDonate}</Message>
-                        )) ||
-                        (loadingDonate && <Loader />) ||
-                        (successDonate ? (
-                          <Message variant='success'>{successDonate}</Message>
-                        ) : (
-                          <Row>
-                            <Col md={8}>
-                              <Form>
-                                <Form.Group controlId='mInit'>
-                                  <Form.Label>Mr / Mrs ? </Form.Label>
-                                  <Form.Control
-                                    as='select'
-                                    value={mInit}
-                                    onChange={(e) => setMInit(e.target.value)}
-                                  >
-                                    <option value='Mr'>Mr</option>
-                                    <option value='Mrs'>Mrs</option>
-                                  </Form.Control>
-                                </Form.Group>
-
-                                <Form.Group controlId='firstName'>
-                                  <Form.Label>First Name</Form.Label>
-                                  <Form.Control
-                                    type='text'
-                                    placeholder='Please Enter Your First Name..'
-                                    value={firstName}
-                                    onChange={(e) =>
-                                      setFirstName(e.target.value)
-                                    }
-                                  ></Form.Control>
-                                </Form.Group>
-
-                                <Form.Group controlId='lastName'>
-                                  <Form.Label>Last Name</Form.Label>
-                                  <Form.Control
-                                    type='text'
-                                    placeholder='Please Enter Your Last Name'
-                                    value={lastName}
-                                    onChange={(e) =>
-                                      setLastName(e.target.value)
-                                    }
-                                  ></Form.Control>
-                                </Form.Group>
-
-                                <Form.Group controlId='email'>
-                                  <Form.Label>Email</Form.Label>
-                                  <Form.Control
-                                    type='email'
-                                    placeholder='Please Enter Address..'
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                  ></Form.Control>
-                                </Form.Group>
-
-                                <Form.Group controlId='donateAmount'>
-                                  <Form.Label>Donate Amount</Form.Label>
-                                  <Form.Control
-                                    type='number'
-                                    placeholder='Please Enter Donation Amount'
-                                    value={donateAmount}
-                                    onChange={(e) =>
-                                      setDonateAmount(e.target.value)
-                                    }
-                                  ></Form.Control>
-                                </Form.Group>
-
-                                {/* <Button type='submit' variant='info' block>
-                                  <i className='fas fa-plus' /> Add
-                                </Button> */}
-                              </Form>
-                            </Col>
-                            <Col md={4}>
-                              <ListGroup variant='flush'>
-                                <ListGroup.Item>
-                                  <Row>
-                                    <Col>Donation Amount</Col>
-                                    <Col>${donateAmount}</Col>
-                                  </Row>
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                  {loadingDonate && <Loader />}
-                                  {!sdkReady ? (
-                                    <Loader />
-                                  ) : (
-                                    <PayPalButton
-                                      amount={donateAmount}
-                                      onSuccess={successDonationHandler}
-                                    />
-                                  )}
-                                </ListGroup.Item>
-                              </ListGroup>
-                            </Col>
-                          </Row>
-                        ))
-                      : null}
-                    {/* {message && <Message variant='danger'>{message}</Message>} */}
-                    {/* {registerError && (
-                        <Message variant='danger'>{registerError}</Message>
-                      )}
-                      {registerLoading && <Loader />}
-                      {} */}
-                  </Card.Body>
-                </Card>
               </Card>
             </Col>
           </>

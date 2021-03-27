@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import * as S from './App.styles';
 import Footer from './components/Footer';
 import Header from './components/Header/Header';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
@@ -19,7 +18,6 @@ import TrainingScreen from './screens/TrainingScreen/TrainingScreen';
 import CommittieesScreen from './screens/CommitteesScreen/CommitteesScreen';
 // import Navbar from './components/Navbar/Navbar';
 import EmailActivationScreen from './screens/EmailActivationScreen/EmailActivationScreen';
-import verifyUserEmail from './screens/EmailActivationScreen/[hash]';
 import SystemAdminScreen from './screens/SystemAdminScreen/SystemAdminScreen';
 import UserPendingApproveScreen from './screens/UserPendingApproveScreen/UserPendingApproveScreen';
 import ChapterScreen from './screens/ChapterScreen/ChapterScreen';
@@ -31,6 +29,8 @@ import HistoryScreen from './screens/HistoryScreen/HistoryScreen';
 import PasswordResetScreen from './screens/PasswordResetScreen/PasswordResetScreen';
 import PasswordUpdateScreen from './screens/PasswordUpdateScreen/PasswordUpdateScreen';
 import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
+import ImagesScreen from './screens/ImagesScreen/ImagesScreen';
+import MembersScreen from './screens/MembersScreen/MembersScreen';
 
 const App = () => {
   return (
@@ -56,10 +56,12 @@ const App = () => {
             <Route path='/vission' component={VissionScreen} />
             <Route path='/history' component={HistoryScreen} />
             <Route path='/paymentType' component={PaymentTypeScreen} />
+            <Route path='/images' component={ImagesScreen} />
             <Route path='/payment' component={PaymentScreen} />
             <Route path='/donate' component={DonateScreen} />
             <Route path='/training' component={TrainingScreen} />
             <Route path='/committiees' component={CommittieesScreen} />
+            <Route path='/members' component={MembersScreen} />
             <Route
               path='/users/:id/pending'
               component={UserPendingApproveScreen}

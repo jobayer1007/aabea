@@ -23,6 +23,7 @@ const Sidebar = () => {
                 // onClick={() => setAddChapter(!addChapter)}
               >
                 Chapter
+                {/* <Button>Chapter</Button> */}
               </Link>
             </LinkContainer>
             {/* </Button> */}
@@ -106,6 +107,15 @@ const Sidebar = () => {
                   </Link>
                 </LinkContainer>
                 {/* </Button> */}
+              </Card.Title>
+
+              {/* Images */}
+              <Card.Title>
+                <LinkContainer to='/images'>
+                  <Link className='btn btn-outline-info btn-sm btn-block rounded'>
+                    Images
+                  </Link>
+                </LinkContainer>
               </Card.Title>
             </>
           )}

@@ -10,7 +10,6 @@ import swal from 'sweetalert';
 import {
   USER_LOGOUT,
   USER_PASSWORD_RESET_RESET,
-  USER_VERIFY_EMAIL_RESEND_RESET,
 } from '../constants/userConstants';
 
 const LoginScreen = ({ location, history }) => {
@@ -26,11 +25,7 @@ const LoginScreen = ({ location, history }) => {
   const userVerifyEmailResend = useSelector(
     (state) => state.userVerifyEmailResend
   );
-  const {
-    loading: veResendLoading,
-    error: veResendError,
-    success,
-  } = userVerifyEmailResend;
+  const { error: veResendError, success } = userVerifyEmailResend;
 
   const redirect = location.search
     ? location.search.split('=')[1]

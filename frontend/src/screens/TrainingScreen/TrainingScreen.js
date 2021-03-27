@@ -1,23 +1,9 @@
-import React, { useEffect } from 'react';
-import { LinkContainer } from 'react-router-bootstrap';
-import {
-  Table,
-  Button,
-  Image,
-  Row,
-  Col,
-  Card,
-  CardDeck,
-  Nav,
-} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import Message from '../../components/Message';
-import Loader from '../../components/Loader';
+import React from 'react';
+import { Row, Col, Card } from 'react-bootstrap';
 import Sidebar from '../../components/Sidebar/Sidebar';
 // import { listUsers, deleteUser } from '../actions/userActions';
 
-const TrainingScreen = ({ history }) => {
+const TrainingScreen = () => {
   return (
     <>
       <Row className='content'>

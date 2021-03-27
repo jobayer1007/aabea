@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Alert } from 'react-bootstrap';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button, Row, Col, Card } from 'react-bootstrap';
+import { Row, Col, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import FormContainer from '../../components/FormContainer';
 import { verifyUserEmail } from '../../actions/userActions';
@@ -13,7 +12,7 @@ import { USER_EMAIL_VERIFY_RESET } from '../../constants/userConstants';
 const EmailActivationScreen = ({ location, match, history }) => {
   const { hash } = match.params;
 
-  const [email, setEmail] = useState('');
+  // const [email, setEmail] = useState('');
 
   const dispatch = useDispatch();
 
@@ -68,24 +67,23 @@ const EmailActivationScreen = ({ location, match, history }) => {
         <Card.Body>
           {error && <Message variant='danger'>{error}</Message>}
           {loading && <Loader />}
-          {success ? (
-            <Message variant='info'>{success}</Message>
-          ) : null
-          // <Form onSubmit={submitHandler}>
-          //   {/* <Form.Group controlId='email'>
-          //     <Form.Label>Please Confirm Your Email Address</Form.Label>
-          //     <Form.Control
-          //       type='email'
-          //       placeholder='Enter Email..'
-          //       value={email}
-          //       onChange={(e) => setEmail(e.target.value)}
-          //     ></Form.Control>
-          //   </Form.Group> */}
+          {
+            success ? <Message variant='info'>{success}</Message> : null
+            // <Form onSubmit={submitHandler}>
+            //   {/* <Form.Group controlId='email'>
+            //     <Form.Label>Please Confirm Your Email Address</Form.Label>
+            //     <Form.Control
+            //       type='email'
+            //       placeholder='Enter Email..'
+            //       value={email}
+            //       onChange={(e) => setEmail(e.target.value)}
+            //     ></Form.Control>
+            //   </Form.Group> */}
 
-          //   <Button type='submit' variant='info' block>
-          //     Verify
-          //   </Button>
-          // </Form>
+            //   <Button type='submit' variant='info' block>
+            //     Verify
+            //   </Button>
+            // </Form>
           }
         </Card.Body>
         <Card.Footer className='text-muted'>

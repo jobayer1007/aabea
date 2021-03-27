@@ -2,27 +2,21 @@ import {
   HISTORY_ALL_FAIL,
   HISTORY_ALL_REQUEST,
   HISTORY_ALL_SUCCESS,
+  HISTORY_BY_ID_FAIL,
+  HISTORY_BY_ID_REQUEST,
+  HISTORY_BY_ID_RESET,
+  HISTORY_BY_ID_SUCCESS,
   HISTORY_DELETE_FAIL,
   HISTORY_DELETE_REQUEST,
   HISTORY_DELETE_SUCCESS,
   HISTORY_NEW_FAIL,
   HISTORY_NEW_REQUEST,
+  HISTORY_NEW_RESET,
   HISTORY_NEW_SUCCESS,
   HISTORY_UPDATE_BY_ID_FAIL,
   HISTORY_UPDATE_BY_ID_REQUEST,
+  HISTORY_UPDATE_BY_ID_RESET,
   HISTORY_UPDATE_BY_ID_SUCCESS,
-  VISSION_ALL_FAIL,
-  VISSION_ALL_REQUEST,
-  VISSION_ALL_SUCCESS,
-  VISSION_DELETE_FAIL,
-  VISSION_DELETE_REQUEST,
-  VISSION_DELETE_SUCCESS,
-  VISSION_NEW_FAIL,
-  VISSION_NEW_REQUEST,
-  VISSION_NEW_SUCCESS,
-  VISSION_UPDATE_BY_ID_FAIL,
-  VISSION_UPDATE_BY_ID_REQUEST,
-  VISSION_UPDATE_BY_ID_SUCCESS,
 } from '../constants/historyConstants';
 
 export const historyNewReducer = (state = {}, action) => {
@@ -33,21 +27,37 @@ export const historyNewReducer = (state = {}, action) => {
       return { loading: false, success: action.payload };
     case HISTORY_NEW_FAIL:
       return { loading: false, error: action.payload };
+    case HISTORY_NEW_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const historyAllReducer = (state = { histories: [] }, action) => {
+  switch (action.type) {
+    case HISTORY_ALL_REQUEST:
+      return { loading: true };
+    case HISTORY_ALL_SUCCESS:
+      return { loading: false, histories: action.payload };
+    case HISTORY_ALL_FAIL:
+      return { loading: false, error: action.payload };
 
     default:
       return state;
   }
 };
 
-export const historyAllReducer = (state = { history: [] }, action) => {
+export const historyByIdReducer = (state = { historyId: {} }, action) => {
   switch (action.type) {
-    case HISTORY_ALL_REQUEST:
-      return { loading: true };
-    case HISTORY_ALL_SUCCESS:
-      return { loading: false, history: action.payload };
-    case HISTORY_ALL_FAIL:
+    case HISTORY_BY_ID_REQUEST:
+      return { ...state, loading: true };
+    case HISTORY_BY_ID_SUCCESS:
+      return { loading: false, success: true, historyId: action.payload };
+    case HISTORY_BY_ID_FAIL:
       return { loading: false, error: action.payload };
-
+    case HISTORY_BY_ID_RESET:
+      return {};
     default:
       return state;
   }
@@ -61,7 +71,8 @@ export const historyUpdateReducer = (state = {}, action) => {
       return { loading: false, success: true, history: action.payload };
     case HISTORY_UPDATE_BY_ID_FAIL:
       return { loading: false, error: action.payload };
-
+    case HISTORY_UPDATE_BY_ID_RESET:
+      return {};
     default:
       return state;
   }

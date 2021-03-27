@@ -17,15 +17,19 @@ import {
   MISSION_UPDATE_BY_ID_SUCCESS,
 } from '../constants/missionConstants';
 
-export const newMission = (title, body, id) => async (dispatch) => {
+export const newMission = (title, body, id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: MISSION_NEW_REQUEST,
     });
 
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
@@ -54,18 +58,15 @@ export const newMission = (title, body, id) => async (dispatch) => {
   }
 };
 
-export const allMission = () => async (dispatch, getState) => {
+export const allMission = () => async (dispatch) => {
   try {
     dispatch({
       type: MISSION_ALL_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        'Content-Type': 'application/json',
       },
     };
 
@@ -174,6 +175,7 @@ export const deleteMission = (id) => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     };

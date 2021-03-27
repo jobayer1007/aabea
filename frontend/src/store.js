@@ -50,16 +50,24 @@ import {
 } from './reducers/missionReducers';
 import {
   vissionAllReducer,
+  vissionByIdReducer,
   vissionDeleteReducer,
   vissionNewReducer,
   vissionUpdateReducer,
 } from './reducers/vissionReducers';
 import {
   historyAllReducer,
+  historyByIdReducer,
   historyDeleteReducer,
   historyNewReducer,
   historyUpdateReducer,
 } from './reducers/historyReducers';
+import {
+  imageAllReducer,
+  imageByIdReducer,
+  imageDeleteReducer,
+  imageNewReducer,
+} from './reducers/imageReducers';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -107,16 +115,22 @@ const reducer = combineReducers({
   missionUpdate: missionUpdateReducer,
   missionDelete: missionDeleteReducer,
 
-  vissionRegister: vissionNewReducer,
+  vissionNew: vissionNewReducer,
   vissionAll: vissionAllReducer,
-  // vissionById: vissionByIdReducer,
+  vissionById: vissionByIdReducer,
   vissionUpdate: vissionUpdateReducer,
   vissionDelete: vissionDeleteReducer,
 
-  historyRegister: historyNewReducer,
+  historyNew: historyNewReducer,
   historyAll: historyAllReducer,
+  historyById: historyByIdReducer,
   historyUpdate: historyUpdateReducer,
   historyDelete: historyDeleteReducer,
+
+  imageNew: imageNewReducer,
+  imageAll: imageAllReducer,
+  imageById: imageByIdReducer,
+  imageDelete: imageDeleteReducer,
 
   paymentTypeRegister: paymentTypeRegisterReducer,
   paymentTypeList: paymentTypeListReducer,

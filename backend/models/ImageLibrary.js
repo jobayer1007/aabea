@@ -25,16 +25,13 @@ const ImageLibrary = (sequelize, DataTypes) =>
       allowNull: false,
       notEmpty: true,
     },
-
     imageLink: {
       type: DataTypes.JSONB,
     },
-
     image: {
       type: DataTypes.STRING,
       required: true,
     },
-
     chapterId: {
       type: DataTypes.UUID,
       allowNull: false,

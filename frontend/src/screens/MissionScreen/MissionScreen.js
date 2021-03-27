@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button, Row, Col, Card, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -44,20 +43,10 @@ const MissionScreen = ({ history }) => {
   } = missionNew;
 
   const missionById = useSelector((state) => state.missionById);
-  const {
-    loading: missionByIdLoading,
-    error: missionByIdError,
-    success: missionByIdSuccess,
-    mission,
-  } = missionById;
+  const { success: missionByIdSuccess, mission } = missionById;
 
   const missionUpdate = useSelector((state) => state.missionUpdate);
-  const {
-    loading: missionUpdateLoading,
-    error: missionUpdateError,
-    success: missionUpdateSuccess,
-    mission: missionUpdated,
-  } = missionUpdate;
+  const { success: missionUpdateSuccess } = missionUpdate;
 
   const missionDelete = useSelector((state) => state.missionDelete);
   const { success: successDelete } = missionDelete;
@@ -99,7 +88,8 @@ const MissionScreen = ({ history }) => {
 
   const editMissionHandler = (id) => {
     dispatch({ type: MISSION_UPDATE_BY_ID_RESET });
-
+    setEditMission(!editMission);
+    setAddMission(!addMission);
     dispatch(getMissionById(id));
   };
 
@@ -154,7 +144,7 @@ const MissionScreen = ({ history }) => {
                     {missions && missions.length !== 0 ? (
                       <Link
                         className='btn btn-outline-info btn-sm btn-block rounded'
-                        onClick={() => setAddMission(!addMission)}
+                        onClick={() => editMissionHandler(userInfo.chapterId)}
                       >
                         Update Mission
                       </Link>

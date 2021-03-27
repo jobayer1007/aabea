@@ -270,7 +270,13 @@ const DashboardScreen = ({ history }) => {
                               <td>{user.memberId}</td>
                               <td>
                                 {' '}
-                                <Image src={user.image} thumbnail />
+                                {/* <Image src={user.image} thumbnail /> */}
+                                <Image
+                                  // src={user.member.certificates}
+                                  alt={user.userName}
+                                  fluid
+                                  rounded
+                                />
                               </td>
                               <td> {user.userName}</td>
                               <td>

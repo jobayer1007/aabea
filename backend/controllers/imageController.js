@@ -52,6 +52,24 @@ exports.getAllImages = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get Image by Id     ///////////////////////////////////////////////
+// @route   GET /api/image/:id
+// @access  Private/Admin || SystemAdmin
+exports.getImageById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const image = await models.ImageLibrary.findOne({
+    where: { imageId: id },
+  });
+
+  if (image) {
+    res.json(image);
+  } else {
+    res.status(401);
+    throw new Error('image not found');
+  }
+});
+
 // @desc    Delete an image by Id     /////////////////////////////////////////////// pending
 // @route   DELETE /api/image/:id
 // @access  Private/Admin

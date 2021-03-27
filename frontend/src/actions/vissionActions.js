@@ -3,6 +3,9 @@ import {
   VISSION_ALL_FAIL,
   VISSION_ALL_REQUEST,
   VISSION_ALL_SUCCESS,
+  VISSION_BY_ID_FAIL,
+  VISSION_BY_ID_REQUEST,
+  VISSION_BY_ID_SUCCESS,
   VISSION_DELETE_FAIL,
   VISSION_DELETE_REQUEST,
   VISSION_DELETE_SUCCESS,
@@ -14,15 +17,19 @@ import {
   VISSION_UPDATE_BY_ID_SUCCESS,
 } from '../constants/vissionConstants';
 
-export const newVission = (title, body, id) => async (dispatch) => {
+export const newVission = (title, body, id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: VISSION_NEW_REQUEST,
     });
 
+    const {
+      userLogin: { userInfo },
+    } = getState();
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
@@ -51,18 +58,15 @@ export const newVission = (title, body, id) => async (dispatch) => {
   }
 };
 
-export const allVission = () => async (dispatch, getState) => {
+export const allVission = () => async (dispatch) => {
   try {
     dispatch({
       type: VISSION_ALL_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        'Content-Type': 'application/json',
       },
     };
 
@@ -83,7 +87,47 @@ export const allVission = () => async (dispatch, getState) => {
   }
 };
 
-export const updateVissionById = (vission) => async (dispatch, getState) => {
+export const getVissionById = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: VISSION_BY_ID_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(
+      `/api/chapters/vission/${id}`,
+
+      config
+    );
+
+    dispatch({
+      type: VISSION_BY_ID_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: VISSION_BY_ID_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const updateVissionById = (id, body, title) => async (
+  dispatch,
+  getState
+) => {
   try {
     dispatch({
       type: VISSION_UPDATE_BY_ID_REQUEST,
@@ -101,7 +145,7 @@ export const updateVissionById = (vission) => async (dispatch, getState) => {
 
     const { data } = await axios.put(
       `/api/chapters/vission/${id}`,
-      vission,
+      { title, body },
       config
     );
 
@@ -131,6 +175,7 @@ export const deleteVission = (id) => async (dispatch, getState) => {
     } = getState();
     const config = {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,
       },
     };

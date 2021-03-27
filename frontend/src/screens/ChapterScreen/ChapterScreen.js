@@ -193,7 +193,7 @@ const ChapterScreen = ({ history }) => {
                 <Card className='text-center' border='primary'>
                   <Card.Header as='h5'>All Chapter List</Card.Header>
 
-                  <Card.Body>
+                  <>
                     {loading ? (
                       <Loader />
                     ) : error ? (
@@ -290,7 +290,7 @@ const ChapterScreen = ({ history }) => {
                         </tbody>
                       </Table>
                     )}
-                  </Card.Body>
+                  </>
                 </Card>
               </Col>
               {/* 5th card section : All Chapter List End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}

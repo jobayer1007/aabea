@@ -1,4 +1,5 @@
 import {
+  ADMIN_LIST,
   USER_APPROVE_FAIL,
   USER_APPROVE_REQUEST,
   USER_APPROVE_RESET,
@@ -35,7 +36,6 @@ import {
   USER_LIST_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
-  USER_LOGIN_RESET,
   USER_LOGIN_SUCCESS,
   USER_LOGOUT,
   USER_PASSWORD_RESET_FAIL,
@@ -150,11 +150,20 @@ export const userListReducer = (state = { users: [] }, action) => {
     case USER_LIST_REQUEST:
       return { loading: true };
     case USER_LIST_SUCCESS:
-      return { loading: false, users: action.payload };
+      return { loading: false, success: true, users: action.payload };
+    // case ADMIN_LIST:
+    //   return {
+    //     admins: action.payload.filter((user) => {
+    //       const regex = new RegExp(`admin`, 'gi');
+    //       return (
+    //         user.userRole.match(regex) || user.userRole.match('systemAdmin')
+    //       );
+    //     }),
+    //   };
     case USER_LIST_FAIL:
       return { loading: false, error: action.payload };
     case USER_LIST_RESET:
-      return { users: [] };
+      return { users: [], admins: [] };
     default:
       return state;
   }

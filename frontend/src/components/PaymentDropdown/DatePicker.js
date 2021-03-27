@@ -22,7 +22,7 @@ class DatePicker extends React.Component {
   };
 
   render() {
-    const { thisYear, selectedYear } = this.state;
+    const { thisYear } = this.state;
     const options = [];
 
     for (let i = minOffset; i <= maxOffset; i++) {
