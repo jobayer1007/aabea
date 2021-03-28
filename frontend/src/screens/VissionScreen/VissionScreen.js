@@ -44,20 +44,10 @@ const VissionScreen = ({ history }) => {
   } = vissionNew;
 
   const vissionById = useSelector((state) => state.vissionById);
-  const {
-    loading: vissionByIdLoading,
-    error: vissionByIdError,
-    success: vissionByIdSuccess,
-    vission,
-  } = vissionById;
+  const { success: vissionByIdSuccess, vission } = vissionById;
 
   const vissionUpdate = useSelector((state) => state.vissionUpdate);
-  const {
-    loading: vissionUpdateLoading,
-    error: vissionUpdateError,
-    success: vissionUpdateSuccess,
-    mission: vissionUpdated,
-  } = vissionUpdate;
+  const { success: vissionUpdateSuccess } = vissionUpdate;
 
   const vissionDelete = useSelector((state) => state.vissionDelete);
   const { success: successDelete } = vissionDelete;
@@ -65,23 +55,21 @@ const VissionScreen = ({ history }) => {
   useEffect(() => {
     if (userInfo) {
       setId(userInfo.memberId);
-      console.log(addVission);
       dispatch(allVission());
-      // dispatch({ type: CHAPTER_LIST_RESET });
       dispatch({ type: VISSION_NEW_RESET });
     } else {
       history.push('/login');
     }
     if (success || vissionUpdateSuccess) {
-      setAddVission(!addVission);
+      setAddVission(false);
       setEditVission(false);
       setTitle('');
       setBody('');
       dispatch({ type: VISSION_BY_ID_RESET });
     }
     if (vissionByIdSuccess) {
-      setAddVission(true);
-      setEditVission(true);
+      setAddVission((addVission) => !addVission);
+      setEditVission((editVission) => !editVission);
       setTitle(vission.title);
       setBody(vission.body);
       setId(vission.chapterId);
@@ -91,16 +79,15 @@ const VissionScreen = ({ history }) => {
     history,
     userInfo,
     success,
+    vission,
     vissionByIdSuccess,
-    // missions,
     vissionUpdateSuccess,
     successDelete,
   ]);
 
   const editVissionHandler = (id) => {
     dispatch({ type: VISSION_UPDATE_BY_ID_RESET });
-    setEditVission(!editVission);
-    setAddVission(!addVission);
+
     dispatch(getVissionById(id));
   };
 
@@ -117,7 +104,6 @@ const VissionScreen = ({ history }) => {
       dispatch(updateVissionById(id, title, body));
     } else {
       setId(userInfo.memberId);
-      console.log(id);
       dispatch(newVission(title, body, id));
     }
   };

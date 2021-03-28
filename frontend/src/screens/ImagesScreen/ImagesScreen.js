@@ -54,7 +54,7 @@ const ImagesScreen = ({ history }) => {
       history.push('/login');
     }
     if (success) {
-      setAddImage(!addImage);
+      setAddImage((addImage) => !addImage);
       setImageName('');
       setImageDescription('');
       setImageLink('');

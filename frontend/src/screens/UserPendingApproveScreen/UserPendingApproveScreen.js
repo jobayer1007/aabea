@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, ListGroup, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,27 +9,6 @@ import Loader from '../../components/Loader';
 
 const UserPendingApproveScreen = ({ match, history }) => {
   const pendingId = match.params.id;
-
-  const [firstName, setFirstName] = useState('');
-  const [mInit, setMInit] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [address1, setAddress1] = useState('');
-  const [address2, setAddress2] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [zipcode, setZipcode] = useState('');
-  const [primaryPhone, setPrimaryPhone] = useState('');
-  const [alternatePhone, setAlternatePhone] = useState('');
-  const [degree, setDegree] = useState('');
-  const [degreeYear, setDegreeYear] = useState('');
-  const [major, setMajor] = useState('');
-  const [collegeName, setCollegeName] = useState('');
-  const [email, setEmail] = useState('');
-  const [alternateEmail, setAlternateEmail] = useState('');
-  const [image, setImage] = useState('');
-  const [userRole, setUserRole] = useState('');
-  const [status, setStatus] = useState('');
-  const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -57,54 +35,11 @@ const UserPendingApproveScreen = ({ match, history }) => {
           console.log(pendingId);
           dispatch(getPendingUserDetails(pendingId));
         }
-        // else {
-        //   setFirstName(pendingUser.firstName);
-        //   setMInit(pendingUser.mInit);
-        //   setLastName(pendingUser.lastName);
-        //   setAddress1(pendingUser.address1);
-        //   setAddress2(pendingUser.address2);
-        //   setCity(pendingUser.city);
-        //   setState(pendingUser.state);
-        //   setZipcode(pendingUser.zipcode);
-        //   setPrimaryPhone(pendingUser.primaryPhone);
-        //   setAlternatePhone(pendingUser.alternatePhone);
-        //   setDegree(pendingUser.degree);
-        //   setDegreeYear(new Date(pendingUser.degreeYear).getFullYear());
-        //   setMajor(pendingUser.major);
-        //   setCollegeName(pendingUser.collegeName);
-        //   setEmail(pendingUser.email);
-        //   setAlternateEmail(pendingUser.alternateEmail);
-        //   setImage(pendingUser.image);
-        //   setUserRole(pendingUser.userRole);
-        //   setStatus(pendingUser.status);
-        // }
       }
     } else {
       history.push('/login');
     }
-  }, [dispatch, history, pendingUser, pendingId, successApprove]);
-
-  const uploadFileHandler = async (e) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('image', file);
-    setUploading(true);
-
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      };
-
-      const { data } = await axios.post('/api/upload', formData, config);
-      setImage(data);
-      setUploading(false);
-    } catch (error) {
-      console.error(error);
-      setUploading(false);
-    }
-  };
+  }, [dispatch, userInfo, history, pendingUser, pendingId, successApprove]);
 
   const submitHandler = (e) => {
     e.preventDefault();

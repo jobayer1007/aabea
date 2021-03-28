@@ -150,7 +150,7 @@ const DashboardScreen = ({ history }) => {
                           <Row className='text-info'>
                             <Col md={4}>Status:</Col>
                             {user &&
-                              (user.status == 'active' ? (
+                              (user.status === 'active' ? (
                                 <Col>
                                   <i
                                     className='fas fa-user'
@@ -265,8 +265,8 @@ const DashboardScreen = ({ history }) => {
                         </thead>
 
                         <tbody>
-                          {users.map((user) => (
-                            <tr key={user.memberId}>
+                          {users.map((user, index) => (
+                            <tr key={index}>
                               <td>{user.memberId}</td>
                               <td>
                                 {' '}

@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import { LinkContainer } from 'react-router-bootstrap';
-import { Button, Card, Nav } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const Sidebar = () => {

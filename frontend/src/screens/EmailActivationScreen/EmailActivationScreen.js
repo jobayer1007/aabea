@@ -6,8 +6,6 @@ import FormContainer from '../../components/FormContainer';
 import { verifyUserEmail } from '../../actions/userActions';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import swal from 'sweetalert';
-import { USER_EMAIL_VERIFY_RESET } from '../../constants/userConstants';
 
 const EmailActivationScreen = ({ location, match, history }) => {
   const { hash } = match.params;
@@ -19,9 +17,7 @@ const EmailActivationScreen = ({ location, match, history }) => {
   const userEmailVerify = useSelector((state) => state.userEmailVerify);
   const { loading, error, success } = userEmailVerify;
 
-  const redirect = location.search
-    ? location.search.split('=')[1]
-    : '/dashboard';
+  const redirect = location.search ? location.search.split('=')[1] : '/login';
 
   useEffect(() => {
     if (!hash) {
@@ -30,28 +26,16 @@ const EmailActivationScreen = ({ location, match, history }) => {
       dispatch(verifyUserEmail(hash));
       //   history.push(redirect);
       // }
-      if (success) {
-        console.log(success);
-        swal('Success!', success, 'success').then((value) => {
-          dispatch({ type: USER_EMAIL_VERIFY_RESET });
-          history.push(redirect);
-        });
-      } else if (error) {
-        console.log(error);
-        swal('Error!', error, 'error');
-        dispatch({ type: USER_EMAIL_VERIFY_RESET });
-        history.push(redirect);
-      }
     }
-  }, [history, hash, error, redirect]);
+  }, [dispatch, history, hash, redirect]);
 
-  const submitHandler = (e) => {
-    e.preventDefault();
+  // const submitHandler = (e) => {
+  //   e.preventDefault();
 
-    // Dispatch Verify
-    dispatch(verifyUserEmail(hash));
-    console.log(`hash: ${hash} `);
-  };
+  //   // Dispatch Verify
+  //   dispatch(verifyUserEmail(hash));
+  //   console.log(`hash: ${hash} `);
+  // };
 
   return (
     <FormContainer>
@@ -67,24 +51,11 @@ const EmailActivationScreen = ({ location, match, history }) => {
         <Card.Body>
           {error && <Message variant='danger'>{error}</Message>}
           {loading && <Loader />}
-          {
-            success ? <Message variant='info'>{success}</Message> : null
-            // <Form onSubmit={submitHandler}>
-            //   {/* <Form.Group controlId='email'>
-            //     <Form.Label>Please Confirm Your Email Address</Form.Label>
-            //     <Form.Control
-            //       type='email'
-            //       placeholder='Enter Email..'
-            //       value={email}
-            //       onChange={(e) => setEmail(e.target.value)}
-            //     ></Form.Control>
-            //   </Form.Group> */}
-
-            //   <Button type='submit' variant='info' block>
-            //     Verify
-            //   </Button>
-            // </Form>
-          }
+          {success ? (
+            <>
+              <Message variant='info'>{success}</Message>
+            </>
+          ) : null}
         </Card.Body>
         <Card.Footer className='text-muted'>
           <Row className='py-3'>

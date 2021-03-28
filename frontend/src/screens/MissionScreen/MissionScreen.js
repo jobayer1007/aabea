@@ -54,23 +54,21 @@ const MissionScreen = ({ history }) => {
   useEffect(() => {
     if (userInfo) {
       setId(userInfo.memberId);
-      console.log(addMission);
       dispatch(allMission());
-      // dispatch({ type: CHAPTER_LIST_RESET });
       dispatch({ type: MISSION_NEW_RESET });
     } else {
       history.push('/login');
     }
     if (success || missionUpdateSuccess) {
-      setAddMission(!addMission);
+      setAddMission(false);
       setEditMission(false);
       setTitle('');
       setBody('');
       dispatch({ type: MISSION_BY_ID_RESET });
     }
     if (missionByIdSuccess) {
-      setAddMission(true);
-      setEditMission(true);
+      setAddMission((addMission) => !addMission);
+      setEditMission((editMission) => !editMission);
       setTitle(mission.title);
       setBody(mission.body);
       setId(mission.chapterId);
@@ -81,15 +79,14 @@ const MissionScreen = ({ history }) => {
     userInfo,
     success,
     missionByIdSuccess,
-    // missions,
+    mission,
     missionUpdateSuccess,
     successDelete,
   ]);
 
   const editMissionHandler = (id) => {
     dispatch({ type: MISSION_UPDATE_BY_ID_RESET });
-    setEditMission(!editMission);
-    setAddMission(!addMission);
+
     dispatch(getMissionById(id));
   };
 
@@ -106,11 +103,9 @@ const MissionScreen = ({ history }) => {
       dispatch(updateMissionById(id, title, body));
     } else {
       setId(userInfo.memberId);
-      console.log(id);
       dispatch(newMission(title, body, id));
     }
   };
-  console.log(addMission);
   return (
     <>
       <Row className='content'>

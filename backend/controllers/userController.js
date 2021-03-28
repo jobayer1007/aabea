@@ -702,7 +702,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Delete User     /////////////////////////////////////////////// pending
+// @desc    Delete User     ///////////////////////////////////////////////
 // @route   DELETE /api/users/:id
 // @access  Private
 exports.deleteUser = asyncHandler(async (req, res) => {

@@ -1,16 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import {
-  Table,
-  Button,
-  Image,
-  Row,
-  Col,
-  Card,
-  CardColumns,
-  Nav,
-} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Table, Button, Image, Row, Col, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
@@ -24,9 +14,8 @@ import {
   getUserProfile,
 } from '../../actions/userActions';
 import * as S from './MembersScreen.Styles';
-import { deleteChapter, listChapters } from '../../actions/chapterActions';
+import { listChapters } from '../../actions/chapterActions';
 import Sidebar from '../../components/Sidebar/Sidebar';
-import { USER_PENDING_LIST_RESET } from '../../constants/userConstants';
 
 const MembersScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -44,12 +33,7 @@ const MembersScreen = ({ history }) => {
   } = userPendingList;
 
   const userList = useSelector((state) => state.userList);
-  const {
-    loading: userListLoading,
-    error: userListError,
-    success,
-    users,
-  } = userList;
+  const { loading: userListLoading, error: userListError, users } = userList;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;

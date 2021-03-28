@@ -54,9 +54,7 @@ const AnnouncementScreen = ({ history }) => {
   useEffect(() => {
     if (userInfo) {
       setId(userInfo.memberId);
-      console.log(addAnnouncement);
       dispatch(allAnnouncements());
-      // dispatch({ type: CHAPTER_LIST_RESET });
       dispatch({ type: ANNOUNCEMENT_NEW_RESET });
     } else {
       history.push('/login');
@@ -83,7 +81,6 @@ const AnnouncementScreen = ({ history }) => {
     history,
     userInfo,
     success,
-    // addAnnouncement,
     announcementByIdSuccess,
     announcement,
     announcementUpdateSuccess,
@@ -102,6 +99,14 @@ const AnnouncementScreen = ({ history }) => {
     }
   };
 
+  const addNewAnnouncement = (e) => {
+    e.preventDefault();
+
+    setAddAnnouncement(!addAnnouncement);
+    setTitle('');
+    setBody('');
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
 
@@ -109,13 +114,10 @@ const AnnouncementScreen = ({ history }) => {
       dispatch(updateAnnouncementById(id, title, body));
     } else {
       setId(userInfo.memberId);
-      console.log(id);
+      // console.log(id);
       dispatch(newAnnouncement(title, body, id));
     }
   };
-  console.log(addAnnouncement);
-  console.log(title);
-  console.log(body);
 
   return (
     <>
@@ -149,7 +151,8 @@ const AnnouncementScreen = ({ history }) => {
                   <Card.Header className='text-center' as='h2'>
                     <Link
                       className='btn btn-outline-info btn-sm btn-block rounded'
-                      onClick={() => setAddAnnouncement(!addAnnouncement)}
+                      // onClick={() => setAddAnnouncement(!addAnnouncement)}
+                      onClick={addNewAnnouncement}
                     >
                       New Announcement
                     </Link>

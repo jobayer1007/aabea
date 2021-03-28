@@ -79,9 +79,6 @@ const LoginScreen = ({ location, history }) => {
             case 'resend':
               dispatch(resendVerifyEmail(email, password));
 
-              console.log(email);
-              console.log(password);
-
               break;
 
             default:
@@ -90,7 +87,17 @@ const LoginScreen = ({ location, history }) => {
         });
       }
     }
-  }, [history, userInfo, success, redirect, errorLogin, veResendError]);
+  }, [
+    dispatch,
+    history,
+    userInfo,
+    success,
+    email,
+    password,
+    redirect,
+    errorLogin,
+    veResendError,
+  ]);
 
   const submitHandler = (e) => {
     e.preventDefault();

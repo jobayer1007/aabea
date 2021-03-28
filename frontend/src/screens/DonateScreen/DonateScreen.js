@@ -2,19 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PayPalButton } from 'react-paypal-button-v2';
 
-import { LinkContainer } from 'react-router-bootstrap';
-import {
-  Table,
-  Button,
-  Image,
-  Row,
-  Col,
-  Card,
-  CardDeck,
-  Nav,
-  ListGroup,
-  Form,
-} from 'react-bootstrap';
+import { Table, Row, Col, Card, ListGroup, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
@@ -25,11 +13,7 @@ import {
   donateUserGuest,
   getUserProfile,
 } from '../../actions/userActions';
-import {
-  USER_DONATE_RESET,
-  USER_PAYMENT_DETAILS_RESET,
-  USER_PAY_RESET,
-} from '../../constants/userConstants';
+import { USER_DONATE_RESET } from '../../constants/userConstants';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import swal from 'sweetalert';
 // import { listUsers, deleteUser } from '../actions/userActions';
@@ -50,7 +34,7 @@ const DonateScreen = ({ history }) => {
   const { userInfo } = userLogin;
 
   const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails;
+  const { user } = userDetails;
 
   const userDonateDetails = useSelector((state) => state.userDonateDetails);
   const {
@@ -69,13 +53,6 @@ const DonateScreen = ({ history }) => {
 
   useEffect(() => {
     if (userInfo) {
-      if (addDonation) {
-        setFirstName(user.firstName);
-        setMInit(user.mInit);
-        setLastName(user.lastName);
-        setEmail(user.primaryEmail);
-        setDonateAmount(0);
-      }
       dispatch(getUserProfile());
       dispatch(getUserDonationDetails());
     } else {
@@ -99,14 +76,14 @@ const DonateScreen = ({ history }) => {
       document.body.appendChild(script);
     };
 
-    if (!donations || successDonate) {
-      if (successDonate) {
-        console.log(donateResulte);
-        swal('Success!', donateResulte, 'success').then((value) => {
-          dispatch({ type: USER_DONATE_RESET });
-          setDonateAmount(0);
-        });
-      }
+    // if (!donations || successDonate) {
+    if (donateResulte) {
+      // console.log(donateResulte);
+      swal('Success!', donateResulte, 'success').then(() => {
+        dispatch({ type: USER_DONATE_RESET });
+        setDonateAmount(0);
+      });
+      // }
       // dispatch({ type: USER_DONATE_RESET });
 
       // dispatch({ type: USER_PAYMENT_DETAILS_RESET });
@@ -117,7 +94,7 @@ const DonateScreen = ({ history }) => {
       setSdkReady(true);
     }
     // }
-  }, [history, dispatch, userInfo, addDonation, successDonate]);
+  }, [history, dispatch, userInfo, addDonation, donateResulte]);
 
   const successDonationHandler = (paymentResult) => {
     console.log(paymentResult);
@@ -141,7 +118,6 @@ const DonateScreen = ({ history }) => {
     );
     // setAddDonation(!addDonation);
   };
-  console.log(mInit);
 
   return (
     <>
@@ -181,47 +157,25 @@ const DonateScreen = ({ history }) => {
                         <Row>
                           <Col md={8}>
                             <Form>
-                              <Form.Group controlId='mInit'>
-                                <Form.Label>Mr / Mrs ? </Form.Label>
-                                <Form.Control
-                                  as='select'
-                                  value={mInit}
-                                  onChange={(e) => setMInit(e.target.value)}
-                                >
-                                  <option value='Mr'>Mr</option>
-                                  <option value='Mrs'>Mrs</option>
-                                </Form.Control>
-                              </Form.Group>
+                              <ListGroup variant='flush'>
+                                <ListGroup.Item>
+                                  <Row>
+                                    <Col md={3}>Name:</Col>
+                                    <Col>
+                                      {user.mInit} {user.firstName}{' '}
+                                      {user.lastName}
+                                    </Col>
+                                  </Row>
+                                </ListGroup.Item>
 
-                              <Form.Group controlId='firstName'>
-                                <Form.Label>First Name</Form.Label>
-                                <Form.Control
-                                  type='text'
-                                  placeholder='Please Enter Your First Name..'
-                                  value={firstName}
-                                  onChange={(e) => setFirstName(e.target.value)}
-                                ></Form.Control>
-                              </Form.Group>
+                                <ListGroup.Item>
+                                  <Row>
+                                    <Col md={3}>E-mail:</Col>
 
-                              <Form.Group controlId='lastName'>
-                                <Form.Label>Last Name</Form.Label>
-                                <Form.Control
-                                  type='text'
-                                  placeholder='Please Enter Your Last Name'
-                                  value={lastName}
-                                  onChange={(e) => setLastName(e.target.value)}
-                                ></Form.Control>
-                              </Form.Group>
-
-                              <Form.Group controlId='email'>
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control
-                                  type='email'
-                                  placeholder='Please Enter Address..'
-                                  value={email}
-                                  onChange={(e) => setEmail(e.target.value)}
-                                ></Form.Control>
-                              </Form.Group>
+                                    <Col>{user.primaryEmail}</Col>
+                                  </Row>
+                                </ListGroup.Item>
+                              </ListGroup>
 
                               <Form.Group controlId='donateAmount'>
                                 <Form.Label>Donate Amount</Form.Label>

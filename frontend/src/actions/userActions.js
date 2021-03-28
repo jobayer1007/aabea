@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 import {
-  ADMIN_LIST,
   USER_APPROVE_FAIL,
   USER_APPROVE_REQUEST,
   USER_APPROVE_SUCCESS,

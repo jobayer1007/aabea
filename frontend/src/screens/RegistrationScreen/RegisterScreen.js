@@ -56,7 +56,7 @@ const RegisterScreen = ({ location, history }) => {
       console.log(error);
       swal('Error!', error, 'error');
     }
-  }, [history, success, redirect, error]);
+  }, [dispatch, history, success, redirect, error]);
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];

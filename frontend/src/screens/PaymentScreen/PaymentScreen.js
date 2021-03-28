@@ -56,12 +56,8 @@ const PaymentScreen = ({ history }) => {
     } else {
       dispatch(getUserProfile());
 
-      // setPaymentTypeAmount('');
-      // setPaymentTypeName('');
-      // setTotalPayment(paymentTypeAmount * qty);
       dispatch(listPaymentTypes());
       dispatch(getUserPaymentDetails());
-      // dispatch({ type: USER_PAYMENT_DETAILS_RESET });
 
       const addPaypalScript = async () => {
         const { data: clientId } = await axios.get('/api/config/paypal');
@@ -73,23 +69,17 @@ const PaymentScreen = ({ history }) => {
           setSdkReady(true);
         };
         document.body.appendChild(script);
-
-        console.log(userInfo.memberSince);
       };
 
-      if (!payments || successPay) {
-        if (successPay) {
-          swal('Success!', successPay, 'success').then(() => {
-            dispatch({ type: USER_PAY_RESET });
-          });
-        } else if (errorPay) {
-          console.log(errorPay);
-          swal('Error!', errorPay, 'error').then(() => {
-            dispatch({ type: USER_PAY_RESET });
-          });
-        }
-        // dispatch(getUserPaymentDetails());
-        // dispatch({ type: USER_PAYMENT_DETAILS_RESET });
+      if (successPay) {
+        swal('Success!', successPay, 'success').then(() => {
+          dispatch({ type: USER_PAY_RESET });
+        });
+      } else if (errorPay) {
+        console.log(errorPay);
+        swal('Error!', errorPay, 'error').then(() => {
+          dispatch({ type: USER_PAY_RESET });
+        });
       }
       if (!window.paypal) {
         addPaypalScript();
@@ -97,23 +87,7 @@ const PaymentScreen = ({ history }) => {
         setSdkReady(true);
       }
     }
-    if (paymentTypeName === 'nominationFee' && user.status === 'inactive') {
-      swal(
-        'Error!',
-        'Please Pay your registration fee first to activate your account',
-        'error'
-      );
-    }
-  }, [
-    history,
-    dispatch,
-    userInfo,
-    successPay,
-    errorPay,
-    // qty,
-    // paymentTypeAmount,
-    // paymentTypeName,
-  ]);
+  }, [history, dispatch, userInfo, successPay, errorPay]);
 
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);

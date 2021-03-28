@@ -14,7 +14,7 @@ import {
   getUserProfile,
 } from '../../actions/userActions';
 import * as S from './SystemAdminScreen.Styles';
-import { deleteChapter, listChapters } from '../../actions/chapterActions';
+import { listChapters } from '../../actions/chapterActions';
 import Sidebar from '../../components/Sidebar/Sidebar';
 
 const SystemAdminScreen = ({ history }) => {
@@ -59,12 +59,6 @@ const SystemAdminScreen = ({ history }) => {
     successAdmin,
     successDeleteAdmin,
   ]);
-
-  const deleteChapterHandler = (chapterId) => {
-    if (window.confirm('Are You Sure?')) {
-      dispatch(deleteChapter(chapterId));
-    }
-  };
 
   const deleteUserHandler = (id) => {
     if (window.confirm('Are You Sure?')) {
@@ -238,8 +232,8 @@ const SystemAdminScreen = ({ history }) => {
                         </thead>
 
                         <tbody>
-                          {pendingUsers.map((pendingUser) => (
-                            <tr key={pendingUser.pendingId}>
+                          {pendingUsers.map((pendingUser, index) => (
+                            <tr key={index}>
                               <td>{pendingUser.pendingId}</td>
                               {/* <td>
                                 {' '}
@@ -352,8 +346,8 @@ const SystemAdminScreen = ({ history }) => {
                         </thead>
 
                         <tbody>
-                          {users.map((user) => (
-                            <tr key={user.memberId}>
+                          {users.map((user, index) => (
+                            <tr key={index}>
                               <td>{user.memberId}</td>
                               <td>
                                 {' '}

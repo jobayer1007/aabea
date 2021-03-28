@@ -5,7 +5,6 @@ import { LinkContainer } from 'react-router-bootstrap';
 import {
   Navbar,
   Nav,
-  Carousel,
   Container,
   Row,
   Col,
@@ -14,6 +13,7 @@ import {
 } from 'react-bootstrap';
 import { logout } from '../../actions/userActions';
 import HeaderCarousel from './HeaderCarousel';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -29,13 +29,23 @@ const Header = () => {
       {/* First */}
 
       <Container fluid>
-        <Row>
-          <Col xs={2} href='/' className='text-center'>
-            <Image src='/uploads/logoImage.png' alt='logo' thumbnail />
+        <Row style={{ height: '100px' }}>
+          <Col xs={2} className='text-center'>
+            <Link to='/'>
+              <Image
+                src='/uploads/logoImage.png'
+                alt='logo'
+                style={{ height: '100px' }}
+                fluid
+              />
+            </Link>
             {/* <h1>Logo</h1> */}
           </Col>
-          <Col>
+          <Col xs={6}>
             <HeaderCarousel />
+          </Col>
+          <Col xs={4} className='text-center'>
+            <h3>Washington D.C Chapter</h3>{' '}
           </Col>
         </Row>
       </Container>
@@ -47,7 +57,7 @@ const Header = () => {
         bg='dark'
         variant='dark'
         expand='lg'
-        // sticky='top'
+        sticky='top'
         collapseOnSelect
       >
         <Container>
@@ -57,13 +67,17 @@ const Header = () => {
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='mr-auto'>
-              <LinkContainer to='/systemAdmin'>
-                <Nav.Link>System Admin</Nav.Link>
-              </LinkContainer>
               {userInfo ? (
-                <LinkContainer to='/dashboard'>
-                  <Nav.Link>Dashboard</Nav.Link>
-                </LinkContainer>
+                userInfo.userRole === 'admin' ||
+                userInfo.userRole === 'systemAdmin' ? (
+                  <LinkContainer to='/systemAdmin'>
+                    <Nav.Link>Admin Dashboard</Nav.Link>
+                  </LinkContainer>
+                ) : userInfo.userRole === 'member' ? (
+                  <LinkContainer to='/dashboard'>
+                    <Nav.Link>Dashboard</Nav.Link>
+                  </LinkContainer>
+                ) : null
               ) : (
                 <LinkContainer to='/about'>
                   <Nav.Link>About</Nav.Link>
@@ -91,10 +105,12 @@ const Header = () => {
 
               {userInfo ? (
                 <>
+                  {' '}
                   <NavDropdown
                     title={userInfo.userName.toUpperCase()}
                     id='userName'
                   >
+                    {' '}
                     <LinkContainer to='/profile'>
                       <NavDropdown.Item>Profile</NavDropdown.Item>
                     </LinkContainer>

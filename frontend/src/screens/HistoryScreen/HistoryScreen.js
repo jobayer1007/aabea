@@ -55,23 +55,21 @@ const HistoryScreen = ({ history }) => {
   useEffect(() => {
     if (userInfo) {
       setId(userInfo.memberId);
-      // console.log(addVission);
       dispatch(allHistory());
-      // dispatch({ type: CHAPTER_LIST_RESET });
       dispatch({ type: HISTORY_NEW_RESET });
     } else {
       history.push('/login');
     }
     if (success || historyUpdateSuccess) {
-      setAddHistory(!addHistory);
+      setAddHistory(false);
       setEditHistory(false);
       setTitle('');
       setBody('');
       dispatch({ type: HISTORY_BY_ID_RESET });
     }
     if (historyByIdSuccess) {
-      setAddHistory(true);
-      setEditHistory(true);
+      setAddHistory((addHistory) => !addHistory);
+      setEditHistory((editHistory) => !editHistory);
       setTitle(historyId.title);
       setBody(historyId.body);
       setId(historyId.chapterId);
@@ -82,15 +80,15 @@ const HistoryScreen = ({ history }) => {
     userInfo,
     success,
     historyByIdSuccess,
-    // missions,
+    historyId,
     historyUpdateSuccess,
     successDelete,
   ]);
 
   const editHistoryHandler = (id) => {
     dispatch({ type: HISTORY_UPDATE_BY_ID_RESET });
-    setEditHistory(!editHistory);
-    setAddHistory(!addHistory);
+    // setEditHistory(!editHistory);
+    // setAddHistory(!addHistory);
     dispatch(getHistoryById(id));
   };
 
@@ -98,6 +96,14 @@ const HistoryScreen = ({ history }) => {
     if (window.confirm('Are You Sure?')) {
       dispatch(deleteHistory(id));
     }
+  };
+
+  const addNewHistory = (e) => {
+    e.preventDefault();
+
+    setAddHistory(!addHistory);
+    setTitle('');
+    setBody('');
   };
 
   const submitHandler = (e) => {
@@ -151,7 +157,7 @@ const HistoryScreen = ({ history }) => {
                     ) : (
                       <Link
                         className='btn btn-outline-info btn-sm btn-block rounded'
-                        onClick={() => setAddHistory(!addHistory)}
+                        onClick={addNewHistory}
                       >
                         Add History
                       </Link>

@@ -51,7 +51,7 @@ const ChapterScreen = ({ history }) => {
       history.push('/login');
     }
     if (success) {
-      setAddChapter(!addChapter);
+      setAddChapter((addChapter) => !addChapter);
       setChapterName('');
       setChapterEmail('');
       setChapterAddress('');
@@ -208,7 +208,7 @@ const ChapterScreen = ({ history }) => {
                       >
                         <thead>
                           <tr>
-                            <th>ID</th>
+                            {/* <th>ID</th> */}
                             {/* <th>IMAGE</th> */}
                             <th>CHAPTER NAME</th>
                             <th>CHAPTER EMAIL</th>
@@ -224,7 +224,7 @@ const ChapterScreen = ({ history }) => {
                         <tbody>
                           {chapters.map((chapter) => (
                             <tr key={chapter.chapterId}>
-                              <td>{chapter.chapterId}</td>
+                              {/* <td>{chapter.chapterId}</td> */}
                               {/* <td>
                                 {' '}
                                 <Image src={user.image} thumbnail />

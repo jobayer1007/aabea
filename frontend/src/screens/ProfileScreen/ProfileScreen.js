@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, ListGroup, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';

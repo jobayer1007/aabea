@@ -51,7 +51,7 @@ const PaymentTypeScreen = ({ history }) => {
       history.push('/login');
     }
     if (success) {
-      setAddPaymentType(!addPaymentType);
+      setAddPaymentType((addPaymentType) => !addPaymentType);
       setPaymentTypeName('');
       setPaymentTypeAmount('');
       setPaymentTypeDescription('');
