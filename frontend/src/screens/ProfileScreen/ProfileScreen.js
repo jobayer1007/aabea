@@ -177,7 +177,7 @@ const ProfileScreen = ({ history }) => {
                     </Col>
                     <Col md={4}>
                       <Card.Header>Profile Picture</Card.Header>
-                      <Card.Img src={user.certificates} variant='top' />
+                      <Card.Img src={user.profilePicture} variant='top' />
 
                       <Card.Header>Certificate</Card.Header>
                       <Card.Img src={user.certificates} variant='top' />

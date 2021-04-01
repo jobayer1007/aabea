@@ -85,11 +85,11 @@ const Header = () => {
               )}
             </Nav>
             <Nav className='ml-auto'>
+              <LinkContainer to='/committiees'>
+                <Nav.Link>Committiees</Nav.Link>
+              </LinkContainer>
               {userInfo && (
                 <>
-                  <LinkContainer to='/committiees'>
-                    <Nav.Link>Committiees</Nav.Link>
-                  </LinkContainer>
                   <LinkContainer to='/training'>
                     <Nav.Link>Training</Nav.Link>
                   </LinkContainer>

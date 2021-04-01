@@ -105,6 +105,8 @@ const AnnouncementScreen = ({ history }) => {
     setAddAnnouncement(!addAnnouncement);
     setTitle('');
     setBody('');
+    setEditAnnouncement(false);
+    dispatch({ type: ANNOUNCEMENT_BY_ID_RESET });
   };
 
   const submitHandler = (e) => {

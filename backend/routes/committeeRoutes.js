@@ -15,7 +15,7 @@ router.route('/').get(getCommitteeMembers);
 router.route('/new').post(protect, admin, createNewCommitteeMember);
 router
   .route('/:id')
-  .get(protect, getCommitteeMemberById)
+  .get(getCommitteeMemberById)
   .put(protect, updateCommitteeMember)
   .delete(protect, admin, deleteCommitteeMember);
 

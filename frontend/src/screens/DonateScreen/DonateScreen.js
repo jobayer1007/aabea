@@ -120,286 +120,262 @@ const DonateScreen = ({ history }) => {
   };
 
   return (
-    <>
-      <Row className='content'>
-        {userInfo ? (
-          <>
-            <Col
-              md={{ span: 3, order: 1 }}
-              lg={{ span: 3, order: 1 }}
-              // id='sidebar-wrapper'
-            >
-              <Sidebar />
-            </Col>
-            <Col
-              md={{ span: 9, order: 12 }}
-              lg={{ span: 9, order: 12 }}
-              id='page-content-wrapper'
-            >
-              <Card border='primary' className='mb-2'>
-                <Card.Header className='text-center' as='h2'>
-                  <Link
-                    className='btn btn-outline-info btn-sm btn-block rounded'
-                    onClick={() => setAddDonation(!addDonation)}
-                  >
-                    Make Donation
-                  </Link>
-                </Card.Header>
-                <Card.Body>
-                  {addDonation
-                    ? (errorDonate && (
-                        <Message variant='danger'>{errorDonate}</Message>
-                      )) ||
-                      (loadingDonate && <Loader />) ||
-                      (successDonate ? (
-                        <Message variant='success'>{successDonate}</Message>
-                      ) : (
-                        <Row>
-                          <Col md={8}>
-                            <Form>
-                              <ListGroup variant='flush'>
-                                <ListGroup.Item>
-                                  <Row>
-                                    <Col md={3}>Name:</Col>
-                                    <Col>
-                                      {user.mInit} {user.firstName}{' '}
-                                      {user.lastName}
-                                    </Col>
-                                  </Row>
-                                </ListGroup.Item>
-
-                                <ListGroup.Item>
-                                  <Row>
-                                    <Col md={3}>E-mail:</Col>
-
-                                    <Col>{user.primaryEmail}</Col>
-                                  </Row>
-                                </ListGroup.Item>
-                              </ListGroup>
-
-                              <Form.Group controlId='donateAmount'>
-                                <Form.Label>Donate Amount</Form.Label>
-                                <Form.Control
-                                  type='number'
-                                  placeholder='Please Enter Donation Amount'
-                                  value={donateAmount}
-                                  onChange={(e) =>
-                                    setDonateAmount(e.target.value)
-                                  }
-                                ></Form.Control>
-                              </Form.Group>
-
-                              {/* <Button type='submit' variant='info' block>
-                                  <i className='fas fa-plus' /> Add
-                                </Button> */}
-                            </Form>
-                          </Col>
-                          <Col md={4}>
+    <Row className='content'>
+      {userInfo ? (
+        <>
+          <Col
+            md={{ span: 3, order: 1 }}
+            lg={{ span: 3, order: 1 }}
+            // id='sidebar-wrapper'
+          >
+            <Sidebar />
+          </Col>
+          <Col
+            md={{ span: 9, order: 12 }}
+            lg={{ span: 9, order: 12 }}
+            id='page-content-wrapper'
+          >
+            <Card border='primary' className='mb-2'>
+              <Card.Header className='text-center' as='h2'>
+                <Link
+                  className='btn btn-outline-info btn-sm btn-block rounded'
+                  onClick={() => setAddDonation(!addDonation)}
+                >
+                  Make Donation
+                </Link>
+              </Card.Header>
+              <Card.Body>
+                {addDonation
+                  ? (errorDonate && (
+                      <Message variant='danger'>{errorDonate}</Message>
+                    )) ||
+                    (loadingDonate && <Loader />) ||
+                    (successDonate ? (
+                      <Message variant='success'>{successDonate}</Message>
+                    ) : (
+                      <Row>
+                        <Col md={8}>
+                          <Form>
                             <ListGroup variant='flush'>
                               <ListGroup.Item>
                                 <Row>
-                                  <Col>Donation Amount</Col>
-                                  <Col>${donateAmount}</Col>
+                                  <Col md={3}>Name:</Col>
+                                  <Col>
+                                    {user.mInit} {user.firstName}{' '}
+                                    {user.lastName}
+                                  </Col>
                                 </Row>
                               </ListGroup.Item>
+
                               <ListGroup.Item>
-                                {loadingDonate && <Loader />}
-                                {!sdkReady ? (
-                                  <Loader />
-                                ) : (
-                                  <PayPalButton
-                                    amount={donateAmount}
-                                    onSuccess={successDonationHandler}
-                                  />
-                                )}
+                                <Row>
+                                  <Col md={3}>E-mail:</Col>
+
+                                  <Col>{user.primaryEmail}</Col>
+                                </Row>
                               </ListGroup.Item>
                             </ListGroup>
-                          </Col>
-                        </Row>
-                      ))
-                    : null}
-                  {/* {message && <Message variant='danger'>{message}</Message>} */}
-                  {/* {registerError && (
-                        <Message variant='danger'>{registerError}</Message>
-                      )}
-                      {registerLoading && <Loader />}
-                      {} */}
-                </Card.Body>
-              </Card>
-              <Card className='text-center' border='primary'>
-                <Card.Header as='h2'>Donation</Card.Header>
-                {donateLoading ? (
-                  <Loader />
-                ) : donateErrors ? (
-                  <Message variant='danger'>{donateErrors}</Message>
-                ) : (
-                  <Table striped bordered hover responsive className='table-sm'>
-                    <thead>
-                      <tr>
-                        {/* <th>ID</th> */}
-                        <th>Donation Type</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {donations.map((donation) => (
-                        <tr key={donation.payerId}>
-                          {/* <td>{donation.memberId}</td> */}
-                          <td>{donation.donationType}</td>
-                          <td>{donation.amount}</td>
-                          <td>{donation.donationDate.substring(0, 10)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                )}
-              </Card>
-            </Col>
-          </>
-        ) : (
-          <Col id='page-content-wrapper'>
-            <Card className='text-center' border='primary'>
-              <Card.Header as='h2'>Welcome to Donation Page</Card.Header>
-              <Card.Body>
-                <Row>
-                  <Col md={8}>
-                    <Form>
-                      <Form.Row>
-                        <Form.Group as={Col} md='2'>
-                          <Form.Label>Member ?</Form.Label>
-                        </Form.Group>
 
-                        <Form.Group as={Col} md='4' controlId='guest'>
-                          <Form.Control
-                            required
-                            as='select'
-                            type='text'
-                            value={guest}
-                            onChange={(e) => setGuest(e.target.value)}
-                          >
-                            <option value='false'>No</option>
-                            <option value='true'>Yes</option>
-                            {/* <Form.Check
-                          inline
-                          type='radio'
-                          label='Yes'
-                          name='formHorizontalRadios'
-                          id='member'
-                        />
-                        <Form.Check
-                          inline
-                          type='radio'
-                          label='No'
-                          name='formHorizontalRadios'
-                          id='guest'
-                        /> */}
-                          </Form.Control>
-                        </Form.Group>
-                      </Form.Row>
-                      <Form.Row>
-                        <Form.Group as={Col} md='2'>
-                          <Form.Label>Name</Form.Label>
-                        </Form.Group>
-                        {/* <Col md={10}> */}
-                        {/* <Row> */}
-                        {/* <Col md={2}> */}
-                        <Form.Group as={Col} md='2' controlId='mInit'>
-                          <Form.Control
-                            required
-                            as='select'
-                            type='text'
-                            value={mInit}
-                            onChange={(e) => setMInit(e.target.value)}
-                          >
-                            <option value='Mr'>Mr</option>
-                            <option value='Mrs'>Mrs</option>
-                            <option value='Miss'>Ms</option>
-                          </Form.Control>
-                        </Form.Group>
-                        {/* </Col> */}
-                        {/* <Col md={5}> */}
-                        <Form.Group as={Col} md='4' controlId='firstName'>
-                          <Form.Control
-                            required
-                            type='text'
-                            placeholder='First Name'
-                            value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
-                          ></Form.Control>
-                        </Form.Group>
-                        {/* </Col> */}
-                        {/* <Col md={5}> */}
-                        <Form.Group as={Col} md='4' controlId='lastName'>
-                          <Form.Control
-                            required
-                            placeholder='Last Name'
-                            type='text'
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                          ></Form.Control>
-                        </Form.Group>
-                      </Form.Row>
+                            <Form.Group controlId='donateAmount'>
+                              <Form.Label>Donate Amount</Form.Label>
+                              <Form.Control
+                                type='number'
+                                placeholder='Please Enter Donation Amount'
+                                value={donateAmount}
+                                onChange={(e) =>
+                                  setDonateAmount(e.target.value)
+                                }
+                              ></Form.Control>
+                            </Form.Group>
 
-                      <Form.Row>
-                        <Form.Group as={Col} md='2'>
-                          <Form.Label>Email Address</Form.Label>
-                        </Form.Group>
-                        <Form.Group as={Col} md='10' controlId='email'>
-                          <Form.Control
-                            required
-                            type='email'
-                            placeholder='Enter Email..'
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                          ></Form.Control>
-                        </Form.Group>
-                      </Form.Row>
-
-                      <Form.Row>
-                        <Form.Group as={Col} md='2'>
-                          <Form.Label>Donate Amount</Form.Label>
-                        </Form.Group>
-                        <Form.Group as={Col} md='10' controlId='donateAmount'>
-                          <Form.Control
-                            required
-                            type='number'
-                            placeholder='Please Enter Donation Amount'
-                            value={donateAmount}
-                            onChange={(e) => setDonateAmount(e.target.value)}
-                          ></Form.Control>
-                        </Form.Group>
-                      </Form.Row>
-                    </Form>
-                  </Col>
-                  <Col md={4}>
-                    <ListGroup variant='flush'>
-                      <ListGroup.Item>
-                        <Row>
-                          <Col>Donation Amount</Col>
-                          <Col>${donateAmount}</Col>
-                        </Row>
-                      </ListGroup.Item>
-                      <ListGroup.Item>
-                        {loadingDonate && <Loader />}
-                        {!sdkReady ? (
-                          <Loader />
-                        ) : (
-                          <PayPalButton
-                            amount={donateAmount}
-                            onSuccess={successDonationHandlerGuest}
-                          />
-                        )}
-                      </ListGroup.Item>
-                    </ListGroup>
-                  </Col>
-                </Row>
+                            {/* <Button type='submit' variant='info' block>
+                                  <i className='fas fa-plus' /> Add
+                                </Button> */}
+                          </Form>
+                        </Col>
+                        <Col md={4}>
+                          <ListGroup variant='flush'>
+                            <ListGroup.Item>
+                              <Row>
+                                <Col>Donation Amount</Col>
+                                <Col>${donateAmount}</Col>
+                              </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                              {loadingDonate && <Loader />}
+                              {!sdkReady ? (
+                                <Loader />
+                              ) : (
+                                <PayPalButton
+                                  amount={donateAmount}
+                                  onSuccess={successDonationHandler}
+                                />
+                              )}
+                            </ListGroup.Item>
+                          </ListGroup>
+                        </Col>
+                      </Row>
+                    ))
+                  : null}
               </Card.Body>
             </Card>
+            <Card className='text-center' border='primary'>
+              <Card.Header as='h2'>Donation</Card.Header>
+              {donateLoading ? (
+                <Loader />
+              ) : donateErrors ? (
+                <Message variant='danger'>{donateErrors}</Message>
+              ) : (
+                <Table striped bordered hover responsive className='table-sm'>
+                  <thead>
+                    <tr>
+                      {/* <th>ID</th> */}
+                      <th>Donation Type</th>
+                      <th>Amount</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {donations.map((donation) => (
+                      <tr key={donation.payerId}>
+                        {/* <td>{donation.memberId}</td> */}
+                        <td>{donation.donationType}</td>
+                        <td>{donation.amount}</td>
+                        <td>{donation.donationDate.substring(0, 10)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              )}
+            </Card>
           </Col>
-        )}
-      </Row>
-    </>
+        </>
+      ) : (
+        <Col id='page-content-wrapper'>
+          <Card border='primary'>
+            <Card.Header as='h2' className='text-center'>
+              Welcome to Donation Page
+            </Card.Header>
+            <Card.Body>
+              <Row>
+                <Col md={8}>
+                  <Form>
+                    <Form.Row>
+                      <Form.Group as={Col} md='2'>
+                        <Form.Label>Member ?</Form.Label>
+                      </Form.Group>
+
+                      <Form.Group as={Col} md='4' controlId='guest'>
+                        <Form.Control
+                          required
+                          as='select'
+                          type='text'
+                          value={guest}
+                          onChange={(e) => setGuest(e.target.value)}
+                        >
+                          <option value='false'>No</option>
+                          <option value='true'>Yes</option>
+                        </Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+                    <Form.Row>
+                      <Form.Group as={Col} md='2'>
+                        <Form.Label>Name</Form.Label>
+                      </Form.Group>
+
+                      <Form.Group as={Col} md='2' controlId='mInit'>
+                        <Form.Control
+                          required
+                          as='select'
+                          type='text'
+                          value={mInit}
+                          onChange={(e) => setMInit(e.target.value)}
+                        >
+                          <option value='Mr'>Mr</option>
+                          <option value='Mrs'>Mrs</option>
+                          <option value='Miss'>Ms</option>
+                        </Form.Control>
+                      </Form.Group>
+
+                      <Form.Group as={Col} md='4' controlId='firstName'>
+                        <Form.Control
+                          required
+                          type='text'
+                          placeholder='First Name'
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                        ></Form.Control>
+                      </Form.Group>
+
+                      <Form.Group as={Col} md='4' controlId='lastName'>
+                        <Form.Control
+                          required
+                          placeholder='Last Name'
+                          type='text'
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                        ></Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+
+                    <Form.Row>
+                      <Form.Group as={Col} md='2'>
+                        <Form.Label>Email Address</Form.Label>
+                      </Form.Group>
+                      <Form.Group as={Col} md='10' controlId='email'>
+                        <Form.Control
+                          required
+                          type='email'
+                          placeholder='Enter Email..'
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        ></Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+
+                    <Form.Row>
+                      <Form.Group as={Col} md='2'>
+                        <Form.Label>Donate Amount</Form.Label>
+                      </Form.Group>
+                      <Form.Group as={Col} md='10' controlId='donateAmount'>
+                        <Form.Control
+                          required
+                          type='number'
+                          placeholder='Please Enter Donation Amount'
+                          value={donateAmount}
+                          onChange={(e) => setDonateAmount(e.target.value)}
+                        ></Form.Control>
+                      </Form.Group>
+                    </Form.Row>
+                  </Form>
+                </Col>
+                <Col md={4}>
+                  <ListGroup variant='flush'>
+                    <ListGroup.Item>
+                      <Row>
+                        <Col>Donation Amount</Col>
+                        <Col>${donateAmount}</Col>
+                      </Row>
+                    </ListGroup.Item>
+                    <ListGroup.Item>
+                      {loadingDonate && <Loader />}
+                      {!sdkReady ? (
+                        <Loader />
+                      ) : (
+                        <PayPalButton
+                          amount={donateAmount}
+                          onSuccess={successDonationHandlerGuest}
+                        />
+                      )}
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        </Col>
+      )}
+    </Row>
   );
 };
 

@@ -621,7 +621,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
         status: req.body.status || member.status,
         balance: req.body.balance || member.balance,
 
-        // image: req.body.image || user.image,
+        profilePicture: req.body.image || user.profilePicture,
         // password: bcrypt.hashSync(req.body.password, 10) || user.password,
         userRole: req.body.userRole || user.userRole,
       };
@@ -646,7 +646,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
         major,
         collegeName,
         status,
-        balance,
+        profilePicture,
       } = data;
       const updatedMember = await models.Member.update(
         {
@@ -668,7 +668,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
           major,
           collegeName,
           status,
-          // balance,
+          profilePicture,
         },
         { where: { memberId: user.memberId } }
       );

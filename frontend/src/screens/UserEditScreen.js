@@ -68,12 +68,12 @@ const UserEditScreen = ({ match, history }) => {
         setPrimaryPhone(user.primaryPhone);
         setAlternatePhone(user.alternatePhone);
         setDegree(user.degree);
-        setDegreeYear(user.degreeYear);
+        setDegreeYear(new Date(user.degreeYear).getFullYear());
         setMajor(user.major);
         setCollegeName(user.collegeName);
         setEmail(user.primaryEmail);
         setAlternateEmail(user.alternateEmail);
-        setImage(user.image);
+        setImage(user.profilePicture);
         setUserRole(user.userRole);
         setStatus(user.status);
       }

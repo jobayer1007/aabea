@@ -23,11 +23,20 @@ const { generateId } = require('../utils/generateId');
 // @route   POST /api/committee/new
 // @access  Private/SystemAdmin || admin
 exports.createNewCommitteeMember = asyncHandler(async (req, res) => {
-  const { memberId, position, tenure, bio } = req.body;
+  const { memberId, position, period, bio } = req.body;
+  const tenure1 = [new Date(period[0]), new Date(period[1])];
 
+  console.log(period);
+  console.log(memberId);
+  console.log(position);
+  console.log(bio);
+  console.log(tenure1);
   // Look for the member's existence in the committee table for the given tenure
   const memberExists = await models.Committee.findOne({
-    where: { memberId: memberId, tenure: tenure },
+    where: {
+      memberId: memberId,
+      tenure: { [Sequelize.Op.contains]: [period[0], period[1]] },
+    },
   });
 
   if (memberExists) {
@@ -44,7 +53,7 @@ exports.createNewCommitteeMember = asyncHandler(async (req, res) => {
       const newCMember = await models.Committee.create({
         memberId,
         position,
-        tenure,
+        tenure: period,
         bio,
         chapterId: req.user.chapterId,
       });
@@ -75,7 +84,7 @@ exports.getCommitteeMembers = asyncHandler(async (req, res) => {
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
-  console.log(chapter.chapterId);
+  // console.log(chapter.chapterId);
 
   if (chapter) {
     const cMembers = await models.Committee.findAll(
@@ -86,6 +95,7 @@ exports.getCommitteeMembers = asyncHandler(async (req, res) => {
     );
     if (cMembers && cMembers.length !== 0) {
       res.json(cMembers);
+      // console.log(cMembers);
     } else {
       res.status(404);
       throw new Error('No Committee');
@@ -101,17 +111,18 @@ exports.getCommitteeMembers = asyncHandler(async (req, res) => {
 // @access  Private
 exports.getCommitteeMemberById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  // console.log(id);
+  console.log(id);
   const cMember = await models.Committee.findOne(
-    { include: models.Member },
     {
       where: { cId: id },
-    }
+    },
+    { include: models.Member }
   );
   // console.log(user.memberId);
 
   if (cMember) {
     res.json(cMember);
+    // console.log(cMember);
   } else {
     res.status(401);
     throw new Error('Member not found');
@@ -127,28 +138,37 @@ exports.updateCommitteeMember = asyncHandler(async (req, res) => {
   });
 
   if (cMember) {
-    const data = {
-      memberId: req.body.memberId || cMember.memberId,
-      position: req.body.position || cMember.position,
-      tenure: req.body.tenure || cMember.tenure,
-      bio: req.body.bio || cMember.bio,
-    };
+    const member = await models.Member.findOne({
+      where: { memberId: req.body.cMemberId },
+    });
 
-    let { memberId, position, tenure, bio } = data;
-    const updatedCMember = await models.Committee.update(
-      {
-        memberId,
-        position,
-        tenure,
-        bio,
-      },
-      { where: { cId: req.params.id } }
-    );
+    if (member) {
+      const data = {
+        memberId: req.body.cMemberId || cMember.memberId,
+        position: req.body.position || cMember.position,
+        tenure: req.body.period || cMember.tenure,
+        bio: req.body.bio || cMember.bio,
+      };
 
-    if (updatedCMember == 1) {
-      res.json({ message: 'Committee Member updated successfully' });
+      let { memberId, position, tenure, bio } = data;
+      const updatedCMember = await models.Committee.update(
+        {
+          memberId,
+          position,
+          tenure,
+          bio,
+        },
+        { where: { cId: req.params.id } }
+      );
+
+      if (updatedCMember == 1) {
+        res.json({ message: 'Committee Member updated successfully' });
+      } else {
+        res.send({ message: 'Committee Member update unsuccessful' });
+      }
     } else {
-      res.send({ message: 'Committee Member update unsuccessful' });
+      res.status(401);
+      throw new Error('Invalid Member Reference');
     }
   } else {
     res.status(401);

@@ -68,6 +68,13 @@ import {
   imageDeleteReducer,
   imageNewReducer,
 } from './reducers/imageReducers';
+import {
+  cMemberAllReducer,
+  cMemberByIdReducer,
+  cMemberDeleteReducer,
+  cMemberNewReducer,
+  cMemberUpdateReducer,
+} from './reducers/committeeReducers';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -135,6 +142,12 @@ const reducer = combineReducers({
   paymentTypeRegister: paymentTypeRegisterReducer,
   paymentTypeList: paymentTypeListReducer,
   paymentTypeDelete: paymentTypeDeleteReducer,
+
+  cMemberNew: cMemberNewReducer,
+  cMemberAll: cMemberAllReducer,
+  cMemberById: cMemberByIdReducer,
+  cMemberUpdate: cMemberUpdateReducer,
+  cMemberDelete: cMemberDeleteReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem('userInfo')
