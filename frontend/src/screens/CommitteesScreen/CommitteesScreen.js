@@ -78,10 +78,12 @@ const CommitteeScreen = ({ history }) => {
       setTenureFrom('');
       setTenureTo('');
       dispatch({ type: COMMITTEE_MEMBER_BY_ID_RESET });
-    } else if (cMemberNewError) {
+    }
+    if (cMemberNewError) {
       // console.log(error);
       swal('Error!', cMemberNewError, 'error');
-    } else if (cMemberUpdateError) {
+    }
+    if (cMemberUpdateError) {
       swal('Error!', cMemberUpdateError, 'error');
     }
 
@@ -163,7 +165,9 @@ const CommitteeScreen = ({ history }) => {
   return (
     <Row className='content'>
       {userInfo &&
-      (userInfo.userRole === 'admin' || userInfo.userRole === 'systemAdmin') ? (
+      (userInfo.userRole === 'admin' ||
+        userInfo.userRole === 'systemAdmin' ||
+        userInfo.userRole === 'member') ? (
         <>
           {/* Sidebar */}
           <Col
@@ -184,214 +188,265 @@ const CommitteeScreen = ({ history }) => {
               {/* <CardColumns> */}
 
               <Row>
-                <Col
-                  md={{ span: 12, order: 1 }}
-                  lg={{ span: 12, order: 1 }}
-                  // style={{ padding: 0 }}
-                  className='mb-2'
-                >
-                  <Card border='primary'>
-                    <Card.Header className='text-center' as='h2'>
-                      <Link
-                        className='btn btn-outline-info btn-sm btn-block rounded'
-                        // onClick={() => setAddAnnouncement(!addAnnouncement)}
-                        onClick={addNewCMember}
-                      >
-                        New Committee Member
-                      </Link>
-                    </Card.Header>
+                {userInfo &&
+                (userInfo.userRole === 'admin' ||
+                  userInfo.userRole === 'systemAdmin') ? (
+                  <>
+                    <Col
+                      md={{ span: 12, order: 1 }}
+                      lg={{ span: 12, order: 1 }}
+                      // style={{ padding: 0 }}
+                      className='mb-2'
+                    >
+                      <Card border='primary'>
+                        <Card.Header className='text-center' as='h2'>
+                          <Link
+                            className='btn btn-outline-info btn-sm btn-block rounded'
+                            // onClick={() => setAddAnnouncement(!addAnnouncement)}
+                            onClick={addNewCMember}
+                          >
+                            New Committee Member
+                          </Link>
+                        </Card.Header>
 
-                    <Card.Body>
-                      {addCMember
-                        ? (cMemberNewError && (
-                            <Message variant='danger'>
-                              {cMemberNewError}{' '}
-                            </Message>
-                          )) ||
-                          (cMemberNewLoading && <Loader />) ||
-                          (success ? (
-                            <Message variant='success'>{success}</Message>
-                          ) : (
-                            <Form onSubmit={submitHandler}>
-                              <Form.Group controlId='postion'>
-                                <Form.Label>Position</Form.Label>
-                                <Form.Control
-                                  type='text'
-                                  placeholder='Please Enter Position'
-                                  value={position}
-                                  onChange={(e) => setPosition(e.target.value)}
-                                ></Form.Control>
-                              </Form.Group>
-
-                              <Form.Group controlId='cMemberId'>
-                                <Form.Label>Member Id</Form.Label>
-                                <Form.Control
-                                  type='number'
-                                  placeholder='Please Enter The Member Id'
-                                  value={cMemberId}
-                                  onChange={(e) => setCMemberId(e.target.value)}
-                                ></Form.Control>
-                              </Form.Group>
-
-                              <Form.Group controlId='tenureFrom'>
-                                <Form.Label>From</Form.Label>
-                                <Form.Control
-                                  type='date'
-                                  placeholder='Please Enter The Starting Date'
-                                  value={tenureFrom}
-                                  onChange={(e) =>
-                                    setTenureFrom(e.target.value)
-                                  }
-                                ></Form.Control>
-                              </Form.Group>
-
-                              <Form.Group controlId='tenureTo'>
-                                <Form.Label>To</Form.Label>
-                                <Form.Control
-                                  type='date'
-                                  placeholder='Please Enter The Ending Date'
-                                  value={tenureTo}
-                                  onChange={(e) => setTenureTo(e.target.value)}
-                                ></Form.Control>
-                              </Form.Group>
-
-                              <Form.Group controlId='bio'>
-                                <Form.Label>Bio</Form.Label>
-                                <Form.Control
-                                  as='textarea'
-                                  rows='3'
-                                  placeholder='Please Enter The Bio'
-                                  value={bio}
-                                  onChange={(e) => setBio(e.target.value)}
-                                ></Form.Control>
-                              </Form.Group>
-
-                              {editCMember ? (
-                                <Button
-                                  type='submit'
-                                  variant='info'
-                                  block
-                                  // onClick={() =>
-                                  //   updateAnnouncementHandler(
-                                  //     announcement.announcementId
-                                  //   )
-                                  // }
-                                >
-                                  <i className='fas fa-plus' /> Update
-                                </Button>
+                        <Card.Body>
+                          {addCMember
+                            ? (cMemberNewError && (
+                                <Message variant='danger'>
+                                  {cMemberNewError}{' '}
+                                </Message>
+                              )) ||
+                              (cMemberNewLoading && <Loader />) ||
+                              (success ? (
+                                <Message variant='success'>{success}</Message>
                               ) : (
-                                <Button type='submit' variant='info' block>
-                                  <i className='fas fa-plus' /> Add
-                                </Button>
-                              )}
-                            </Form>
-                          ))
-                        : null}
-                      {/* {message && <Message variant='danger'>{message}</Message>} */}
-                      {/* {registerError && (
+                                <Form onSubmit={submitHandler}>
+                                  <Form.Group controlId='postion'>
+                                    <Form.Label>Position</Form.Label>
+                                    <Form.Control
+                                      type='text'
+                                      placeholder='Please Enter Position'
+                                      value={position}
+                                      onChange={(e) =>
+                                        setPosition(e.target.value)
+                                      }
+                                    ></Form.Control>
+                                  </Form.Group>
+
+                                  <Form.Group controlId='cMemberId'>
+                                    <Form.Label>Member Id</Form.Label>
+                                    <Form.Control
+                                      type='number'
+                                      placeholder='Please Enter The Member Id'
+                                      value={cMemberId}
+                                      onChange={(e) =>
+                                        setCMemberId(e.target.value)
+                                      }
+                                    ></Form.Control>
+                                  </Form.Group>
+
+                                  <Form.Group controlId='tenureFrom'>
+                                    <Form.Label>From</Form.Label>
+                                    <Form.Control
+                                      type='date'
+                                      placeholder='Please Enter The Starting Date'
+                                      value={tenureFrom}
+                                      onChange={(e) =>
+                                        setTenureFrom(e.target.value)
+                                      }
+                                    ></Form.Control>
+                                  </Form.Group>
+
+                                  <Form.Group controlId='tenureTo'>
+                                    <Form.Label>To</Form.Label>
+                                    <Form.Control
+                                      type='date'
+                                      placeholder='Please Enter The Ending Date'
+                                      value={tenureTo}
+                                      onChange={(e) =>
+                                        setTenureTo(e.target.value)
+                                      }
+                                    ></Form.Control>
+                                  </Form.Group>
+
+                                  <Form.Group controlId='bio'>
+                                    <Form.Label>Bio</Form.Label>
+                                    <Form.Control
+                                      as='textarea'
+                                      rows='3'
+                                      placeholder='Please Enter The Bio'
+                                      value={bio}
+                                      onChange={(e) => setBio(e.target.value)}
+                                    ></Form.Control>
+                                  </Form.Group>
+
+                                  {editCMember ? (
+                                    <Button
+                                      type='submit'
+                                      variant='info'
+                                      block
+                                      // onClick={() =>
+                                      //   updateAnnouncementHandler(
+                                      //     announcement.announcementId
+                                      //   )
+                                      // }
+                                    >
+                                      <i className='fas fa-plus' /> Update
+                                    </Button>
+                                  ) : (
+                                    <Button type='submit' variant='info' block>
+                                      <i className='fas fa-plus' /> Add
+                                    </Button>
+                                  )}
+                                </Form>
+                              ))
+                            : null}
+                          {/* {message && <Message variant='danger'>{message}</Message>} */}
+                          {/* {registerError && (
                         <Message variant='danger'>{registerError}</Message>
                       )}
                       {registerLoading && <Loader />}
                       {} */}
-                    </Card.Body>
-                  </Card>
-                </Col>
+                        </Card.Body>
+                      </Card>
+                    </Col>
 
-                <Col
-                  md={{ span: 12, order: 12 }}
-                  lg={{ span: 12, order: 12 }}
-                  className='mb-2'
-                  id='all-chapter'
-                >
-                  <Card border='primary'>
-                    <Card.Header as='h5' className='text-center'>
-                      Committee Members
-                    </Card.Header>
+                    <Col
+                      md={{ span: 12, order: 12 }}
+                      lg={{ span: 12, order: 12 }}
+                      className='mb-2'
+                      id='all-chapter'
+                    >
+                      <Card border='primary'>
+                        <Card.Header as='h5' className='text-center'>
+                          Committee Members
+                        </Card.Header>
 
-                    <>
-                      {loading ? (
-                        <Loader />
-                      ) : error ? (
-                        <Message variant='danger'>{error}</Message>
-                      ) : (
-                        <Table
-                          striped
-                          bordered
-                          hover
-                          responsive
-                          className='table-sm'
-                        >
-                          <thead>
-                            <tr>
-                              {/* <th>ID</th> */}
-                              <th>Tenure</th>
-                              <th>Position</th>
-                              <th>Member Id</th>
-                              <th>Bio</th>
-                              {/* <th>CHAPTER ADDRESS</th> */}
-                              {userInfo &&
-                                (userInfo.userRole === 'systemAdmin' ||
-                                  userInfo.userRole === 'admin') && (
-                                  <th>EDIT/DELETE</th>
-                                )}
-                            </tr>
-                          </thead>
+                        <>
+                          {loading ? (
+                            <Loader />
+                          ) : error ? (
+                            <Message variant='danger'>{error}</Message>
+                          ) : (
+                            <Table
+                              striped
+                              bordered
+                              hover
+                              responsive
+                              className='table-sm'
+                            >
+                              <thead>
+                                <tr>
+                                  {/* <th>ID</th> */}
+                                  <th>Tenure</th>
+                                  <th>Position</th>
+                                  <th>Member Id</th>
+                                  <th>Name</th>
+                                  {/* <th>Bio</th> */}
+                                  {/* <th>CHAPTER ADDRESS</th> */}
+                                  {userInfo &&
+                                    (userInfo.userRole === 'systemAdmin' ||
+                                      userInfo.userRole === 'admin') && (
+                                      <th>EDIT/DELETE</th>
+                                    )}
+                                </tr>
+                              </thead>
 
-                          <tbody>
-                            {cMembers.map((cMember) => (
-                              <tr key={cMember.cId}>
-                                {/* // <td>{announcement.chapterId}</td> */}
-                                {/* <td>
+                              <tbody>
+                                {cMembers.map((cMember) => (
+                                  <tr key={cMember.cId}>
+                                    {/* // <td>{announcement.chapterId}</td> */}
+                                    {/* <td>
                                 {' '}
                                 <Image src={user.image} thumbnail />
                               </td> */}
-                                <td>
-                                  {' '}
-                                  {new Date(
-                                    cMember.tenure[0].value
-                                  ).getFullYear()}{' '}
-                                  -
-                                  {new Date(
-                                    cMember.tenure[1].value
-                                  ).getFullYear()}
-                                </td>
-                                <td> {cMember.position}</td>
-                                <td> {cMember.memberId}</td>
-                                <td> {cMember.bio}</td>
-
-                                {userInfo &&
-                                  (userInfo.userRole === 'systemAdmin' ||
-                                    userInfo.userRole === 'admin') && (
                                     <td>
-                                      <Button
-                                        variant='light'
-                                        className='btn-sm'
-                                        onClick={() =>
-                                          editCMemberHandler(cMember.cId)
-                                        }
-                                      >
-                                        <i className='fas fa-edit'></i>
-                                      </Button>
-
-                                      <Button
-                                        variant='danger'
-                                        className='btn-sm'
-                                        onClick={() =>
-                                          deleteCMemberHandler(cMember.cId)
-                                        }
-                                      >
-                                        <i className='fas fa-trash'></i>
-                                      </Button>
+                                      {' '}
+                                      {new Date(
+                                        cMember.tenure[0].value
+                                      ).getFullYear()}{' '}
+                                      -
+                                      {new Date(
+                                        cMember.tenure[1].value
+                                      ).getFullYear()}
                                     </td>
-                                  )}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </Table>
-                      )}
-                    </>
-                  </Card>
-                </Col>
+                                    <td> {cMember.position}</td>
+                                    <td> {cMember.memberId}</td>
+                                    <td>
+                                      {' '}
+                                      {cMember.member.firstName}{' '}
+                                      {cMember.member.lastName}
+                                    </td>
+                                    {/* <td> {cMember.bio}</td> */}
+
+                                    {userInfo &&
+                                      (userInfo.userRole === 'systemAdmin' ||
+                                        userInfo.userRole === 'admin') && (
+                                        <td>
+                                          <Button
+                                            variant='light'
+                                            className='btn-sm'
+                                            onClick={() =>
+                                              editCMemberHandler(cMember.cId)
+                                            }
+                                          >
+                                            <i className='fas fa-edit'></i>
+                                          </Button>
+
+                                          <Button
+                                            variant='danger'
+                                            className='btn-sm'
+                                            onClick={() =>
+                                              deleteCMemberHandler(cMember.cId)
+                                            }
+                                          >
+                                            <i className='fas fa-trash'></i>
+                                          </Button>
+                                        </td>
+                                      )}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </Table>
+                          )}
+                        </>
+                      </Card>
+                    </Col>
+                  </>
+                ) : (
+                  <>
+                    {loading ? (
+                      <Loader />
+                    ) : error ? (
+                      <Message variant='danger'>{error}</Message>
+                    ) : (
+                      <>
+                        {cMembers.map((cMember) => (
+                          <Media key={cMember.cId}>
+                            <img
+                              width={164}
+                              height={164}
+                              className='mr-3'
+                              src={cMember.member.profilePicture}
+                              alt={cMember.member.firstName}
+                            />
+                            <Media.Body>
+                              <h5>{cMember.position.toUpperCase()}</h5>
+                              <p className='text-justify'>
+                                Cras sit amet nibh libero, in gravida nulla.
+                                Nulla vel metus scelerisque ante sollicitudin
+                                commodo. Cras purus odio, vestibulum in
+                                vulputate at, tempus viverra turpis. Fusce
+                                condimentum nunc ac nisi vulputate fringilla.
+                                Donec lacinia congue felis in faucibus.
+                              </p>
+                            </Media.Body>
+                          </Media>
+                        ))}
+                      </>
+                    )}
+                  </>
+                )}
               </Row>
             </S.CardDeck>
           </Col>
@@ -415,7 +470,7 @@ const CommitteeScreen = ({ history }) => {
                   />
                   <Media.Body>
                     <h5>{cMember.position.toUpperCase()}</h5>
-                    <p>
+                    <p className='text-justify'>
                       Cras sit amet nibh libero, in gravida nulla. Nulla vel
                       metus scelerisque ante sollicitudin commodo. Cras purus
                       odio, vestibulum in vulputate at, tempus viverra turpis.

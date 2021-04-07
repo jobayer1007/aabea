@@ -35,7 +35,7 @@ const ImageCarousel = () => {
               src={image.image}
               alt={image.imageDescription}
               fluid
-              style={{ height: '300px' }}
+              style={{ height: '300px', width: '100%' }}
             />
             {/* <Carousel.Caption className='carousel-caption'>
               <h2>{image.imageName}</h2>

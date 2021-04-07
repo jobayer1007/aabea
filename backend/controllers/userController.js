@@ -56,7 +56,8 @@ exports.authUser = asyncHandler(async (req, res) => {
         image: user.image,
         last_login: user.last_login,
         memberSince: user.member.startDate,
-        token: generateToken(user.memberId),
+        // token: generateToken(user.memberId),
+        token: generateToken(user.memberId, user.userRole),
       });
     }
   } else {

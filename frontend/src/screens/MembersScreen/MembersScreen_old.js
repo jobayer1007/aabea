@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button, Image, Row, Col, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,10 +16,9 @@ import {
 import * as S from './MembersScreen.Styles';
 import { listChapters } from '../../actions/chapterActions';
 import Sidebar from '../../components/Sidebar/Sidebar';
-// import { COLUMNS } from './MemberColumns';
+import { COLUMNS } from './MemberColumns';
 import RTable from '../../components/Table/RTable';
 import SearchBar from '../../components/SearchBar/SearchBar';
-import ColumnFilter from '../../components/Table/ColumnFilter';
 
 const MembersScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -27,7 +26,6 @@ const MembersScreen = ({ history }) => {
   const [data, setData] = useState([]);
   const [rowdata, setRowData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const usersRef = useRef();
 
   // const chapterList = useSelector((state) => state.chapterList);
   // const { loading, error, chapters } = chapterList;
@@ -46,8 +44,6 @@ const MembersScreen = ({ history }) => {
     success: userListSuccess,
     users,
   } = userList;
-
-  usersRef.current = users;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -93,20 +89,14 @@ const MembersScreen = ({ history }) => {
     successAdmin,
     successDeleteAdmin,
   ]);
-  const editUserHandler = (rowIndex) => {
-    const id = usersRef.current[rowIndex].memberId;
-    // console.log(rowIndex);
+  // const data = useMemo(() => users, []);
+  // const columns = useMemo(() => COLUMNS, []);
 
-    history.push(`/users/${id}/edit`);
-    // props.history.push("/tutorials/" + id);
-    console.log(id);
-  };
+  // console.log(columns);
 
-  const deleteUserHandler = (rowIndex) => {
-    const id = usersRef.current[rowIndex].memberId;
+  const deleteUserHandler = (id) => {
     if (window.confirm('Are You Sure?')) {
       dispatch(deleteUser(id));
-      // console.log(`User deleted: with id: ${id}`);
     }
   };
 
@@ -128,55 +118,23 @@ const MembersScreen = ({ history }) => {
     }
   };
 
-  const columnsAdmin = [
-    {
-      Header: 'Id',
-      accessor: 'memberId',
-      Filter: ColumnFilter,
-    },
-    // {
-    //   Header: 'Name',
-    //   accessor: 'userName',
-    // },
-    {
-      Header: 'First Name',
-      accessor: 'member.firstName',
-      Filter: ColumnFilter,
-    },
-    {
-      Header: 'Last Name',
-      accessor: 'member.lastName',
-      Filter: ColumnFilter,
-    },
-    {
-      Header: 'City',
-      accessor: 'member.city',
-      Filter: ColumnFilter,
-    },
-    {
-      Header: 'State',
-      accessor: 'member.state',
-      Filter: ColumnFilter,
-    },
-    {
-      Header: 'Actions',
-      accessor: 'actions',
-      Cell: (props) => {
-        const rowIdx = props.row.id;
-        return (
-          <div>
-            <span onClick={() => editUserHandler(rowIdx)}>
-              <i className='far fa-edit action mr-2'></i>
-            </span>
+  const onSearchbarChange = (e) => {
+    const value = e.target.value;
 
-            <span onClick={() => deleteUserHandler(rowIdx)}>
-              <i className='fas fa-trash action'></i>
-            </span>
-          </div>
-        );
-      },
-    },
-  ];
+    if (value === '') {
+      setFilteredData(users);
+    } else {
+      if (filteredData.length > 0) {
+        const result = filteredData.filter((item) => item.email === value);
+
+        setFilteredData(result);
+      } else {
+        const result = users.filter((item) => item.email === value);
+
+        setFilteredData(result);
+      }
+    }
+  };
 
   return (
     <>
@@ -482,7 +440,7 @@ const MembersScreen = ({ history }) => {
               >
                 <Card className='text-center' border='primary'>
                   <Card.Header as='h5'>Chapter Members</Card.Header>
-
+                  <SearchBar onChange={onSearchbarChange} />
                   <Card.Body>
                     {userListLoading ? (
                       <Loader />
@@ -629,7 +587,7 @@ const MembersScreen = ({ history }) => {
                         <>
                           {users && users.length !== 0 && (
                             <>
-                              <RTable users={users} COLUMNS={columnsAdmin} />
+                              <RTable users={users} COLUMNS={COLUMNS} />
                             </>
                           )}
                         </>

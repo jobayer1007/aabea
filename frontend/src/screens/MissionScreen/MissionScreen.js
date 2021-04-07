@@ -203,8 +203,10 @@ const MissionScreen = ({ history }) => {
                 className='mb-2'
                 id='all-chapter'
               >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>Mission</Card.Header>
+                <Card border='primary'>
+                  <Card.Header as='h5' className='text-center'>
+                    Mission
+                  </Card.Header>
 
                   <Card.Body>
                     {loading ? (

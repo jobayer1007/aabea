@@ -18,7 +18,9 @@ exports.protect = asyncHandler(async (req, res, next) => {
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       console.log(decoded);
-      req.user = await models.User.findByPk(decoded.id);
+      req.user = await models.User.findOne({
+        where: { memberId: decoded.id, userRole: decoded.role },
+      });
       next();
     } catch (error) {
       console.error(error);

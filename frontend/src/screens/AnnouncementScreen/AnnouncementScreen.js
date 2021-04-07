@@ -185,7 +185,8 @@ const AnnouncementScreen = ({ history }) => {
                             <Form.Group controlId='body'>
                               <Form.Label>Announcement</Form.Label>
                               <Form.Control
-                                type='text'
+                                as='textarea'
+                                rows='3'
                                 placeholder='Please Enter The Announcement'
                                 value={body}
                                 onChange={(e) => setBody(e.target.value)}
@@ -229,8 +230,10 @@ const AnnouncementScreen = ({ history }) => {
                 className='mb-2'
                 id='all-chapter'
               >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>Announcements</Card.Header>
+                <Card border='primary'>
+                  <Card.Header as='h5' className='text-center'>
+                    Announcements
+                  </Card.Header>
 
                   <>
                     {loading ? (
