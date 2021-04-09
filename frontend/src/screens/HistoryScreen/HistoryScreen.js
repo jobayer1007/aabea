@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Row, Col, Card, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import parse from 'html-react-parser';
 import Sidebar from '../../components/Sidebar/Sidebar';
 
 import Message from '../../components/Message';
@@ -185,12 +188,20 @@ const HistoryScreen = ({ history }) => {
 
                             <Form.Group controlId='body'>
                               <Form.Label>History</Form.Label>
-                              <Form.Control
+                              <CKEditor
+                                editor={ClassicEditor}
+                                data={body}
+                                onChange={(e, editor) => {
+                                  const data = editor.getData();
+                                  setBody(data);
+                                }}
+                              />
+                              {/* <Form.Control
                                 type='text'
                                 placeholder='Please Enter The History'
                                 value={body}
                                 onChange={(e) => setBody(e.target.value)}
-                              ></Form.Control>
+                              ></Form.Control> */}
                             </Form.Group>
                             {editHistory ? (
                               <Button type='submit' variant='info' block>
@@ -251,7 +262,7 @@ const HistoryScreen = ({ history }) => {
                                 <Image src={user.image} thumbnail />
                               </td> */}
                               <td> {history.title}</td>
-                              <td> {history.body}</td>
+                              <td> {parse(history.body)}</td>
                               {userInfo &&
                                 (userInfo.userRole === 'systemAdmin' ||
                                   userInfo.userRole === 'admin') && (

@@ -432,7 +432,7 @@ exports.getUserById = asyncHandler(async (req, res) => {
   const user = await models.User.findOne({
     where: { memberId: id },
   });
-  console.log(user.memberId);
+  // console.log(user.memberId);
 
   if (user) {
     const member = await models.Member.findOne({

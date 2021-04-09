@@ -93,13 +93,9 @@ export const getMissionById = (id) => async (dispatch, getState) => {
       type: MISSION_BY_ID_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 

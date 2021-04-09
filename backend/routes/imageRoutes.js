@@ -8,9 +8,13 @@ const {
   addNewImage,
   deleteImage,
   getImageById,
+  getAllNavbarImages,
+  getAllHomeScreenImages,
 } = require('../controllers/imageController');
 
 router.route('/').get(getAllImages);
+router.route('/navbar').get(getAllNavbarImages);
+router.route('/homeScreen').get(getAllHomeScreenImages);
 router.route('/new').post(protect, admin, addNewImage);
 router.route('/:id').get(getImageById).delete(protect, admin, deleteImage);
 

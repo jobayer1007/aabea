@@ -4,16 +4,16 @@ import { Link } from 'react-router-dom';
 import { Carousel, Image } from 'react-bootstrap';
 import Loader from '../Loader';
 import Message from '../Message';
-import { allImage } from '../../actions/imageActions';
+import { allImage, getHomeScreenImage } from '../../actions/imageActions';
 
 const ImageCarousel = () => {
   const dispatch = useDispatch();
 
-  const imageAll = useSelector((state) => state.imageAll);
-  const { loading, error, images } = imageAll;
+  const imageHomeScreen = useSelector((state) => state.imageHomeScreen);
+  const { loading, error, homeScreenImages } = imageHomeScreen;
 
   useEffect(() => {
-    dispatch(allImage());
+    dispatch(getHomeScreenImage());
   }, [dispatch]);
 
   return loading ? (
@@ -28,21 +28,23 @@ const ImageCarousel = () => {
       indicators={false}
       fade
     >
-      {images.map((image) => (
-        <Carousel.Item key={image.imageId}>
-          <Link to={`/image/${image.imageId}`}>
-            <Image
-              src={image.image}
-              alt={image.imageDescription}
-              fluid
-              style={{ height: '300px', width: '100%' }}
-            />
-            {/* <Carousel.Caption className='carousel-caption'>
+      {homeScreenImages &&
+        homeScreenImages.map((image, index) => (
+          <Carousel.Item key={index}>
+            <Link to={`/image/${image.imageId}`}>
+              <Image
+                src={image.image}
+                alt={image.imageDescription}
+                fluid
+                style={{ height: '300px', width: '100%' }}
+              />
+
+              {/* <Carousel.Caption className='carousel-caption'>
               <h2>{image.imageName}</h2>
             </Carousel.Caption> */}
-          </Link>
-        </Carousel.Item>
-      ))}
+            </Link>
+          </Carousel.Item>
+        ))}
     </Carousel>
   );
 };

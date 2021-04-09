@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import {
@@ -17,12 +17,15 @@ import {
   listUsers,
   deleteUser,
   getUserProfile,
+  getUserDonationDetails,
 } from '../../actions/userActions';
 import * as S from './DashboardScreen.Styles';
 import Sidebar from '../../components/Sidebar/Sidebar';
 
 const DashboardScreen = ({ history }) => {
   const dispatch = useDispatch();
+
+  const [lastDonation, setLastDonation] = useState('');
 
   const userList = useSelector((state) => state.userList);
   const { loading, error, users } = userList;
@@ -36,10 +39,27 @@ const DashboardScreen = ({ history }) => {
   const userDelete = useSelector((state) => state.userDelete);
   const { success: successDelete } = userDelete;
 
+  const userDonateDetails = useSelector((state) => state.userDonateDetails);
+  const {
+    loading: donateLoading,
+    error: donateErrors,
+    donations,
+  } = userDonateDetails;
+
   useEffect(() => {
     if (userInfo) {
       dispatch(listUsers());
       dispatch(getUserProfile());
+
+      dispatch(getUserDonationDetails());
+      setLastDonation(donations.pop());
+
+      console.log(lastDonation);
+      //   console.log(lastDonation);
+
+      // if (donations.length > 0) {
+      //   setLastDonation(donations.pop());
+      // }
     } else {
       history.push('/login');
     }
@@ -77,48 +97,60 @@ const DashboardScreen = ({ history }) => {
                 // style={{ padding: 0 }}
                 className='mb-2'
               >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5' className='text-info'>
-                    {userInfo &&
-                      (userLoading ? (
-                        <Loader />
-                      ) : userError ? (
-                        <Message variant='danger'>{userError}</Message>
-                      ) : user && user.length !== 0 ? (
-                        user.status === 'active' ? (
-                          <span>
-                            Memeber Status:{' '}
-                            <i
-                              className='fas fa-user'
-                              style={{ color: '#63D471' }}
-                            ></i>{' '}
-                            {user.status.toUpperCase()}
-                          </span>
-                        ) : user.status === 'pending' ? (
-                          <span>
-                            Memeber Status:{' '}
-                            <i
-                              className='fas fa-user'
-                              style={{ color: '29539B' }}
-                            ></i>{' '}
-                            {user.status}
-                          </span>
-                        ) : user.status === 'inactive' ? (
-                          <span className='text-danger'>
-                            Memeber Status:{' '}
-                            <i
-                              className='fas fa-user'
-                              style={{ color: '#A40606' }}
-                            >
-                              {' '}
-                            </i>{' '}
-                            {'  '} {user.status}
-                          </span>
-                        ) : null
-                      ) : (
-                        <span>No User </span>
-                      ))}
-                  </Card.Header>
+                <Card border='primary'>
+                  {userInfo ? (
+                    <>
+                      <Card.Img
+                        variant='top'
+                        src={user.profilePicture}
+                        alt='Profile Picture'
+                        style={{ height: '171px', width: '180px' }}
+                        roundedCircle
+                      />
+                      <ListGroup variant='flush'>
+                        <ListGroup.Item>
+                          <Row>
+                            <Col sm={4}>Name:</Col>
+                            <Col>{userInfo.userName}</Col>
+                          </Row>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          <Row>
+                            <Col sm={4}>Email:</Col>
+                            <Col>{userInfo.email}</Col>
+                          </Row>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          <Row className='text-info'>
+                            <Col md={4}>Phone:</Col>
+                            <Col>{user.primaryPhone}</Col>
+                          </Row>
+                        </ListGroup.Item>
+
+                        <ListGroup.Item>
+                          <Row className='text-info'>
+                            <Col md={4}>Address:</Col>
+                            <Col>
+                              {user.address1}
+                              {'; '}
+                              {user.city}
+                              {'; '}
+                              {user.state}
+                            </Col>
+                          </Row>
+                        </ListGroup.Item>
+                      </ListGroup>
+
+                      <Card.Footer className='text-muted'>
+                        <Link
+                          className='btn btn-outline-info btn-sm btn-block rounded'
+                          to='/profile'
+                        >
+                          View Full Profile
+                        </Link>
+                      </Card.Footer>
+                    </>
+                  ) : null}
                 </Card>
               </Col>
               {/* 1st card section end~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
@@ -134,12 +166,6 @@ const DashboardScreen = ({ history }) => {
                   {userInfo ? (
                     <>
                       <ListGroup variant='flush'>
-                        <ListGroup.Item>
-                          <Row>
-                            <Col md={4}>Name:</Col>
-                            <Col>{userInfo.userName}</Col>
-                          </Row>
-                        </ListGroup.Item>
                         <ListGroup.Item>
                           <Row>
                             <Col md={4}>User Type:</Col>
@@ -188,159 +214,55 @@ const DashboardScreen = ({ history }) => {
                               </Row>{' '}
                             </ListGroup.Item>
                           ))}
-                      </ListGroup>
 
-                      <Card.Footer className='text-muted'>
-                        <Link
-                          className='btn btn-outline-info btn-sm btn-block rounded'
-                          to='/profile'
-                        >
-                          View Full Profile
-                        </Link>
-                      </Card.Footer>
+                        <ListGroup.Item>
+                          <Row>
+                            <Col md={4}>Last Training Taken:</Col>
+                            <Col>None</Col>
+                          </Row>
+                        </ListGroup.Item>
+
+                        <ListGroup.Item>
+                          <Row>
+                            <Col md={4}>Last Donation:</Col>
+
+                            <Col>
+                              {donateLoading ? (
+                                <Loader />
+                              ) : donateErrors ? (
+                                <Message variant='danger'>
+                                  {donateErrors}
+                                </Message>
+                              ) : donations ? (
+                                // new Date(
+                                //   Math.max.apply(
+                                //     null,
+                                //     donations.map(function (e) {
+                                //       return new Date(donations.donationDate);
+                                //     })
+                                //   )
+                                // )
+                                donations
+                                  .map(function (e) {
+                                    return e.donationDate;
+                                  })
+                                  .sort()
+                                  .reverse()[0]
+                              ) : (
+                                // donations.map((a, index) => (
+                                //   <Col key={index}>{a.donationDate}</Col>
+                                // ))
+                                'None'
+                              )}
+                            </Col>
+                          </Row>
+                        </ListGroup.Item>
+                      </ListGroup>
                     </>
                   ) : null}
                 </Card>
               </Col>
               {/* 2nd card section : Profile Information ~End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-              {/* 3rd card section : Last Donation ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-              <Col
-                md={{ span: 6, order: 3 }}
-                lg={{ span: 6, order: 3 }}
-                className='mb-2'
-                id='last-donation'
-              >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>Last Donation</Card.Header>
-                </Card>
-              </Col>
-              {/* 3rd card section : Last Donation End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-              {/* 4th card section : Training Taken ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-              <Col
-                md={{ span: 6, order: 4 }}
-                lg={{ span: 6, order: 4 }}
-                className='mb-2'
-                id='training-taken'
-              >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>Training Taken</Card.Header>
-                </Card>
-              </Col>
-              {/* 4th card section : Training Taken End ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-              {/* 5th card section : All Member List ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-              <Col
-                md={{ span: 12, order: 12 }}
-                lg={{ span: 12, order: 12 }}
-                className='mb-2'
-                id='all-member'
-              >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>All Members List</Card.Header>
-
-                  <Card.Body>
-                    {loading ? (
-                      <Loader />
-                    ) : error ? (
-                      <Message variant='danger'>{error}</Message>
-                    ) : (
-                      <Table
-                        striped
-                        bordered
-                        hover
-                        responsive
-                        className='table-sm'
-                      >
-                        <thead>
-                          <tr>
-                            <th>ID</th>
-                            <th>IMAGE</th>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-                            <th>ADMIN</th>
-                            <th>STATUS</th>
-                            {userInfo && userInfo.userRole === 'admin' && (
-                              <th>EDIT/DELETE</th>
-                            )}
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          {users.map((user, index) => (
-                            <tr key={index}>
-                              <td>{user.memberId}</td>
-                              <td>
-                                {' '}
-                                {/* <Image src={user.image} thumbnail /> */}
-                                <Image
-                                  // src={user.member.certificates}
-                                  alt={user.userName}
-                                  fluid
-                                  rounded
-                                />
-                              </td>
-                              <td> {user.userName}</td>
-                              <td>
-                                <a href={`mailto: ${user.email}`}>
-                                  {' '}
-                                  {user.email}
-                                </a>
-                              </td>
-                              <td>
-                                {user.userRole === 'admin' ||
-                                user.userRole === 'systemAdmin' ? (
-                                  <i
-                                    className='fas fa-check'
-                                    style={{ color: 'green' }}
-                                  ></i>
-                                ) : (
-                                  <i
-                                    className='fas fa-times'
-                                    style={{ color: 'red' }}
-                                  ></i>
-                                )}
-                              </td>
-                              <td>
-                                {user.member.status === 'active' ? (
-                                  <i
-                                    className='fas fa-check'
-                                    style={{ color: 'green' }}
-                                  ></i>
-                                ) : (
-                                  <i
-                                    className='fas fa-times'
-                                    style={{ color: 'red' }}
-                                  ></i>
-                                )}
-                              </td>
-                              {userInfo.userRole === 'admin' && (
-                                <td>
-                                  <LinkContainer
-                                    to={`/users/${user.memberId}/edit`}
-                                  >
-                                    <Button variant='light' className='btn-sm'>
-                                      <i className='fas fa-edit'></i>
-                                    </Button>
-                                  </LinkContainer>
-
-                                  <Button
-                                    variant='danger'
-                                    className='btn-sm'
-                                    onClick={() => deleteHandler(user.memberId)}
-                                  >
-                                    <i className='fas fa-trash'></i>
-                                  </Button>
-                                </td>
-                              )}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                    )}
-                  </Card.Body>
-                </Card>
-              </Col>
-              {/* 5th card section : All Member List End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-              {/* </CardColumns> */}
             </Row>
           </S.CardDeck>
         </Col>

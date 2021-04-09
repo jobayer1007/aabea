@@ -66,6 +66,8 @@ import {
   imageAllReducer,
   imageByIdReducer,
   imageDeleteReducer,
+  imageHomeScreenReducer,
+  imageNavbarReducer,
   imageNewReducer,
 } from './reducers/imageReducers';
 import {
@@ -135,8 +137,10 @@ const reducer = combineReducers({
   historyDelete: historyDeleteReducer,
 
   imageNew: imageNewReducer,
-  imageAll: imageAllReducer,
   imageById: imageByIdReducer,
+  imageNavbar: imageNavbarReducer,
+  imageHomeScreen: imageHomeScreenReducer,
+  imageAll: imageAllReducer,
   imageDelete: imageDeleteReducer,
 
   paymentTypeRegister: paymentTypeRegisterReducer,

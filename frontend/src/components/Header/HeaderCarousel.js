@@ -4,16 +4,16 @@ import { Link } from 'react-router-dom';
 import { Carousel, Image } from 'react-bootstrap';
 import Loader from '../Loader';
 import Message from '../Message';
-import { allImage } from '../../actions/imageActions';
+import { allImage, getNavbarImage } from '../../actions/imageActions';
 
 const HeaderCarousel = () => {
   const dispatch = useDispatch();
 
-  const imageAll = useSelector((state) => state.imageAll);
-  const { loading, error, images } = imageAll;
+  const imageNavbar = useSelector((state) => state.imageNavbar);
+  const { loading, error, images } = imageNavbar;
 
   useEffect(() => {
-    dispatch(allImage());
+    dispatch(getNavbarImage());
   }, [dispatch]);
 
   return loading ? (
@@ -27,21 +27,23 @@ const HeaderCarousel = () => {
       controls={false}
       indicators={false}
     >
-      {images.map((image) => (
-        <Carousel.Item key={image.imageId}>
-          <Link to={`/image/${image.imageId}`}>
-            <Image
-              src={image.image}
-              alt={image.imageDescription}
-              fluid
-              style={{ height: '100px' }}
-            />
-            {/* <Carousel.Caption className='carousel-caption'>
+      {images &&
+        images.map((image, index) => (
+          <Carousel.Item key={index}>
+            <Link to={`/image/${image.imageId}`}>
+              <Image
+                src={image.image}
+                alt={image.imageDescription}
+                fluid
+                style={{ height: '100px' }}
+              />
+
+              {/* <Carousel.Caption className='carousel-caption'>
               <h2>{image.imageName}</h2>
             </Carousel.Caption> */}
-          </Link>
-        </Carousel.Item>
-      ))}
+            </Link>
+          </Carousel.Item>
+        ))}
     </Carousel>
   );
 };

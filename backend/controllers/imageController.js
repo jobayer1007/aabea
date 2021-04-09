@@ -52,6 +52,62 @@ exports.getAllImages = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    GET all Navbar Images     ///////////////////////////////////////////////
+// @route   GET /api/image/navbar
+// @access  Public
+exports.getAllNavbarImages = asyncHandler(async (req, res) => {
+  // Find Chapter
+  const subDomain = 'bd.aabea.org'; // at dev only
+  // const chapterName = 'Bangladesh';
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+  // console.log(chapter.chapterId);
+
+  if (chapter) {
+    const images = await models.ImageLibrary.findAll({
+      where: { chapterId: chapter.chapterId, imageName: 'navbarImage' },
+    });
+    if (images && images.length !== 0) {
+      res.json(images);
+    } else {
+      res.status(404);
+      throw new Error('No image');
+    }
+  } else {
+    res.status(404);
+    throw new Error('Invalid Chapter Domain');
+  }
+});
+
+// @desc    GET all Navbar Images     ///////////////////////////////////////////////
+// @route   GET /api/image/homeScreen
+// @access  Public
+exports.getAllHomeScreenImages = asyncHandler(async (req, res) => {
+  // Find Chapter
+  const subDomain = 'bd.aabea.org'; // at dev only
+  // const chapterName = 'Bangladesh';
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+  // console.log(chapter.chapterId);
+
+  if (chapter) {
+    const images = await models.ImageLibrary.findAll({
+      where: { chapterId: chapter.chapterId, imageName: 'homeScreenImage' },
+    });
+    if (images && images.length !== 0) {
+      res.json(images);
+    } else {
+      res.status(404);
+      throw new Error('No image');
+    }
+  } else {
+    res.status(404);
+    throw new Error('Invalid Chapter Domain');
+  }
+});
+
 // @desc    Get Image by Id     ///////////////////////////////////////////////
 // @route   GET /api/image/:id
 // @access  Private/Admin || SystemAdmin

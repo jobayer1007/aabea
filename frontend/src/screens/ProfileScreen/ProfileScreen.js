@@ -109,7 +109,9 @@ const ProfileScreen = ({ history }) => {
                                 <ListGroup.Item>
                                   <Row>
                                     <Col md={4}>Year the Degree Earned :</Col>
-                                    <Col>{user.degreeYear}</Col>
+                                    <Col>
+                                      {new Date(user.degreeYear).getFullYear()}
+                                    </Col>
                                   </Row>{' '}
                                 </ListGroup.Item>
 

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Row, Col, Card, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import parse from 'html-react-parser';
 import Sidebar from '../../components/Sidebar/Sidebar';
 
 import Message from '../../components/Message';
@@ -104,7 +107,7 @@ const VissionScreen = ({ history }) => {
       dispatch(updateVissionById(id, title, body));
     } else {
       setId(userInfo.memberId);
-      dispatch(newVission(title, body, id));
+      dispatch(newVission(id, title, body));
     }
   };
   return (
@@ -175,12 +178,20 @@ const VissionScreen = ({ history }) => {
 
                             <Form.Group controlId='body'>
                               <Form.Label>Vission</Form.Label>
-                              <Form.Control
+                              <CKEditor
+                                editor={ClassicEditor}
+                                data={body}
+                                onChange={(e, editor) => {
+                                  const data = editor.getData();
+                                  setBody(data);
+                                }}
+                              />
+                              {/* <Form.Control
                                 type='text'
                                 placeholder='Please Enter The Vission'
                                 value={body}
                                 onChange={(e) => setBody(e.target.value)}
-                              ></Form.Control>
+                              ></Form.Control> */}
                             </Form.Group>
                             {editVission ? (
                               <Button type='submit' variant='info' block>
@@ -241,7 +252,7 @@ const VissionScreen = ({ history }) => {
                                 <Image src={user.image} thumbnail />
                               </td> */}
                               <td> {vission.title}</td>
-                              <td> {vission.body}</td>
+                              <td> {parse(vission.body)}</td>
                               {userInfo &&
                                 (userInfo.userRole === 'systemAdmin' ||
                                   userInfo.userRole === 'admin') && (

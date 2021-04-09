@@ -9,6 +9,14 @@ import {
   IMAGE_DELETE_FAIL,
   IMAGE_DELETE_REQUEST,
   IMAGE_DELETE_SUCCESS,
+  IMAGE_HOMESCREEN_FAIL,
+  IMAGE_HOMESCREEN_REQUEST,
+  IMAGE_HOMESCREEN_RESET,
+  IMAGE_HOMESCREEN_SUCCESS,
+  IMAGE_NAVBAR_FAIL,
+  IMAGE_NAVBAR_REQUEST,
+  IMAGE_NAVBAR_RESET,
+  IMAGE_NAVBAR_SUCCESS,
   IMAGE_NEW_FAIL,
   IMAGE_NEW_REQUEST,
   IMAGE_NEW_RESET,
@@ -53,6 +61,42 @@ export const imageByIdReducer = (state = { image: {} }, action) => {
     case IMAGE_BY_ID_FAIL:
       return { loading: false, error: action.payload };
     case IMAGE_BY_ID_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const imageNavbarReducer = (state = { images: [] }, action) => {
+  switch (action.type) {
+    case IMAGE_NAVBAR_REQUEST:
+      return { loading: true };
+    case IMAGE_NAVBAR_SUCCESS:
+      return { loading: false, images: action.payload };
+    case IMAGE_NAVBAR_FAIL:
+      return { loading: false, error: action.payload };
+    case IMAGE_NAVBAR_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const imageHomeScreenReducer = (
+  state = { homeScreenImages: [] },
+  action
+) => {
+  switch (action.type) {
+    case IMAGE_HOMESCREEN_REQUEST:
+      return { loading: true };
+    case IMAGE_HOMESCREEN_SUCCESS:
+      return {
+        loading: false,
+        homeScreenImages: action.payload,
+      };
+    case IMAGE_HOMESCREEN_FAIL:
+      return { loading: false, error: action.payload };
+    case IMAGE_HOMESCREEN_RESET:
       return {};
     default:
       return state;

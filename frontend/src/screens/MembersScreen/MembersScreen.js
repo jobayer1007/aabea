@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button, Image, Row, Col, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,15 +18,11 @@ import { listChapters } from '../../actions/chapterActions';
 import Sidebar from '../../components/Sidebar/Sidebar';
 // import { COLUMNS } from './MemberColumns';
 import RTable from '../../components/Table/RTable';
-import SearchBar from '../../components/SearchBar/SearchBar';
 import ColumnFilter from '../../components/Table/ColumnFilter';
 
 const MembersScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  const [data, setData] = useState([]);
-  const [rowdata, setRowData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
   const usersRef = useRef();
 
   // const chapterList = useSelector((state) => state.chapterList);
@@ -61,25 +57,12 @@ const MembersScreen = ({ history }) => {
   const userDeleteAdmin = useSelector((state) => state.userDeleteAdmin);
   const { success: successDeleteAdmin } = userDeleteAdmin;
 
-  // var admins = [];
   useEffect(() => {
     if (userInfo) {
       dispatch(getUserProfile());
       dispatch(listChapters());
       dispatch(listPendingUsers());
       dispatch(listUsers());
-      if (userListSuccess) {
-        setData(users);
-        setRowData(users);
-        console.log(data);
-        console.log(rowdata);
-      }
-
-      // if (success) {
-      //   setAdmins(users.filter((user) => user.userRole === 'admin'));
-      // }
-      // console.log(success);
-      // console.log(admins);
     } else {
       history.push('/login');
     }
@@ -87,8 +70,6 @@ const MembersScreen = ({ history }) => {
     dispatch,
     history,
     userInfo,
-    // userListSuccess,
-    // users,
     successDelete,
     successAdmin,
     successDeleteAdmin,

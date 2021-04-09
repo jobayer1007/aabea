@@ -9,6 +9,12 @@ import {
   IMAGE_DELETE_FAIL,
   IMAGE_DELETE_REQUEST,
   IMAGE_DELETE_SUCCESS,
+  IMAGE_HOMESCREEN_FAIL,
+  IMAGE_HOMESCREEN_REQUEST,
+  IMAGE_HOMESCREEN_SUCCESS,
+  IMAGE_NAVBAR_FAIL,
+  IMAGE_NAVBAR_REQUEST,
+  IMAGE_NAVBAR_SUCCESS,
   IMAGE_NEW_FAIL,
   IMAGE_NEW_REQUEST,
   IMAGE_NEW_SUCCESS,
@@ -73,7 +79,7 @@ export const allImage = () => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/image`, config);
+    const { data } = await axios.get(`/api/image`, {}, config);
 
     dispatch({
       type: IMAGE_ALL_SUCCESS,
@@ -102,11 +108,7 @@ export const getImageById = (id) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(
-      `/api/image/${id}`,
-
-      config
-    );
+    const { data } = await axios.get(`/api/image/${id}`, {}, config);
 
     dispatch({
       type: IMAGE_BY_ID_SUCCESS,
@@ -115,6 +117,64 @@ export const getImageById = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: IMAGE_BY_ID_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getNavbarImage = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: IMAGE_NAVBAR_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const { data } = await axios.get(`/api/image/navbar`, {}, config);
+
+    dispatch({
+      type: IMAGE_NAVBAR_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: IMAGE_NAVBAR_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getHomeScreenImage = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: IMAGE_HOMESCREEN_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const { data } = await axios.get(`/api/image/homeScreen`, {}, config);
+
+    dispatch({
+      type: IMAGE_HOMESCREEN_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: IMAGE_HOMESCREEN_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

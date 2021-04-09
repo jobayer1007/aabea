@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Card, Form, Button, Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import parse from 'html-react-parser';
 
 import * as S from './AnnouncementScreen.Styles';
 import Sidebar from '../../components/Sidebar/Sidebar';
@@ -19,6 +23,8 @@ import {
   ANNOUNCEMENT_NEW_RESET,
   ANNOUNCEMENT_UPDATE_BY_ID_RESET,
 } from '../../constants/announcementConstants';
+import ColumnFilter from '../../components/Table/ColumnFilter';
+import RTable from '../../components/Table/RTable';
 
 const AnnouncementScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -29,11 +35,15 @@ const AnnouncementScreen = ({ history }) => {
   const [body, setBody] = useState('');
   const [id, setId] = useState('');
 
+  const announcementsRef = useRef();
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   const announcementAll = useSelector((state) => state.announcementAll);
   const { loading, error, announcements } = announcementAll;
+
+  announcementsRef.current = announcements;
 
   const announcementNew = useSelector((state) => state.announcementNew);
   const {
@@ -87,13 +97,17 @@ const AnnouncementScreen = ({ history }) => {
     successDelete,
   ]);
 
-  const editAnnouncementHandler = (id) => {
+  const editAnnouncementHandler = (rowIndex) => {
+    const id = announcementsRef.current[rowIndex].announcementId;
     dispatch({ type: ANNOUNCEMENT_UPDATE_BY_ID_RESET });
-
+    console.log(rowIndex);
+    console.log(id);
     dispatch(getAnnouncementById(id));
   };
 
-  const deleteAnnouncementHandler = (id) => {
+  const deleteAnnouncementHandler = (rowIndex) => {
+    const id = announcementsRef.current[rowIndex].announcementId;
+
     if (window.confirm('Are You Sure?')) {
       dispatch(deleteAnnouncement(id));
     }
@@ -120,6 +134,53 @@ const AnnouncementScreen = ({ history }) => {
       dispatch(newAnnouncement(title, body, id));
     }
   };
+
+  const columnsAdmin = [
+    {
+      Header: 'Title',
+      accessor: 'title',
+      Filter: ColumnFilter,
+    },
+    // {
+    //   Header: 'Name',
+    //   accessor: 'userName',
+    // },
+    {
+      Header: 'Announcement',
+      accessor: 'body',
+      Filter: ColumnFilter,
+      Cell: ({ value }) => {
+        return parse(value);
+      },
+    },
+    {
+      Header: 'Date',
+      accessor: 'createdAt',
+      Filter: ColumnFilter,
+      Cell: ({ value }) => {
+        return format(new Date(value), 'dd/mm/yyyy');
+      },
+    },
+
+    {
+      Header: 'Actions',
+      accessor: 'actions',
+      Cell: (props) => {
+        const rowIdx = props.row.id;
+        return (
+          <div>
+            <span onClick={() => editAnnouncementHandler(rowIdx)}>
+              <i className='far fa-edit action mr-2'></i>
+            </span>
+
+            <span onClick={() => deleteAnnouncementHandler(rowIdx)}>
+              <i className='fas fa-trash action'></i>
+            </span>
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
     <>
@@ -184,13 +245,21 @@ const AnnouncementScreen = ({ history }) => {
 
                             <Form.Group controlId='body'>
                               <Form.Label>Announcement</Form.Label>
-                              <Form.Control
+                              <CKEditor
+                                editor={ClassicEditor}
+                                data={body}
+                                onChange={(e, editor) => {
+                                  const data = editor.getData();
+                                  setBody(data);
+                                }}
+                              />
+                              {/* <Form.Control
                                 as='textarea'
                                 rows='3'
                                 placeholder='Please Enter The Announcement'
                                 value={body}
                                 onChange={(e) => setBody(e.target.value)}
-                              ></Form.Control>
+                              ></Form.Control> */}
                             </Form.Group>
 
                             {editAnnouncement ? (
@@ -241,76 +310,9 @@ const AnnouncementScreen = ({ history }) => {
                     ) : error ? (
                       <Message variant='danger'>{error}</Message>
                     ) : (
-                      <Table
-                        striped
-                        bordered
-                        hover
-                        responsive
-                        className='table-sm'
-                      >
-                        <thead>
-                          <tr>
-                            {/* <th>ID</th> */}
-                            {/* <th>IMAGE</th> */}
-                            <th>Title</th>
-                            <th>Announcement</th>
-                            <th>Date</th>
-                            {/* <th>CHAPTER ADDRESS</th> */}
-                            {userInfo &&
-                              (userInfo.userRole === 'systemAdmin' ||
-                                userInfo.userRole === 'admin') && (
-                                <th>EDIT/DELETE</th>
-                              )}
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          {announcements.map((announcement) => (
-                            <tr key={announcement.announcementId}>
-                              {/* // <td>{announcement.chapterId}</td> */}
-                              {/* <td>
-                                {' '}
-                                <Image src={user.image} thumbnail />
-                              </td> */}
-                              <td> {announcement.title}</td>
-                              <td> {announcement.body}</td>
-                              <td>
-                                {' '}
-                                {announcement.createdAt.substring(0, 10)}
-                              </td>
-                              {userInfo &&
-                                (userInfo.userRole === 'systemAdmin' ||
-                                  userInfo.userRole === 'admin') && (
-                                  <td>
-                                    <Button
-                                      variant='light'
-                                      className='btn-sm'
-                                      onClick={() =>
-                                        editAnnouncementHandler(
-                                          announcement.announcementId
-                                        )
-                                      }
-                                    >
-                                      <i className='fas fa-edit'></i>
-                                    </Button>
-
-                                    <Button
-                                      variant='danger'
-                                      className='btn-sm'
-                                      onClick={() =>
-                                        deleteAnnouncementHandler(
-                                          announcement.announcementId
-                                        )
-                                      }
-                                    >
-                                      <i className='fas fa-trash'></i>
-                                    </Button>
-                                  </td>
-                                )}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
+                      <>
+                        <RTable users={announcements} COLUMNS={columnsAdmin} />
+                      </>
                     )}
                   </>
                 </Card>

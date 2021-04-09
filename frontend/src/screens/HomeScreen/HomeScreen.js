@@ -1,30 +1,85 @@
-import React from 'react';
-import { Col, Row, Card, Carousel } from 'react-bootstrap';
+import React, { useEffect } from 'react';
+import { Col, Row, Card, Carousel, ListGroup } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom';
+import { allAnnouncements } from '../../actions/announcementAction';
+import { allMission } from '../../actions/missionActions';
 import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
+import Loader from '../../components/Loader';
+import Message from '../../components/Message';
+import parse from 'html-react-parser';
+import { allVission } from '../../actions/vissionActions';
+import { allHistory } from '../../actions/historyActions';
+import { allCMembers } from '../../actions/committeeActions';
+import PauseOnHover from '../../components/ImageCarousel/PauseOnHover';
 
 const HomeScreen = () => {
+  const dispatch = useDispatch();
+
+  const announcementAll = useSelector((state) => state.announcementAll);
+  const { loading, error, announcements } = announcementAll;
+
+  const missionAll = useSelector((state) => state.missionAll);
+  const { loading: missionLoading, error: missionError, missions } = missionAll;
+
+  const vissionAll = useSelector((state) => state.vissionAll);
+  const { loading: vissionLoading, error: vissionError, vissions } = vissionAll;
+
+  const historyAll = useSelector((state) => state.historyAll);
+  const {
+    loading: historyLoading,
+    error: historyError,
+    histories,
+  } = historyAll;
+
+  const cMemberAll = useSelector((state) => state.cMemberAll);
+  const {
+    loading: cMemeberLoading,
+    error: cMemberError,
+    cMembers,
+  } = cMemberAll;
+
+  useEffect(() => {
+    dispatch(allAnnouncements());
+    dispatch(allMission());
+    dispatch(allVission());
+    dispatch(allHistory());
+    dispatch(allCMembers());
+  }, [dispatch]);
+  console.log(cMembers);
   return (
     <>
+      {/* <PauseOnHover /> */}
+
       <Row>
         <Col md={{ span: 6, order: 1 }} lg={{ span: 3, order: 1 }}>
           <Card className='mb-2'>
-            <Card.Header as='h4'>Announcements</Card.Header>
-            <Card.Body>
-              {/* <ListGroup>
-              <ListGroup.Item>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
-                officiis facilis beatae consequatur reiciendis dicta quia
-                voluptatem, ab, voluptatum eligendi ullam libero facere impedit
-                molestiae repudiandae ipsa, necessitatibus numquam velit?
-              </ListGroup.Item>
-            </ListGroup> */}
-              <Card.Text>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
-                officiis facilis beatae consequatur reiciendis dicta quia
-                voluptatem, ab, voluptatum eligendi ullam libero facere impedit
-                molestiae repudiandae ipsa, necessitatibus numquam velit?
-              </Card.Text>
-            </Card.Body>
+            <Card.Header as='h5'>Announcements</Card.Header>
+
+            <>
+              {loading ? (
+                <Loader />
+              ) : error ? (
+                <Message variant='danger'>{error}</Message>
+              ) : (
+                <ListGroup variant='flush'>
+                  {announcements.map((announcement, index) => (
+                    <ListGroup.Item key={index}>
+                      {/* <LinkContainer
+                        to={`/announcements/${announcement.announcementId}`}
+                      > */}
+                      <Link
+                        to={`/announcements/${announcement.announcementId}`}
+                      >
+                        {announcement.title}
+                      </Link>
+                      {/* </LinkContainer> */}
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              )}
+            </>
           </Card>
           <Card className='mb-2'>
             {/* <Card.Title as='h4'>Events:</Card.Title> */}
@@ -48,45 +103,108 @@ const HomeScreen = () => {
         <Col md={{ order: 12 }} lg={{ span: 6, order: 2 }}>
           <Card className='text-center mb-2 home-carousal'>
             <ImageCarousel />
+            {/* <Image
+                src={image.image}
+                alt={image.imageDescription}
+                fluid
+                style={{ height: '300px', width: '100%' }}
+              /> */}
           </Card>
 
           <Card className='text-center mb-2'>
             <Card.Header as='h2'>Mission</Card.Header>
             <Card.Body>
-              <Card.Title>Special title treatment</Card.Title>
-              <Card.Text>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
-                ipsa amet, optio mollitia rem hic odit aliquam quaerat dolor
-                minus molestias iusto sint, quia, quis laudantium ducimus animi
-                possimus inventore!
-              </Card.Text>
+              {missionLoading ? (
+                <Loader />
+              ) : missionError ? (
+                <Message variant='danger'>{missionError}</Message>
+              ) : (
+                <>
+                  {missions.map((mission, index) => (
+                    <Card.Body key={index}>
+                      <Card.Title>{mission.title}</Card.Title>
+                      <Card.Text>
+                        {parse(mission.body.substring(0, 100))}...
+                        {/* <LinkContainer
+                          to={`/chapters/mission/${mission.chapterId}`}
+                        > */}
+                        <Link to={`/chapters/mission/${mission.chapterId}`}>
+                          Read more
+                        </Link>
+                        {/* </LinkContainer> */}
+                        {/* <a href={`/chapters/mission/${mission.chapterId}`}>
+                          Read more
+                        </a> */}
+                      </Card.Text>
+                    </Card.Body>
+                  ))}
+                </>
+              )}
             </Card.Body>
           </Card>
 
           <Card className='text-center mb-2'>
             <Card.Header as='h2'>Vission</Card.Header>
             <Card.Body>
-              <Card.Title>Vission title </Card.Title>
-              <Card.Text>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
-                ipsa amet, optio mollitia rem hic odit aliquam quaerat dolor
-                minus molestias iusto sint, quia, quis laudantium ducimus animi
-                possimus inventore!
-              </Card.Text>
+              {vissionLoading ? (
+                <Loader />
+              ) : vissionError ? (
+                <Message variant='danger'>{vissionError}</Message>
+              ) : (
+                <>
+                  {vissions.map((vission, index) => (
+                    <Card.Body key={index}>
+                      <Card.Title>{vission.title}</Card.Title>
+                      <Card.Text>
+                        {parse(vission.body.substring(0, 100))}...
+                        {/* <LinkContainer
+                          to={`/chapters/vission/${vission.chapterId}`}
+                        > */}
+                        <Link to={`/chapters/vission/${vission.chapterId}`}>
+                          Read more
+                        </Link>
+                        {/* </LinkContainer> */}
+                        {/* <a href={`/chapters/mission/${mission.chapterId}`}>
+                          Read more
+                        </a> */}
+                      </Card.Text>
+                    </Card.Body>
+                  ))}
+                </>
+              )}
             </Card.Body>
           </Card>
 
           <Card className='text-center mb-2'>
             <Card.Header as='h2'>History</Card.Header>
-            <Card.Body>
-              <Card.Title>History Title</Card.Title>
-              <Card.Text>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
-                ipsa amet, optio mollitia rem hic odit aliquam quaerat dolor
-                minus molestias iusto sint, quia, quis laudantium ducimus animi
-                possimus inventore!
-              </Card.Text>
-            </Card.Body>
+            <>
+              {historyLoading ? (
+                <Loader />
+              ) : historyError ? (
+                <Message variant='danger'>{historyError}</Message>
+              ) : (
+                <>
+                  {histories.map((history, index) => (
+                    <Card.Body key={index}>
+                      <Card.Title>{history.title}</Card.Title>
+                      <Card.Text>
+                        {parse(history.body.substring(0, 100))}...
+                        {/* <LinkContainer
+                          to={`/chapters/history/${history.chapterId}`}
+                        > */}
+                        <Link to={`/chapters/history/${history.chapterId}`}>
+                          Read more
+                        </Link>
+                        {/* </LinkContainer> */}
+                        {/* <a href={`/chapters/mission/${mission.chapterId}`}>
+                          Read more
+                        </a> */}
+                      </Card.Text>
+                    </Card.Body>
+                  ))}
+                </>
+              )}
+            </>
           </Card>
 
           <Card className='text-center mb-2'>
@@ -104,7 +222,7 @@ const HomeScreen = () => {
         </Col>
 
         <Col md={{ span: 6, order: 2 }} lg={{ span: 3, order: 12 }}>
-          <Card>
+          <Card className='mb-2'>
             <Card.Body>
               <Card.Title>Quick Links</Card.Title>
               <Card.Link href='#'>Link 1</Card.Link>
@@ -112,10 +230,39 @@ const HomeScreen = () => {
               <Card.Link href='#'>Link 3</Card.Link>
               <Card.Link href='#'>Link 4</Card.Link>
             </Card.Body>
-            <Card.Body>
-              <Card.Title>Current Committee:</Card.Title>
-
-              <Carousel controls={false} indicators={false}>
+          </Card>
+          {/* <Card className='mb-2'> */}
+          {/* <Card.Body> */}
+          {/* <Card.Title>Current Committee:</Card.Title> */}
+          {cMemeberLoading ? (
+            <Loader />
+          ) : cMemberError ? (
+            <Message variant='danger'>{cMemberError}</Message>
+          ) : (
+            cMembers.length !== 0 &&
+            cMembers.map((cMember, index) => (
+              <Card key={index} className='mb-2'>
+                <Card.Img
+                  variant='top'
+                  src={cMember.member.profilePicture}
+                  style={{ height: '150px', width: '100%' }}
+                />
+                <Card.Header className='text-center'>
+                  {cMember.position}
+                </Card.Header>
+                <Card.Title className='text-center'>
+                  {cMember.member.firstName} {cMember.member.lastName}
+                </Card.Title>
+                <Card.Body>{cMember.bio}</Card.Body>
+                {/* <img
+                      className='d-block w-100'
+                      src={cMember.member.image}
+                      alt='First slide'
+                    /> */}
+              </Card>
+            ))
+          )}
+          {/* <Carousel controls={false} indicators={false}>
                 <Carousel.Item>
                   <img
                     className='d-block w-100'
@@ -137,9 +284,9 @@ const HomeScreen = () => {
                     alt='Third slide'
                   />
                 </Carousel.Item>
-              </Carousel>
-            </Card.Body>
-          </Card>
+              </Carousel> */}
+          {/* </Card.Body> */}
+          {/* </Card> */}
         </Col>
       </Row>
     </>

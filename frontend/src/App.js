@@ -31,6 +31,10 @@ import PasswordUpdateScreen from './screens/PasswordUpdateScreen/PasswordUpdateS
 import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
 import ImagesScreen from './screens/ImagesScreen/ImagesScreen';
 import MembersScreen from './screens/MembersScreen/MembersScreen';
+import Announcement from './screens/AnnouncementScreen/Announcement';
+import Mission from './screens/MissionScreen/Mission';
+import Vission from './screens/VissionScreen/Vission';
+import History from './screens/HistoryScreen/History';
 
 const App = () => {
   return (
@@ -51,10 +55,14 @@ const App = () => {
             <Route path='/dashboard' component={DashboardScreen} />
             <Route path='/systemAdmin' component={SystemAdminScreen} />
             <Route path='/chapter' component={ChapterScreen} />
-            <Route path='/announcement' component={AnnouncementScreen} />
             <Route path='/mission' component={MissionScreen} />
+            <Route path='/chapters/mission/:id' component={Mission} />
+            <Route path='/announcement' component={AnnouncementScreen} />
+            <Route path='/announcements/:id' component={Announcement} />
             <Route path='/vission' component={VissionScreen} />
+            <Route path='/chapters/vission/:id' component={Vission} />
             <Route path='/history' component={HistoryScreen} />
+            <Route path='/chapters/history/:id' component={History} />
             <Route path='/paymentType' component={PaymentTypeScreen} />
             <Route path='/images' component={ImagesScreen} />
             <Route path='/payment' component={PaymentScreen} />

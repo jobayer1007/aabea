@@ -17,7 +17,7 @@ import {
   VISSION_UPDATE_BY_ID_SUCCESS,
 } from '../constants/vissionConstants';
 
-export const newVission = (title, body, id) => async (dispatch, getState) => {
+export const newVission = (id, title, body) => async (dispatch, getState) => {
   try {
     dispatch({
       type: VISSION_NEW_REQUEST,
@@ -36,9 +36,9 @@ export const newVission = (title, body, id) => async (dispatch, getState) => {
     const { data } = await axios.post(
       '/api/chapters/vission',
       {
+        id,
         title,
         body,
-        id,
       },
       config
     );
@@ -124,7 +124,7 @@ export const getVissionById = (id) => async (dispatch, getState) => {
   }
 };
 
-export const updateVissionById = (id, body, title) => async (
+export const updateVissionById = (id, title, body) => async (
   dispatch,
   getState
 ) => {

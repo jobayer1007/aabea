@@ -17,7 +17,7 @@ import {
   HISTORY_UPDATE_BY_ID_SUCCESS,
 } from '../constants/historyConstants';
 
-export const newHistory = (title, body, id) => async (dispatch, getState) => {
+export const newHistory = (id, title, body) => async (dispatch, getState) => {
   try {
     dispatch({
       type: HISTORY_NEW_REQUEST,

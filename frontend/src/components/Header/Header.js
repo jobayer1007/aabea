@@ -14,6 +14,7 @@ import {
 import { logout } from '../../actions/userActions';
 import HeaderCarousel from './HeaderCarousel';
 import { Link } from 'react-router-dom';
+import PauseOnHover from '../ImageCarousel/PauseOnHover';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ const Header = () => {
             {/* <h1>Logo</h1> */}
           </Col>
           <Col xs={6}>
-            <HeaderCarousel />
+            <PauseOnHover />
           </Col>
           <Col xs={4} className='text-center'>
             <h3>Washington D.C Chapter</h3>{' '}
