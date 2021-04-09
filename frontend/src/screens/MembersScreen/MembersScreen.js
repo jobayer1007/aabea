@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button, Image, Row, Col, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,7 +22,7 @@ import ColumnFilter from '../../components/Table/ColumnFilter';
 
 const MembersScreen = ({ history }) => {
   const dispatch = useDispatch();
-
+  const [columnsAdmin, setColumnsAdmin] = useState([]);
   const usersRef = useRef();
 
   // const chapterList = useSelector((state) => state.chapterList);
@@ -63,6 +63,101 @@ const MembersScreen = ({ history }) => {
       dispatch(listChapters());
       dispatch(listPendingUsers());
       dispatch(listUsers());
+
+      if (
+        userInfo.userRole === 'admin' ||
+        userInfo.userRole === 'systemAdmin'
+      ) {
+        setColumnsAdmin([
+          {
+            Header: 'Id',
+            accessor: 'memberId',
+            Filter: ColumnFilter,
+          },
+          // {
+          //   Header: 'Name',
+          //   accessor: 'userName',
+          // },
+          {
+            Header: 'First Name',
+            accessor: 'member.firstName',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'member.lastName',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'City',
+            accessor: 'member.city',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'State',
+            accessor: 'member.state',
+            Filter: ColumnFilter,
+          },
+
+          {
+            Header: 'Actions',
+            accessor: 'actions',
+            Cell: (props) => {
+              const rowIdx = props.row.id;
+              return (
+                <div>
+                  <span onClick={() => editUserHandler(rowIdx)}>
+                    <i className='far fa-edit action mr-2'></i>
+                  </span>
+                  <span onClick={() => deleteUserHandler(rowIdx)}>
+                    <i className='fas fa-trash action'></i>
+                  </span>
+                  <br />
+                  <Button
+                    variant='danger'
+                    className='btn-sm'
+                    onClick={() => createAdminHandler(rowIdx)}
+                  >
+                    Set As ADMIN
+                  </Button>
+                </div>
+              );
+            },
+          },
+        ]);
+      } else {
+        setColumnsAdmin([
+          {
+            Header: 'Id',
+            accessor: 'memberId',
+            Filter: ColumnFilter,
+          },
+          // {
+          //   Header: 'Name',
+          //   accessor: 'userName',
+          // },
+          {
+            Header: 'First Name',
+            accessor: 'member.firstName',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'member.lastName',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'City',
+            accessor: 'member.city',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'State',
+            accessor: 'member.state',
+            Filter: ColumnFilter,
+          },
+        ]);
+      }
     } else {
       history.push('/login');
     }
@@ -78,14 +173,14 @@ const MembersScreen = ({ history }) => {
     const id = usersRef.current[rowIndex].memberId;
     // console.log(rowIndex);
 
-    history.push(`/users/${id}/edit`);
+    history.push(`/admin/users/${id}/edit`);
     // props.history.push("/tutorials/" + id);
     console.log(id);
   };
 
   const deleteUserHandler = (rowIndex) => {
     const id = usersRef.current[rowIndex].memberId;
-    if (window.confirm('Are You Sure?')) {
+    if (window.confirm('Are You Sure about deleting this User?')) {
       dispatch(deleteUser(id));
       // console.log(`User deleted: with id: ${id}`);
     }
@@ -97,9 +192,10 @@ const MembersScreen = ({ history }) => {
     }
   };
 
-  const createAdminHandler = (memberId) => {
-    if (window.confirm('Are You Sure?')) {
-      dispatch(createAdminUser(memberId));
+  const createAdminHandler = (rowIndex) => {
+    const id = usersRef.current[rowIndex].memberId;
+    if (window.confirm('Are You Sure about making this user as Admin?')) {
+      dispatch(createAdminUser(id));
     }
   };
 
@@ -108,56 +204,6 @@ const MembersScreen = ({ history }) => {
       dispatch(deleteAdminUser(userId));
     }
   };
-
-  const columnsAdmin = [
-    {
-      Header: 'Id',
-      accessor: 'memberId',
-      Filter: ColumnFilter,
-    },
-    // {
-    //   Header: 'Name',
-    //   accessor: 'userName',
-    // },
-    {
-      Header: 'First Name',
-      accessor: 'member.firstName',
-      Filter: ColumnFilter,
-    },
-    {
-      Header: 'Last Name',
-      accessor: 'member.lastName',
-      Filter: ColumnFilter,
-    },
-    {
-      Header: 'City',
-      accessor: 'member.city',
-      Filter: ColumnFilter,
-    },
-    {
-      Header: 'State',
-      accessor: 'member.state',
-      Filter: ColumnFilter,
-    },
-    {
-      Header: 'Actions',
-      accessor: 'actions',
-      Cell: (props) => {
-        const rowIdx = props.row.id;
-        return (
-          <div>
-            <span onClick={() => editUserHandler(rowIdx)}>
-              <i className='far fa-edit action mr-2'></i>
-            </span>
-
-            <span onClick={() => deleteUserHandler(rowIdx)}>
-              <i className='fas fa-trash action'></i>
-            </span>
-          </div>
-        );
-      },
-    },
-  ];
 
   return (
     <>
@@ -322,20 +368,18 @@ const MembersScreen = ({ history }) => {
                         <thead>
                           <tr>
                             <th>ID</th>
-                            <th>IMAGE</th>
-                            <th>NAME</th>
+                            <th>Name</th>
+                            {/* <th>Last Name</th> */}
                             <th>EMAIL</th>
-                            <th>ADMIN</th>
-                            <th>ACTIVE STATUS</th>
+                            <th>Phone</th>
+
                             {userInfo &&
                               (userInfo.userRole === 'systemAdmin' ||
                                 userInfo.userRole === 'admin') && (
-                                <th>EDIT/DELETE</th>
-                              )}
-
-                            {userInfo &&
-                              userInfo.userRole === 'systemAdmin' && (
-                                <th>Assign As Admin / Member</th>
+                                <>
+                                  <th>EDIT/DELETE</th>
+                                  <th>Assign As Admin / Member</th>
+                                </>
                               )}
                           </tr>
                         </thead>
@@ -348,10 +392,10 @@ const MembersScreen = ({ history }) => {
                                   user.userRole === 'systemAdmin') && (
                                   <>
                                     <td>{user.memberId}</td>
-                                    <td>
+                                    {/* <td>
                                       {' '}
-                                      <Image src={user.image} thumbnail />
-                                    </td>
+                                      <Image src={user.member.firstName} />
+                                    </td> */}
                                     <td> {user.userName}</td>
                                     <td>
                                       <a href={`mailto: ${user.email}`}>
@@ -359,33 +403,7 @@ const MembersScreen = ({ history }) => {
                                         {user.email}
                                       </a>
                                     </td>
-                                    <td>
-                                      {user.userRole === 'admin' ||
-                                      user.userRole === 'systemAdmin' ? (
-                                        <i
-                                          className='fas fa-check'
-                                          style={{ color: 'green' }}
-                                        ></i>
-                                      ) : (
-                                        <i
-                                          className='fas fa-times'
-                                          style={{ color: 'red' }}
-                                        ></i>
-                                      )}
-                                    </td>
-                                    <td>
-                                      {user.member.status === 'active' ? (
-                                        <i
-                                          className='fas fa-check'
-                                          style={{ color: 'green' }}
-                                        ></i>
-                                      ) : (
-                                        <i
-                                          className='fas fa-times'
-                                          style={{ color: 'red' }}
-                                        ></i>
-                                      )}
-                                    </td>
+                                    <td>{user.member.primaryPhone}</td>
                                     {(userInfo.userRole === 'systemAdmin' ||
                                       userInfo.userRole === 'admin') && (
                                       <td>
@@ -411,8 +429,8 @@ const MembersScreen = ({ history }) => {
                                         </Button>
                                       </td>
                                     )}
-
-                                    {userInfo.userRole === 'systemAdmin' &&
+                                    {(userInfo.userRole === 'systemAdmin' ||
+                                      userInfo.userRole === 'admin') &&
                                       (user.userRole === 'member' ? (
                                         <td>
                                           <Button
@@ -471,149 +489,9 @@ const MembersScreen = ({ history }) => {
                       <Message variant='danger'>{userListError}</Message>
                     ) : (
                       <>
-                        <Table
-                          striped
-                          bordered
-                          hover
-                          responsive
-                          className='table-sm'
-                        >
-                          <thead>
-                            <tr>
-                              <th>ID</th>
-                              <th>IMAGE</th>
-                              <th>NAME</th>
-                              <th>EMAIL</th>
-                              <th>ADMIN</th>
-                              <th>ACTIVE STATUS</th>
-                              {userInfo &&
-                                (userInfo.userRole === 'systemAdmin' ||
-                                  userInfo.userRole === 'admin') && (
-                                  <th>EDIT/DELETE</th>
-                                )}
-
-                              {userInfo &&
-                                userInfo.userRole === 'systemAdmin' && (
-                                  <th>Assign As Admin</th>
-                                )}
-                            </tr>
-                          </thead>
-
-                          <tbody>
-                            {users.map((user, index) => (
-                              <tr key={index}>
-                                {user.userRole === 'member' && (
-                                  <>
-                                    <td>{user.memberId}</td>
-                                    <td>
-                                      {' '}
-                                      <Image src={user.image} thumbnail />
-                                    </td>
-                                    <td> {user.userName}</td>
-                                    <td>
-                                      <a href={`mailto: ${user.email}`}>
-                                        {' '}
-                                        {user.email}
-                                      </a>
-                                    </td>
-                                    <td>
-                                      {user.userRole === 'admin' ||
-                                      user.userRole === 'systemAdmin' ? (
-                                        <i
-                                          className='fas fa-check'
-                                          style={{ color: 'green' }}
-                                        ></i>
-                                      ) : (
-                                        <i
-                                          className='fas fa-times'
-                                          style={{ color: 'red' }}
-                                        ></i>
-                                      )}
-                                    </td>
-                                    <td>
-                                      {user.member.status === 'active' ? (
-                                        <i
-                                          className='fas fa-check'
-                                          style={{ color: 'green' }}
-                                        ></i>
-                                      ) : (
-                                        <i
-                                          className='fas fa-times'
-                                          style={{ color: 'red' }}
-                                        ></i>
-                                      )}
-                                    </td>
-                                    {(userInfo.userRole === 'systemAdmin' ||
-                                      userInfo.userRole === 'admin') && (
-                                      <td>
-                                        <LinkContainer
-                                          to={`/users/${user.memberId}/edit`}
-                                        >
-                                          <Button
-                                            variant='light'
-                                            className='btn-sm'
-                                          >
-                                            <i className='fas fa-edit'></i>
-                                          </Button>
-                                        </LinkContainer>
-
-                                        <Button
-                                          variant='danger'
-                                          className='btn-sm'
-                                          onClick={() =>
-                                            deleteUserHandler(user.memberId)
-                                          }
-                                        >
-                                          <i className='fas fa-trash'></i>
-                                        </Button>
-                                      </td>
-                                    )}
-
-                                    {userInfo.userRole === 'systemAdmin' &&
-                                      (user.userRole === 'member' ? (
-                                        <td>
-                                          <Button
-                                            variant='danger'
-                                            className='btn-sm'
-                                            onClick={() =>
-                                              createAdminHandler(user.memberId)
-                                            }
-                                          >
-                                            {' '}
-                                            Set As ADMIN
-                                            {/* <i className='fas fa-trash'></i> */}
-                                          </Button>{' '}
-                                        </td>
-                                      ) : (
-                                        <td>
-                                          <Button
-                                            variant='success'
-                                            className='btn-sm'
-                                            onClick={() =>
-                                              deleteAdminHandler(user.memberId)
-                                            }
-                                          >
-                                            {' '}
-                                            Set As Member
-                                            {/* <i className='fas fa-trash'></i> */}
-                                          </Button>
-                                        </td>
-                                      ))}
-                                  </>
-                                )}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </Table>
-                        <br />
-
-                        <>
-                          {users && users.length !== 0 && (
-                            <>
-                              <RTable users={users} COLUMNS={columnsAdmin} />
-                            </>
-                          )}
-                        </>
+                        {users && users.length !== 0 && (
+                          <RTable users={users} COLUMNS={columnsAdmin} />
+                        )}
                       </>
                     )}
                   </Card.Body>

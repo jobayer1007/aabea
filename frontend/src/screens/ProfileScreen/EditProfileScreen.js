@@ -3,23 +3,22 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Card, Row, Col, ListGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import FormContainer from '../components/FormContainer';
+import FormContainer from '../../components/FormContainer';
 import {
   getUserDetailsById,
   getUserProfile,
   updateUser,
   updateUserProfile,
-} from '../actions/userActions';
+} from '../../actions/userActions';
 import {
-  USER_DETAILS_BY_ID_RESET,
   USER_UPDATE_PROFILE_RESET,
   USER_UPDATE_RESET,
-} from '../constants/userConstants';
-import Message from '../components/Message';
-import Loader from '../components/Loader';
+} from '../../constants/userConstants';
+import Message from '../../components/Message';
+import Loader from '../../components/Loader';
 
-const UserEditScreen = ({ match, history }) => {
-  const id = match.params.id;
+const EditProfileScreen = ({ match, history }) => {
+  // const memberId = match.params.id;
 
   const [firstName, setFirstName] = useState('');
   const [mInit, setMInit] = useState('');
@@ -43,15 +42,15 @@ const UserEditScreen = ({ match, history }) => {
 
   const dispatch = useDispatch();
 
-  const userDetailsById = useSelector((state) => state.userDetailsById);
-  const { loading, error, user } = userDetailsById;
+  const userDetails = useSelector((state) => state.userDetails);
+  const { loading, error, user } = userDetails;
 
-  const userUpdate = useSelector((state) => state.userUpdate);
+  const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const {
     loading: loadingUpdate,
     error: errorUpdate,
     success: successUpdate,
-  } = userUpdate;
+  } = userUpdateProfile;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -59,12 +58,11 @@ const UserEditScreen = ({ match, history }) => {
   useEffect(() => {
     if (userInfo) {
       if (successUpdate) {
-        dispatch({ type: USER_UPDATE_RESET });
-        dispatch({ type: USER_DETAILS_BY_ID_RESET });
-        history.push('/members');
+        dispatch({ type: USER_UPDATE_PROFILE_RESET });
+        history.push('/profile');
       } else {
         if (!user.memberId) {
-          dispatch(getUserDetailsById(id));
+          dispatch(getUserProfile());
         } else {
           setFirstName(user.firstName);
           setMInit(user.mInit);
@@ -120,8 +118,9 @@ const UserEditScreen = ({ match, history }) => {
     e.preventDefault();
 
     dispatch(
-      updateUser({
-        id,
+      updateUserProfile({
+        // id,
+
         firstName,
         mInit,
         lastName,
@@ -148,14 +147,14 @@ const UserEditScreen = ({ match, history }) => {
       {userInfo.userRole === 'systemAdmin' ? (
         <Link
           className='btn btn-light my-3 btn-sm btn-outline-success'
-          to='/members'
+          to='/systemAdmin'
         >
           Go Back
         </Link>
       ) : (
         <Link
           className='btn btn-light my-3 btn-sm btn-outline-success'
-          to='/members'
+          to='/profile'
         >
           Go Back
         </Link>
@@ -568,4 +567,4 @@ const UserEditScreen = ({ match, history }) => {
   );
 };
 
-export default UserEditScreen;
+export default EditProfileScreen;

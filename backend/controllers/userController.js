@@ -505,18 +505,19 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
         degreeYear: req.body.degreeYear || member.degreeYear,
         major: req.body.major || member.major,
         collegeName: req.body.collegeName || member.collegeName,
-        status: req.body.status || member.status,
-        balance: req.body.balance || member.balance,
+        status: member.status,
+        // balance: req.body.balance || member.balance,
 
-        // image: req.body.image || user.image,
-        password: bcrypt.hashSync(req.body.password, 10) || user.password,
-        userRole: req.body.userRole || user.userRole,
+        profilePicture: req.body.profilePicture || user.profilePicture,
+        certificates: req.body.certificates || user.certificates,
+        // password: bcrypt.hashSync(req.body.password, 10) || user.password,
+        // userRole: req.body.userRole || user.userRole,
       };
 
       let {
         primaryEmail,
-        password,
-        userRole,
+        // password,
+        // userRole,
         firstName,
         mInit,
         lastName,
@@ -533,51 +534,78 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
         major,
         collegeName,
         status,
-        balance,
+        profilePicture,
+        certificates,
       } = data;
-      const updatedMember = await models.Member.update(
-        {
-          primaryEmail,
 
-          firstName,
-          mInit,
-          lastName,
-          address1,
-          address2,
-          city,
-          state,
-          zipcode,
-          alternateEmail,
-          primaryPhone,
-          alternatePhone,
-          degree,
-          degreeYear,
-          major,
-          collegeName,
-          status,
-          balance,
-        },
-        { where: { memberId: req.user.memberId } }
-      );
+      // First, we start a transaction and save it into a variable
+      const t = await sequelize.transaction();
 
-      if (updatedMember == 1) {
+      try {
+        // Then, we do some calls passing this transaction as an option:
+        const updatedMember = await models.Member.update(
+          {
+            firstName,
+            mInit,
+            lastName,
+            address1,
+            address2,
+            city,
+            state,
+            zipcode,
+            alternateEmail,
+            primaryEmail,
+            primaryPhone,
+            alternatePhone,
+            degree,
+            degreeYear,
+            major,
+            collegeName,
+            status,
+            profilePicture,
+            certificates,
+          },
+          { where: { memberId: req.user.memberId } },
+          { transaction: t }
+        );
+
         const updatedUser = await models.User.update(
           {
             userName: firstName + ' ' + lastName,
-            password,
-            userRole,
+            // password,
+            // userRole,
             // image,
           },
-          { where: { memberId: req.user.memberId } }
+          { where: { memberId: req.user.memberId, userRole: 'member' } },
+          { transaction: t }
         );
 
-        if (updatedUser == 1) {
-          res.json({ message: 'User updated successfully' });
-        } else {
-          res.send({ message: 'User update unsuccessful' });
+        const ifAdmin = await models.User.findOne({
+          where: { memberId: req.user.memberId, userRole: 'admin' },
+        });
+        if (ifAdmin) {
+          const updateAdminUser = await models.User.update(
+            {
+              userName: firstName + ' ' + lastName,
+              // password,
+              // userRole,
+              // image,
+            },
+            { where: { memberId: req.user.memberId, userRole: 'admin' } },
+            { transaction: t }
+          );
         }
-      } else {
-        res.send({ message: 'Member update unsuccessful' });
+
+        // If the execution reaches this line, no errors were thrown.
+        // We commit the transaction.
+        await t.commit();
+        res.status(201).json('profile Updated successfully');
+      } catch (error) {
+        // If the execution reaches this line, an error was thrown.
+        // We rollback the transaction.
+        await t.rollback();
+        res.status(401);
+        throw new Error('profile Update unsuccessful');
       }
     } else {
       res.status(401);
@@ -611,7 +639,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
         city: req.body.city || member.city,
         state: req.body.state || member.state,
         zipcode: req.body.zipcode || member.zipcode,
-        // primaryEmail: member.primaryEmail,
+        primaryEmail: member.primaryEmail,
         alternateEmail: req.body.alternateEmail || member.alternateEmail,
         primaryPhone: req.body.primaryPhone || member.primaryPhone,
         alternatePhone: req.body.alternatePhone || member.alternatePhone,
@@ -619,18 +647,19 @@ exports.updateUser = asyncHandler(async (req, res) => {
         degreeYear: req.body.degreeYear || member.degreeYear,
         major: req.body.major || member.major,
         collegeName: req.body.collegeName || member.collegeName,
-        status: req.body.status || member.status,
-        balance: req.body.balance || member.balance,
+        status: member.status,
+        // balance: req.body.balance || member.balance,
 
-        profilePicture: req.body.image || user.profilePicture,
+        profilePicture: req.body.profilePicture || user.profilePicture,
+        certificates: req.body.certificates || user.certificates,
         // password: bcrypt.hashSync(req.body.password, 10) || user.password,
-        userRole: req.body.userRole || user.userRole,
+        // userRole: req.body.userRole || user.userRole,
       };
 
       let {
-        // primaryEmail,
+        primaryEmail,
         // password,
-        userRole,
+        // userRole,
         firstName,
         mInit,
         lastName,
@@ -648,50 +677,77 @@ exports.updateUser = asyncHandler(async (req, res) => {
         collegeName,
         status,
         profilePicture,
+        certificates,
       } = data;
-      const updatedMember = await models.Member.update(
-        {
-          // primaryEmail,
 
-          firstName,
-          mInit,
-          lastName,
-          address1,
-          address2,
-          city,
-          state,
-          zipcode,
-          alternateEmail,
-          primaryPhone,
-          alternatePhone,
-          degree,
-          degreeYear,
-          major,
-          collegeName,
-          status,
-          profilePicture,
-        },
-        { where: { memberId: user.memberId } }
-      );
+      // First, we start a transaction and save it into a variable
+      const t = await sequelize.transaction();
 
-      if (updatedMember == 1) {
-        const updatedUser = await models.User.update(
+      try {
+        // Then, we do some calls passing this transaction as an option:
+        const updatedMember = await models.Member.update(
           {
-            // password,
-            userName: firstName + ' ' + lastName,
-            userRole,
-            // image,
+            firstName,
+            mInit,
+            lastName,
+            address1,
+            address2,
+            city,
+            state,
+            zipcode,
+            alternateEmail,
+            primaryEmail,
+            primaryPhone,
+            alternatePhone,
+            degree,
+            degreeYear,
+            major,
+            collegeName,
+            status,
+            profilePicture,
+            certificates,
           },
-          { where: { memberId: user.memberId } }
+          { where: { memberId: user.memberId } },
+          { transaction: t }
         );
 
-        if (updatedUser == 1) {
-          res.json({ message: 'User updated successfully' });
-        } else {
-          res.send({ message: 'User update unsuccessful' });
+        const updatedUser = await models.User.update(
+          {
+            userName: firstName + ' ' + lastName,
+            // password,
+            // userRole,
+            // image,
+          },
+          { where: { memberId: user.memberId, userRole: 'member' } },
+          { transaction: t }
+        );
+
+        const ifAdmin = await models.User.findOne({
+          where: { memberId: user.memberId, userRole: 'admin' },
+        });
+        if (ifAdmin) {
+          const updateAdminUser = await models.User.update(
+            {
+              userName: firstName + ' ' + lastName,
+              // password,
+              // userRole,
+              // image,
+            },
+            { where: { memberId: user.memberId, userRole: 'admin' } },
+            { transaction: t }
+          );
         }
-      } else {
-        res.send({ message: 'Member update unsuccessful' });
+
+        // If the execution reaches this line, no errors were thrown.
+        // We commit the transaction.
+        await t.commit();
+        res.status(201).json('User Updated successfully');
+      } catch (error) {
+        // If the execution reaches this line, an error was thrown.
+        // We rollback the transaction.
+        await t.rollback();
+        res.status(401);
+        throw new Error('User Update unsuccessful');
       }
     } else {
       res.status(401);

@@ -44,10 +44,12 @@ const ProfileScreen = ({ history }) => {
     }
   }, [dispatch, history, userInfo]);
 
-  const submitHandler = (e) => {
+  const editUserHandler = (e) => {
     e.preventDefault();
 
     console.log('Edit clicked');
+    history.push(`/users/profile/edit`);
+
     // dispatch(approveUser(pendingId));
     // history.push('/systemAdmin');
   };
@@ -198,7 +200,7 @@ const ProfileScreen = ({ history }) => {
                 <Card.Footer className='text-muted'>
                   <Link
                     className='btn btn-outline-info btn-sm btn-block rounded'
-                    onClick={submitHandler}
+                    onClick={editUserHandler}
                   >
                     Edit
                   </Link>

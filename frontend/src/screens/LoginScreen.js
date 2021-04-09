@@ -34,10 +34,8 @@ const LoginScreen = ({ location, history }) => {
   useEffect(() => {
     dispatch({ type: USER_PASSWORD_RESET_RESET });
 
-    if (userInfo && userInfo.userRole !== 'systemAdmin') {
+    if (userInfo) {
       history.push(redirect);
-    } else if (userInfo && userInfo.userRole === 'systemAdmin') {
-      history.push('/systemAdmin');
     } else if (errorLogin) {
       // console.log(errorLogin);
       if (errorLogin === 'Invalid User' || errorLogin === 'Invalid Password!') {

@@ -55,7 +55,7 @@ router
   .post(protect, systemAdmin, createAdminUser)
   .delete(protect, systemAdmin, deleteAdminUser);
 router.route('/dashboard').get(protect, getUsers);
-router.route('/:id').get(getUserById).put(updateUser);
+router.route('/:id').get(getUserById).put(protect, admin, updateUser);
 router.route('/:id').delete(protect, admin, deleteUser);
 
 // Password Reset

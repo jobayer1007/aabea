@@ -48,7 +48,7 @@ const DashboardScreen = ({ history }) => {
 
   useEffect(() => {
     if (userInfo) {
-      dispatch(listUsers());
+      // dispatch(listUsers());
       dispatch(getUserProfile());
 
       dispatch(getUserDonationDetails());
@@ -100,46 +100,54 @@ const DashboardScreen = ({ history }) => {
                 <Card border='primary'>
                   {userInfo ? (
                     <>
-                      <Card.Img
-                        variant='top'
-                        src={user.profilePicture}
-                        alt='Profile Picture'
-                        style={{ height: '171px', width: '180px' }}
-                        roundedCircle
-                      />
-                      <ListGroup variant='flush'>
-                        <ListGroup.Item>
-                          <Row>
-                            <Col sm={4}>Name:</Col>
-                            <Col>{userInfo.userName}</Col>
-                          </Row>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                          <Row>
-                            <Col sm={4}>Email:</Col>
-                            <Col>{userInfo.email}</Col>
-                          </Row>
-                        </ListGroup.Item>
-                        <ListGroup.Item>
-                          <Row className='text-info'>
-                            <Col md={4}>Phone:</Col>
-                            <Col>{user.primaryPhone}</Col>
-                          </Row>
-                        </ListGroup.Item>
+                      {userLoading ? (
+                        <Loader />
+                      ) : userError ? (
+                        <Message variant='danger'>{userError}</Message>
+                      ) : (
+                        <>
+                          <Card.Img
+                            variant='top'
+                            src={user.profilePicture}
+                            alt='Profile Picture'
+                            // style={{ height: '171px', width: '180px' }}
+                            roundedCircle
+                          />
+                          <ListGroup variant='flush'>
+                            <ListGroup.Item>
+                              <Row>
+                                <Col sm={4}>Name:</Col>
+                                <Col>{userInfo.userName}</Col>
+                              </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                              <Row>
+                                <Col sm={4}>Email:</Col>
+                                <Col>{userInfo.email}</Col>
+                              </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                              <Row className='text-info'>
+                                <Col md={4}>Phone:</Col>
+                                <Col>{user.primaryPhone}</Col>
+                              </Row>
+                            </ListGroup.Item>
 
-                        <ListGroup.Item>
-                          <Row className='text-info'>
-                            <Col md={4}>Address:</Col>
-                            <Col>
-                              {user.address1}
-                              {'; '}
-                              {user.city}
-                              {'; '}
-                              {user.state}
-                            </Col>
-                          </Row>
-                        </ListGroup.Item>
-                      </ListGroup>
+                            <ListGroup.Item>
+                              <Row className='text-info'>
+                                <Col md={4}>Address:</Col>
+                                <Col>
+                                  {user.address1}
+                                  {'; '}
+                                  {user.city}
+                                  {'; '}
+                                  {user.state}
+                                </Col>
+                              </Row>
+                            </ListGroup.Item>
+                          </ListGroup>
+                        </>
+                      )}
 
                       <Card.Footer className='text-muted'>
                         <Link

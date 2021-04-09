@@ -6,6 +6,7 @@ import {
   userCreateAdminReducer,
   userDeleteAdminReducer,
   userDeleteReducer,
+  userDetailsByIdReducer,
   userDetailsReducer,
   userDonateReducer,
   userDonationDetailsReducer,
@@ -88,6 +89,7 @@ const reducer = combineReducers({
   userPasswordUpdate: userPasswordUpdateReducer,
 
   userDetails: userDetailsReducer,
+  userDetailsById: userDetailsByIdReducer,
   userUpdateProfile: userUpdateProfileReducer,
 
   userList: userListReducer,

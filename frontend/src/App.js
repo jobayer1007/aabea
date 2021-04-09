@@ -29,6 +29,7 @@ import HistoryScreen from './screens/HistoryScreen/HistoryScreen';
 import PasswordResetScreen from './screens/PasswordResetScreen/PasswordResetScreen';
 import PasswordUpdateScreen from './screens/PasswordUpdateScreen/PasswordUpdateScreen';
 import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
+import EditProfileScreen from './screens/ProfileScreen/EditProfileScreen';
 import ImagesScreen from './screens/ImagesScreen/ImagesScreen';
 import MembersScreen from './screens/MembersScreen/MembersScreen';
 import Announcement from './screens/AnnouncementScreen/Announcement';
@@ -75,7 +76,8 @@ const App = () => {
               component={UserPendingApproveScreen}
             />
             <Route path='/profile' component={ProfileScreen} />
-            <Route path='/users/:id/edit' component={UserEditScreen} />
+            <Route path='/users/profile/edit' component={EditProfileScreen} />
+            <Route path='/admin/users/:id/edit' component={UserEditScreen} />
             <Route path='/' component={HomeScreen} exact />
           </Container>
         </main>
