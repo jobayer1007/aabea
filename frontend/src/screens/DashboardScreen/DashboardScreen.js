@@ -52,9 +52,9 @@ const DashboardScreen = ({ history }) => {
       dispatch(getUserProfile());
 
       dispatch(getUserDonationDetails());
-      setLastDonation(donations.pop());
+      // setLastDonation(donations.pop());
 
-      console.log(lastDonation);
+      // console.log(lastDonation);
       //   console.log(lastDonation);
 
       // if (donations.length > 0) {

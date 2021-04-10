@@ -37,24 +37,24 @@ app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
 );
 
-// const syncStatus = true;
+const syncStatus = false;
 
-// sequelize
-//   .sync({
-//     force: syncStatus,
-//     // alter: true,
-//   })
-//   .then(() => {
-//     //   //if  (syncStatus) {
-//     //   //defaultValueManager.Generate(syncStatus);
-//     //   // }
+sequelize
+  .sync({
+    force: syncStatus,
+    // alter: true,
+  })
+  .then(() => {
+    //   //if  (syncStatus) {
+    //   //defaultValueManager.Generate(syncStatus);
+    //   // }
 
-//     console.log('initial synced'.yellow.inverse);
-//   })
-//   .catch((err) => console.log(err));
+    console.log('initial synced'.yellow.inverse);
+  })
+  .catch((err) => console.log(err));
 
-// const __dirname = path.resolve();
-// app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')));
 
 app.use(notFound);
