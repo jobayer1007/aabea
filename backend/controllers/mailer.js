@@ -12,8 +12,8 @@ exports.sendConfirmationEmail = function ({ toUser, hash }) {
 
     const message = {
       from: process.env.GOOGLE_USER,
-      // to: toUserEmail,
-      to: process.env.GOOGLE_USER,
+      to: toUserEmail,
+      // to: process.env.GOOGLE_USER,
       subject: 'AABEA Team - Activate Account',
       html: `
         <h3>Hello ${toUser}</h3>
@@ -47,8 +47,8 @@ exports.sendCongratulationsEmail = function ({ toUser }) {
 
     const message = {
       from: process.env.GOOGLE_USER,
-      // to: toUserEmail,
-      to: process.env.GOOGLE_USER,
+      to: toUserEmail,
+      // to: process.env.GOOGLE_USER,
       subject: 'AABEA Team - Congratulations!',
       html: `
         <h3>Hello ${toUser}</h3>

@@ -71,7 +71,7 @@ const Header = () => {
               {userInfo ? (
                 userInfo.userRole === 'admin' ||
                 userInfo.userRole === 'systemAdmin' ? (
-                  <LinkContainer to='/systemAdmin'>
+                  <LinkContainer to='/dashboard'>
                     <Nav.Link>Admin Dashboard</Nav.Link>
                   </LinkContainer>
                 ) : userInfo.userRole === 'member' ? (
