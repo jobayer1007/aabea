@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card, Form, Button, Table, Media } from 'react-bootstrap';
+import {
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  Table,
+  Media,
+  ListGroup,
+} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import * as S from './CommitteeScreen.Styles';
@@ -20,6 +29,9 @@ import {
   COMMITTEE_MEMBER_UPDATE_BY_ID_RESET,
 } from '../../constants/committeeConstants';
 import swal from 'sweetalert';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import parse from 'html-react-parser';
 
 const CommitteeScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -271,26 +283,19 @@ const CommitteeScreen = ({ history }) => {
 
                                   <Form.Group controlId='bio'>
                                     <Form.Label>Bio</Form.Label>
-                                    <Form.Control
-                                      as='textarea'
-                                      rows='3'
-                                      placeholder='Please Enter The Bio'
-                                      value={bio}
-                                      onChange={(e) => setBio(e.target.value)}
-                                    ></Form.Control>
+
+                                    <CKEditor
+                                      editor={ClassicEditor}
+                                      data={bio}
+                                      onChange={(e, editor) => {
+                                        const data = editor.getData();
+                                        setBio(data);
+                                      }}
+                                    />
                                   </Form.Group>
 
                                   {editCMember ? (
-                                    <Button
-                                      type='submit'
-                                      variant='info'
-                                      block
-                                      // onClick={() =>
-                                      //   updateAnnouncementHandler(
-                                      //     announcement.announcementId
-                                      //   )
-                                      // }
-                                    >
+                                    <Button type='submit' variant='info' block>
                                       <i className='fas fa-plus' /> Update
                                     </Button>
                                   ) : (
@@ -301,12 +306,6 @@ const CommitteeScreen = ({ history }) => {
                                 </Form>
                               ))
                             : null}
-                          {/* {message && <Message variant='danger'>{message}</Message>} */}
-                          {/* {registerError && (
-                        <Message variant='danger'>{registerError}</Message>
-                      )}
-                      {registerLoading && <Loader />}
-                      {} */}
                         </Card.Body>
                       </Card>
                     </Col>
@@ -421,28 +420,30 @@ const CommitteeScreen = ({ history }) => {
                       <Message variant='danger'>{error}</Message>
                     ) : (
                       <>
-                        {cMembers.map((cMember) => (
-                          <Media key={cMember.cId}>
-                            <img
-                              width={164}
-                              height={164}
-                              className='mr-3'
-                              src={cMember.member.profilePicture}
-                              alt={cMember.member.firstName}
-                            />
-                            <Media.Body>
-                              <h5>{cMember.position.toUpperCase()}</h5>
-                              <p className='text-justify'>
-                                Cras sit amet nibh libero, in gravida nulla.
-                                Nulla vel metus scelerisque ante sollicitudin
-                                commodo. Cras purus odio, vestibulum in
-                                vulputate at, tempus viverra turpis. Fusce
-                                condimentum nunc ac nisi vulputate fringilla.
-                                Donec lacinia congue felis in faucibus.
-                              </p>
-                            </Media.Body>
-                          </Media>
-                        ))}
+                        <ListGroup variant='flush'>
+                          {cMembers.map((cMember) => (
+                            <ListGroup.Item>
+                              <Media key={cMember.cId}>
+                                <img
+                                  width={164}
+                                  height={164}
+                                  className='mr-3'
+                                  src={cMember.member.profilePicture}
+                                  alt={cMember.member.firstName}
+                                />
+                                <Media.Body>
+                                  <h5>{cMember.position.toUpperCase()}</h5>
+                                  <p className='text-justify'>
+                                    {parse(cMember.bio.substring(0, 100))}...
+                                    <Link to={`/committee/${cMember.cId}`}>
+                                      Read more
+                                    </Link>
+                                  </p>
+                                </Media.Body>
+                              </Media>
+                            </ListGroup.Item>
+                          ))}
+                        </ListGroup>
                       </>
                     )}
                   </>
@@ -459,27 +460,30 @@ const CommitteeScreen = ({ history }) => {
             <Message variant='danger'>{error}</Message>
           ) : (
             <>
-              {cMembers.map((cMember) => (
-                <Media key={cMember.cId}>
-                  <img
-                    width={164}
-                    height={164}
-                    className='mr-3'
-                    src={cMember.member.profilePicture}
-                    alt={cMember.member.firstName}
-                  />
-                  <Media.Body>
-                    <h5>{cMember.position.toUpperCase()}</h5>
-                    <p className='text-justify'>
-                      Cras sit amet nibh libero, in gravida nulla. Nulla vel
-                      metus scelerisque ante sollicitudin commodo. Cras purus
-                      odio, vestibulum in vulputate at, tempus viverra turpis.
-                      Fusce condimentum nunc ac nisi vulputate fringilla. Donec
-                      lacinia congue felis in faucibus.
-                    </p>
-                  </Media.Body>
-                </Media>
-              ))}
+              <ListGroup variant='flush'>
+                {cMembers.map((cMember) => (
+                  <ListGroup.Item>
+                    <Media key={cMember.cId}>
+                      <img
+                        width={164}
+                        height={164}
+                        className='mr-3'
+                        src={cMember.member.profilePicture}
+                        alt={cMember.member.firstName}
+                      />
+                      <Media.Body>
+                        <h5>{cMember.position.toUpperCase()}</h5>
+                        <p className='text-justify'>
+                          {parse(cMember.bio.substring(0, 100))}...
+                          <Link to={`/committee/${cMember.cId}`}>
+                            Read more
+                          </Link>
+                        </p>
+                      </Media.Body>
+                    </Media>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
             </>
           )}
         </>

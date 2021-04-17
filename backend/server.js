@@ -14,6 +14,7 @@ const committeeRoutes = require('./routes/committeeRoutes');
 const announcementRoutes = require('./routes/announcementRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const { join } = require('path');
 
 dotenv.config();
 
@@ -53,9 +54,18 @@ sequelize
   })
   .catch((err) => console.log(err));
 
-const __dirname = path.resolve();
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+// const __dirname = path.resolve();
+// app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')));
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(path.resolve(), '/frontend/build')));
+
+  app.get('*', (req, res) =>
+    res.sendFile(
+      path.resolve(path.resolve(), 'frontend', 'build', 'index.html')
+    )
+  );
+}
 
 app.use(notFound);
 app.use(errorHandler);

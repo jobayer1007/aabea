@@ -47,7 +47,7 @@ const HomeScreen = () => {
     dispatch(allHistory());
     dispatch(allCMembers());
   }, [dispatch]);
-  console.log(cMembers);
+  // console.log(cMembers);
   return (
     <>
       {/* <PauseOnHover /> */}
@@ -55,7 +55,9 @@ const HomeScreen = () => {
       <Row>
         <Col md={{ span: 6, order: 1 }} lg={{ span: 3, order: 1 }}>
           <Card className='mb-2'>
-            <Card.Header as='h5'>Announcements</Card.Header>
+            <Card.Header className='text-info' as='h5'>
+              Announcements
+            </Card.Header>
 
             <>
               {loading ? (
@@ -72,7 +74,7 @@ const HomeScreen = () => {
                       <Link
                         to={`/announcements/${announcement.announcementId}`}
                       >
-                        {announcement.title}
+                        <span className='text-info'> {announcement.title}</span>
                       </Link>
                       {/* </LinkContainer> */}
                     </ListGroup.Item>
@@ -83,9 +85,11 @@ const HomeScreen = () => {
           </Card>
           <Card className='mb-2'>
             {/* <Card.Title as='h4'>Events:</Card.Title> */}
-            <Card.Header as='h4'>Events :</Card.Header>
+            <Card.Header className='text-info' as='h4'>
+              Events :
+            </Card.Header>
             <Card.Body>
-              <Card.Text>
+              <Card.Text className='text-info'>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
                 officiis facilis beatae consequatur reiciendis dicta quia
                 voluptatem, ab, voluptatum eligendi ullam libero facere impedit
@@ -96,6 +100,16 @@ const HomeScreen = () => {
             <Card.Body>
               <Card.Link href='#'>Card Link</Card.Link>
               <Card.Link href='#'>Another Link</Card.Link>
+            </Card.Body>
+          </Card>
+
+          <Card className='mb-2'>
+            <Card.Body>
+              <Card.Title className='text-info'>Quick Links</Card.Title>
+              <Card.Link href='#'>Link 1</Card.Link>
+              <Card.Link href='#'>Link 2</Card.Link>
+              <Card.Link href='#'>Link 3</Card.Link>
+              <Card.Link href='#'>Link 4</Card.Link>
             </Card.Body>
           </Card>
         </Col>
@@ -111,8 +125,10 @@ const HomeScreen = () => {
               /> */}
           </Card>
 
-          <Card className='text-center mb-2'>
-            <Card.Header as='h2'>Mission</Card.Header>
+          <Card className=' mb-2'>
+            <Card.Header className='text-info' as='h2'>
+              Mission
+            </Card.Header>
             <Card.Body>
               {missionLoading ? (
                 <Loader />
@@ -122,9 +138,9 @@ const HomeScreen = () => {
                 <>
                   {missions.map((mission, index) => (
                     <Card.Body key={index}>
-                      <Card.Title>{mission.title}</Card.Title>
+                      {/* <Card.Title>{mission.title}</Card.Title> */}
                       <Card.Text>
-                        {parse(mission.body.substring(0, 100))}...
+                        {parse(mission.body.substring(0, 300))}...
                         {/* <LinkContainer
                           to={`/chapters/mission/${mission.chapterId}`}
                         > */}
@@ -143,8 +159,10 @@ const HomeScreen = () => {
             </Card.Body>
           </Card>
 
-          <Card className='text-center mb-2'>
-            <Card.Header as='h2'>Vission</Card.Header>
+          <Card className='mb-2'>
+            <Card.Header className='text-info' as='h2'>
+              Vission
+            </Card.Header>
             <Card.Body>
               {vissionLoading ? (
                 <Loader />
@@ -154,9 +172,9 @@ const HomeScreen = () => {
                 <>
                   {vissions.map((vission, index) => (
                     <Card.Body key={index}>
-                      <Card.Title>{vission.title}</Card.Title>
+                      {/* <Card.Title>{vission.title}</Card.Title> */}
                       <Card.Text>
-                        {parse(vission.body.substring(0, 100))}...
+                        {parse(vission.body.substring(0, 300))}...
                         {/* <LinkContainer
                           to={`/chapters/vission/${vission.chapterId}`}
                         > */}
@@ -175,8 +193,10 @@ const HomeScreen = () => {
             </Card.Body>
           </Card>
 
-          <Card className='text-center mb-2'>
-            <Card.Header as='h2'>History</Card.Header>
+          <Card className='mb-2'>
+            <Card.Header className='text-info' as='h2'>
+              History
+            </Card.Header>
             <>
               {historyLoading ? (
                 <Loader />
@@ -186,19 +206,12 @@ const HomeScreen = () => {
                 <>
                   {histories.map((history, index) => (
                     <Card.Body key={index}>
-                      <Card.Title>{history.title}</Card.Title>
+                      {/* <Card.Title>{history.title}</Card.Title> */}
                       <Card.Text>
-                        {parse(history.body.substring(0, 100))}...
-                        {/* <LinkContainer
-                          to={`/chapters/history/${history.chapterId}`}
-                        > */}
+                        {parse(history.body.substring(0, 300))}...
                         <Link to={`/chapters/history/${history.chapterId}`}>
                           Read more
                         </Link>
-                        {/* </LinkContainer> */}
-                        {/* <a href={`/chapters/mission/${mission.chapterId}`}>
-                          Read more
-                        </a> */}
                       </Card.Text>
                     </Card.Body>
                   ))}
@@ -207,10 +220,12 @@ const HomeScreen = () => {
             </>
           </Card>
 
-          <Card className='text-center mb-2'>
-            <Card.Header as='h2'>Any other Main Topic</Card.Header>
+          <Card className='text-justify mb-2'>
+            <Card.Header className='text-info' as='h2'>
+              Any other Main Topic
+            </Card.Header>
             <Card.Body>
-              <Card.Title>Topic Title</Card.Title>
+              <Card.Title className='text-info'>Topic Title</Card.Title>
               <Card.Text>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem
                 ipsa amet, optio mollitia rem hic odit aliquam quaerat dolor
@@ -222,15 +237,6 @@ const HomeScreen = () => {
         </Col>
 
         <Col md={{ span: 6, order: 2 }} lg={{ span: 3, order: 12 }}>
-          <Card className='mb-2'>
-            <Card.Body>
-              <Card.Title>Quick Links</Card.Title>
-              <Card.Link href='#'>Link 1</Card.Link>
-              <Card.Link href='#'>Link 2</Card.Link>
-              <Card.Link href='#'>Link 3</Card.Link>
-              <Card.Link href='#'>Link 4</Card.Link>
-            </Card.Body>
-          </Card>
           {/* <Card className='mb-2'> */}
           {/* <Card.Body> */}
           {/* <Card.Title>Current Committee:</Card.Title> */}
@@ -253,7 +259,10 @@ const HomeScreen = () => {
                 <Card.Title className='text-center'>
                   {cMember.member.firstName} {cMember.member.lastName}
                 </Card.Title>
-                <Card.Body>{cMember.bio}</Card.Body>
+                <Card.Body>
+                  {parse(cMember.bio.substring(0, 100))}...
+                  <Link to={`/committee/${cMember.cId}`}>Read more</Link>
+                </Card.Body>
                 {/* <img
                       className='d-block w-100'
                       src={cMember.member.image}

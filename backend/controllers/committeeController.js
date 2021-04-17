@@ -111,18 +111,16 @@ exports.getCommitteeMembers = asyncHandler(async (req, res) => {
 // @access  Private
 exports.getCommitteeMemberById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  console.log(id);
-  const cMember = await models.Committee.findOne(
-    {
-      where: { cId: id },
-    },
-    { include: models.Member }
-  );
+  // console.log(id);
+  const cMember = await models.Committee.findOne({
+    where: { cId: id },
+    include: models.Member,
+  });
   // console.log(user.memberId);
 
   if (cMember) {
     res.json(cMember);
-    // console.log(cMember);
+    console.log(cMember);
   } else {
     res.status(401);
     throw new Error('Member not found');

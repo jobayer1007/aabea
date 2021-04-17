@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-exports.sendConfirmationEmail = function ({ toUser, hash }) {
+exports.sendConfirmationEmail = function ({ toUserEmail, toUser, hash }) {
   return new Promise((res, rej) => {
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
@@ -35,7 +35,7 @@ exports.sendConfirmationEmail = function ({ toUser, hash }) {
   });
 };
 
-exports.sendCongratulationsEmail = function ({ toUser }) {
+exports.sendCongratulationsEmail = function ({ toUserEmail, toUser }) {
   return new Promise((res, rej) => {
     const transporter = nodemailer.createTransport({
       service: 'Gmail',

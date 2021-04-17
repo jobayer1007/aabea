@@ -30,13 +30,13 @@ const Header = () => {
       {/* First */}
 
       <Container fluid>
-        <Row style={{ height: '100px' }}>
+        <Row style={{ height: '30%' }}>
           <Col xs={2} className='text-center'>
             <Link to='/'>
               <Image
                 src='/uploads/logoImage.png'
                 alt='logo'
-                style={{ height: '100px' }}
+                style={{ height: '100px', width: '100%' }}
                 fluid
               />
             </Link>
@@ -61,7 +61,7 @@ const Header = () => {
         sticky='top'
         collapseOnSelect
       >
-        <Container>
+        <>
           <LinkContainer to='/'>
             <Navbar.Brand>AABEA</Navbar.Brand>
           </LinkContainer>
@@ -134,7 +134,7 @@ const Header = () => {
               )}
             </Nav>
           </Navbar.Collapse>
-        </Container>
+        </>
       </Navbar>
     </header>
   );

@@ -36,6 +36,7 @@ import Announcement from './screens/AnnouncementScreen/Announcement';
 import Mission from './screens/MissionScreen/Mission';
 import Vission from './screens/VissionScreen/Vission';
 import History from './screens/HistoryScreen/History';
+import CommitteeMemberScreen from './screens/CommitteesScreen/CommitteeMemberScreens';
 
 const App = () => {
   return (
@@ -70,6 +71,7 @@ const App = () => {
             <Route path='/donate' component={DonateScreen} />
             <Route path='/training' component={TrainingScreen} />
             <Route path='/committiees' component={CommittieesScreen} />
+            <Route path='/committee/:id' component={CommitteeMemberScreen} />
             <Route path='/members' component={MembersScreen} />
             <Route
               path='/users/:id/pending'

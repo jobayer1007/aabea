@@ -120,11 +120,11 @@ db.Donation.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 db.Chapter.hasMany(db.Announcement, { foreignKey: 'chapterId' });
 db.Announcement.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 
-// CHAPTER TO ANNOUNCEMENT
+// CHAPTER TO Mission
 db.Chapter.hasMany(db.Mission, { foreignKey: 'chapterId' });
 db.Mission.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 
-// CHAPTER TO ANNOUNCEMENT
+// CHAPTER TO Vission
 db.Chapter.hasMany(db.Vission, { foreignKey: 'chapterId' });
 db.Vission.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 
@@ -154,7 +154,7 @@ db.Member.hasMany(db.Donation, { foreignKey: 'memberId' });
 db.Chapter.hasMany(db.Committee, { foreignKey: 'chapterId' });
 db.Committee.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 
-db.Member.hasOne(db.Committee, { foreignKey: 'memberId' });
+db.Member.hasMany(db.Committee, { foreignKey: 'memberId' });
 db.Committee.belongsTo(db.Member, { foreignKey: 'memberId' });
 
 // Image Library
