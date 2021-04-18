@@ -252,7 +252,7 @@ const DonateScreen = ({ history }) => {
         </>
       ) : (
         <Col id='page-content-wrapper'>
-          <Card border='primary'>
+          <Card border='info'>
             <Card.Header as='h2' className='text-center'>
               Welcome to Donation Page
             </Card.Header>

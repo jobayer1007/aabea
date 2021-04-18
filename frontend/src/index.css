@@ -12,13 +12,11 @@ main {
 }
 
 header {
-  
-  border-top: 5px solid #ffffff;
+  border-top: 10px solid #ffffff;
 }
 
 footer {
-  
-  border-top: 1px solid #ced4da;
+ border-top: 1px solid #ced4da;
 }
 
 .col-4 {
@@ -34,17 +32,13 @@ footer {
   background: aliceblue;
 }
 
-/* footer {
-  background: teal;
-} */
+
 
 .text-center.py-3.m-5.col {
   color: white;
 }
 
-/* footer {
-  background: teal;
-} */
+
 
 .text-center.py-3.m-5.col {
   color: white;
@@ -59,7 +53,6 @@ img.d-block.w-100 {
   border: 2px solid thistle;
 }
 
-/* carousel */
 .carousel-item-next,
 .carousel-item-prev,
 .carousel-item.active {
@@ -74,46 +67,37 @@ img.d-block.w-100 {
   color: #fff;
 }
 
-/* .carousel img {
-  height: 300px;
-  /* padding: 30px; */
-  /* margin: 40px; */
-  /* border-radius: 5%; */
-
 .carousel a {
   margin: 0 auto;
 }
 
-/* 
-.sort-desc {
-  box-shadow: none !important;
-  &:before {
-  content: "▼";
-  float: right;
-  margin-right: 16px;
-  }
-  }
-  .-sort-asc {
-  box-shadow: none !important;
-  &:before {
-  content: "▲";
-  float: right;
-  margin-right: 16px;
+.row {
+  margin-right: 0px;
+  margin-left: 0px;
   }
 
-  .MyReactTableClass {
-    .-sort-desc {
-      box-shadow: none !important;
-      &:before {
-        content: "▼";
-        float: right;
-      }
-    }
-  
-    .-sort-asc {
-      box-shadow: none !important;
-      &:before {
-        content: "▲";
-        float: right;
-      }
-     */
+  .text-center.col-2 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.col-6 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.text-center.col-4 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.col-lg-6.col-md.order-lg-2.order-md-12 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+
+main.py-3 {
+  padding-top: 8px!important;
+}
+

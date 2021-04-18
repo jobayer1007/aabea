@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Row, Col, Card, ListGroup } from 'react-bootstrap';
+import { Row, Col, Card, ListGroup, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,83 +21,78 @@ const CommitteeMemberScreen = ({ history, match }) => {
   }, [dispatch, history, id]);
 
   return (
-    <>
-      <Link className='btn btn-light my-3 btn-sm btn-outline-success' to='/'>
+    <Container>
+      <Link className='btn btn-light my-3 btn-sm btn-outline-info' to='/'>
         Go Back
       </Link>
-      <Row className='content'>
-        <Col id='page-content-wrapper'>
-          <Card border='primary'>
-            {loading ? (
-              <Loader />
-            ) : error ? (
-              <Message variant='danger'>{error}</Message>
-            ) : (
-              cMember && (
+
+      <Card>
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant='danger'>{error}</Message>
+        ) : (
+          cMember && (
+            <>
+              {' '}
+              {cMember.position ? (
                 <>
-                  {' '}
-                  {cMember.position ? (
-                    <>
-                      <Card.Header className='' as='h2'>
-                        {cMember.position.toUpperCase()}
-                      </Card.Header>
-                      <Card.Body>
-                        <Row>
-                          <Col md={8}>
-                            <ListGroup variant='flush'>
-                              <ListGroup.Item>
-                                <Row>
-                                  <Col md={3}>Name:</Col>
-                                  <Col>
-                                    {cMember.member.mInit}{' '}
-                                    {cMember.member.firstName}{' '}
-                                    {cMember.member.lastName}
-                                  </Col>
-                                </Row>
-                              </ListGroup.Item>
+                  <Card.Header className='text-info' as='h2'>
+                    {cMember.position.toUpperCase()}
+                  </Card.Header>
+                  <Card.Body>
+                    <Row>
+                      <Col md={8}>
+                        <ListGroup variant='flush'>
+                          <ListGroup.Item>
+                            <Row>
+                              <Col md={3}>Name:</Col>
+                              <Col>
+                                {cMember.member.mInit}{' '}
+                                {cMember.member.firstName}{' '}
+                                {cMember.member.lastName}
+                              </Col>
+                            </Row>
+                          </ListGroup.Item>
 
-                              <ListGroup.Item>
-                                <Row>
-                                  <Col md={3}>Tenure:</Col>
-                                  <Col>
-                                    {new Date(
-                                      cMember.tenure[0].value
-                                    ).getFullYear()}{' '}
-                                    -
-                                    {new Date(
-                                      cMember.tenure[1].value
-                                    ).getFullYear()}
-                                  </Col>
-                                </Row>
-                              </ListGroup.Item>
+                          <ListGroup.Item>
+                            <Row>
+                              <Col md={3}>Tenure:</Col>
+                              <Col>
+                                {new Date(
+                                  cMember.tenure[0].value
+                                ).getFullYear()}{' '}
+                                -
+                                {new Date(
+                                  cMember.tenure[1].value
+                                ).getFullYear()}
+                              </Col>
+                            </Row>
+                          </ListGroup.Item>
 
-                              <ListGroup.Item>
-                                <Row>
-                                  <Col md={3}>Bio:</Col>
-                                  <Col>
-                                    {parse(`<div>${cMember.bio}</div>`)}
-                                  </Col>
-                                </Row>
-                              </ListGroup.Item>
-                            </ListGroup>
-                          </Col>
-                          <Col md={4}>
-                            <Card.Img
-                              src={cMember.member.profilePicture}
-                              variant='top'
-                            />
-                          </Col>
-                        </Row>
-                      </Card.Body>
-                    </>
-                  ) : null}
+                          <ListGroup.Item>
+                            <Row>
+                              <Col md={3}>Bio:</Col>
+                              <Col>{parse(`<div>${cMember.bio}</div>`)}</Col>
+                            </Row>
+                          </ListGroup.Item>
+                        </ListGroup>
+                      </Col>
+                      <Col md={4}>
+                        <Card.Img
+                          src={cMember.member.profilePicture}
+                          variant='top'
+                        />
+                      </Col>
+                    </Row>
+                  </Card.Body>
                 </>
-              )
-            )}
-          </Card>
-        </Col>
-      </Row>
-    </>
+              ) : null}
+            </>
+          )
+        )}
+      </Card>
+    </Container>
   );
 };
 

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import { Col, Row, Card, Carousel, ListGroup } from 'react-bootstrap';
+import { Col, Row, Card, ListGroup, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { LinkContainer } from 'react-router-bootstrap';
 import { Link } from 'react-router-dom';
 import { allAnnouncements } from '../../actions/announcementAction';
 import { allMission } from '../../actions/missionActions';
@@ -12,7 +11,6 @@ import parse from 'html-react-parser';
 import { allVission } from '../../actions/vissionActions';
 import { allHistory } from '../../actions/historyActions';
 import { allCMembers } from '../../actions/committeeActions';
-import PauseOnHover from '../../components/ImageCarousel/PauseOnHover';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -49,9 +47,7 @@ const HomeScreen = () => {
   }, [dispatch]);
   // console.log(cMembers);
   return (
-    <>
-      {/* <PauseOnHover /> */}
-
+    <Container fluid>
       <Row>
         <Col md={{ span: 6, order: 1 }} lg={{ span: 3, order: 1 }}>
           <Card className='mb-2'>
@@ -68,15 +64,11 @@ const HomeScreen = () => {
                 <ListGroup variant='flush'>
                   {announcements.map((announcement, index) => (
                     <ListGroup.Item key={index}>
-                      {/* <LinkContainer
-                        to={`/announcements/${announcement.announcementId}`}
-                      > */}
                       <Link
                         to={`/announcements/${announcement.announcementId}`}
                       >
                         <span className='text-info'> {announcement.title}</span>
                       </Link>
-                      {/* </LinkContainer> */}
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
@@ -84,7 +76,6 @@ const HomeScreen = () => {
             </>
           </Card>
           <Card className='mb-2'>
-            {/* <Card.Title as='h4'>Events:</Card.Title> */}
             <Card.Header className='text-info' as='h4'>
               Events :
             </Card.Header>
@@ -117,15 +108,9 @@ const HomeScreen = () => {
         <Col md={{ order: 12 }} lg={{ span: 6, order: 2 }}>
           <Card className='text-center mb-2 home-carousal'>
             <ImageCarousel />
-            {/* <Image
-                src={image.image}
-                alt={image.imageDescription}
-                fluid
-                style={{ height: '300px', width: '100%' }}
-              /> */}
           </Card>
 
-          <Card className=' mb-2'>
+          <Card className='text-justify mb-2'>
             <Card.Header className='text-info' as='h2'>
               Mission
             </Card.Header>
@@ -138,19 +123,11 @@ const HomeScreen = () => {
                 <>
                   {missions.map((mission, index) => (
                     <Card.Body key={index}>
-                      {/* <Card.Title>{mission.title}</Card.Title> */}
                       <Card.Text>
                         {parse(mission.body.substring(0, 300))}...
-                        {/* <LinkContainer
-                          to={`/chapters/mission/${mission.chapterId}`}
-                        > */}
                         <Link to={`/chapters/mission/${mission.chapterId}`}>
                           Read more
                         </Link>
-                        {/* </LinkContainer> */}
-                        {/* <a href={`/chapters/mission/${mission.chapterId}`}>
-                          Read more
-                        </a> */}
                       </Card.Text>
                     </Card.Body>
                   ))}
@@ -159,7 +136,7 @@ const HomeScreen = () => {
             </Card.Body>
           </Card>
 
-          <Card className='mb-2'>
+          <Card className='text-justify mb-2'>
             <Card.Header className='text-info' as='h2'>
               Vission
             </Card.Header>
@@ -172,19 +149,11 @@ const HomeScreen = () => {
                 <>
                   {vissions.map((vission, index) => (
                     <Card.Body key={index}>
-                      {/* <Card.Title>{vission.title}</Card.Title> */}
                       <Card.Text>
                         {parse(vission.body.substring(0, 300))}...
-                        {/* <LinkContainer
-                          to={`/chapters/vission/${vission.chapterId}`}
-                        > */}
                         <Link to={`/chapters/vission/${vission.chapterId}`}>
                           Read more
                         </Link>
-                        {/* </LinkContainer> */}
-                        {/* <a href={`/chapters/mission/${mission.chapterId}`}>
-                          Read more
-                        </a> */}
                       </Card.Text>
                     </Card.Body>
                   ))}
@@ -193,7 +162,7 @@ const HomeScreen = () => {
             </Card.Body>
           </Card>
 
-          <Card className='mb-2'>
+          <Card className='text-justify mb-2'>
             <Card.Header className='text-info' as='h2'>
               History
             </Card.Header>
@@ -206,7 +175,6 @@ const HomeScreen = () => {
                 <>
                   {histories.map((history, index) => (
                     <Card.Body key={index}>
-                      {/* <Card.Title>{history.title}</Card.Title> */}
                       <Card.Text>
                         {parse(history.body.substring(0, 300))}...
                         <Link to={`/chapters/history/${history.chapterId}`}>
@@ -237,9 +205,6 @@ const HomeScreen = () => {
         </Col>
 
         <Col md={{ span: 6, order: 2 }} lg={{ span: 3, order: 12 }}>
-          {/* <Card className='mb-2'> */}
-          {/* <Card.Body> */}
-          {/* <Card.Title>Current Committee:</Card.Title> */}
           {cMemeberLoading ? (
             <Loader />
           ) : cMemberError ? (
@@ -247,58 +212,30 @@ const HomeScreen = () => {
           ) : (
             cMembers.length !== 0 &&
             cMembers.map((cMember, index) => (
-              <Card key={index} className='mb-2'>
+              <Card key={index} className='text-justify mb-2'>
                 <Card.Img
                   variant='top'
                   src={cMember.member.profilePicture}
-                  style={{ height: '150px', width: '100%' }}
+                  style={{ width: '100%' }}
                 />
-                <Card.Header className='text-center'>
-                  {cMember.position}
+                <Card.Header className='text-info'>
+                  {cMember.position.toUpperCase()}
+                  <Card.Title className='text-info'>
+                    {cMember.member.mInit} {cMember.member.firstName}{' '}
+                    {cMember.member.lastName}
+                  </Card.Title>
                 </Card.Header>
-                <Card.Title className='text-center'>
-                  {cMember.member.firstName} {cMember.member.lastName}
-                </Card.Title>
+
                 <Card.Body>
                   {parse(cMember.bio.substring(0, 100))}...
                   <Link to={`/committee/${cMember.cId}`}>Read more</Link>
                 </Card.Body>
-                {/* <img
-                      className='d-block w-100'
-                      src={cMember.member.image}
-                      alt='First slide'
-                    /> */}
               </Card>
             ))
           )}
-          {/* <Carousel controls={false} indicators={false}>
-                <Carousel.Item>
-                  <img
-                    className='d-block w-100'
-                    src='https://source.unsplash.com/random/?building'
-                    alt='First slide'
-                  />
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className='d-block w-100'
-                    src='https://source.unsplash.com/random/?nature'
-                    alt='Third slide'
-                  />
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className='d-block w-100'
-                    src='https://source.unsplash.com/random/?people'
-                    alt='Third slide'
-                  />
-                </Carousel.Item>
-              </Carousel> */}
-          {/* </Card.Body> */}
-          {/* </Card> */}
         </Col>
       </Row>
-    </>
+    </Container>
   );
 };
 

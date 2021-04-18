@@ -37,6 +37,7 @@ import Mission from './screens/MissionScreen/Mission';
 import Vission from './screens/VissionScreen/Vission';
 import History from './screens/HistoryScreen/History';
 import CommitteeMemberScreen from './screens/CommitteesScreen/CommitteeMemberScreens';
+import About from './screens/AboutScreen/About';
 
 const App = () => {
   return (
@@ -44,7 +45,8 @@ const App = () => {
       <Router>
         <Header />
         <main className='py-3'>
-          <Container>
+          <Container fluid>
+            <Route path='/about' component={About} />
             <Route path='/login' component={LoginScreen} />
             <Route path='/password/recover' component={PasswordResetScreen} />
             <Route

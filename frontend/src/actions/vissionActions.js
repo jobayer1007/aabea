@@ -87,19 +87,15 @@ export const allVission = () => async (dispatch) => {
   }
 };
 
-export const getVissionById = (id) => async (dispatch, getState) => {
+export const getVissionById = (id) => async (dispatch) => {
   try {
     dispatch({
       type: VISSION_BY_ID_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 

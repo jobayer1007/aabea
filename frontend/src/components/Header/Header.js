@@ -27,37 +27,31 @@ const Header = () => {
   };
   return (
     <header>
-      {/* First */}
-
       <Container fluid>
         <Row style={{ height: '30%' }}>
-          <Col xs={2} className='text-center'>
+          <Col xs={3} className='text-center'>
             <Link to='/'>
               <Image
                 src='/uploads/logoImage.png'
                 alt='logo'
-                style={{ height: '100px', width: '100%' }}
+                style={{ height: '100px' }}
                 fluid
               />
             </Link>
-            {/* <h1>Logo</h1> */}
           </Col>
           <Col xs={6}>
             <PauseOnHover />
           </Col>
-          <Col xs={4} className='text-center'>
+          <Col xs={3} className='text-center'>
             <h3>Washington D.C Chapter</h3>{' '}
           </Col>
         </Row>
       </Container>
 
-      {/* Second */}
-      {/* NEW */}
-      {/* OLD */}
       <Navbar
         bg='dark'
         variant='dark'
-        expand='lg'
+        expand='md'
         sticky='top'
         collapseOnSelect
       >

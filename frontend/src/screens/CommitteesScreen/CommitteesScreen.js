@@ -8,6 +8,7 @@ import {
   Table,
   Media,
   ListGroup,
+  Container,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -459,7 +460,7 @@ const CommitteeScreen = ({ history }) => {
           ) : error ? (
             <Message variant='danger'>{error}</Message>
           ) : (
-            <>
+            <Container>
               <ListGroup variant='flush'>
                 {cMembers.map((cMember) => (
                   <ListGroup.Item>
@@ -484,7 +485,7 @@ const CommitteeScreen = ({ history }) => {
                   </ListGroup.Item>
                 ))}
               </ListGroup>
-            </>
+            </Container>
           )}
         </>
       )}

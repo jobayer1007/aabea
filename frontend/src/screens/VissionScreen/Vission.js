@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Row, Col, Card } from 'react-bootstrap';
+import { Card, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,36 +20,29 @@ const Vission = ({ history, match }) => {
   }, [dispatch, history, id]);
 
   return (
-    <>
-      <Link className='btn btn-light my-3 btn-sm btn-outline-success' to='/'>
+    <Container>
+      <Link className='btn btn-light my-3 btn-sm btn-outline-info' to='/'>
         Go Back
       </Link>
-      <Row className='content'>
-        <Col id='page-content-wrapper'>
-          <Card border='primary'>
-            {loading ? (
-              <Loader />
-            ) : error ? (
-              <Message variant='danger'>{error}</Message>
-            ) : (
-              vission && (
-                <>
-                  <Card.Header className='text-center' as='h2'>
-                    {vission.title}
-                  </Card.Header>
-                  {/* <Card.Title className='text-center'>
-                  {' '}
-                  Published Date:
-                  {format(new Date(announcement.createdAt), 'dd/mm/yyyy')}
-                </Card.Title> */}
-                  <Card.Body> {parse(`<div>${vission.body}</div>`)}</Card.Body>
-                </>
-              )
-            )}
-          </Card>
-        </Col>
-      </Row>
-    </>
+
+      <Card>
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant='danger'>{error}</Message>
+        ) : (
+          vission && (
+            <>
+              <Card.Header className='text-info' as='h2'>
+                {vission.title}
+              </Card.Header>
+
+              <Card.Body> {parse(`<div>${vission.body}</div>`)}</Card.Body>
+            </>
+          )
+        )}
+      </Card>
+    </Container>
   );
 };
 

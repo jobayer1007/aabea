@@ -87,19 +87,15 @@ export const allHistory = () => async (dispatch) => {
   }
 };
 
-export const getHistoryById = (id) => async (dispatch, getState) => {
+export const getHistoryById = (id) => async (dispatch) => {
   try {
     dispatch({
       type: HISTORY_BY_ID_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
