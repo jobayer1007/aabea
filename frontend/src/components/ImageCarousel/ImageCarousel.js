@@ -37,11 +37,8 @@ const ImageCarousel = () => {
                 alt={image.imageDescription}
                 fluid
                 style={{ height: '500px', width: '100%' }}
+                className='chapterIconicImage'
               />
-
-              {/* <Carousel.Caption className='carousel-caption'>
-              <h2>{image.imageName}</h2>
-            </Carousel.Caption> */}
             </Link>
           </Carousel.Item>
         ))}

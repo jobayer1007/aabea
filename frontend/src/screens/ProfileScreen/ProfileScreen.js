@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, ListGroup, Row, Col } from 'react-bootstrap';
+import { Card, ListGroup, Row, Col, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserProfile } from '../../actions/userActions';
 import Message from '../../components/Message';
@@ -55,10 +55,10 @@ const ProfileScreen = ({ history }) => {
   };
 
   return (
-    <>
+    <Container>
       {userInfo && (
         <Link
-          className='btn btn-light my-3 btn-sm btn-outline-success'
+          className='btn btn-light my-3 btn-sm btn-outline-info'
           to='/dashboard'
         >
           Go Back
@@ -66,7 +66,7 @@ const ProfileScreen = ({ history }) => {
       )}
 
       <>
-        <Card border='success'>
+        <Card border='info'>
           <Card.Header className='text-center' as='h2'>
             {userInfo && userInfo.userName}
           </Card.Header>
@@ -210,7 +210,7 @@ const ProfileScreen = ({ history }) => {
           )}
         </Card>
       </>
-    </>
+    </Container>
   );
 };
 

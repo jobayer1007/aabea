@@ -145,14 +145,14 @@ const VissionScreen = ({ history }) => {
                         className='btn btn-outline-info btn-sm btn-block rounded'
                         onClick={() => editVissionHandler(userInfo.chapterId)}
                       >
-                        Update Vission
+                        Update Vision
                       </Link>
                     ) : (
                       <Link
                         className='btn btn-outline-info btn-sm btn-block rounded'
                         onClick={() => setAddVission(!addVission)}
                       >
-                        Add Vission
+                        Add Vision
                       </Link>
                     )}
                   </Card.Header>
@@ -177,7 +177,7 @@ const VissionScreen = ({ history }) => {
                             </Form.Group>
 
                             <Form.Group controlId='body'>
-                              <Form.Label>Vission</Form.Label>
+                              <Form.Label>Vision</Form.Label>
                               <CKEditor
                                 editor={ClassicEditor}
                                 data={body}
@@ -216,7 +216,7 @@ const VissionScreen = ({ history }) => {
                 id='all-chapter'
               >
                 <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>Vission</Card.Header>
+                  <Card.Header as='h5'>Vision</Card.Header>
 
                   <Card.Body>
                     {loading ? (
@@ -234,7 +234,7 @@ const VissionScreen = ({ history }) => {
                         <thead>
                           <tr>
                             <th>Title</th>
-                            <th>Vission</th>
+                            <th>Vision</th>
                             {userInfo &&
                               (userInfo.userRole === 'systemAdmin' ||
                                 userInfo.userRole === 'admin') && (

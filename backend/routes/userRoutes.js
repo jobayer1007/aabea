@@ -52,8 +52,8 @@ router
   .post(protect, admin, approveUser);
 router
   .route('/:id/admin')
-  .post(protect, systemAdmin, createAdminUser)
-  .delete(protect, systemAdmin, deleteAdminUser);
+  .post(protect, admin, createAdminUser)
+  .delete(protect, admin, deleteAdminUser);
 router.route('/dashboard').get(protect, getUsers);
 router.route('/:id').get(getUserById).put(protect, admin, updateUser);
 router.route('/:id').delete(protect, admin, deleteUser);

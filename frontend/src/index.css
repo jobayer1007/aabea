@@ -98,6 +98,69 @@ img.d-block.w-100 {
 
 
 main.py-3 {
-  padding-top: 8px!important;
+  padding-top: 10px!important;
 }
 
+
+
+/* test */
+@media (min-width: 370px) {
+  .navbarEventImage, .logo, .nav-chapterName {
+    height: 75px;
+    }
+   
+}
+
+@media (min-width: 576px) {
+  .navbarEventImage, .logo, .nav-chapterName {
+    height: 100px;
+  }
+ 
+}
+
+@media (min-width: 768px) {
+  .navbarEventImage, .logo, .nav-chapterName {
+    height: 100px;
+  }
+ 
+}
+
+@media (min-width: 992px) {
+  .navbarEventImage, .logo, .nav-chapterName {
+    height: 100px;
+  }
+
+ 
+}
+
+@media (min-width: 1200px) {
+  .navbarEventImage, .logo, .nav-chapterName {
+    height: 100px;
+  }
+
+ 
+}
+
+@media (min-width: 1400px) {
+  .container, .container-sm, .container-md, .container-lg, .container-xl, .container-xxl {
+    max-width: 1320px;
+  }
+
+  .navbarEventImage, .logo, .nav-chapterName {
+    height: 135px;
+  }
+
+ 
+}
+
+@media (min-width: 1600px) {
+  .container, .container-sm, .container-md, .container-lg, .container-xl, .container-xxl, .container-xxxl {
+    max-width: 1530px;
+  }
+
+  .navbarEventImage, .logo, .nav-chapterName {
+    height: 135px;
+  }
+
+  
+}

@@ -44,6 +44,11 @@ const Chapter = (sequelize, DataTypes) =>
       required: true,
       allowNull: false,
     },
+    createdBy: {
+      type: DataTypes.BIGINT,
+      // allowNull: false,
+      notEmpty: true,
+    },
   });
 
 module.exports = Chapter;

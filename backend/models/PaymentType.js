@@ -30,6 +30,12 @@ const PaymentType = (sequelize, DataTypes) =>
     paymentTypeDescription: {
       type: DataTypes.TEXT,
     },
+    chapterId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+      notEmpty: true,
+    },
   });
 
 module.exports = PaymentType;

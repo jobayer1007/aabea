@@ -1,7 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button, Card, Row, Col, ListGroup } from 'react-bootstrap';
+import {
+  Form,
+  Button,
+  Card,
+  Row,
+  Col,
+  ListGroup,
+  Container,
+} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import FormContainer from '../../components/FormContainer';
 import {
@@ -143,17 +151,17 @@ const EditProfileScreen = ({ match, history }) => {
   };
 
   return (
-    <>
+    <Container>
       {userInfo.userRole === 'systemAdmin' ? (
         <Link
-          className='btn btn-light my-3 btn-sm btn-outline-success'
+          className='btn btn-light my-3 btn-sm btn-outline-info'
           to='/systemAdmin'
         >
           Go Back
         </Link>
       ) : (
         <Link
-          className='btn btn-light my-3 btn-sm btn-outline-success'
+          className='btn btn-light my-3 btn-sm btn-outline-info'
           to='/profile'
         >
           Go Back
@@ -161,7 +169,7 @@ const EditProfileScreen = ({ match, history }) => {
       )}
 
       <>
-        <Card border='primary'>
+        <Card border='info'>
           <Card.Header className='text-center' as='h2'>
             Edit Profile
           </Card.Header>
@@ -239,7 +247,6 @@ const EditProfileScreen = ({ match, history }) => {
                           </Col>
                         </Row>
                       </ListGroup.Item>
-
                       <ListGroup.Item>
                         <Row>
                           <Col md={3}>Education:</Col>
@@ -321,7 +328,6 @@ const EditProfileScreen = ({ match, history }) => {
                           </Col>
                         </Row>
                       </ListGroup.Item>
-
                       <ListGroup.Item>
                         <Row>
                           <Col md={3}>Contact Details:</Col>
@@ -485,7 +491,6 @@ const EditProfileScreen = ({ match, history }) => {
                           </Col>
                         </Row>
                       </ListGroup.Item>
-
                       <ListGroup.Item>
                         <Row>
                           <Col md={3}>Profile Picture:</Col>
@@ -511,31 +516,6 @@ const EditProfileScreen = ({ match, history }) => {
                         </Row>
                       </ListGroup.Item>
 
-                      {/* <ListGroup.Item>
-                        <Row>
-                          <Col md={3}>Certificates:</Col>
-                          <Col>
-                            <Form.Group controlId='certificates'>
-                              <Form.Control
-                                type='text'
-                                placeholder='Enter image url..'
-                                value={certificates}
-                                onChange={(e) =>
-                                  setCertificates(e.target.value)
-                                }
-                              ></Form.Control>
-                              <Form.File
-                                id='image-file'
-                                label='Choose File'
-                                custom
-                                onChange={uploadFileHandler}
-                              ></Form.File>
-                              {uploading && <Loader />}
-                            </Form.Group>
-                          </Col>
-                        </Row>
-                      </ListGroup.Item>
- */}
                       <Button type='submit' variant='primary' block>
                         Update
                       </Button>
@@ -548,14 +528,6 @@ const EditProfileScreen = ({ match, history }) => {
 
                   <Card.Header>Certificate</Card.Header>
                   <Card.Img src={user.certificates} variant='top' />
-                  {/* <Document
-                        src={samplePDF}
-                        // src={require('/uploads/image-1616636214274.pdf')}
-                      ></Document> */}
-                  {/* <Image
-                      src={pendingUser.certificate}
-                      alt={pendingUser.firstName}
-                    /> */}
                 </Col>
               </Row>
             )}
@@ -563,7 +535,7 @@ const EditProfileScreen = ({ match, history }) => {
           {/* <Card.Footer className='text-muted'>2 days ago</Card.Footer> */}
         </Card>
       </>
-    </>
+    </Container>
   );
 };
 

@@ -79,8 +79,8 @@ const PauseOnHover = () => {
                     src={image.image}
                     alt={image.imageDescription}
                     fluid
-                    style={{ height: '100px', width: '100%' }}
-                    // style={{ height: '100px', width: '100px' }}
+                    style={{ width: '100%' }}
+                    className='navbarEventImage'
                   />
 
                   {/* <Carousel.Caption className='carousel-caption'>

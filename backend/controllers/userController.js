@@ -13,8 +13,6 @@ const {
   resetPasswordTemplate,
   transporter,
 } = require('./mailer');
-const User = require('../models/User');
-const Member = require('../models/Member');
 const models = require('../models/index');
 const { generateToken, passwordResetToken } = require('../utils/generateToken');
 const { generateId } = require('../utils/generateId');
@@ -39,12 +37,6 @@ exports.authUser = asyncHandler(async (req, res) => {
         message: 'Invalid Password!',
       });
     } else {
-      const loggedInUser = await models.User.update(
-        {
-          last_login: new Date(),
-        },
-        { where: { email: email, userRole: userRole } }
-      );
       // console.log(JSON.stringify(user));
       res.json({
         chapterId: user.chapterId,
@@ -478,7 +470,9 @@ exports.getUserProfile = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/profile
 // @access  Private
 exports.updateUserProfile = asyncHandler(async (req, res) => {
-  // res.send('success');
+  console.log(req.user.memberId);
+  console.log(req.body.firstName);
+
   const user = await models.User.findOne({
     where: { memberId: req.user.memberId },
   });
@@ -515,7 +509,7 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
       };
 
       let {
-        primaryEmail,
+        // primaryEmail,
         // password,
         // userRole,
         firstName,
@@ -542,8 +536,7 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
       const t = await sequelize.transaction();
 
       try {
-        // Then, we do some calls passing this transaction as an option:
-        const updatedMember = await models.Member.update(
+        await models.Member.update(
           {
             firstName,
             mInit,
@@ -554,7 +547,6 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
             state,
             zipcode,
             alternateEmail,
-            primaryEmail,
             primaryPhone,
             alternatePhone,
             degree,
@@ -569,40 +561,30 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
           { transaction: t }
         );
 
-        const updatedUser = await models.User.update(
-          {
-            userName: firstName + ' ' + lastName,
-            // password,
-            // userRole,
-            // image,
-          },
-          { where: { memberId: req.user.memberId, userRole: 'member' } },
-          { transaction: t }
-        );
-
         const ifAdmin = await models.User.findOne({
           where: { memberId: req.user.memberId, userRole: 'admin' },
         });
         if (ifAdmin) {
-          const updateAdminUser = await models.User.update(
+          await models.User.update(
             {
               userName: firstName + ' ' + lastName,
-              // password,
-              // userRole,
-              // image,
             },
             { where: { memberId: req.user.memberId, userRole: 'admin' } },
             { transaction: t }
           );
         }
 
-        // If the execution reaches this line, no errors were thrown.
-        // We commit the transaction.
+        await models.User.update(
+          {
+            userName: firstName + ' ' + lastName,
+          },
+          { where: { memberId: req.user.memberId, userRole: 'member' } },
+          { transaction: t }
+        );
+
         await t.commit();
         res.status(201).json('profile Updated successfully');
       } catch (error) {
-        // If the execution reaches this line, an error was thrown.
-        // We rollback the transaction.
         await t.rollback();
         res.status(401);
         throw new Error('profile Update unsuccessful');
@@ -657,7 +639,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
       };
 
       let {
-        primaryEmail,
+        // primaryEmail,
         // password,
         // userRole,
         firstName,
@@ -684,8 +666,7 @@ exports.updateUser = asyncHandler(async (req, res) => {
       const t = await sequelize.transaction();
 
       try {
-        // Then, we do some calls passing this transaction as an option:
-        const updatedMember = await models.Member.update(
+        await models.Member.update(
           {
             firstName,
             mInit,
@@ -696,7 +677,6 @@ exports.updateUser = asyncHandler(async (req, res) => {
             state,
             zipcode,
             alternateEmail,
-            primaryEmail,
             primaryPhone,
             alternatePhone,
             degree,
@@ -707,39 +687,30 @@ exports.updateUser = asyncHandler(async (req, res) => {
             profilePicture,
             certificates,
           },
-          { where: { memberId: user.memberId } },
-          { transaction: t }
-        );
-
-        const updatedUser = await models.User.update(
-          {
-            userName: firstName + ' ' + lastName,
-            // password,
-            // userRole,
-            // image,
-          },
-          { where: { memberId: user.memberId, userRole: 'member' } },
+          { where: { memberId: req.params.id } },
           { transaction: t }
         );
 
         const ifAdmin = await models.User.findOne({
-          where: { memberId: user.memberId, userRole: 'admin' },
+          where: { memberId: req.params.id, userRole: 'admin' },
         });
         if (ifAdmin) {
-          const updateAdminUser = await models.User.update(
+          await models.User.update(
             {
               userName: firstName + ' ' + lastName,
-              // password,
-              // userRole,
-              // image,
             },
-            { where: { memberId: user.memberId, userRole: 'admin' } },
+            { where: { memberId: req.params.id, userRole: 'admin' } },
             { transaction: t }
           );
         }
 
-        // If the execution reaches this line, no errors were thrown.
-        // We commit the transaction.
+        await models.User.update(
+          {
+            userName: firstName + ' ' + lastName,
+          },
+          { where: { memberId: req.params.id, userRole: 'member' } },
+          { transaction: t }
+        );
         await t.commit();
         res.status(201).json('User Updated successfully');
       } catch (error) {
@@ -771,29 +742,39 @@ exports.deleteUser = asyncHandler(async (req, res) => {
   console.log(user.memberId);
   console.log(user.memberId);
 
-  if (user) {
-    models.Member.destroy({
-      where: { memberId: user.memberId },
-    })
-      .then((num) => {
-        if (num == 1) {
-          models.User.destroy({ where: { memberId: id } })
-            .then((des) => {
-              if (des == 1) {
-                res.json({ message: 'User has been deleted successfully' });
-              } else {
-                res.json({ message: 'Cannot delete the user' });
-              }
-            })
-            .catch((err) => console.log(err));
-        } else {
-          res.json({ message: 'Cannot delete the member' });
-        }
-      })
-      .catch((err) => console.log(err));
-  } else {
+  // First, we start a transaction and save it into a variable
+  const t = await sequelize.transaction();
+
+  try {
+    const cMember = await models.Committee.findOne({
+      where: { memberId: id },
+    });
+
+    if (cMember) {
+      models.Committee.destroy(
+        {
+          where: { memberId: id },
+        },
+        { transaction: t }
+      );
+    }
+
+    models.User.destroy({ where: { memberId: id } }, { transaction: t });
+
+    models.Member.destroy(
+      {
+        where: { memberId: user.memberId },
+      },
+      { transaction: t }
+    );
+
+    await t.commit();
+    res.json({ message: 'User has been deleted successfully' });
+  } catch (error) {
+    await t.rollback();
+
     res.status(401);
-    throw new Error('User not found');
+    throw new Error('Cannot delete the member');
   }
 });
 
@@ -936,7 +917,7 @@ exports.receiveNewPassword = asyncHandler(async (req, res) => {
               res.status(202).json('Password changed successfull');
             }
           })
-          .catch((error) => {
+          .catch(() => {
             res.status(401);
             throw new Error(
               'Password change Unsuccessful. Please contact the admin'

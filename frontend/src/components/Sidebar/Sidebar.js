@@ -10,7 +10,7 @@ const Sidebar = () => {
   const { userInfo } = userLogin;
 
   return (
-    <Card className='text-center' border='success'>
+    <Card className='text-center' border='info'>
       <Card.Body>
         {/* Chapter */}
         {userInfo && userInfo.userRole === 'systemAdmin' && (
@@ -73,7 +73,7 @@ const Sidebar = () => {
                     className='btn btn-outline-info btn-sm btn-block rounded'
                     // onClick={() => setAddChapter(!addChapter)}
                   >
-                    Vission
+                    Vision
                   </Link>
                 </LinkContainer>
                 {/* </Button> */}

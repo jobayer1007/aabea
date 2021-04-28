@@ -12,6 +12,7 @@ const chapterRoutes = require('./routes/chapterRoutes');
 const userRoutes = require('./routes/userRoutes');
 const committeeRoutes = require('./routes/committeeRoutes');
 const announcementRoutes = require('./routes/announcementRoutes');
+const eventRoutes = require('./routes/eventRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const { join } = require('path');
@@ -32,27 +33,28 @@ app.use('/api/users', userRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/committee', committeeRoutes);
 app.use('/api/announcements', announcementRoutes);
+app.use('/api/events', eventRoutes);
 app.use('/api/image', imageRoutes);
 
 app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
 );
 
-const syncStatus = false;
+// const syncStatus = false;
 
-sequelize
-  .sync({
-    force: syncStatus,
-    // alter: true,
-  })
-  .then(() => {
-    //   //if  (syncStatus) {
-    //   //defaultValueManager.Generate(syncStatus);
-    //   // }
+// sequelize
+//   .sync({
+//     force: syncStatus,
+//     // alter: true,
+//   })
+//   .then(() => {
+//     //   //if  (syncStatus) {
+//     //   //defaultValueManager.Generate(syncStatus);
+//     //   // }
 
-    console.log('initial synced'.yellow.inverse);
-  })
-  .catch((err) => console.log(err));
+//     console.log('initial synced'.yellow.inverse);
+//   })
+//   .catch((err) => console.log(err));
 
 // const __dirname = path.resolve();
 // app.use('/uploads', express.static(path.join(__dirname, '/uploads')));

@@ -92,6 +92,18 @@ db.Vission = require('../models/Vission')(sequelize, Sequelize);
 db.History = require('../models/History')(sequelize, Sequelize);
 db.Committee = require('../models/Committee')(sequelize, Sequelize);
 db.ImageLibrary = require('../models/ImageLibrary')(sequelize, Sequelize);
+db.Event = require('../models/Event')(sequelize, Sequelize);
+db.EventContact = require('../models/EventContact')(sequelize, Sequelize);
+db.EventRegistration = require('../models/EventRegistration')(
+  sequelize,
+  Sequelize
+);
+db.EventPayment = require('../models/EventPayment')(sequelize, Sequelize);
+db.EventImageGallery = require('../models/EventImageGallery')(
+  sequelize,
+  Sequelize
+);
+db.Document = require('../models/Document')(sequelize, Sequelize);
 
 //Model relationships
 
@@ -163,5 +175,28 @@ db.ImageLibrary.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 
 db.Member.hasMany(db.ImageLibrary, { foreignKey: 'memberId' });
 db.ImageLibrary.belongsTo(db.Member, { foreignKey: 'memberId' });
+
+// Event
+db.Chapter.hasMany(db.Event, { foreignKey: 'chapterId' });
+db.Event.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+db.Event.hasMany(db.EventContact, { foreignKey: 'eventId' });
+db.EventContact.belongsTo(db.Event, { foreignKey: 'eventId' });
+
+db.Event.hasMany(db.EventRegistration, { foreignKey: 'eventId' });
+db.EventRegistration.belongsTo(db.Event, { foreignKey: 'eventId' });
+
+db.Event.hasMany(db.EventPayment, { foreignKey: 'eventId' });
+db.EventPayment.belongsTo(db.Event, { foreignKey: 'eventId' });
+
+db.Event.hasMany(db.EventImageGallery, { foreignKey: 'eventId' });
+db.EventImageGallery.belongsTo(db.Event, { foreignKey: 'eventId' });
+
+db.Member.hasMany(db.EventContact, { foreignKey: 'memberId' });
+db.EventContact.belongsTo(db.Member, { foreignKey: 'memberId' });
+
+// Document
+db.Chapter.hasMany(db.Document, { foreignKey: 'chapterId' });
+db.Document.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 
 module.exports = db;

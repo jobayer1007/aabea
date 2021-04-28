@@ -28,7 +28,7 @@ const DonateScreen = ({ history }) => {
   const [mInit, setMInit] = useState('Mr');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [donateAmount, setDonateAmount] = useState(0);
+  const [donateAmount, setDonateAmount] = useState(5);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -60,9 +60,8 @@ const DonateScreen = ({ history }) => {
       setMInit('');
       setLastName('');
       setEmail('');
-      setDonateAmount(0);
+      setDonateAmount(5);
     }
-    // dispatch({ type: USER_PAYMENT_DETAILS_RESET });
 
     const addPaypalScript = async () => {
       const { data: clientId } = await axios.get('/api/config/paypal');
@@ -76,17 +75,12 @@ const DonateScreen = ({ history }) => {
       document.body.appendChild(script);
     };
 
-    // if (!donations || successDonate) {
     if (donateResulte) {
       // console.log(donateResulte);
       swal('Success!', donateResulte, 'success').then(() => {
         dispatch({ type: USER_DONATE_RESET });
         setDonateAmount(0);
       });
-      // }
-      // dispatch({ type: USER_DONATE_RESET });
-
-      // dispatch({ type: USER_PAYMENT_DETAILS_RESET });
     }
     if (!window.paypal) {
       addPaypalScript();
@@ -116,7 +110,6 @@ const DonateScreen = ({ history }) => {
         paymentResult
       )
     );
-    // setAddDonation(!addDonation);
   };
 
   return (
@@ -135,7 +128,7 @@ const DonateScreen = ({ history }) => {
             lg={{ span: 9, order: 12 }}
             id='page-content-wrapper'
           >
-            <Card border='primary' className='mb-2'>
+            <Card border='info' className='mb-2'>
               <Card.Header className='text-center' as='h2'>
                 <Link
                   className='btn btn-outline-info btn-sm btn-block rounded'
@@ -181,16 +174,13 @@ const DonateScreen = ({ history }) => {
                               <Form.Control
                                 type='number'
                                 placeholder='Please Enter Donation Amount'
+                                min='5'
                                 value={donateAmount}
                                 onChange={(e) =>
                                   setDonateAmount(e.target.value)
                                 }
                               ></Form.Control>
                             </Form.Group>
-
-                            {/* <Button type='submit' variant='info' block>
-                                  <i className='fas fa-plus' /> Add
-                                </Button> */}
                           </Form>
                         </Col>
                         <Col md={4}>
@@ -219,8 +209,10 @@ const DonateScreen = ({ history }) => {
                   : null}
               </Card.Body>
             </Card>
-            <Card className='text-center' border='primary'>
-              <Card.Header as='h2'>Donation</Card.Header>
+            <Card className='text-center' border='info'>
+              <Card.Header as='h3' className='text-info'>
+                Donation
+              </Card.Header>
               {donateLoading ? (
                 <Loader />
               ) : donateErrors ? (
@@ -253,8 +245,8 @@ const DonateScreen = ({ history }) => {
       ) : (
         <Col id='page-content-wrapper'>
           <Card border='info'>
-            <Card.Header as='h2' className='text-center'>
-              Welcome to Donation Page
+            <Card.Header as='h4' className='text-center text-info'>
+              Donation
             </Card.Header>
             <Card.Body>
               <Row>
@@ -283,38 +275,40 @@ const DonateScreen = ({ history }) => {
                         <Form.Label>Name</Form.Label>
                       </Form.Group>
 
-                      <Form.Group as={Col} md='2' controlId='mInit'>
-                        <Form.Control
-                          required
-                          as='select'
-                          type='text'
-                          value={mInit}
-                          onChange={(e) => setMInit(e.target.value)}
-                        >
-                          <option value='Mr'>Mr</option>
-                          <option value='Mrs'>Mrs</option>
-                          <option value='Miss'>Ms</option>
-                        </Form.Control>
-                      </Form.Group>
+                      <Form.Group as={Col} md='10'>
+                        <Form.Group controlId='mInit'>
+                          <Form.Control
+                            required
+                            as='select'
+                            type='text'
+                            value={mInit}
+                            onChange={(e) => setMInit(e.target.value)}
+                          >
+                            <option value='Mr'>Mr</option>
+                            <option value='Mrs'>Mrs</option>
+                            <option value='Miss'>Ms</option>
+                          </Form.Control>
+                        </Form.Group>
 
-                      <Form.Group as={Col} md='4' controlId='firstName'>
-                        <Form.Control
-                          required
-                          type='text'
-                          placeholder='First Name'
-                          value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)}
-                        ></Form.Control>
-                      </Form.Group>
+                        <Form.Group controlId='firstName'>
+                          <Form.Control
+                            required
+                            type='text'
+                            placeholder='First Name'
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                          ></Form.Control>
+                        </Form.Group>
 
-                      <Form.Group as={Col} md='4' controlId='lastName'>
-                        <Form.Control
-                          required
-                          placeholder='Last Name'
-                          type='text'
-                          value={lastName}
-                          onChange={(e) => setLastName(e.target.value)}
-                        ></Form.Control>
+                        <Form.Group controlId='lastName'>
+                          <Form.Control
+                            required
+                            placeholder='Last Name'
+                            type='text'
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                          ></Form.Control>
+                        </Form.Group>
                       </Form.Group>
                     </Form.Row>
 
@@ -341,6 +335,7 @@ const DonateScreen = ({ history }) => {
                         <Form.Control
                           required
                           type='number'
+                          min='5'
                           placeholder='Please Enter Donation Amount'
                           value={donateAmount}
                           onChange={(e) => setDonateAmount(e.target.value)}

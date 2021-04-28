@@ -240,8 +240,10 @@ const MembersScreen = ({ history }) => {
                     className='mb-2'
                     id='all-chapter'
                   >
-                    <Card className='text-center' border='primary'>
-                      <Card.Header as='h5'>Member Pending List</Card.Header>
+                    <Card className='text-center' border='info'>
+                      <Card.Header as='h3' className='text-info'>
+                        Member Pending List
+                      </Card.Header>
 
                       <Card.Body>
                         <Table
@@ -255,7 +257,7 @@ const MembersScreen = ({ history }) => {
                             <tr>
                               <th>ID</th>
                               {/* <th>IMAGE</th> */}
-                              <th>FIRST NAME</th>
+                              <th>NAME</th>
                               <th>EMAIL</th>
                               <th>EMAIL VERIFIED</th>
                               <th>PHONE</th>
@@ -278,7 +280,9 @@ const MembersScreen = ({ history }) => {
                                   {' '}
                                   <Image src={user.image} thumbnail />
                                 </td> */}
-                                <td> {pendingUser.firstName}</td>
+                                <td>
+                                  {pendingUser.firstName} {pendingUser.lastName}
+                                </td>
                                 <td>
                                   <a href={`mailto: ${pendingUser.email}`}>
                                     {' '}
@@ -349,8 +353,10 @@ const MembersScreen = ({ history }) => {
                 className='mb-2'
                 id='all-member'
               >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>Admins</Card.Header>
+                <Card className='text-center' border='info'>
+                  <Card.Header as='h3' className='text-info'>
+                    Admins
+                  </Card.Header>
 
                   <Card.Body>
                     {userListLoading ? (
@@ -479,8 +485,10 @@ const MembersScreen = ({ history }) => {
                 className='mb-2'
                 id='all-member'
               >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>Chapter Members</Card.Header>
+                <Card className='text-center' border='info'>
+                  <Card.Header as='h3' className='text-info'>
+                    Chapter Members
+                  </Card.Header>
 
                   <Card.Body>
                     {userListLoading ? (

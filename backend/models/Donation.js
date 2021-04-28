@@ -72,6 +72,12 @@ const Donation = (sequelize, DataTypes) =>
     paymentTime: {
       type: DataTypes.STRING, //update_time from Paypal
     },
+    chapterId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+      notEmpty: true,
+    },
   });
 
 // Payment.sync({ force: true });

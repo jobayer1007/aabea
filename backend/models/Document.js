@@ -1,37 +1,49 @@
 const { Sequelize } = require('sequelize');
 
-//Chapter schema
+//Documents schema
 
-const ImageLibrary = (sequelize, DataTypes) =>
-  sequelize.define('imageLibrary', {
-    imageId: {
+const Document = (sequelize, DataTypes) =>
+  sequelize.define('document', {
+    documentId: {
       type: DataTypes.UUID,
       defaultValue: Sequelize.UUIDV4,
-      // defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
     },
-    imageName: {
-      type: DataTypes.STRING,
-      primaryKey: true,
+
+    documentType: {
+      type: DataTypes.ENUM(15),
+      defaultValue: 'private',
+      values: ['public', 'private'],
+    },
+
+    documentName: {
+      type: DataTypes.STRING(50),
       required: true,
       allowNull: false,
       notEmpty: true,
     },
-    imageDescription: {
-      type: DataTypes.TEXT,
+
+    documentDescription: {
+      type: DataTypes.STRING(250),
       required: true,
       allowNull: false,
       notEmpty: true,
     },
-    imageLink: {
-      type: DataTypes.JSONB,
+
+    uploadDate: {
+      type: DataTypes.DATE,
+      required: true,
+      allowNull: false,
+      notEmpty: true,
     },
-    image: {
+
+    document: {
       type: DataTypes.STRING,
       required: true,
     },
+
     createdBy: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -52,4 +64,6 @@ const ImageLibrary = (sequelize, DataTypes) =>
     },
   });
 
-module.exports = ImageLibrary;
+// Member.sync({ force: true });
+
+module.exports = Document;

@@ -1,42 +1,20 @@
 const { Sequelize } = require('sequelize');
 // const sequelize = new Sequelize('sqlite::memory:');
 
-const Payment = (sequelize, DataTypes) =>
-  sequelize.define('payment', {
-    chapterId: {
-      type: DataTypes.UUID,
+const EventPayment = (sequelize, DataTypes) =>
+  sequelize.define('eventPayment', {
+    eventId: {
+      type: DataTypes.STRING(5),
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
     },
-    memberId: {
-      type: DataTypes.BIGINT,
+
+    registrationId: {
+      type: DataTypes.STRING(5),
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
-    },
-    year: {
-      type: DataTypes.REAL,
-      allowNull: false,
-      // unique: 'compositeIndex',
-      primaryKey: true,
-      validate: {
-        isNumeric: true,
-        notEmpty: true,
-      },
-    },
-
-    // month: {
-    //   type: DataTypes.STRING,
-    //   // allowNull: false,
-    //   unique: 'compositeIndex',
-    // },
-
-    paymentType: {
-      type: DataTypes.STRING,
-      // defaultValue: 'dues',
-      primaryKey: true,
-      // values: ['dues', 'nominationFee', 'event'],
     },
 
     amount: {
@@ -74,4 +52,4 @@ const Payment = (sequelize, DataTypes) =>
 
 // Payment.sync({ force: true });
 
-module.exports = Payment;
+module.exports = EventPayment;

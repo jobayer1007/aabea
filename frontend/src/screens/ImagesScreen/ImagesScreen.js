@@ -132,7 +132,7 @@ const ImagesScreen = ({ history }) => {
                 // style={{ padding: 0 }}
                 className='mb-2'
               >
-                <Card border='primary'>
+                <Card border='info'>
                   <Card.Header className='text-center' as='h2'>
                     <Link
                       className='btn btn-outline-info btn-sm btn-block rounded'
@@ -164,10 +164,10 @@ const ImagesScreen = ({ history }) => {
 
                                 <option value='logo'>Logo</option>
                                 <option value='navbarImage'>
-                                  Navbar Image
+                                  Events photo
                                 </option>
                                 <option value='homeScreenImage'>
-                                  Home Screen Image
+                                  Chapter iconic image
                                 </option>
                               </Form.Control>
                             </Form.Group>
@@ -184,20 +184,8 @@ const ImagesScreen = ({ history }) => {
                               ></Form.Control>
                             </Form.Group>
 
-                            <Form.Group controlId='imageLink'>
-                              <Form.Label>Image Link</Form.Label>
-                              <Form.Control
-                                type='text'
-                                placeholder='Please Enter image link(optional)'
-                                value={imageLink}
-                                onChange={(e) => setImageLink(e.target.value)}
-                              ></Form.Control>
-                            </Form.Group>
-
-                            <Form.Group as={Col} md='2'>
+                            <Form.Group controlId='image'>
                               <Form.Label>Image</Form.Label>
-                            </Form.Group>
-                            <Form.Group as={Col} md='10' controlId='image'>
                               <Form.Control
                                 required
                                 type='text'
@@ -215,7 +203,7 @@ const ImagesScreen = ({ history }) => {
                             </Form.Group>
 
                             <Button type='submit' variant='info' block>
-                              <i className='fas fa-plus' /> Add
+                              <i className='fas fa-plus' /> Load
                             </Button>
                           </Form>
                         ))
@@ -230,8 +218,10 @@ const ImagesScreen = ({ history }) => {
                 className='mb-2'
                 id='all-chapter'
               >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>Images</Card.Header>
+                <Card className='text-center' border='info'>
+                  <Card.Header as='h3' className='text-info'>
+                    Images
+                  </Card.Header>
 
                   <Card.Body>
                     {loading ? (
@@ -280,16 +270,6 @@ const ImagesScreen = ({ history }) => {
                                 (userInfo.userRole === 'systemAdmin' ||
                                   userInfo.userRole === 'admin') && (
                                   <td>
-                                    {/* <Button
-                                      variant='light'
-                                      className='btn-sm'
-                                      onClick={() =>
-                                        editHistoryHandler(image.imageId)
-                                      }
-                                    >
-                                      <i className='fas fa-edit'></i>
-                                    </Button> */}
-
                                     <Button
                                       variant='danger'
                                       className='btn-sm'

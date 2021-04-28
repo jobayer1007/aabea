@@ -76,7 +76,7 @@ exports.createNewCommitteeMember = asyncHandler(async (req, res) => {
 
 // @desc    GET all committee member     ///////////////////////////////////////////////
 // @route   GET /api/committee
-// @access  Private/Admin
+// @access  Public
 exports.getCommitteeMembers = asyncHandler(async (req, res) => {
   // Find Chapter
   const subDomain = 'bd.aabea.org'; // at dev only

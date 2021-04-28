@@ -51,7 +51,7 @@ const HomeScreen = () => {
       <Row>
         <Col md={{ span: 6, order: 1 }} lg={{ span: 3, order: 1 }}>
           <Card className='mb-2'>
-            <Card.Header className='text-info' as='h5'>
+            <Card.Header className='text-info' as='h4'>
               Announcements
             </Card.Header>
 
@@ -111,7 +111,7 @@ const HomeScreen = () => {
           </Card>
 
           <Card className='text-justify mb-2'>
-            <Card.Header className='text-info' as='h2'>
+            <Card.Header className='text-info text-center' as='h4'>
               Mission
             </Card.Header>
             <Card.Body>
@@ -137,8 +137,8 @@ const HomeScreen = () => {
           </Card>
 
           <Card className='text-justify mb-2'>
-            <Card.Header className='text-info' as='h2'>
-              Vission
+            <Card.Header className='text-info text-center' as='h4'>
+              Vision
             </Card.Header>
             <Card.Body>
               {vissionLoading ? (
@@ -163,7 +163,7 @@ const HomeScreen = () => {
           </Card>
 
           <Card className='text-justify mb-2'>
-            <Card.Header className='text-info' as='h2'>
+            <Card.Header className='text-info text-center' as='h4'>
               History
             </Card.Header>
             <>
@@ -189,7 +189,7 @@ const HomeScreen = () => {
           </Card>
 
           <Card className='text-justify mb-2'>
-            <Card.Header className='text-info' as='h2'>
+            <Card.Header className='text-info text-center' as='h4'>
               Any other Main Topic
             </Card.Header>
             <Card.Body>

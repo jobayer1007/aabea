@@ -97,7 +97,7 @@ const DashboardScreen = ({ history }) => {
                 // style={{ padding: 0 }}
                 className='mb-2'
               >
-                <Card border='primary'>
+                <Card>
                   {userInfo ? (
                     <>
                       {userLoading ? (
@@ -169,11 +169,19 @@ const DashboardScreen = ({ history }) => {
                 className='mb-2'
                 id='profile-information'
               >
-                <Card border='primary'>
-                  <Card.Header as='h5'>Profile Summery </Card.Header>
+                <Card>
+                  <Card.Header as='h5' className='text-info'>
+                    Profile Summery{' '}
+                  </Card.Header>
                   {userInfo ? (
                     <>
                       <ListGroup variant='flush'>
+                        <ListGroup.Item>
+                          <Row>
+                            <Col md={4}>Member Id:</Col>
+                            <Col>{userInfo.memberId}</Col>
+                          </Row>
+                        </ListGroup.Item>
                         <ListGroup.Item>
                           <Row>
                             <Col md={4}>User Type:</Col>

@@ -1,9 +1,9 @@
 const { Sequelize } = require('sequelize');
 
-//Chapter schema
+//EventImageGallery schema
 
-const ImageLibrary = (sequelize, DataTypes) =>
-  sequelize.define('imageLibrary', {
+const EventImageGallery = (sequelize, DataTypes) =>
+  sequelize.define('eventImageGallery', {
     imageId: {
       type: DataTypes.UUID,
       defaultValue: Sequelize.UUIDV4,
@@ -12,11 +12,10 @@ const ImageLibrary = (sequelize, DataTypes) =>
       primaryKey: true,
       notEmpty: true,
     },
-    imageName: {
-      type: DataTypes.STRING,
-      primaryKey: true,
-      required: true,
+    eventId: {
+      type: DataTypes.STRING(5),
       allowNull: false,
+      primaryKey: true,
       notEmpty: true,
     },
     imageDescription: {
@@ -52,4 +51,4 @@ const ImageLibrary = (sequelize, DataTypes) =>
     },
   });
 
-module.exports = ImageLibrary;
+module.exports = EventImageGallery;

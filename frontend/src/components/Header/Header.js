@@ -12,7 +12,6 @@ import {
   NavDropdown,
 } from 'react-bootstrap';
 import { logout } from '../../actions/userActions';
-import HeaderCarousel from './HeaderCarousel';
 import { Link } from 'react-router-dom';
 import PauseOnHover from '../ImageCarousel/PauseOnHover';
 
@@ -27,15 +26,16 @@ const Header = () => {
   };
   return (
     <header>
-      <Container fluid>
-        <Row style={{ height: '30%' }}>
+      <Container>
+        <Row className='align-items-center'>
           <Col xs={3} className='text-center'>
             <Link to='/'>
               <Image
                 src='/uploads/logoImage.png'
                 alt='logo'
-                style={{ height: '100px' }}
+                // style={{ height: '135px' }}
                 fluid
+                className='logo'
               />
             </Link>
           </Col>
@@ -43,7 +43,9 @@ const Header = () => {
             <PauseOnHover />
           </Col>
           <Col xs={3} className='text-center'>
-            <h3>Washington D.C Chapter</h3>{' '}
+            <span className='nav-chapterName text-info'>
+              Washington D.C Chapter
+            </span>
           </Col>
         </Row>
       </Container>
@@ -95,7 +97,7 @@ const Header = () => {
               )}
 
               <LinkContainer to='/donate'>
-                <Nav.Link>Donate</Nav.Link>
+                <Nav.Link>Donation</Nav.Link>
               </LinkContainer>
 
               {userInfo ? (

@@ -1,53 +1,59 @@
-const { Sequelize, DataTypes, NOW } = require('sequelize');
+const { Sequelize } = require('sequelize');
 
-//Committee schema
+//event contact schema
 
-const Committee = (sequelize, DataTypes) =>
-  sequelize.define('committee', {
-    cId: {
+const EventContact = (sequelize, DataTypes) =>
+  sequelize.define('eventContact', {
+    eventContactId: {
       type: DataTypes.UUID,
       defaultValue: Sequelize.UUIDV4,
-      // defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
     },
+    eventId: {
+      type: DataTypes.STRING(5),
+      allowNull: false,
+      primaryKey: true,
+      notEmpty: true,
+    },
+
     memberId: {
       type: DataTypes.BIGINT,
-      // defaultValue: 123456,
-      // autoIncrement: true,
-      // defaultValue: Sequelize.literal('uuid_generate_v4()'),
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
     },
 
-    position: {
-      type: DataTypes.STRING(20),
-      primaryKey: true,
+    positionName: {
+      type: DataTypes.STRING(50),
       required: true,
+      primaryKey: true,
       allowNull: false,
       notEmpty: true,
     },
-    tenure: {
-      type: DataTypes.RANGE(DataTypes.DATEONLY),
-      primaryKey: true,
+
+    contactName: {
+      type: DataTypes.STRING(50),
       required: true,
       allowNull: false,
       notEmpty: true,
     },
 
-    bio: {
-      type: DataTypes.TEXT,
-      required: true,
+    contactEmail: {
+      type: DataTypes.STRING(30),
       allowNull: false,
-      notEmpty: true,
+      required: true,
+      validate: {
+        isEmail: true,
+      },
     },
 
-    // startDate: {
-    //   type: DataTypes.DATEONLY,
-    //   defaultValue: Sequelize.NOW,
-    // },
+    contactPhone: {
+      type: DataTypes.STRING(12),
+      required: true,
+      allowNull: false,
+    },
 
     createdBy: {
       type: DataTypes.BIGINT,
@@ -69,6 +75,6 @@ const Committee = (sequelize, DataTypes) =>
     },
   });
 
-// Committee.sync({ force: true });
+// Member.sync({ force: true });
 
-module.exports = Committee;
+module.exports = EventContact;

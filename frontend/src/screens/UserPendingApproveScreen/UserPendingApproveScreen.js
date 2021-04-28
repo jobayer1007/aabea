@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, ListGroup, Row, Col } from 'react-bootstrap';
+import { Card, ListGroup, Row, Col, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { approveUser, getPendingUserDetails } from '../../actions/userActions';
 import { USER_APPROVE_RESET } from '../../constants/userConstants';
@@ -49,17 +49,17 @@ const UserPendingApproveScreen = ({ match, history }) => {
   };
 
   return (
-    <>
+    <Container>
       {userInfo && userInfo.userRole === 'systemAdmin' ? (
         <Link
-          className='btn btn-light my-3 btn-sm btn-outline-success'
+          className='btn btn-light my-3 btn-sm btn-outline-info'
           to='/systemAdmin'
         >
           Go Back
         </Link>
       ) : (
         <Link
-          className='btn btn-light my-3 btn-sm btn-outline-success'
+          className='btn btn-light my-3 btn-sm btn-outline-info'
           to='/dashboard'
         >
           Go Back
@@ -67,8 +67,8 @@ const UserPendingApproveScreen = ({ match, history }) => {
       )}
 
       <>
-        <Card border='success'>
-          <Card.Header className='text-center' as='h2'>
+        <Card border='info'>
+          <Card.Header className='text-center text-info' as='h3'>
             Approve User
           </Card.Header>
           {loadingApprove && <Loader />}
@@ -180,7 +180,7 @@ const UserPendingApproveScreen = ({ match, history }) => {
                     </ListGroup>
                   </Col>
                   <Col md={4}>
-                    <Card.Title>Certificate</Card.Title>
+                    <Card.Title className='text-info'>Certificate</Card.Title>
                     <Card.Img src={pendingUser.certificate} variant='top' />
                     {/* <Image
                       src={pendingUser.certificate}
@@ -205,7 +205,7 @@ const UserPendingApproveScreen = ({ match, history }) => {
           )}
         </Card>
       </>
-    </>
+    </Container>
   );
 };
 

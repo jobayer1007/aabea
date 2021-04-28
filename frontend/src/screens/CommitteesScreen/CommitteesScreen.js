@@ -211,8 +211,8 @@ const CommitteeScreen = ({ history }) => {
                       // style={{ padding: 0 }}
                       className='mb-2'
                     >
-                      <Card border='primary'>
-                        <Card.Header className='text-center' as='h2'>
+                      <Card border='info'>
+                        <Card.Header className='text-center text-info' as='h3'>
                           <Link
                             className='btn btn-outline-info btn-sm btn-block rounded'
                             // onClick={() => setAddAnnouncement(!addAnnouncement)}
@@ -317,8 +317,8 @@ const CommitteeScreen = ({ history }) => {
                       className='mb-2'
                       id='all-chapter'
                     >
-                      <Card border='primary'>
-                        <Card.Header as='h5' className='text-center'>
+                      <Card border='info'>
+                        <Card.Header as='h3' className='text-center text-info'>
                           Committee Members
                         </Card.Header>
 

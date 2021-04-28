@@ -112,20 +112,9 @@ const PaymentTypeScreen = ({ history }) => {
                 // style={{ padding: 0 }}
                 className='mb-2'
               >
-                {/* <Card className='text-center' border='primary'>
-                  <Card.Header as='h5' className='text-info'>
-                    <Link
-                      className='btn btn-outline-info btn-sm btn-block  rounded'
-                      to=''
-                    >
-                      Add New Payment Type
-                    </Link>
-                  </Card.Header>
-                </Card> */}
-
                 <>
                   {/* Card Start */}
-                  <Card border='primary'>
+                  <Card border='info'>
                     <Card.Header className='text-center' as='h2'>
                       <Link
                         className='btn btn-outline-info btn-sm btn-block rounded'
@@ -206,8 +195,10 @@ const PaymentTypeScreen = ({ history }) => {
                 className='mb-2'
                 id='all-chapter'
               >
-                <Card className='text-center' border='primary'>
-                  <Card.Header as='h5'>All Payment Types</Card.Header>
+                <Card className='text-center' border='info'>
+                  <Card.Header as='h5' className='text-info'>
+                    All Payment Types
+                  </Card.Header>
 
                   <Card.Body>
                     {loading ? (
@@ -230,7 +221,8 @@ const PaymentTypeScreen = ({ history }) => {
                             <th>AMOUNT</th>
 
                             {userInfo &&
-                              userInfo.userRole === 'systemAdmin' && (
+                              (userInfo.userRole === 'systemAdmin' ||
+                                userInfo.userRole === 'admin') && (
                                 <th>EDIT/DELETE</th>
                               )}
                           </tr>
@@ -245,7 +237,8 @@ const PaymentTypeScreen = ({ history }) => {
 
                               <td> {paymentType.paymentTypeAmount}</td>
 
-                              {userInfo.userRole === 'systemAdmin' && (
+                              {(userInfo.userRole === 'systemAdmin' ||
+                                userInfo.userRole === 'admin') && (
                                 <td>
                                   <LinkContainer
                                     to={`/paymentType/${paymentType.paymentTypeId}/edit`}
