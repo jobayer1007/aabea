@@ -55,6 +55,8 @@ exports.createNewCommitteeMember = asyncHandler(async (req, res) => {
         position,
         tenure: period,
         bio,
+        createdBy: req.user.memberId,
+        lastUpdatedBy: req.user.memberId,
         chapterId: req.user.chapterId,
       });
       if (newCMember) {
@@ -108,7 +110,7 @@ exports.getCommitteeMembers = asyncHandler(async (req, res) => {
 
 // @desc    Get a  committee member by Id     ///////////////////////////////////////////////
 // @route   GET /api/committee/:id
-// @access  Private
+// @access  Public
 exports.getCommitteeMemberById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   // console.log(id);
@@ -155,6 +157,7 @@ exports.updateCommitteeMember = asyncHandler(async (req, res) => {
           position,
           tenure,
           bio,
+          lastUpdatedBy: req.user.memberId,
         },
         { where: { cId: req.params.id } }
       );

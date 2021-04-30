@@ -16,14 +16,6 @@ const PasswordUpdateScreen = ({ location, match, history }) => {
   const userPasswordUpdate = useSelector((state) => state.userPasswordUpdate);
   const { loading, error, success } = userPasswordUpdate;
 
-  // useEffect(() => {
-  //   if (success) {
-  //     swal('Success!', success, 'success').then(() => {
-  //       dispatch({ type: USER_PASSWORD_RESET_RESET });
-  //     });
-  //   }
-  // }, [success]);
-
   const submitHandler = (e) => {
     e.preventDefault();
     console.log('Submited');

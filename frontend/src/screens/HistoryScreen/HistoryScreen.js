@@ -148,8 +148,8 @@ const HistoryScreen = ({ history }) => {
                 // style={{ padding: 0 }}
                 className='mb-2'
               >
-                <Card border='primary'>
-                  <Card.Header className='text-center' as='h2'>
+                <Card border='info'>
+                  <Card.Header className='text-center' as='h5'>
                     {histories && histories.length !== 0 ? (
                       <Link
                         className='btn btn-outline-info btn-sm btn-block rounded'
@@ -225,7 +225,7 @@ const HistoryScreen = ({ history }) => {
                 className='mb-2'
                 id='all-chapter'
               >
-                <Card className='text-center' border='primary'>
+                <Card className='text-center' border='info'>
                   <Card.Header as='h5'>History</Card.Header>
 
                   <Card.Body>

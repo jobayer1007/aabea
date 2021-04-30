@@ -19,6 +19,7 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 // import { COLUMNS } from './MemberColumns';
 import RTable from '../../components/Table/RTable';
 import ColumnFilter from '../../components/Table/ColumnFilter';
+import { Link } from 'react-router-dom';
 
 const MembersScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -107,19 +108,34 @@ const MembersScreen = ({ history }) => {
               return (
                 <div>
                   <span onClick={() => editUserHandler(rowIdx)}>
-                    <i className='far fa-edit action mr-2'></i>
+                    <i
+                      className='far fa-edit action'
+                      style={{ color: '#4285F4' }}
+                    ></i>
                   </span>
-                  <span onClick={() => deleteUserHandler(rowIdx)}>
-                    <i className='fas fa-trash action'></i>
-                  </span>
-                  <br />
-                  <Button
-                    variant='danger'
-                    className='btn-sm'
+
+                  {/* <Button
+                    // style={{ color: '#F4B400' }}
+                    variant='warning'
+                    className='btn btn-sm ml-2 mr-2 btn-outline-warning rounded'
                     onClick={() => createAdminHandler(rowIdx)}
                   >
-                    Set As ADMIN
-                  </Button>
+                    Make admin
+                  </Button> */}
+
+                  <Link
+                    className='btn btn-outline-warning btn-sm btn-block  rounded'
+                    onClick={() => createAdminHandler(rowIdx)}
+                  >
+                    Make admin
+                  </Link>
+
+                  <span onClick={() => deleteUserHandler(rowIdx)}>
+                    <i
+                      className='fas fa-trash action'
+                      style={{ color: 'red' }}
+                    ></i>
+                  </span>
                 </div>
               );
             },
@@ -440,7 +456,7 @@ const MembersScreen = ({ history }) => {
                                       (user.userRole === 'member' ? (
                                         <td>
                                           <Button
-                                            variant='danger'
+                                            variant='warning'
                                             className='btn-sm'
                                             onClick={() =>
                                               createAdminHandler(user.memberId)

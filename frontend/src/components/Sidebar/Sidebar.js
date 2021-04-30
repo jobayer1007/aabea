@@ -174,28 +174,34 @@ const Sidebar = () => {
         </Card.Title>
 
         <Card.Title>
-          {/* <Button variant='outline-info' block> */}
           <LinkContainer to='/donate'>
-            {/* <Nav.Link>Donation</Nav.Link> */}
-            <Link
-              className='btn btn-outline-info btn-sm btn-block rounded'
-              // onClick={() => setAddChapter(!addChapter)}
-            >
+            <Link className='btn btn-outline-info btn-sm btn-block rounded'>
               Donation
             </Link>
           </LinkContainer>
-          {/* </Button> */}
+        </Card.Title>
+
+        <Card.Title>
+          <LinkContainer to='/events'>
+            <Link className='btn btn-outline-info btn-sm btn-block rounded'>
+              Events
+            </Link>
+          </LinkContainer>
         </Card.Title>
       </Card.Body>
 
-      {/* <Card.Footer className='text-muted'>
-        <Link
-          className='btn btn-outline-warning btn-sm btn-block my-5 rounded'
-          to=''
-        >
-          another button
-        </Link>
-      </Card.Footer> */}
+      {userInfo &&
+        (userInfo.userRole === 'systemAdmin' ||
+          userInfo.userRole === 'admin') && (
+          <Card.Footer className='text-muted'>
+            <Link
+              className='btn btn-outline-warning btn-sm btn-block  rounded'
+              to='/settings'
+            >
+              Chapter Settings
+            </Link>
+          </Card.Footer>
+        )}
     </Card>
   );
 };

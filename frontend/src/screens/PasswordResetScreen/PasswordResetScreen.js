@@ -13,14 +13,6 @@ const PasswordResetScreen = () => {
   const userPasswordReset = useSelector((state) => state.userPasswordReset);
   const { loading, error, success } = userPasswordReset;
 
-  // useEffect(() => {
-  //   if (success) {
-  //     swal('Success!', success, 'success').then(() => {
-  //       dispatch({ type: USER_PASSWORD_RESET_RESET });
-  //     });
-  //   }
-  // }, [success]);
-
   const submitHandler = (e) => {
     e.preventDefault();
     console.log('Submited');

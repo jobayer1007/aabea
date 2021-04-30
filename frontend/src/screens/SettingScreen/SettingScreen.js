@@ -6,7 +6,6 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import parse from 'html-react-parser';
 
-import * as S from './AnnouncementScreen.Styles';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import {
   allAnnouncements,
@@ -26,7 +25,7 @@ import {
 import ColumnFilter from '../../components/Table/ColumnFilter';
 import RTable from '../../components/Table/RTable';
 
-const AnnouncementScreen = ({ history }) => {
+const SettingScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [addAnnouncement, setAddAnnouncement] = useState(false);
@@ -200,7 +199,7 @@ const AnnouncementScreen = ({ history }) => {
           lg={{ span: 9, order: 12 }}
           id='page-content-wrapper'
         >
-          <S.CardDeck>
+          <>
             {/* <CardColumns> */}
 
             <Row>
@@ -318,11 +317,11 @@ const AnnouncementScreen = ({ history }) => {
                 </Card>
               </Col>
             </Row>
-          </S.CardDeck>
+          </>
         </Col>
       </Row>
     </>
   );
 };
 
-export default AnnouncementScreen;
+export default SettingScreen;

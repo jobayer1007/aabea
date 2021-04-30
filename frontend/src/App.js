@@ -9,14 +9,11 @@ import RegisterScreen from './screens/RegistrationScreen/RegisterScreen';
 import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
 import UserListScreen from './screens/UserListScreen';
 import UserEditScreen from './screens/UserEditScreen';
-// imort for sidebar experiment
-// import Sidebar from './components/Sidebar/Sidebar';
-// import MainScreen from './screens/MainScreen';
+
 import PaymentScreen from './screens/PaymentScreen/PaymentScreen';
 import DonateScreen from './screens/DonateScreen/DonateScreen';
 import TrainingScreen from './screens/TrainingScreen/TrainingScreen';
 import CommittieesScreen from './screens/CommitteesScreen/CommitteesScreen';
-// import Navbar from './components/Navbar/Navbar';
 import EmailActivationScreen from './screens/EmailActivationScreen/EmailActivationScreen';
 import SystemAdminScreen from './screens/SystemAdminScreen/SystemAdminScreen';
 import UserPendingApproveScreen from './screens/UserPendingApproveScreen/UserPendingApproveScreen';
@@ -38,6 +35,10 @@ import Vission from './screens/VissionScreen/Vission';
 import History from './screens/HistoryScreen/History';
 import CommitteeMemberScreen from './screens/CommitteesScreen/CommitteeMemberScreens';
 import About from './screens/AboutScreen/About';
+import EventScreen from './screens/EventScreen/EventScreen';
+import SettingScreen from './screens/SettingScreen/SettingScreen';
+import EventNewScreen from './screens/EventScreen/EventNewScreen';
+import EventByIdScreen from './screens/EventScreen/EventByIdScreen';
 
 const App = () => {
   return (
@@ -75,6 +76,10 @@ const App = () => {
             <Route path='/committiees' component={CommittieesScreen} />
             <Route path='/committee/:id' component={CommitteeMemberScreen} />
             <Route path='/members' component={MembersScreen} />
+            <Route path='/events' component={EventScreen} />
+            <Route path='/eventsnew' component={EventNewScreen} />
+            <Route path='/event/:id' component={EventByIdScreen} />
+            <Route path='/settings' component={SettingScreen} />
             <Route
               path='/users/:id/pending'
               component={UserPendingApproveScreen}

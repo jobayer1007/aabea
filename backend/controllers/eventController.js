@@ -40,7 +40,7 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
     chapterId: req.user.chapterId,
   });
   if (newEvent) {
-    res.json('New Event Created Successfully');
+    res.json(newEvent);
   } else {
     res.status(400);
     throw new Error('Encountered problem while creating new Event');
@@ -85,10 +85,10 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getEventById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  // console.log(id);
+  console.log(id);
   const event = await models.Event.findOne({
     where: { eventId: id },
-    include: models.EventImageGallery,
+    // include: models.EventImageGallery,
     include: models.EventContact,
   });
   // console.log(user.memberId);
@@ -191,15 +191,15 @@ exports.deleteEvent = asyncHandler(async (req, res) => {
 // /////////////////////////////Event Contacts //////////////////////////////
 
 // @desc    Create a new Event Contact     ///////////////////////////////////////////////
-// @route   POST /api/events/:id/newContact
+// @route   POST /api/events/newContact/:id
 // @access  Private/Admin
 exports.createNewEventContact = asyncHandler(async (req, res) => {
-  const { eventId } = req.params.id;
+  const { id } = req.params;
   const { memberId, positionName, contactEmail, contactPhone } = req.body;
 
   const contactExists = await models.EventContact.findOne({
     where: {
-      eventId: eventId,
+      eventId: id,
       memberId: memberId,
     },
   });
@@ -213,10 +213,11 @@ exports.createNewEventContact = asyncHandler(async (req, res) => {
 
     if (member) {
       const newContact = await models.EventContact.create({
-        eventId,
+        eventId: id,
         memberId,
         positionName,
-        contactName: member.mInit + member.firstName + member.lastName,
+        contactName:
+          member.mInit + ' ' + member.firstName + ' ' + member.lastName,
         contactEmail,
         contactPhone,
         createdBy: req.user.memberId,
@@ -241,21 +242,21 @@ exports.createNewEventContact = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET all Event Contacts     ///////////////////////////////////////////////
-// @route   GET /api/events/:id/contacts
+// @route   GET /api/events/contacts/:id
 // @access  Public
 exports.getEventContacts = asyncHandler(async (req, res) => {
-  const { eventId } = req.params.id;
+  const { id } = req.params;
 
+  console.log(id);
   const event = await models.Event.findOne({
-    where: { eventId: eventId },
+    where: { eventId: id },
   });
-  // console.log(chapter.chapterId);
 
   if (event) {
     const contacts = await models.EventContact.findAll(
-      { include: models.Member },
+      // { include: models.Member },
       {
-        where: { eventId: eventId },
+        where: { eventId: id },
       }
     );
     if (contacts && contacts.length !== 0) {
@@ -272,10 +273,10 @@ exports.getEventContacts = asyncHandler(async (req, res) => {
 });
 
 // @desc    Get a  Event Contact by Id     ///////////////////////////////////////////////
-// @route   GET /api/events/contacts/:id
+// @route   GET /api/events/contactby/:id
 // @access  Private
 exports.getEventContactById = asyncHandler(async (req, res) => {
-  const { id } = req.params.id;
+  const { id } = req.params;
 
   // console.log(id);
   const eContact = await models.EventContact.findOne({
@@ -286,7 +287,7 @@ exports.getEventContactById = asyncHandler(async (req, res) => {
 
   if (eContact) {
     res.json(eContact);
-    console.log(eContact);
+    // console.log(eContact);
   } else {
     res.status(401);
     throw new Error('Member not found');
@@ -294,21 +295,21 @@ exports.getEventContactById = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update Event Contact by Id       ///////////////////////////////////////////////
-// @route   PUT /api/events/contacts/:id
+// @route   PUT /api/events/contactby/:id
 // @access  Private/Admin || systemAdmin || Committee Member
 exports.updateEventContactById = asyncHandler(async (req, res) => {
-  const eContact = await models.Committee.findOne({
+  const eContact = await models.EventContact.findOne({
     where: { eventContactId: req.params.id },
   });
 
   if (eContact) {
     const member = await models.Member.findOne({
-      where: { memberId: req.body.eMemberId },
+      where: { memberId: req.body.memberId },
     });
 
     if (member) {
       const data = {
-        memberId: req.body.eMemberId || eContact.memberId,
+        memberId: req.body.memberId || eContact.memberId,
         positionName: req.body.positionName || eContact.positionName,
         contactName: member.mInit + member.firstName + member.lastName,
         contactEmail: req.body.contactEmail || eContact.contactEmail,
@@ -350,7 +351,7 @@ exports.updateEventContactById = asyncHandler(async (req, res) => {
 });
 
 // @desc    Delete an Event Contact by Id     ///////////////////////////////////////////////
-// @route   DELETE /api/events/contacts/:id
+// @route   DELETE /api/events/contactby/:id
 // @access  Private/Admin
 exports.deleteEventContact = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -379,7 +380,7 @@ exports.deleteEventContact = asyncHandler(async (req, res) => {
 
 // /////////////////////////////Event Publish //////////////////////////////
 // @desc    Publish Event by Id       ///////////////////////////////////////////////
-// @route   PUT /api/events/:id/publish
+// @route   PUT /api/events/publish/:id
 // @access  Private/Admin
 exports.publishEvent = asyncHandler(async (req, res) => {
   const event = await models.Event.findOne({
@@ -395,9 +396,9 @@ exports.publishEvent = asyncHandler(async (req, res) => {
     );
 
     if (updatedEvent == 1) {
-      res.json({ message: 'Event published successfully' });
+      res.json('Event published successfully');
     } else {
-      res.send({ message: 'Event publish unsuccessful' });
+      res.send('Event publish unsuccessful');
     }
   } else {
     res.status(401);
@@ -406,7 +407,7 @@ exports.publishEvent = asyncHandler(async (req, res) => {
 });
 
 // @desc    unPublish Event by Id       ///////////////////////////////////////////////
-// @route   PUT /api/events/:id/unpublish
+// @route   PUT /api/events/unpublish/:id
 // @access  Private/Admin
 exports.unPublishEvent = asyncHandler(async (req, res) => {
   const event = await models.Event.findOne({
@@ -422,9 +423,9 @@ exports.unPublishEvent = asyncHandler(async (req, res) => {
     );
 
     if (updatedEvent == 1) {
-      res.json({ message: 'Event un-published successfully' });
+      res.json('Event un-published successfully');
     } else {
-      res.send({ message: 'Event un-publish unsuccessful' });
+      res.send('Event un-publish unsuccessful');
     }
   } else {
     res.status(401);

@@ -137,7 +137,7 @@ const MissionScreen = ({ history }) => {
                 // style={{ padding: 0 }}
                 className='mb-2'
               >
-                <Card border='primary'>
+                <Card border='info'>
                   <Card.Header className='text-center' as='h2'>
                     {missions && missions.length !== 0 ? (
                       <Link
@@ -185,12 +185,6 @@ const MissionScreen = ({ history }) => {
                                   setBody(data);
                                 }}
                               />
-                              {/* <Form.Control
-                                type='text'
-                                placeholder='Please Enter The Mission'
-                                value={body}
-                                onChange={(e) => setBody(e.target.value)}
-                              ></Form.Control> */}
                             </Form.Group>
                             {editMission ? (
                               <Button type='submit' variant='info' block>
@@ -214,7 +208,7 @@ const MissionScreen = ({ history }) => {
                 className='mb-2'
                 id='all-chapter'
               >
-                <Card border='primary'>
+                <Card border='info'>
                   <Card.Header as='h5' className='text-center'>
                     Mission
                   </Card.Header>

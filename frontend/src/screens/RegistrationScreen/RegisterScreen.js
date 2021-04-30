@@ -306,7 +306,7 @@ const RegisterScreen = ({ location, history }) => {
                     <Form.Control
                       required
                       type='text'
-                      placeholder='Enter your last certificate url..'
+                      // placeholder='Enter your last certificate url..'
                       value={certificate}
                       onChange={(e) => setCertificate(e.target.value)}
                     ></Form.Control>

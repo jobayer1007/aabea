@@ -352,6 +352,7 @@ exports.approveUser = asyncHandler(async (req, res) => {
           collegeName: pendingUser.collegeName,
           certificates: pendingUser.certificate,
           nextPaymentDueIn: new Date().getFullYear(),
+          profilePicture: '/uploads/image-1616626388111.jpg',
         },
         { transaction: t }
       );
@@ -1054,6 +1055,7 @@ exports.registerSystemAdmin = asyncHandler(async (req, res) => {
           collegeName,
           status,
           isPaid: true,
+          profilePicture: '/uploads/image-1616626388111.jpg',
           nextPaymentDueIn: new Date().getFullYear(),
           // balance,
         },

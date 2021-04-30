@@ -147,13 +147,13 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
                   chapterId: member.chapterId,
                   memberId: member.memberId,
                   // amount: req.body.paymentResult.purchase_units[0].amount.value,
-                  amount: paymentType.paymentTypeAmount,
                   year: year,
+                  paymentType: req.body.paymentTypeName,
+                  amount: paymentType.paymentTypeAmount,
                   payerId: req.body.paymentResult.payer.email_address,
                   paymentId: req.body.paymentResult.id,
                   paymentStatus: req.body.paymentResult.status,
                   paymentTime: req.body.paymentResult.update_time,
-                  // paymentType: req.body.paymentTypeName,
                 },
                 { transaction: t }
               );
@@ -174,12 +174,15 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
           } catch (error) {
             await t.rollback();
             res
-              .status(400)
+              .status(402)
               .send(
                 'msg: Encountered a problem while making Payments, error:' +
                   error
               );
           }
+        } else {
+          res.status(401);
+          throw new Error('Invalid Payment Type');
         }
       }
     } else {

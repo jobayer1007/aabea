@@ -67,7 +67,7 @@ const ProfileScreen = ({ history }) => {
 
       <>
         <Card border='info'>
-          <Card.Header className='text-center' as='h2'>
+          <Card.Header className='text-center text-info' as='h5'>
             {userInfo && userInfo.userName}
           </Card.Header>
 

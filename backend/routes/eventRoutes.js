@@ -28,15 +28,15 @@ router
   .delete(protect, admin, deleteEvent);
 
 // Publis Event
-router.route('/:id/publish').put(protect, admin, publishEvent);
-router.route('/:id/unpublish').put(protect, admin, unPublishEvent);
+router.route('/publish/:id').put(protect, admin, publishEvent);
+router.route('/unpublish/:id').put(protect, admin, unPublishEvent);
 
 // Event Contact
-router.route('/:id/newContact').post(protect, admin, createNewEventContact);
-router.route('/:id/contacts').post(getEventContacts);
+router.route('/newContact/:id').post(protect, admin, createNewEventContact);
+router.route('/contacts/:id').get(getEventContacts);
 
 router
-  .route('/contacts/:id')
+  .route('/contactby/:id')
   .get(getEventContactById)
   .put(protect, admin, updateEventContactById)
   .delete(protect, admin, deleteEventContact);

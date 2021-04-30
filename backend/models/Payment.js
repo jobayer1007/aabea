@@ -26,12 +26,6 @@ const Payment = (sequelize, DataTypes) =>
       },
     },
 
-    // month: {
-    //   type: DataTypes.STRING,
-    //   // allowNull: false,
-    //   unique: 'compositeIndex',
-    // },
-
     paymentType: {
       type: DataTypes.STRING,
       // defaultValue: 'dues',

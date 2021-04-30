@@ -40,7 +40,7 @@ app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)
 );
 
-// const syncStatus = false;
+// const syncStatus = true;
 
 // sequelize
 //   .sync({

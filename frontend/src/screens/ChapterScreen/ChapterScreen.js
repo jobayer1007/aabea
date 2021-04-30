@@ -101,7 +101,7 @@ const ChapterScreen = ({ history }) => {
                 // style={{ padding: 0 }}
                 className='mb-2'
               >
-                <Card border='primary'>
+                <Card border='info'>
                   <Card.Header className='text-center' as='h2'>
                     <Link
                       className='btn btn-outline-info btn-sm btn-block rounded'
@@ -190,7 +190,7 @@ const ChapterScreen = ({ history }) => {
                 className='mb-2'
                 id='all-chapter'
               >
-                <Card className='text-center' border='primary'>
+                <Card className='text-center' border='info'>
                   <Card.Header as='h5'>All Chapter List</Card.Header>
 
                   <>

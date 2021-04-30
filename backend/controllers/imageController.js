@@ -14,6 +14,8 @@ exports.addNewImage = asyncHandler(async (req, res) => {
     imageDescription,
     imageLink,
     image,
+    createdBy: req.user.memberId,
+    lastUpdatedBy: req.user.memberId,
     chapterId: req.user.chapterId,
   });
   if (newImage) {

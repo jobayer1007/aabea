@@ -72,21 +72,16 @@ const DashboardScreen = ({ history }) => {
   };
   return (
     <>
-      <Row className='content'>
+      <Row>
         <Col
           md={{ span: 3, order: 1 }}
           lg={{ span: 3, order: 1 }}
-          id='sidebar-wrapper'
           className='mb-2'
         >
           <Sidebar />
         </Col>
-        <Col
-          md={{ span: 9, order: 12 }}
-          lg={{ span: 9, order: 12 }}
-          id='page-content-wrapper'
-        >
-          <S.CardDeck>
+        <Col md={{ span: 9, order: 12 }} lg={{ span: 9, order: 12 }}>
+          <>
             {/* <CardColumns> */}
             {/* 1st card section : member Status~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
             <Row>
@@ -280,7 +275,7 @@ const DashboardScreen = ({ history }) => {
               </Col>
               {/* 2nd card section : Profile Information ~End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
             </Row>
-          </S.CardDeck>
+          </>
         </Col>
       </Row>
     </>

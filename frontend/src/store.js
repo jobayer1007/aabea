@@ -78,6 +78,21 @@ import {
   cMemberNewReducer,
   cMemberUpdateReducer,
 } from './reducers/committeeReducers';
+import {
+  eventAllReducer,
+  eventByIdReducer,
+  eventContactAllReducer,
+  eventContactByIdReducer,
+  eventContactDeleteReducer,
+  eventContactNewReducer,
+  eventContactUpdateReducer,
+  eventDeleteReducer,
+  eventNewReducer,
+  eventPublishReducer,
+  eventRegisterReducer,
+  eventUnpublishReducer,
+  eventUpdateReducer,
+} from './reducers/eventReducers';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -154,6 +169,23 @@ const reducer = combineReducers({
   cMemberById: cMemberByIdReducer,
   cMemberUpdate: cMemberUpdateReducer,
   cMemberDelete: cMemberDeleteReducer,
+
+  eventNew: eventNewReducer,
+  eventAll: eventAllReducer,
+  eventById: eventByIdReducer,
+  eventUpdate: eventUpdateReducer,
+  eventDelete: eventDeleteReducer,
+
+  eventContactNew: eventContactNewReducer,
+  eventContactAll: eventContactAllReducer,
+  eventContactById: eventContactByIdReducer,
+  eventContactUpdate: eventContactUpdateReducer,
+  eventContactDelete: eventContactDeleteReducer,
+
+  eventPublish: eventPublishReducer,
+  eventUnpublish: eventUnpublishReducer,
+
+  eventRegister: eventRegisterReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

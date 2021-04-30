@@ -19,8 +19,10 @@ const TrainingScreen = () => {
           lg={{ span: 9, order: 12 }}
           id='page-content-wrapper'
         >
-          <Card className='text-center' border='primary'>
-            <Card.Header as='h2'>Training Screen</Card.Header>
+          <Card className='text-center' border='info'>
+            <Card.Header as='h5' className='text-info'>
+              Training Screen
+            </Card.Header>
           </Card>
         </Col>
       </Row>
