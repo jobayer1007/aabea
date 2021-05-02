@@ -85,14 +85,14 @@ const PaymentTypeScreen = ({ history }) => {
   // console.log(addPaymentType);
 
   return (
-    <S.CardDeck>
+    <>
       <Row className='content'>
         {/* Sidebar */}
         <Col
           md={{ span: 3, order: 1 }}
           lg={{ span: 3, order: 1 }}
           id='sidebar-wrapper'
-          className='mb-2'
+          className='m-0 p-1'
         >
           <Sidebar />
         </Col>
@@ -101,16 +101,15 @@ const PaymentTypeScreen = ({ history }) => {
           md={{ span: 9, order: 12 }}
           lg={{ span: 9, order: 12 }}
           id='page-content-wrapper'
+          className='m-0 p-0'
         >
-          <S.CardDeck>
-            {/* <CardColumns> */}
-            {/* 1st card section : member Status~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
+          <>
             <Row>
               <Col
                 md={{ span: 6, order: 1 }}
                 lg={{ span: 6, order: 1 }}
                 // style={{ padding: 0 }}
-                className='mb-2'
+                className='mb-2 p-1'
               >
                 <>
                   {/* Card Start */}
@@ -175,12 +174,6 @@ const PaymentTypeScreen = ({ history }) => {
                             </Form>
                           ))
                         : null}
-                      {/* {message && <Message variant='danger'>{message}</Message>} */}
-                      {/* {registerError && (
-                        <Message variant='danger'>{registerError}</Message>
-                      )}
-                      {registerLoading && <Loader />}
-                      {} */}
                     </Card.Body>
                   </Card>
                   {/* Card End */}
@@ -188,11 +181,10 @@ const PaymentTypeScreen = ({ history }) => {
               </Col>
               {/* 1st card section end~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
 
-              {/* 5th card section : All Chapter List ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
               <Col
                 md={{ span: 6, order: 12 }}
                 lg={{ span: 6, order: 12 }}
-                className='mb-2'
+                className='mb-2 p-1'
                 id='all-chapter'
               >
                 <Card className='text-center' border='info'>
@@ -273,10 +265,10 @@ const PaymentTypeScreen = ({ history }) => {
 
               {/* </CardColumns> */}
             </Row>
-          </S.CardDeck>
+          </>
         </Col>
       </Row>
-    </S.CardDeck>
+    </>
   );
 };
 

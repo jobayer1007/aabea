@@ -16,7 +16,6 @@ import {
 import { USER_DONATE_RESET } from '../../constants/userConstants';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import swal from 'sweetalert';
-// import { listUsers, deleteUser } from '../actions/userActions';
 
 const DonateScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -76,7 +75,6 @@ const DonateScreen = ({ history }) => {
     };
 
     if (donateResulte) {
-      // console.log(donateResulte);
       swal('Success!', donateResulte, 'success').then(() => {
         dispatch({ type: USER_DONATE_RESET });
         setDonateAmount(0);
@@ -120,6 +118,7 @@ const DonateScreen = ({ history }) => {
             md={{ span: 3, order: 1 }}
             lg={{ span: 3, order: 1 }}
             // id='sidebar-wrapper'
+            className='m-0 p-1'
           >
             <Sidebar />
           </Col>
@@ -127,6 +126,7 @@ const DonateScreen = ({ history }) => {
             md={{ span: 9, order: 12 }}
             lg={{ span: 9, order: 12 }}
             id='page-content-wrapper'
+            className='m-0 p-1'
           >
             <Card border='info' className='mb-2'>
               <Card.Header className='text-center' as='h2'>

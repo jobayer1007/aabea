@@ -170,7 +170,7 @@ const EditProfileScreen = ({ match, history }) => {
 
       <>
         <Card border='info'>
-          <Card.Header className='text-center' as='h2'>
+          <Card.Header className='text-center text-info' as='h5'>
             Edit Profile
           </Card.Header>
           <Card.Body>

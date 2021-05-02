@@ -11,12 +11,16 @@ import parse from 'html-react-parser';
 import { allVission } from '../../actions/vissionActions';
 import { allHistory } from '../../actions/historyActions';
 import { allCMembers } from '../../actions/committeeActions';
+import { allEvents } from '../../actions/eventActions';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
 
   const announcementAll = useSelector((state) => state.announcementAll);
   const { loading, error, announcements } = announcementAll;
+
+  const eventAll = useSelector((state) => state.eventAll);
+  const { loading: eventsLoading, error: eventsError, events } = eventAll;
 
   const missionAll = useSelector((state) => state.missionAll);
   const { loading: missionLoading, error: missionError, missions } = missionAll;
@@ -40,6 +44,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     dispatch(allAnnouncements());
+    dispatch(allEvents());
     dispatch(allMission());
     dispatch(allVission());
     dispatch(allHistory());
@@ -79,14 +84,23 @@ const HomeScreen = () => {
             <Card.Header className='text-info' as='h4'>
               Events :
             </Card.Header>
-            <Card.Body>
-              <Card.Text className='text-info'>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore
-                officiis facilis beatae consequatur reiciendis dicta quia
-                voluptatem, ab, voluptatum eligendi ullam libero facere impedit
-                molestiae repudiandae ipsa, necessitatibus numquam velit?
-              </Card.Text>
-            </Card.Body>
+            <>
+              {eventsLoading ? (
+                <Loader />
+              ) : eventsError ? (
+                <Message variant='danger'>{eventsError}</Message>
+              ) : (
+                <ListGroup variant='flush'>
+                  {events.map((event, index) => (
+                    <ListGroup.Item key={index}>
+                      <Link to={`/event/${event.eventId}`}>
+                        <span className='text-info'> {event.eventName}</span>
+                      </Link>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              )}
+            </>
 
             <Card.Body>
               <Card.Link href='#'>Card Link</Card.Link>

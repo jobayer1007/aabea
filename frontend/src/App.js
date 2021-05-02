@@ -39,6 +39,7 @@ import EventScreen from './screens/EventScreen/EventScreen';
 import SettingScreen from './screens/SettingScreen/SettingScreen';
 import EventNewScreen from './screens/EventScreen/EventNewScreen';
 import EventByIdScreen from './screens/EventScreen/EventByIdScreen';
+import EventRegisterScreen from './screens/EventScreen/EventRegistrationScreen';
 
 const App = () => {
   return (
@@ -77,8 +78,9 @@ const App = () => {
             <Route path='/committee/:id' component={CommitteeMemberScreen} />
             <Route path='/members' component={MembersScreen} />
             <Route path='/events' component={EventScreen} />
+            <Route path='/event/register/:id' component={EventRegisterScreen} />
             <Route path='/eventsnew' component={EventNewScreen} />
-            <Route path='/event/:id' component={EventByIdScreen} />
+            <Route path='/event/:id' component={EventByIdScreen} exact />
             <Route path='/settings' component={SettingScreen} />
             <Route
               path='/users/:id/pending'

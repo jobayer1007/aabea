@@ -187,7 +187,7 @@ const CommitteeScreen = ({ history }) => {
             md={{ span: 3, order: 1 }}
             lg={{ span: 3, order: 1 }}
             id='sidebar-wrapper'
-            className='mb-2'
+            className='m-0 p-1'
           >
             <Sidebar />
           </Col>
@@ -196,8 +196,9 @@ const CommitteeScreen = ({ history }) => {
             md={{ span: 9, order: 12 }}
             lg={{ span: 9, order: 12 }}
             id='page-content-wrapper'
+            className='m-0 p-1'
           >
-            <S.CardDeck>
+            <>
               {/* <CardColumns> */}
 
               <Row>
@@ -209,7 +210,7 @@ const CommitteeScreen = ({ history }) => {
                       md={{ span: 12, order: 1 }}
                       lg={{ span: 12, order: 1 }}
                       // style={{ padding: 0 }}
-                      className='mb-2'
+                      className='mb-2 p-0'
                     >
                       <Card border='info'>
                         <Card.Header className='text-center text-info' as='h3'>
@@ -314,7 +315,7 @@ const CommitteeScreen = ({ history }) => {
                     <Col
                       md={{ span: 12, order: 12 }}
                       lg={{ span: 12, order: 12 }}
-                      className='mb-2'
+                      className='mb-2 p-0'
                       id='all-chapter'
                     >
                       <Card border='info'>
@@ -450,7 +451,7 @@ const CommitteeScreen = ({ history }) => {
                   </>
                 )}
               </Row>
-            </S.CardDeck>
+            </>
           </Col>
         </>
       ) : (

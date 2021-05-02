@@ -47,7 +47,7 @@ const ProfileScreen = ({ history }) => {
   const editUserHandler = (e) => {
     e.preventDefault();
 
-    console.log('Edit clicked');
+    // console.log('Edit clicked');
     history.push(`/users/profile/edit`);
 
     // dispatch(approveUser(pendingId));

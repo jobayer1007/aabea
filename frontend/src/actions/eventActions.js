@@ -511,7 +511,7 @@ export const unpublishEvent = (id) => async (dispatch, getState) => {
 
 /////////////////////////Event Registration///////////////////////////////////////////////
 
-export const eventRegister = (
+export const registerEvent = (
   eventId,
   eventName,
   mInit,

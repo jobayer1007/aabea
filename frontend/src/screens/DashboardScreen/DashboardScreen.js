@@ -76,11 +76,16 @@ const DashboardScreen = ({ history }) => {
         <Col
           md={{ span: 3, order: 1 }}
           lg={{ span: 3, order: 1 }}
-          className='mb-2'
+          // className='mb-2'
+          className='m-0 p-1'
         >
           <Sidebar />
         </Col>
-        <Col md={{ span: 9, order: 12 }} lg={{ span: 9, order: 12 }}>
+        <Col
+          md={{ span: 9, order: 12 }}
+          lg={{ span: 9, order: 12 }}
+          className='m-0 p-0'
+        >
           <>
             {/* <CardColumns> */}
             {/* 1st card section : member Status~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
@@ -90,7 +95,7 @@ const DashboardScreen = ({ history }) => {
                 lg={{ span: 6, order: 1 }}
                 id='member-status'
                 // style={{ padding: 0 }}
-                className='mb-2'
+                className='mb-2 p-1'
               >
                 <Card>
                   {userInfo ? (
@@ -161,8 +166,9 @@ const DashboardScreen = ({ history }) => {
               <Col
                 md={{ span: 6, order: 2 }}
                 lg={{ span: 6, order: 2 }}
-                className='mb-2'
+                className='mb-2 p-1'
                 id='profile-information'
+                // className='m-0 p-1'
               >
                 <Card>
                   <Card.Header as='h5' className='text-info'>

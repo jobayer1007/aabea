@@ -11,6 +11,7 @@ const TrainingScreen = () => {
           md={{ span: 3, order: 1 }}
           lg={{ span: 3, order: 1 }}
           // id='sidebar-wrapper'
+          className='m-0 p-1'
         >
           <Sidebar />
         </Col>
@@ -18,6 +19,7 @@ const TrainingScreen = () => {
           md={{ span: 9, order: 12 }}
           lg={{ span: 9, order: 12 }}
           id='page-content-wrapper'
+          className='m-0 p-1'
         >
           <Card className='text-center' border='info'>
             <Card.Header as='h5' className='text-info'>

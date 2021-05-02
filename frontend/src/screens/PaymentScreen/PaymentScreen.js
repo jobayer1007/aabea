@@ -117,7 +117,11 @@ const PaymentScreen = ({ history }) => {
   return (
     <>
       <Row className='content'>
-        <Col md={{ span: 3, order: 1 }} lg={{ span: 3, order: 1 }}>
+        <Col
+          md={{ span: 3, order: 1 }}
+          lg={{ span: 3, order: 1 }}
+          className='m-0 p-1'
+        >
           <Sidebar />
         </Col>
 
@@ -125,10 +129,11 @@ const PaymentScreen = ({ history }) => {
           md={{ span: 9, order: 12 }}
           lg={{ span: 9, order: 12 }}
           id='page-content-wrapper'
+          className='m-0 p-0'
         >
           <>
             <Row>
-              <Col md={8}>
+              <Col md={8} className='mb-2 p-1'>
                 <Card>
                   <h3 className='text-info text-center'>Payment</h3>
                   {loadingPaymentTypes ? (
@@ -145,9 +150,9 @@ const PaymentScreen = ({ history }) => {
                             onChange={paymentTypeChangeHandler}
                           >
                             <option>Select Payment Type</option>
-                            {paymentTypes.map((paymentType) => (
+                            {paymentTypes.map((paymentType, index) => (
                               <option
-                                key={paymentType.paymentTypeId}
+                                key={index}
                                 value={[
                                   paymentType.paymentTypeName,
                                   paymentType.paymentTypeAmount,
@@ -218,7 +223,6 @@ const PaymentScreen = ({ history }) => {
                       </ListGroup>
                     </>
                   )}
-
                   <>
                     <Card.Header as='h5' className='text-info text-center'>
                       Payments
@@ -245,8 +249,8 @@ const PaymentScreen = ({ history }) => {
                           </tr>
                         </thead>
                         <tbody>
-                          {payments.map((payment) => (
-                            <tr key={payment.paymentId}>
+                          {payments.map((payment, index) => (
+                            <tr key={index}>
                               <td>{payment.paymentId}</td>
                               <td>{payment.paymentType}</td>
                               <td>{payment.amount}</td>
@@ -261,7 +265,7 @@ const PaymentScreen = ({ history }) => {
                 </Card>
               </Col>
 
-              <Col md={4}>
+              <Col md={4} className='mb-2 p-1'>
                 <Card>
                   <ListGroup variant='flush'>
                     <ListGroup.Item>

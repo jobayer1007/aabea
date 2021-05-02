@@ -81,7 +81,7 @@ const ChapterScreen = ({ history }) => {
           md={{ span: 3, order: 1 }}
           lg={{ span: 3, order: 1 }}
           id='sidebar-wrapper'
-          className='mb-2'
+          className='m-0 p-1'
         >
           <Sidebar />
         </Col>
@@ -90,8 +90,9 @@ const ChapterScreen = ({ history }) => {
           md={{ span: 9, order: 12 }}
           lg={{ span: 9, order: 12 }}
           id='page-content-wrapper'
+          className='m-0 p-1'
         >
-          <S.CardDeck>
+          <>
             {/* <CardColumns> */}
             {/* 1st card section : member Status~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
             <Row>
@@ -99,10 +100,10 @@ const ChapterScreen = ({ history }) => {
                 md={{ span: 12, order: 1 }}
                 lg={{ span: 12, order: 1 }}
                 // style={{ padding: 0 }}
-                className='mb-2'
+                className='mb-2 p-0'
               >
                 <Card border='info'>
-                  <Card.Header className='text-center' as='h2'>
+                  <Card.Header className='text-center text-info' as='h2'>
                     <Link
                       className='btn btn-outline-info btn-sm btn-block rounded'
                       onClick={() => setAddChapter(!addChapter)}
@@ -187,11 +188,13 @@ const ChapterScreen = ({ history }) => {
               <Col
                 md={{ span: 12, order: 12 }}
                 lg={{ span: 12, order: 12 }}
-                className='mb-2'
+                className='mb-2 p-0'
                 id='all-chapter'
               >
                 <Card className='text-center' border='info'>
-                  <Card.Header as='h5'>All Chapter List</Card.Header>
+                  <Card.Header as='h5' className='text-info'>
+                    All Chapter List
+                  </Card.Header>
 
                   <>
                     {loading ? (
@@ -297,7 +300,7 @@ const ChapterScreen = ({ history }) => {
 
               {/* </CardColumns> */}
             </Row>
-          </S.CardDeck>
+          </>
         </Col>
       </Row>
     </>

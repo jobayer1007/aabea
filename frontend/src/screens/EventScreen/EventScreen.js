@@ -1,52 +1,24 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Row, Col, Card, Form, Button, Table } from 'react-bootstrap';
+import React, { useEffect, useRef } from 'react';
+import { Row, Col, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { format } from 'date-fns';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import parse from 'html-react-parser';
 
 import Sidebar from '../../components/Sidebar/Sidebar';
-import {
-  allAnnouncements,
-  deleteAnnouncement,
-  getAnnouncementById,
-  newAnnouncement,
-  updateAnnouncementById,
-} from '../../actions/announcementAction';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import {
-  ANNOUNCEMENT_BY_ID_RESET,
-  ANNOUNCEMENT_NEW_RESET,
-  ANNOUNCEMENT_UPDATE_BY_ID_RESET,
-} from '../../constants/announcementConstants';
 import ColumnFilter from '../../components/Table/ColumnFilter';
 import RTable from '../../components/Table/RTable';
-import {
-  allEvents,
-  deleteEvent,
-  getEventById,
-} from '../../actions/eventActions';
-import {
-  EVENT_NEW_RESET,
-  EVENT_UPDATE_BY_ID_RESET,
-} from '../../constants/eventConstants';
+import { allEvents, deleteEvent } from '../../actions/eventActions';
+import { EVENT_UPDATE_BY_ID_RESET } from '../../constants/eventConstants';
 
 const EventScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  // const [addAnnouncement, setAddAnnouncement] = useState(false);
-  // const [editAnnouncement, setEditAnnouncement] = useState(false);
-  // const [title, setTitle] = useState('');
-  // const [body, setBody] = useState('');
-  // const [id, setId] = useState('');
-
   const eventsRef = useRef();
 
-  // const userLogin = useSelector((state) => state.userLogin);
-  // const { userInfo } = userLogin;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   const eventAll = useSelector((state) => state.eventAll);
   const { loading, error, events } = eventAll;
@@ -54,26 +26,25 @@ const EventScreen = ({ history }) => {
   eventsRef.current = events;
 
   const eventNew = useSelector((state) => state.eventNew);
-  const { loading: eventNewLoading, error: eventNewError, success } = eventNew;
+  const { success } = eventNew;
 
-  const eventById = useSelector((state) => state.eventById);
-  const { success: eventByIdSuccess, event } = eventById;
+  // const eventById = useSelector((state) => state.eventById);
+  // const { success: eventByIdSuccess, event } = eventById;
 
-  const eventUpdate = useSelector((state) => state.eventUpdate);
-  const { success: eventUpdateSuccess } = eventUpdate;
+  // const eventUpdate = useSelector((state) => state.eventUpdate);
+  // const { success: eventUpdateSuccess } = eventUpdate;
 
   const eventDelete = useSelector((state) => state.eventDelete);
   const { success: successDelete } = eventDelete;
 
   useEffect(() => {
-    // if (userInfo) {
-    // setId(userInfo.memberId);
-    dispatch(allEvents());
-    // dispatch({ type: EVENT_NEW_RESET });
-    // }
-    // else {
-    //   history.push('/login');
-    // }
+    if (userInfo) {
+      // setId(userInfo.memberId);
+      dispatch(allEvents());
+      // dispatch({ type: EVENT_NEW_RESET });
+    } else {
+      history.push('/login');
+    }
     // if (success || eventUpdateSuccess) {
     //   setAddEvent(false);
     //   setEditEvent(false);
@@ -94,7 +65,7 @@ const EventScreen = ({ history }) => {
   }, [
     dispatch,
     history,
-    // userInfo,
+    userInfo,
     success,
     // announcementByIdSuccess,
     // announcement,
@@ -118,28 +89,6 @@ const EventScreen = ({ history }) => {
       dispatch(deleteEvent(id));
     }
   };
-
-  // const addNewEvent = (e) => {
-  //   e.preventDefault();
-
-  //   setAddAnnouncement(!addAnnouncement);
-  //   setTitle('');
-  //   setBody('');
-  //   setEditAnnouncement(false);
-  //   dispatch({ type: ANNOUNCEMENT_BY_ID_RESET });
-  // };
-
-  // const submitHandler = (e) => {
-  //   e.preventDefault();
-
-  //   if (editAnnouncement) {
-  //     dispatch(updateAnnouncementById(id, title, body));
-  //   } else {
-  //     setId(userInfo.memberId);
-  //     // console.log(id);
-  //     dispatch(newAnnouncement(title, body, id));
-  //   }
-  // };
 
   const columnsAdmin = [
     {
@@ -206,7 +155,7 @@ const EventScreen = ({ history }) => {
           md={{ span: 3, order: 1 }}
           lg={{ span: 3, order: 1 }}
           id='sidebar-wrapper'
-          className='mb-2'
+          className='m-0 p-1'
         >
           <Sidebar />
         </Col>
@@ -215,6 +164,7 @@ const EventScreen = ({ history }) => {
           md={{ span: 9, order: 12 }}
           lg={{ span: 9, order: 12 }}
           id='page-content-wrapper'
+          className='m-0 p-1'
         >
           <>
             {/* <CardColumns> */}
@@ -224,7 +174,7 @@ const EventScreen = ({ history }) => {
                 md={{ span: 12, order: 1 }}
                 lg={{ span: 12, order: 1 }}
                 // style={{ padding: 0 }}
-                className='mb-2'
+                className='mb-2 p-0'
               >
                 <Card border='info'>
                   <Card.Header className='text-center' as='h5'>
@@ -249,7 +199,7 @@ const EventScreen = ({ history }) => {
               <Col
                 md={{ span: 12, order: 12 }}
                 lg={{ span: 12, order: 12 }}
-                className='mb-2'
+                className='mb-2 p-0'
                 id='all-chapter'
               >
                 <Card border='info'>

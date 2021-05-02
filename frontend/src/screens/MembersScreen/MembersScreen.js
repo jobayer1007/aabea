@@ -106,7 +106,7 @@ const MembersScreen = ({ history }) => {
             Cell: (props) => {
               const rowIdx = props.row.id;
               return (
-                <div>
+                <>
                   <span onClick={() => editUserHandler(rowIdx)}>
                     <i
                       className='far fa-edit action'
@@ -124,7 +124,7 @@ const MembersScreen = ({ history }) => {
                   </Button> */}
 
                   <Link
-                    className='btn btn-outline-warning btn-sm btn-block  rounded'
+                    className='btn btn-outline-warning btn-sm ml-2 rounded'
                     onClick={() => createAdminHandler(rowIdx)}
                   >
                     Make admin
@@ -132,11 +132,11 @@ const MembersScreen = ({ history }) => {
 
                   <span onClick={() => deleteUserHandler(rowIdx)}>
                     <i
-                      className='fas fa-trash action'
+                      className='fas fa-trash action ml-2'
                       style={{ color: 'red' }}
                     ></i>
                   </span>
-                </div>
+                </>
               );
             },
           },
@@ -229,7 +229,7 @@ const MembersScreen = ({ history }) => {
           md={{ span: 3, order: 1 }}
           lg={{ span: 3, order: 1 }}
           id='sidebar-wrapper'
-          className='mb-2'
+          className='m-0 p-1'
         >
           <Sidebar />
         </Col>
@@ -237,8 +237,9 @@ const MembersScreen = ({ history }) => {
           md={{ span: 9, order: 12 }}
           lg={{ span: 9, order: 12 }}
           id='page-content-wrapper'
+          className='m-0 p-1'
         >
-          <S.CardDeck>
+          <>
             {/* <CardColumns> */}
             <Row>
               {/* 5th card section : All Email Verified Pending User List ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
@@ -251,9 +252,9 @@ const MembersScreen = ({ history }) => {
                   <Message variant='danger'>{pendingUsersError}</Message>
                 ) : pendingUsers && pendingUsers.length !== 0 ? (
                   <Col
-                    md={{ span: 12, order: 12 }}
-                    lg={{ span: 12, order: 12 }}
-                    className='mb-2'
+                    md={{ span: 12, order: 1 }}
+                    lg={{ span: 12, order: 1 }}
+                    className='mb-2 p-0'
                     id='all-chapter'
                   >
                     <Card className='text-center' border='info'>
@@ -261,7 +262,7 @@ const MembersScreen = ({ history }) => {
                         Member Pending List
                       </Card.Header>
 
-                      <Card.Body>
+                      <>
                         <Table
                           striped
                           bordered
@@ -354,7 +355,7 @@ const MembersScreen = ({ history }) => {
                             ))}
                           </tbody>
                         </Table>
-                      </Card.Body>
+                      </>
                     </Card>
                   </Col>
                 ) : null
@@ -366,7 +367,7 @@ const MembersScreen = ({ history }) => {
               <Col
                 md={{ span: 12, order: 12 }}
                 lg={{ span: 12, order: 12 }}
-                className='mb-2'
+                className='mb-2 p-0'
                 id='all-member'
               >
                 <Card className='text-center' border='info'>
@@ -374,7 +375,7 @@ const MembersScreen = ({ history }) => {
                     Admins
                   </Card.Header>
 
-                  <Card.Body>
+                  <>
                     {userListLoading ? (
                       <Loader />
                     ) : userListError ? (
@@ -489,7 +490,7 @@ const MembersScreen = ({ history }) => {
                         </tbody>
                       </Table>
                     )}
-                  </Card.Body>
+                  </>
                 </Card>
               </Col>
               {/* 6th card section : Admin List End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
@@ -498,7 +499,7 @@ const MembersScreen = ({ history }) => {
               <Col
                 md={{ span: 12, order: 12 }}
                 lg={{ span: 12, order: 12 }}
-                className='mb-2'
+                className='mb-2 p-0'
                 id='all-member'
               >
                 <Card className='text-center' border='info'>
@@ -506,7 +507,7 @@ const MembersScreen = ({ history }) => {
                     Chapter Members
                   </Card.Header>
 
-                  <Card.Body>
+                  <>
                     {userListLoading ? (
                       <Loader />
                     ) : userListError ? (
@@ -518,13 +519,13 @@ const MembersScreen = ({ history }) => {
                         )}
                       </>
                     )}
-                  </Card.Body>
+                  </>
                 </Card>
               </Col>
               {/* 7th card section : All Member List End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
               {/* </CardColumns> */}
             </Row>
-          </S.CardDeck>
+          </>
         </Col>
       </Row>
     </>

@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+const dotenv = require('dotenv');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
 const { sendConfirmationEmail } = require('./mailer');
@@ -6,6 +8,23 @@ const Member = require('../models/Member');
 const models = require('../models/index');
 const generateToken = require('../utils/generateToken');
 const { generateId } = require('../utils/generateId');
+
+const sequelize = new Sequelize(
+  process.env.PG_DATABASE,
+  process.env.PG_USER,
+  process.env.PG_PASSWORD,
+  {
+    host: 'localhost',
+    dialect: 'postgres',
+
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+  }
+);
 
 // @desc    Create a new Event     ///////////////////////////////////////////////
 // @route   POST /api/events/new
@@ -150,7 +169,7 @@ exports.updateEvent = asyncHandler(async (req, res) => {
     );
 
     if (updatedEvent == 1) {
-      res.json({ message: 'Event updated successfully' });
+      res.json(updatedEvent);
     } else {
       res.send({ message: 'Event update unsuccessful' });
     }
@@ -451,6 +470,7 @@ exports.registerEventGuest = asyncHandler(async (req, res) => {
     phone,
     numberOfAdults,
     numberOfMinors,
+    paymentResult,
   } = req.body;
   const event = await models.Event.findOne({
     where: { eventId: eventId, eventStatus: true },
@@ -464,8 +484,10 @@ exports.registerEventGuest = asyncHandler(async (req, res) => {
       const t = await sequelize.transaction();
 
       try {
+        const register = await models.EventRegistration.findAll();
         const guestRegister = await models.EventRegistration.create(
           {
+            registrationId: generateId(register),
             eventId,
             eventName,
             mInit,
@@ -482,21 +504,19 @@ exports.registerEventGuest = asyncHandler(async (req, res) => {
           { transaction: t }
         );
 
-        if (guestRegister) {
-          await models.EventPayment.create(
-            {
-              eventId,
-              registrationId: guestRegister.registrationId,
-              amount: paymentResult.purchase_units[0].amount.value,
-              payerId: paymentResult.payer.email_address,
-              paymentId: paymentResult.id,
-              paymentStatus: paymentResult.status,
-              paymentTime: paymentResult.update_time,
-              chapterId: event.chapterId,
-            },
-            { transaction: t }
-          );
-        }
+        await models.EventPayment.create(
+          {
+            eventId,
+            registrationId: guestRegister.registrationId,
+            amount: paymentResult.purchase_units[0].amount.value,
+            payerId: paymentResult.payer.email_address,
+            paymentId: paymentResult.id,
+            paymentStatus: paymentResult.status,
+            paymentTime: paymentResult.update_time,
+            chapterId: event.chapterId,
+          },
+          { transaction: t }
+        );
 
         await t.commit();
         res.send('Event Registration successful');
@@ -504,7 +524,8 @@ exports.registerEventGuest = asyncHandler(async (req, res) => {
         await t.rollback();
         res.status(400);
         throw new Error(
-          'Something Went Wrong with event registration, Please contact the Administrator'
+          'Something Went Wrong with event registration, Please contact the Administrator' +
+            error
         );
       }
     } else {
