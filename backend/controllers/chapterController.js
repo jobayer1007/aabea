@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
 const { sendConfirmationEmail } = require('./mailer');
@@ -5,6 +7,23 @@ const User = require('../models/User');
 const Member = require('../models/Member');
 const models = require('../models/index');
 const generateToken = require('../utils/generateToken');
+
+const sequelize = new Sequelize(
+  process.env.PG_DATABASE,
+  process.env.PG_USER,
+  process.env.PG_PASSWORD,
+  {
+    host: 'localhost',
+    dialect: 'postgres',
+
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+  }
+);
 
 // @desc    Create a new Chapter     ///////////////////////////////////////////////
 // @route   POST /api/chapters/new
@@ -297,9 +316,9 @@ exports.deleteMission = asyncHandler(async (req, res) => {
   }
 });
 
-///////////////////////////////////////////VISSION////////////////////////////////////////////////
+///////////////////////////////////////////VISION////////////////////////////////////////////////
 
-// @desc    Create a new VISSION     /////////////////////////////////////////VISSION//////
+// @desc    Create a new VISION     /////////////////////////////////////////VISSION//////
 // @route   POST /api/chapters/vission
 // @access  Private/SystemAdmin || Admin
 exports.createVission = asyncHandler(async (req, res) => {
@@ -530,5 +549,156 @@ exports.deleteHistory = asyncHandler(async (req, res) => {
   } else {
     res.status(401);
     throw new Error('History not found');
+  }
+});
+
+//////////////////////////////Chapter Settings///////////////////////////////////////
+
+// @desc    Create a new Chapter Settings     ///////////////////////////////////////////////
+// @route   POST /api/chapters/settings
+// @access  Private/admin
+exports.createNewChapterSettings = asyncHandler(async (req, res) => {
+  const {
+    chapterEmail,
+    password,
+    chapterAddress,
+    chapterPhone,
+    chapterPaymentId,
+  } = req.body;
+
+  const chapterEmailExists = await models.ChapterSettings.findOne({
+    where: { chapterEmail: chapterEmail },
+  });
+  if (!chapterEmailExists) {
+    const t = await sequelize.transaction();
+
+    try {
+      const chapter = await models.Chapter.findOne({
+        where: { chapterId: req.user.chapterId },
+      });
+      await models.ChapterSettings.create(
+        {
+          chapterEmail,
+          password,
+          chapterName: chapter.chapterName,
+          chapterAddress,
+          chapterPhone,
+          chapterPayment: chapterPaymentId,
+          createdBy: req.user.memberId,
+          lastUpdatedBy: req.user.memberId,
+          chapterId: req.user.chapterId,
+        },
+        { transaction: t }
+      );
+
+      await models.Chapter.update(
+        {
+          chapterEmail,
+          chapterAddress,
+          chapterPhone,
+        },
+        { where: { chapterId: req.user.chapterId } },
+        { transaction: t }
+      );
+
+      await t.commit();
+      res.send('Chapter settings created successful');
+    } catch (error) {
+      await t.rollback();
+      res.status(400);
+      throw new Error(
+        'Something Went Wrong, Please contact the System Admin' + error
+      );
+    }
+  } else {
+    res.status(400);
+    throw new Error(
+      'A Chapter with Chapter Email:' +
+        chapterEmailExists.chapterEmail +
+        ' already exist' +
+        'where Chapter Name:' +
+        chapterEmailExists.chapterName
+    );
+  }
+});
+
+// @desc    GET Chapter Settings     ///////////////////////////////////////////////
+// @route   GET /api/chapters/settings
+// @access  Private/admin
+exports.getChapterSettings = asyncHandler(async (req, res) => {
+  try {
+    const chapterSettings = await models.ChapterSettings.findOne({
+      where: { chapterId: req.user.chapterId },
+    });
+
+    res.json(chapterSettings);
+  } catch (error) {
+    res.status(401);
+    throw new Error('Invalid Chapter Reference' + error);
+  }
+});
+
+// @desc    Create a new Chapter Settings     ///////////////////////////////////////////////
+// @route   PUT /api/chapters/settings
+// @access  Private/admin
+exports.updateChapterSettings = asyncHandler(async (req, res) => {
+  const chapterExists = await models.ChapterSettings.findOne({
+    where: { chapterId: req.user.chapterId },
+  });
+  if (chapterExists) {
+    const data = {
+      chapterEmail: req.body.chapterEmail || chapterExists.chapterEmail,
+      password: req.body.password || chapterExists.password,
+      chapterAddress: req.body.chapterAddress || chapterExists.chapterAddress,
+      chapterPhone: req.body.chapterPhone || chapterExists.chapterPhone,
+      chapterPayment: req.body.chapterPaymentId || chapterExists.chapterPayment,
+    };
+
+    let {
+      chapterEmail,
+      password,
+      chapterAddress,
+      chapterPhone,
+      chapterPayment,
+    } = data;
+
+    const t = await sequelize.transaction();
+
+    try {
+      await models.ChapterSettings.update(
+        {
+          chapterEmail,
+          password,
+          chapterAddress,
+          chapterPhone,
+          chapterPayment,
+          lastUpdatedBy: req.user.memberId,
+        },
+        { where: { chapterId: req.user.chapterId } },
+        { transaction: t }
+      );
+
+      await models.Chapter.update(
+        {
+          chapterEmail,
+          chapterAddress,
+          chapterPhone,
+        },
+        { where: { chapterId: req.user.chapterId } },
+        { transaction: t }
+      );
+
+      await t.commit();
+      res.send('Chapter settings updated successful');
+    } catch (error) {
+      await t.rollback();
+      res.status(401);
+      throw new Error(
+        'Something Went Wrong, Please contact the System Admin' + ' ' + error
+      );
+    }
+  } else {
+    res.status(400);
+    throw new Error('Invalid Chapter Reference');
   }
 });

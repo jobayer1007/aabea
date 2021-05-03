@@ -1,5 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Row, Col, Card, Form, Button, Table } from 'react-bootstrap';
+import {
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  Table,
+  ListGroup,
+} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -24,162 +32,129 @@ import {
 } from '../../constants/announcementConstants';
 import ColumnFilter from '../../components/Table/ColumnFilter';
 import RTable from '../../components/Table/RTable';
+import {
+  getChapterSettings,
+  newChapterSettings,
+  updateChapterSettings,
+} from '../../actions/chapterActions';
+import {
+  CHAPTER_SETTINGS_NEW_RESET,
+  CHAPTER_SETTINGS_UPDATE_RESET,
+} from '../../constants/chapterConstants';
+import swal from 'sweetalert';
 
 const SettingScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  const [addAnnouncement, setAddAnnouncement] = useState(false);
-  const [editAnnouncement, setEditAnnouncement] = useState(false);
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
-  const [id, setId] = useState('');
-
-  const announcementsRef = useRef();
+  const [newSettings, setNewSettings] = useState(false);
+  const [editSettings, setEditSettings] = useState(false);
+  const [chapterAddress, setChapterAddress] = useState('');
+  const [chapterEmail, setChapterEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [chapterPhone, setChapterPhone] = useState('');
+  const [chapterPaymentId, setChapterPaymentId] = useState('');
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const announcementAll = useSelector((state) => state.announcementAll);
-  const { loading, error, announcements } = announcementAll;
-
-  announcementsRef.current = announcements;
-
-  const announcementNew = useSelector((state) => state.announcementNew);
+  const chapterSettingsNew = useSelector((state) => state.chapterSettingsNew);
   const {
-    loading: announcementNewLoading,
-    error: announcementNewError,
+    loading: chapterSettingsNewLoading,
+    error: chapterSettingsNewError,
+    success: chapterSettingsNewSuccess,
+  } = chapterSettingsNew;
+
+  const chapterSettingsAll = useSelector((state) => state.chapterSettingsAll);
+  const {
+    loading: chapterSettingsLoading,
+    error: chapterSettingsError,
     success,
-  } = announcementNew;
+    chapterSettings,
+  } = chapterSettingsAll;
 
-  const announcementById = useSelector((state) => state.announcementById);
-  const { success: announcementByIdSuccess, announcement } = announcementById;
-
-  const announcementUpdate = useSelector((state) => state.announcementUpdate);
-  const { success: announcementUpdateSuccess } = announcementUpdate;
-
-  const announcementDelete = useSelector((state) => state.announcementDelete);
-  const { success: successDelete } = announcementDelete;
+  const chapterSettingsUpdate = useSelector(
+    (state) => state.chapterSettingsUpdate
+  );
+  const {
+    loading: chapterSettingsUpdateLoading,
+    error: chapterSettingsUpdateError,
+    success: chapterSettingsUpdateSuccess,
+  } = chapterSettingsUpdate;
 
   useEffect(() => {
     if (userInfo) {
-      setId(userInfo.memberId);
-      dispatch(allAnnouncements());
-      dispatch({ type: ANNOUNCEMENT_NEW_RESET });
+      dispatch(getChapterSettings());
+      // dispatch({ type: ANNOUNCEMENT_NEW_RESET });
     } else {
       history.push('/login');
     }
-    if (success || announcementUpdateSuccess) {
-      setAddAnnouncement(false);
-      setEditAnnouncement(false);
+    if (chapterSettingsNewSuccess || chapterSettingsUpdateSuccess) {
+      swal(
+        'Success!',
+        chapterSettingsNewSuccess || chapterSettingsUpdateSuccess,
+        'success'
+      ).then((value) => {
+        dispatch({ type: CHAPTER_SETTINGS_NEW_RESET });
+        dispatch({ type: CHAPTER_SETTINGS_UPDATE_RESET });
 
-      setTitle('');
-      setBody('');
-      dispatch({ type: ANNOUNCEMENT_BY_ID_RESET });
-    }
-    if (announcementByIdSuccess) {
-      setAddAnnouncement(true);
-      setEditAnnouncement(true);
-      setTitle(announcement.title);
-      setBody(announcement.body);
-      setId(announcement.announcementId);
-
-      // setId(announcement.announcementId);
+        setNewSettings(false);
+        setEditSettings(false);
+      });
     }
   }, [
     dispatch,
     history,
     userInfo,
-    success,
-    announcementByIdSuccess,
-    announcement,
-    announcementUpdateSuccess,
-    successDelete,
+    chapterSettingsNewSuccess,
+    chapterSettingsUpdateSuccess,
   ]);
 
-  const editAnnouncementHandler = (rowIndex) => {
-    const id = announcementsRef.current[rowIndex].announcementId;
-    dispatch({ type: ANNOUNCEMENT_UPDATE_BY_ID_RESET });
-    console.log(rowIndex);
-    console.log(id);
-    dispatch(getAnnouncementById(id));
-  };
-
-  const deleteAnnouncementHandler = (rowIndex) => {
-    const id = announcementsRef.current[rowIndex].announcementId;
-
-    if (window.confirm('Are You Sure?')) {
-      dispatch(deleteAnnouncement(id));
-    }
-  };
-
-  const addNewAnnouncement = (e) => {
+  const addNewSettings = (e) => {
     e.preventDefault();
 
-    setAddAnnouncement(!addAnnouncement);
-    setTitle('');
-    setBody('');
-    setEditAnnouncement(false);
-    dispatch({ type: ANNOUNCEMENT_BY_ID_RESET });
+    setNewSettings(!newSettings);
+  };
+
+  const editSettingsHandler = (e) => {
+    e.preventDefault();
+
+    setEditSettings(!editSettings);
+    setChapterAddress(chapterSettings.chapterAddress);
+    setChapterEmail(chapterSettings.chapterEmail);
+    setPassword(chapterSettings.password);
+    setChapterPhone(chapterSettings.chapterPhone);
+    setChapterPaymentId(chapterSettings.chapterPayment);
+  };
+
+  const updateSettingsHandler = (e) => {
+    e.preventDefault();
+
+    dispatch(
+      updateChapterSettings({
+        chapterEmail,
+        password,
+        chapterAddress,
+        chapterPhone,
+        chapterPaymentId,
+      })
+    );
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (editAnnouncement) {
-      dispatch(updateAnnouncementById(id, title, body));
-    } else {
-      setId(userInfo.memberId);
-      // console.log(id);
-      dispatch(newAnnouncement(title, body, id));
-    }
+    console.log(chapterAddress);
+
+    dispatch(
+      newChapterSettings(
+        chapterEmail,
+        password,
+        chapterAddress,
+        chapterPhone,
+        chapterPaymentId
+      )
+    );
   };
-
-  const columnsAdmin = [
-    {
-      Header: 'Title',
-      accessor: 'title',
-      Filter: ColumnFilter,
-    },
-    // {
-    //   Header: 'Name',
-    //   accessor: 'userName',
-    // },
-    {
-      Header: 'Announcement',
-      accessor: 'body',
-      Filter: ColumnFilter,
-      Cell: ({ value }) => {
-        return parse(value);
-      },
-    },
-    {
-      Header: 'Date',
-      accessor: 'createdAt',
-      Filter: ColumnFilter,
-      Cell: ({ value }) => {
-        return format(new Date(value), 'dd/mm/yyyy');
-      },
-    },
-
-    {
-      Header: 'Actions',
-      accessor: 'actions',
-      Cell: (props) => {
-        const rowIdx = props.row.id;
-        return (
-          <div>
-            <span onClick={() => editAnnouncementHandler(rowIdx)}>
-              <i className='far fa-edit action mr-2'></i>
-            </span>
-
-            <span onClick={() => deleteAnnouncementHandler(rowIdx)}>
-              <i className='fas fa-trash action'></i>
-            </span>
-          </div>
-        );
-      },
-    },
-  ];
 
   return (
     <>
@@ -200,125 +175,212 @@ const SettingScreen = ({ history }) => {
           id='page-content-wrapper'
           className='m-0 p-1'
         >
-          <>
-            {/* <CardColumns> */}
+          <Card>
+            <Card.Header as='h5' className='text-center text-info'>
+              Chapter Settings
+            </Card.Header>
+            <Card.Body>
+              {chapterSettingsLoading ? (
+                <Loader />
+              ) : chapterSettingsError ? (
+                <Message variant='danger'>{chapterSettingsError}</Message>
+              ) : (chapterSettings && chapterSettings.length !== 0) ||
+                newSettings ? (
+                <Form onSubmit={submitHandler}>
+                  <ListGroup variant='flush'>
+                    {chapterSettings && chapterSettings.length !== 0 && (
+                      <ListGroup.Item>
+                        <Row>
+                          <>
+                            <Col md={3}>Chapter Name:</Col>
+                            <Col>{chapterSettings.chapterName}</Col>
+                          </>
+                        </Row>
+                      </ListGroup.Item>
+                    )}
 
-            <Row>
-              <Col
-                md={{ span: 12, order: 1 }}
-                lg={{ span: 12, order: 1 }}
-                // style={{ padding: 0 }}
-                className='mb-2 p-0'
-              >
-                <Card border='info'>
-                  <Card.Header className='text-center' as='h2'>
-                    <Link
-                      className='btn btn-outline-info btn-sm btn-block rounded'
-                      // onClick={() => setAddAnnouncement(!addAnnouncement)}
-                      onClick={addNewAnnouncement}
-                    >
-                      New Announcement
-                    </Link>
-                  </Card.Header>
-
-                  <Card.Body>
-                    {addAnnouncement
-                      ? (announcementNewError && (
-                          <Message variant='danger'>
-                            {announcementNewError}
-                          </Message>
-                        )) ||
-                        (announcementNewLoading && <Loader />) ||
-                        (success ? (
-                          <Message variant='success'>{success}</Message>
-                        ) : (
-                          <Form onSubmit={submitHandler}>
-                            <Form.Group controlId='title'>
-                              <Form.Label>Title</Form.Label>
+                    <ListGroup.Item>
+                      <Row>
+                        <Col md={3}>Chapter Address:</Col>
+                        {chapterSettings &&
+                        chapterSettings.length !== 0 &&
+                        !editSettings ? (
+                          <Col>{chapterSettings.chapterAddress}</Col>
+                        ) : newSettings || editSettings ? (
+                          <>
+                            <Form.Group as={Col} controlId='chapterAddress'>
                               <Form.Control
+                                required
                                 type='text'
-                                placeholder='Please Enter A Title..'
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder='Address'
+                                value={chapterAddress}
+                                onChange={(e) =>
+                                  setChapterAddress(e.target.value)
+                                }
                               ></Form.Control>
                             </Form.Group>
+                          </>
+                        ) : null}
+                      </Row>
+                    </ListGroup.Item>
 
-                            <Form.Group controlId='body'>
-                              <Form.Label>Announcement</Form.Label>
-                              <CKEditor
-                                editor={ClassicEditor}
-                                data={body}
-                                onChange={(e, editor) => {
-                                  const data = editor.getData();
-                                  setBody(data);
-                                }}
-                              />
-                              {/* <Form.Control
-                                as='textarea'
-                                rows='3'
-                                placeholder='Please Enter The Announcement'
-                                value={body}
-                                onChange={(e) => setBody(e.target.value)}
-                              ></Form.Control> */}
+                    <ListGroup.Item>
+                      <Row>
+                        <Col md={3}>Chapter Phone:</Col>
+                        {chapterSettings &&
+                        chapterSettings.length !== 0 &&
+                        !editSettings ? (
+                          <Col>{chapterSettings.chapterPhone}</Col>
+                        ) : newSettings || editSettings ? (
+                          <>
+                            <Form.Group as={Col} controlId='chapterPhone'>
+                              <Form.Control
+                                required
+                                type='text'
+                                placeholder='Phone number..'
+                                value={chapterPhone}
+                                onChange={(e) =>
+                                  setChapterPhone(e.target.value)
+                                }
+                              ></Form.Control>
                             </Form.Group>
+                          </>
+                        ) : null}
+                      </Row>
+                    </ListGroup.Item>
 
-                            {editAnnouncement ? (
-                              <Button
-                                type='submit'
-                                variant='info'
-                                block
-                                // onClick={() =>
-                                //   updateAnnouncementHandler(
-                                //     announcement.announcementId
-                                //   )
-                                // }
-                              >
-                                <i className='fas fa-plus' /> Update
-                              </Button>
-                            ) : (
-                              <Button type='submit' variant='info' block>
-                                <i className='fas fa-plus' /> Add
-                              </Button>
-                            )}
-                          </Form>
-                        ))
-                      : null}
-                    {/* {message && <Message variant='danger'>{message}</Message>} */}
-                    {/* {registerError && (
-                        <Message variant='danger'>{registerError}</Message>
-                      )}
-                      {registerLoading && <Loader />}
-                      {} */}
-                  </Card.Body>
-                </Card>
-              </Col>
+                    <ListGroup.Item>
+                      <Row>
+                        <Col md={3}>Chapter Email:</Col>
+                        {chapterSettings &&
+                        chapterSettings.length !== 0 &&
+                        !editSettings ? (
+                          <Col>{chapterSettings.chapterEmail}</Col>
+                        ) : newSettings || editSettings ? (
+                          <>
+                            <Form.Group as={Col} controlId='chapterEmail'>
+                              <Form.Control
+                                required
+                                type='email'
+                                placeholder='Email..'
+                                value={chapterEmail}
+                                onChange={(e) =>
+                                  setChapterEmail(e.target.value)
+                                }
+                              ></Form.Control>
+                            </Form.Group>
+                          </>
+                        ) : null}
+                      </Row>
+                    </ListGroup.Item>
 
-              <Col
-                md={{ span: 12, order: 12 }}
-                lg={{ span: 12, order: 12 }}
-                className='mb-2 p-0'
-                id='all-chapter'
-              >
-                <Card border='info'>
-                  <Card.Header as='h5' className='text-center text-info'>
-                    Settings
-                  </Card.Header>
+                    {newSettings || editSettings ? (
+                      <ListGroup.Item>
+                        <Row>
+                          <>
+                            <Col md={3}>Password:</Col>
+                            <Form.Group as={Col} controlId='password'>
+                              <Form.Control
+                                required
+                                type='password'
+                                placeholder='password...'
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                              ></Form.Control>
+                            </Form.Group>
+                          </>
+                        </Row>
+                      </ListGroup.Item>
+                    ) : null}
 
-                  <>
-                    {loading ? (
-                      <Loader />
-                    ) : error ? (
-                      <Message variant='danger'>{error}</Message>
+                    <ListGroup.Item>
+                      <Row>
+                        <Col md={3}>PayPal Client Id:</Col>
+                        {chapterSettings &&
+                        chapterSettings.length !== 0 &&
+                        !editSettings ? (
+                          <Col>{chapterSettings.chapterPayment}</Col>
+                        ) : newSettings || editSettings ? (
+                          <>
+                            <Form.Group as={Col} controlId='chapterPaymentId'>
+                              <Form.Control
+                                required
+                                type='text'
+                                placeholder='PayPal Client Id'
+                                value={chapterPaymentId}
+                                onChange={(e) =>
+                                  setChapterPaymentId(e.target.value)
+                                }
+                              ></Form.Control>
+                            </Form.Group>
+                          </>
+                        ) : null}
+                      </Row>
+                    </ListGroup.Item>
+                    {newSettings ? (
+                      <Row>
+                        <Col className='m-0 p-1'>
+                          {/* <Link
+                            className='btn btn-outline-info btn-sm btn-block rounded'
+                            onClick={submitHandler}
+                          >
+                            Submit
+                          </Link> */}
+                          <Button
+                            type='submit'
+                            variant='info'
+                            className='btn  btn-sm btn-block rounded'
+                          >
+                            Submit
+                          </Button>
+                        </Col>
+                        <Col className='m-0 p-1'>
+                          <Link
+                            className='btn btn-outline-warning btn-sm btn-block rounded'
+                            onClick={addNewSettings}
+                          >
+                            Cancel
+                          </Link>
+                        </Col>
+                      </Row>
+                    ) : editSettings ? (
+                      <Row>
+                        <Col className='m-0 p-1'>
+                          <Link
+                            className='btn btn-outline-info btn-sm btn-block  rounded'
+                            onClick={updateSettingsHandler}
+                          >
+                            Update
+                          </Link>
+                        </Col>
+                      </Row>
                     ) : (
-                      <>
-                        <RTable users={announcements} COLUMNS={columnsAdmin} />
-                      </>
+                      <Row>
+                        <Col className='m-0 p-1'>
+                          <Link
+                            className='btn btn-outline-info btn-sm btn-block  rounded'
+                            onClick={editSettingsHandler}
+                          >
+                            Edit
+                          </Link>
+                        </Col>
+                      </Row>
                     )}
-                  </>
-                </Card>
-              </Col>
-            </Row>
-          </>
+                  </ListGroup>
+                </Form>
+              ) : (
+                <>
+                  <Link
+                    className='btn btn-outline-warning btn-sm btn-block rounded'
+                    onClick={addNewSettings}
+                  >
+                    Chapter settings has not been created yet. Please create
+                    chapter settings. To create settings click here.
+                  </Link>
+                </>
+              )}
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
     </>

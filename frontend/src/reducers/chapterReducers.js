@@ -10,6 +10,18 @@ import {
   CHAPTER_REGISTER_REQUEST,
   CHAPTER_REGISTER_RESET,
   CHAPTER_REGISTER_SUCCESS,
+  CHAPTER_SETTINGS_FAIL,
+  CHAPTER_SETTINGS_NEW_FAIL,
+  CHAPTER_SETTINGS_NEW_REQUEST,
+  CHAPTER_SETTINGS_NEW_RESET,
+  CHAPTER_SETTINGS_NEW_SUCCESS,
+  CHAPTER_SETTINGS_REQUEST,
+  CHAPTER_SETTINGS_RESET,
+  CHAPTER_SETTINGS_SUCCESS,
+  CHAPTER_SETTINGS_UPDATE_FAIL,
+  CHAPTER_SETTINGS_UPDATE_REQUEST,
+  CHAPTER_SETTINGS_UPDATE_RESET,
+  CHAPTER_SETTINGS_UPDATE_SUCCESS,
 } from '../constants/chapterConstants';
 
 export const chapterRegisterReducer = (state = {}, action) => {
@@ -51,6 +63,56 @@ export const chapterDeleteReducer = (state = {}, action) => {
     case CHAPTER_DELETE_FAIL:
       return { loading: false, error: action.payload };
 
+    default:
+      return state;
+  }
+};
+
+///////////////////////Chapter Settings///////////////////
+
+export const chapterSettingsNewReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CHAPTER_SETTINGS_NEW_REQUEST:
+      return { loading: true };
+    case CHAPTER_SETTINGS_NEW_SUCCESS:
+      return { loading: false, success: action.payload };
+    case CHAPTER_SETTINGS_NEW_FAIL:
+      return { loading: false, error: action.payload };
+    case CHAPTER_SETTINGS_NEW_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const chapterSettingsReducer = (
+  state = { chapterSettings: {} },
+  action
+) => {
+  switch (action.type) {
+    case CHAPTER_SETTINGS_REQUEST:
+      return { ...state, loading: true };
+    case CHAPTER_SETTINGS_SUCCESS:
+      return { loading: false, success: true, chapterSettings: action.payload };
+    case CHAPTER_SETTINGS_FAIL:
+      return { loading: false, error: action.payload };
+    case CHAPTER_SETTINGS_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const chapterSettingsUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CHAPTER_SETTINGS_UPDATE_REQUEST:
+      return { loading: true };
+    case CHAPTER_SETTINGS_UPDATE_SUCCESS:
+      return { loading: false, success: action.payload };
+    case CHAPTER_SETTINGS_UPDATE_FAIL:
+      return { loading: false, error: action.payload };
+    case CHAPTER_SETTINGS_UPDATE_RESET:
+      return {};
     default:
       return state;
   }

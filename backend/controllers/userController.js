@@ -471,8 +471,8 @@ exports.getUserProfile = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/profile
 // @access  Private
 exports.updateUserProfile = asyncHandler(async (req, res) => {
-  console.log(req.user.memberId);
-  console.log(req.body.firstName);
+  // console.log(req.user.memberId);
+  // console.log(req.body.firstName);
 
   const user = await models.User.findOne({
     where: { memberId: req.user.memberId },

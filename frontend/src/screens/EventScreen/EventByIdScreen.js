@@ -771,7 +771,7 @@ const EventByIdScreen = ({ history, match }) => {
                         {/* </Card.Footer> */}
                       </Col>
                     </>
-                  ) : (
+                  ) : event && event.eventStatus ? (
                     <Col className='m-0 p-1'>
                       <Link
                         className='btn btn-outline-info btn-sm btn-block  rounded'
@@ -780,7 +780,7 @@ const EventByIdScreen = ({ history, match }) => {
                         Register
                       </Link>
                     </Col>
-                  )}
+                  ) : null}
                 </Row>
               </Col>
             </Row>

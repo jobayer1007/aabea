@@ -94,7 +94,14 @@ const HomeScreen = () => {
                   {events.map((event, index) => (
                     <ListGroup.Item key={index}>
                       <Link to={`/event/${event.eventId}`}>
-                        <span className='text-info'> {event.eventName}</span>
+                        <span className='text-info d-flex justify-content-between align-items-center'>
+                          {event.eventName}
+                          {event.eventStatus ? (
+                            <span class='badge badge-info badge-pill'>
+                              live
+                            </span>
+                          ) : null}
+                        </span>
                       </Link>
                     </ListGroup.Item>
                   ))}

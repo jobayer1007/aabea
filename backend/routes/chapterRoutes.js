@@ -27,6 +27,9 @@ const {
   getMissionById,
   getVissionById,
   getHistoryById,
+  createNewChapterSettings,
+  getChapterSettings,
+  updateChapterSettings,
 } = require('../controllers/chapterController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
@@ -34,6 +37,13 @@ const { protect, admin } = require('../middleware/authMiddleware');
 router.route('/new').post(createNewChapter);
 router.route('/').get(getChapters);
 router.route('/:id').delete(deleteChapter);
+
+// Settings///////////////////////////////////////////////////////
+router
+  .route('/settings')
+  .post(protect, admin, createNewChapterSettings)
+  .get(protect, admin, getChapterSettings)
+  .put(protect, admin, updateChapterSettings);
 
 // PaymentType/////////////////////////////////////////////////
 router

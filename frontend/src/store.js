@@ -29,6 +29,9 @@ import {
   chapterDeleteReducer,
   chapterListReducer,
   chapterRegisterReducer,
+  chapterSettingsNewReducer,
+  chapterSettingsReducer,
+  chapterSettingsUpdateReducer,
 } from './reducers/chapterReducers';
 import {
   paymentTypeDeleteReducer,
@@ -186,6 +189,10 @@ const reducer = combineReducers({
   eventUnpublish: eventUnpublishReducer,
 
   eventRegister: eventRegisterReducer,
+
+  chapterSettingsNew: chapterSettingsNewReducer,
+  chapterSettingsAll: chapterSettingsReducer,
+  chapterSettingsUpdate: chapterSettingsUpdateReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem('userInfo')
