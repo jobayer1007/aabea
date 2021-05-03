@@ -46,7 +46,10 @@ const ImagesScreen = ({ history }) => {
   const { success: successDelete } = imageDelete;
 
   useEffect(() => {
-    if (userInfo) {
+    if (
+      userInfo &&
+      (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
+    ) {
       dispatch(allImage());
       dispatch({ type: IMAGE_NEW_RESET });
       dispatch({ type: IMAGE_BY_ID_RESET });

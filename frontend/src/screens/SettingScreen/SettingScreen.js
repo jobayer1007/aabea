@@ -82,7 +82,10 @@ const SettingScreen = ({ history }) => {
   } = chapterSettingsUpdate;
 
   useEffect(() => {
-    if (userInfo) {
+    if (
+      userInfo &&
+      (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
+    ) {
       dispatch(getChapterSettings());
       // dispatch({ type: ANNOUNCEMENT_NEW_RESET });
     } else {

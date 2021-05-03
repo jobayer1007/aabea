@@ -9,7 +9,6 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import * as S from './MissionScreen.Styles';
 import {
   allMission,
   deleteMission,
@@ -55,7 +54,10 @@ const MissionScreen = ({ history }) => {
   const { success: successDelete } = missionDelete;
 
   useEffect(() => {
-    if (userInfo) {
+    if (
+      userInfo &&
+      (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
+    ) {
       setId(userInfo.memberId);
       dispatch(allMission());
       dispatch({ type: MISSION_NEW_RESET });

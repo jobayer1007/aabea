@@ -34,6 +34,13 @@ const Sidebar = () => {
           (userInfo.userRole === 'systemAdmin' ||
             userInfo.userRole === 'admin') && (
             <>
+              <Card.Title>
+                <LinkContainer to='/events'>
+                  <Link className='btn btn-outline-info btn-sm btn-block rounded'>
+                    Events
+                  </Link>
+                </LinkContainer>
+              </Card.Title>
               {/* Announcement */}
               <Card.Title>
                 {/* <Button variant='outline-info' block> */}
@@ -177,14 +184,6 @@ const Sidebar = () => {
           <LinkContainer to='/donate'>
             <Link className='btn btn-outline-info btn-sm btn-block rounded'>
               Donation
-            </Link>
-          </LinkContainer>
-        </Card.Title>
-
-        <Card.Title>
-          <LinkContainer to='/events'>
-            <Link className='btn btn-outline-info btn-sm btn-block rounded'>
-              Events
             </Link>
           </LinkContainer>
         </Card.Title>

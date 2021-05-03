@@ -38,7 +38,10 @@ const EventScreen = ({ history }) => {
   const { success: successDelete } = eventDelete;
 
   useEffect(() => {
-    if (userInfo) {
+    if (
+      userInfo &&
+      (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
+    ) {
       // setId(userInfo.memberId);
       dispatch(allEvents());
       // dispatch({ type: EVENT_NEW_RESET });

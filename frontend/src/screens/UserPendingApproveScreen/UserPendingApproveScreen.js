@@ -26,7 +26,10 @@ const UserPendingApproveScreen = ({ match, history }) => {
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    if (userInfo) {
+    if (
+      userInfo &&
+      (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
+    ) {
       if (successApprove) {
         dispatch({ type: USER_APPROVE_RESET });
         history.push('/systemAdmin');

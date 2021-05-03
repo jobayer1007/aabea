@@ -56,7 +56,10 @@ const HistoryScreen = ({ history }) => {
   const { success: successDelete } = historyDelete;
 
   useEffect(() => {
-    if (userInfo) {
+    if (
+      userInfo &&
+      (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
+    ) {
       setId(userInfo.memberId);
       dispatch(allHistory());
       dispatch({ type: HISTORY_NEW_RESET });

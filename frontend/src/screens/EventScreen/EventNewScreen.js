@@ -39,14 +39,16 @@ const EventNewScreen = ({ location, history }) => {
   const eventNew = useSelector((state) => state.eventNew);
   const { loading, error, success, newCreatedEvent } = eventNew;
 
-  // const redirect = location.search ? location.search.split('=')[1] : '/events';
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   useEffect(() => {
-    // if (success) {
-    //   dispatch({ type: USER_REGISTER_RESET });
-    //   history.push(redirect);
-    // }
-    console.log(new Date());
+    if (
+      userInfo &&
+      (userInfo.userRole !== 'systemAdmin' || userInfo.userRole !== 'admin')
+    ) {
+      history.push('/login');
+    }
     if (success) {
       // console.log(success);
       swal('Success!', 'New event createed successfully', 'success').then(

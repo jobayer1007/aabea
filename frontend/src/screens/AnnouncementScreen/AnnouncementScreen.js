@@ -62,7 +62,10 @@ const AnnouncementScreen = ({ history }) => {
   const { success: successDelete } = announcementDelete;
 
   useEffect(() => {
-    if (userInfo) {
+    if (
+      userInfo &&
+      (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
+    ) {
       setId(userInfo.memberId);
       dispatch(allAnnouncements());
       dispatch({ type: ANNOUNCEMENT_NEW_RESET });

@@ -56,7 +56,10 @@ const VissionScreen = ({ history }) => {
   const { success: successDelete } = vissionDelete;
 
   useEffect(() => {
-    if (userInfo) {
+    if (
+      userInfo &&
+      (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
+    ) {
       setId(userInfo.memberId);
       dispatch(allVission());
       dispatch({ type: VISSION_NEW_RESET });
