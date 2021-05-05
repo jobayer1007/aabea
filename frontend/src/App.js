@@ -40,6 +40,7 @@ import SettingScreen from './screens/SettingScreen/SettingScreen';
 import EventNewScreen from './screens/EventScreen/EventNewScreen';
 import EventByIdScreen from './screens/EventScreen/EventByIdScreen';
 import EventRegisterScreen from './screens/EventScreen/EventRegistrationScreen';
+import EmailScreen from './screens/EmailScreen/EmailScreen';
 
 const App = () => {
   return (
@@ -77,6 +78,7 @@ const App = () => {
             <Route path='/committiees' component={CommittieesScreen} />
             <Route path='/committee/:id' component={CommitteeMemberScreen} />
             <Route path='/members' component={MembersScreen} />
+            <Route path='/emails' component={EmailScreen} />
             <Route path='/events' component={EventScreen} />
             <Route path='/event/register/:id' component={EventRegisterScreen} />
             <Route path='/eventsnew' component={EventNewScreen} />

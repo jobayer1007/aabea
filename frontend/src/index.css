@@ -162,5 +162,10 @@ main.py-3 {
     height: 135px;
   }
 
-  
+}
+
+.ck-editor__editable {
+  min-height: 200px;
+  /* max-height: 200px; */
+  /* min-width: 860px; */
 }

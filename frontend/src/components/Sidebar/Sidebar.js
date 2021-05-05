@@ -41,6 +41,15 @@ const Sidebar = () => {
                   </Link>
                 </LinkContainer>
               </Card.Title>
+
+              <Card.Title>
+                <LinkContainer to='/emails'>
+                  <Link className='btn btn-outline-info btn-sm btn-block rounded'>
+                    Email
+                  </Link>
+                </LinkContainer>
+              </Card.Title>
+
               {/* Announcement */}
               <Card.Title>
                 {/* <Button variant='outline-info' block> */}

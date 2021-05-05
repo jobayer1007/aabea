@@ -1,37 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
-import {
-  Row,
-  Col,
-  Card,
-  Form,
-  Button,
-  Table,
-  ListGroup,
-} from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Row, Col, Card, Form, Button, ListGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { format } from 'date-fns';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import parse from 'html-react-parser';
 
 import Sidebar from '../../components/Sidebar/Sidebar';
-import {
-  allAnnouncements,
-  deleteAnnouncement,
-  getAnnouncementById,
-  newAnnouncement,
-  updateAnnouncementById,
-} from '../../actions/announcementAction';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import {
-  ANNOUNCEMENT_BY_ID_RESET,
-  ANNOUNCEMENT_NEW_RESET,
-  ANNOUNCEMENT_UPDATE_BY_ID_RESET,
-} from '../../constants/announcementConstants';
-import ColumnFilter from '../../components/Table/ColumnFilter';
-import RTable from '../../components/Table/RTable';
 import {
   getChapterSettings,
   newChapterSettings,
@@ -58,28 +32,19 @@ const SettingScreen = ({ history }) => {
   const { userInfo } = userLogin;
 
   const chapterSettingsNew = useSelector((state) => state.chapterSettingsNew);
-  const {
-    loading: chapterSettingsNewLoading,
-    error: chapterSettingsNewError,
-    success: chapterSettingsNewSuccess,
-  } = chapterSettingsNew;
+  const { success: chapterSettingsNewSuccess } = chapterSettingsNew;
 
   const chapterSettingsAll = useSelector((state) => state.chapterSettingsAll);
   const {
     loading: chapterSettingsLoading,
     error: chapterSettingsError,
-    success,
     chapterSettings,
   } = chapterSettingsAll;
 
   const chapterSettingsUpdate = useSelector(
     (state) => state.chapterSettingsUpdate
   );
-  const {
-    loading: chapterSettingsUpdateLoading,
-    error: chapterSettingsUpdateError,
-    success: chapterSettingsUpdateSuccess,
-  } = chapterSettingsUpdate;
+  const { success: chapterSettingsUpdateSuccess } = chapterSettingsUpdate;
 
   useEffect(() => {
     if (
@@ -87,7 +52,6 @@ const SettingScreen = ({ history }) => {
       (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
     ) {
       dispatch(getChapterSettings());
-      // dispatch({ type: ANNOUNCEMENT_NEW_RESET });
     } else {
       history.push('/login');
     }
@@ -96,7 +60,7 @@ const SettingScreen = ({ history }) => {
         'Success!',
         chapterSettingsNewSuccess || chapterSettingsUpdateSuccess,
         'success'
-      ).then((value) => {
+      ).then(() => {
         dispatch({ type: CHAPTER_SETTINGS_NEW_RESET });
         dispatch({ type: CHAPTER_SETTINGS_UPDATE_RESET });
 
@@ -127,6 +91,17 @@ const SettingScreen = ({ history }) => {
     setPassword(chapterSettings.password);
     setChapterPhone(chapterSettings.chapterPhone);
     setChapterPaymentId(chapterSettings.chapterPayment);
+  };
+
+  const cancelHandler = (e) => {
+    e.preventDefault();
+
+    setEditSettings(!editSettings);
+    // setChapterAddress(chapterSettings.chapterAddress);
+    // setChapterEmail(chapterSettings.chapterEmail);
+    // setPassword(chapterSettings.password);
+    // setChapterPhone(chapterSettings.chapterPhone);
+    // setChapterPaymentId(chapterSettings.chapterPayment);
   };
 
   const updateSettingsHandler = (e) => {
@@ -356,12 +331,21 @@ const SettingScreen = ({ history }) => {
                             Update
                           </Link>
                         </Col>
+
+                        <Col className='m-0 p-1'>
+                          <Link
+                            className='btn btn-outline-danger btn-sm btn-block  rounded'
+                            onClick={cancelHandler}
+                          >
+                            Cancel
+                          </Link>
+                        </Col>
                       </Row>
                     ) : (
                       <Row>
                         <Col className='m-0 p-1'>
                           <Link
-                            className='btn btn-outline-info btn-sm btn-block  rounded'
+                            className='btn btn-outline-warning btn-sm btn-block  rounded'
                             onClick={editSettingsHandler}
                           >
                             Edit

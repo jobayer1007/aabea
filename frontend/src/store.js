@@ -96,6 +96,11 @@ import {
   eventUnpublishReducer,
   eventUpdateReducer,
 } from './reducers/eventReducers';
+import {
+  emailAllReducer,
+  emailByIdReducer,
+  emailNewReducer,
+} from './reducers/emailReducers';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -193,6 +198,10 @@ const reducer = combineReducers({
   chapterSettingsNew: chapterSettingsNewReducer,
   chapterSettingsAll: chapterSettingsReducer,
   chapterSettingsUpdate: chapterSettingsUpdateReducer,
+
+  emailNew: emailNewReducer,
+  emailAll: emailAllReducer,
+  emailById: emailByIdReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

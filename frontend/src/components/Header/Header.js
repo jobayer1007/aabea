@@ -44,7 +44,7 @@ const Header = () => {
           </Col>
           <Col xs={3} className='text-center'>
             <span className='nav-chapterName text-info'>
-              Washington D.C Chapter
+              <h5>Washington D.C Chapter</h5>
             </span>
           </Col>
         </Row>

@@ -45,7 +45,7 @@ const EventNewScreen = ({ location, history }) => {
   useEffect(() => {
     if (
       userInfo &&
-      (userInfo.userRole !== 'systemAdmin' || userInfo.userRole !== 'admin')
+      !(userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
     ) {
       history.push('/login');
     }

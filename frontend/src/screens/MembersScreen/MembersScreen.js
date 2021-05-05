@@ -196,21 +196,21 @@ const MembersScreen = ({ history }) => {
 
   const deleteUserHandler = (rowIndex) => {
     const id = usersRef.current[rowIndex].memberId;
-    if (window.confirm('Are You Sure about deleting this User?')) {
+    if (window.confirm('Are you sure about deleting this User?')) {
       dispatch(deleteUser(id));
       // console.log(`User deleted: with id: ${id}`);
     }
   };
 
   const deletePendingUserHandler = (id) => {
-    if (window.confirm('Are You Sure?')) {
+    if (window.confirm('Are you sure?')) {
       dispatch(deletePendingUser(id));
     }
   };
 
   const createAdminHandler = (rowIndex) => {
     const id = usersRef.current[rowIndex].memberId;
-    if (window.confirm('Are You Sure about making this user as Admin?')) {
+    if (window.confirm('Are you sure about making this user as Admin?')) {
       dispatch(createAdminUser(id));
     }
   };
@@ -400,8 +400,8 @@ const MembersScreen = ({ history }) => {
                               (userInfo.userRole === 'systemAdmin' ||
                                 userInfo.userRole === 'admin') && (
                                 <>
-                                  <th>EDIT/DELETE</th>
-                                  <th>Assign As Admin / Member</th>
+                                  {/* <th>EDIT/DELETE</th> */}
+                                  <th>Action</th>
                                 </>
                               )}
                           </tr>
@@ -427,7 +427,7 @@ const MembersScreen = ({ history }) => {
                                       </a>
                                     </td>
                                     <td>{user.member.primaryPhone}</td>
-                                    {(userInfo.userRole === 'systemAdmin' ||
+                                    {/* {(userInfo.userRole === 'systemAdmin' ||
                                       userInfo.userRole === 'admin') && (
                                       <td>
                                         <LinkContainer
@@ -451,7 +451,7 @@ const MembersScreen = ({ history }) => {
                                           <i className='fas fa-trash'></i>
                                         </Button>
                                       </td>
-                                    )}
+                                    )} */}
                                     {(userInfo.userRole === 'systemAdmin' ||
                                       userInfo.userRole === 'admin') &&
                                       (user.userRole === 'member' ? (
@@ -464,7 +464,7 @@ const MembersScreen = ({ history }) => {
                                             }
                                           >
                                             {' '}
-                                            Set As ADMIN
+                                            Make ADMIN
                                             {/* <i className='fas fa-trash'></i> */}
                                           </Button>{' '}
                                         </td>
@@ -478,7 +478,7 @@ const MembersScreen = ({ history }) => {
                                             }
                                           >
                                             {' '}
-                                            Set As Member
+                                            Remove Admin
                                             {/* <i className='fas fa-trash'></i> */}
                                           </Button>
                                         </td>

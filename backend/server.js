@@ -13,6 +13,7 @@ const userRoutes = require('./routes/userRoutes');
 const committeeRoutes = require('./routes/committeeRoutes');
 const announcementRoutes = require('./routes/announcementRoutes');
 const eventRoutes = require('./routes/eventRoutes');
+const emailRoutes = require('./routes/emailRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const { join } = require('path');
@@ -34,6 +35,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/committee', committeeRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/emails', emailRoutes);
 app.use('/api/image', imageRoutes);
 
 app.get('/api/config/paypal', (req, res) =>
