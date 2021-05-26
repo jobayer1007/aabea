@@ -106,6 +106,10 @@ db.EventImageGallery = require('../models/EventImageGallery')(
   Sequelize
 );
 db.Document = require('../models/Document')(sequelize, Sequelize);
+db.Category = require('../models/Category')(sequelize, Sequelize);
+db.Blog = require('../models/Blog')(sequelize, Sequelize);
+db.Comment = require('../models/Comment')(sequelize, Sequelize);
+db.Reply = require('../models/Reply')(sequelize, Sequelize);
 
 //Model relationships
 
@@ -206,5 +210,21 @@ db.EventContact.belongsTo(db.Member, { foreignKey: 'memberId' });
 // Document
 db.Chapter.hasMany(db.Document, { foreignKey: 'chapterId' });
 db.Document.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+// Blog Category
+db.Chapter.hasMany(db.Category, { foreignKey: 'chapterId' });
+db.Category.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+// Blog
+db.Chapter.hasMany(db.Blog, { foreignKey: 'chapterId' });
+db.Blog.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+// Comment
+db.Blog.hasMany(db.Comment, { foreignKey: 'blogId' });
+db.Comment.belongsTo(db.Blog, { foreignKey: 'blogId' });
+
+// Reply
+db.Comment.hasMany(db.Reply, { foreignKey: 'commentId' });
+db.Reply.belongsTo(db.Comment, { foreignKey: 'commentId' });
 
 module.exports = db;

@@ -47,7 +47,7 @@ const RegisterScreen = ({ location, history }) => {
     // }
 
     if (success) {
-      console.log(success);
+      // console.log(success);
       swal('Success!', success, 'success').then((value) => {
         dispatch({ type: USER_REGISTER_RESET });
         history.push(redirect);

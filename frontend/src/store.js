@@ -101,6 +101,30 @@ import {
   emailByIdReducer,
   emailNewReducer,
 } from './reducers/emailReducers';
+import {
+  categoryAllReducer,
+  categoryByIdReducer,
+  categoryDeleteReducer,
+  categoryNewReducer,
+  categoryUpdateReducer,
+} from './reducers/categoryReducers';
+import {
+  blogAllReducer,
+  blogByIdReducer,
+  blogDeleteReducer,
+  blogNewReducer,
+  blogUpdateReducer,
+} from './reducers/blogReducers';
+import {
+  commentDeleteReducer,
+  commentNewReducer,
+  commentUpdateReducer,
+} from './reducers/commentReducers';
+import {
+  replyDeleteReducer,
+  replyNewReducer,
+  replyUpdateReducer,
+} from './reducers/replyReducers';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -202,6 +226,26 @@ const reducer = combineReducers({
   emailNew: emailNewReducer,
   emailAll: emailAllReducer,
   emailById: emailByIdReducer,
+
+  categoryNew: categoryNewReducer,
+  categoryAll: categoryAllReducer,
+  categoryById: categoryByIdReducer,
+  categoryUpdate: categoryUpdateReducer,
+  categoryDelete: categoryDeleteReducer,
+
+  blogNew: blogNewReducer,
+  blogAll: blogAllReducer,
+  blogById: blogByIdReducer,
+  blogUpdate: blogUpdateReducer,
+  blogDelete: blogDeleteReducer,
+
+  commentNew: commentNewReducer,
+  commentUpdate: commentUpdateReducer,
+  commentDelete: commentDeleteReducer,
+
+  replyNew: replyNewReducer,
+  replyUpdate: replyUpdateReducer,
+  replyDelete: replyDeleteReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

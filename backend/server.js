@@ -3,8 +3,6 @@ const express = require('express');
 const dotenv = require('dotenv');
 const { sequelize } = require('./models/index');
 
-const bodyParser = require('body-parser');
-const colors = require('colors');
 const morgan = require('morgan');
 // const db = require('./config/db');
 const { errorHandler, notFound } = require('./middleware/errorMiddleware');
@@ -16,6 +14,10 @@ const eventRoutes = require('./routes/eventRoutes');
 const emailRoutes = require('./routes/emailRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const blogRoutes = require('./routes/blogRoutes');
+const commentRoutes = require('./routes/commentRoutes');
+const replyRoutes = require('./routes/replyRoutes');
 const { join } = require('path');
 
 dotenv.config();
@@ -37,6 +39,10 @@ app.use('/api/announcements', announcementRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/emails', emailRoutes);
 app.use('/api/image', imageRoutes);
+app.use('/api/category', categoryRoutes);
+app.use('/api/blog', blogRoutes);
+app.use('/api/comment', commentRoutes);
+app.use('/api/reply', replyRoutes);
 
 app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)

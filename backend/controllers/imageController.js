@@ -36,7 +36,7 @@ exports.getAllImages = asyncHandler(async (req, res) => {
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
-  // console.log(chapter.chapterId);
+  console.log('chapter.chapterId:' + chapter.chapterId);
 
   if (chapter) {
     const images = await models.ImageLibrary.findAll({

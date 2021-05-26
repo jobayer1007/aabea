@@ -44,7 +44,7 @@ const Header = () => {
           </Col>
           <Col xs={3} className='text-center'>
             <span className='nav-chapterName text-info'>
-              <h5>Washington D.C Chapter</h5>
+              <h2>Washington D.C Chapter</h2>
             </span>
           </Col>
         </Row>
@@ -67,13 +67,25 @@ const Header = () => {
               {userInfo ? (
                 userInfo.userRole === 'admin' ||
                 userInfo.userRole === 'systemAdmin' ? (
-                  <LinkContainer to='/dashboard'>
-                    <Nav.Link>Admin Dashboard</Nav.Link>
-                  </LinkContainer>
+                  <>
+                    <LinkContainer to='/dashboard'>
+                      <Nav.Link>Admin Dashboard</Nav.Link>
+                    </LinkContainer>
+
+                    <LinkContainer to='/blog'>
+                      <Nav.Link>Blog</Nav.Link>
+                    </LinkContainer>
+                  </>
                 ) : userInfo.userRole === 'member' ? (
-                  <LinkContainer to='/dashboard'>
-                    <Nav.Link>Dashboard</Nav.Link>
-                  </LinkContainer>
+                  <>
+                    <LinkContainer to='/dashboard'>
+                      <Nav.Link>Dashboard</Nav.Link>
+                    </LinkContainer>
+
+                    <LinkContainer to='/blog'>
+                      <Nav.Link>Blog</Nav.Link>
+                    </LinkContainer>
+                  </>
                 ) : null
               ) : (
                 <LinkContainer to='/about'>

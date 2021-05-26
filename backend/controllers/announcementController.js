@@ -42,7 +42,7 @@ exports.getAnnouncements = asyncHandler(async (req, res) => {
 // @access  Private/Admin || SystemAdmin
 exports.getAnnouncementById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  console.log(id);
+  // console.log(id);
   const announcement = await models.Announcement.findOne({
     where: { announcementId: id },
   });

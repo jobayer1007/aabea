@@ -15,6 +15,8 @@ import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// import DecoupledEditor from '@ckeditor/ckeditor5-editor-decoupled';
+// import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import parse from 'html-react-parser';
 
 import Sidebar from '../../components/Sidebar/Sidebar';

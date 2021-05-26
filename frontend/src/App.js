@@ -41,6 +41,9 @@ import EventNewScreen from './screens/EventScreen/EventNewScreen';
 import EventByIdScreen from './screens/EventScreen/EventByIdScreen';
 import EventRegisterScreen from './screens/EventScreen/EventRegistrationScreen';
 import EmailScreen from './screens/EmailScreen/EmailScreen';
+import BlogScreen from './screens/BlogScreen/BlogScreen';
+import CreateBlogScreen from './screens/BlogScreen/CreateBlogScreen';
+import BlogScreenById from './screens/BlogScreen/BlogScreenById';
 
 const App = () => {
   return (
@@ -60,6 +63,9 @@ const App = () => {
             <Route path='/activate/:hash' component={EmailActivationScreen} />
             <Route path='/dashboardScreen' component={UserListScreen} />
             <Route path='/dashboard' component={DashboardScreen} />
+            <Route path='/blog' component={BlogScreen} exact />
+            <Route path='/blog/new' component={CreateBlogScreen} />
+            <Route path='/blog/:id' component={BlogScreenById} />
             <Route path='/systemAdmin' component={SystemAdminScreen} />
             <Route path='/chapter' component={ChapterScreen} />
             <Route path='/mission' component={MissionScreen} />
