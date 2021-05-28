@@ -26,11 +26,11 @@ exports.createNewCommitteeMember = asyncHandler(async (req, res) => {
   const { memberId, position, period, bio } = req.body;
   const tenure1 = [new Date(period[0]), new Date(period[1])];
 
-  console.log(period);
-  console.log(memberId);
-  console.log(position);
-  console.log(bio);
-  console.log(tenure1);
+  // console.log(period);
+  // console.log(memberId);
+  // console.log(position);
+  // console.log(bio);
+  // console.log(tenure1);
   // Look for the member's existence in the committee table for the given tenure
   const memberExists = await models.Committee.findOne({
     where: {
@@ -81,12 +81,16 @@ exports.createNewCommitteeMember = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getCommitteeMembers = asyncHandler(async (req, res) => {
   // Find Chapter
-  const subDomain = 'bd.aabea.org'; // at dev only
-  // const chapterName = 'Bangladesh';
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = req.body.subDomain;
+  }
+  console.log(subDomain);
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
-  // console.log(chapter.chapterId);
 
   if (chapter) {
     const cMembers = await models.Committee.findAll(

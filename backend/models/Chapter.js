@@ -7,7 +7,6 @@ const Chapter = (sequelize, DataTypes) =>
     chapterId: {
       type: DataTypes.UUID,
       defaultValue: Sequelize.UUIDV4,
-      // defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,
       notEmpty: true,
@@ -24,12 +23,12 @@ const Chapter = (sequelize, DataTypes) =>
 
     chapterEmail: {
       type: DataTypes.STRING,
-      // allowNull: false,
-      // required: true,
+      allowNull: false,
+      required: true,
       // unique: true,
-      // validate: {
-      //   isEmail: true,
-      // },
+      validate: {
+        isEmail: true,
+      },
     },
     chapterPhone: {
       type: DataTypes.STRING,
@@ -38,16 +37,21 @@ const Chapter = (sequelize, DataTypes) =>
     },
 
     subDomain: {
-      // dc.aabea.org
       type: DataTypes.JSONB,
-      defaultValue: 'bd.aabea.org',
+      // defaultValue: 'bd.aabea.org',
       required: true,
       allowNull: false,
     },
     createdBy: {
-      type: DataTypes.STRING,
-      // allowNull: false,
+      type: DataTypes.BIGINT,
+      allowNull: false,
       notEmpty: true,
+    },
+
+    lastUpdatedBy: {
+      type: DataTypes.BIGINT,
+      // allowNull: false,
+      // notEmpty: true,
     },
   });
 

@@ -25,6 +25,7 @@ const SettingScreen = ({ history }) => {
   const [chapterAddress, setChapterAddress] = useState('');
   const [chapterEmail, setChapterEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [chapterName, setChapterName] = useState('');
   const [chapterPhone, setChapterPhone] = useState('');
   const [chapterPaymentId, setChapterPaymentId] = useState('');
 
@@ -32,7 +33,8 @@ const SettingScreen = ({ history }) => {
   const { userInfo } = userLogin;
 
   const chapterSettingsNew = useSelector((state) => state.chapterSettingsNew);
-  const { success: chapterSettingsNewSuccess } = chapterSettingsNew;
+  const { success: chapterSettingsNewSuccess, error: chapterSettingsNewError } =
+    chapterSettingsNew;
 
   const chapterSettingsAll = useSelector((state) => state.chapterSettingsAll);
   const {
@@ -44,7 +46,10 @@ const SettingScreen = ({ history }) => {
   const chapterSettingsUpdate = useSelector(
     (state) => state.chapterSettingsUpdate
   );
-  const { success: chapterSettingsUpdateSuccess } = chapterSettingsUpdate;
+  const {
+    success: chapterSettingsUpdateSuccess,
+    error: chapterSettingsUpdateError,
+  } = chapterSettingsUpdate;
 
   useEffect(() => {
     if (
@@ -67,6 +72,12 @@ const SettingScreen = ({ history }) => {
         setNewSettings(false);
         setEditSettings(false);
       });
+    } else if (chapterSettingsNewError || chapterSettingsUpdateError) {
+      swal(
+        'Error!',
+        chapterSettingsNewError || chapterSettingsUpdateError,
+        'error'
+      );
     }
   }, [
     dispatch,
@@ -74,6 +85,8 @@ const SettingScreen = ({ history }) => {
     userInfo,
     chapterSettingsNewSuccess,
     chapterSettingsUpdateSuccess,
+    chapterSettingsNewError,
+    chapterSettingsUpdateError,
   ]);
 
   const addNewSettings = (e) => {
@@ -86,6 +99,7 @@ const SettingScreen = ({ history }) => {
     e.preventDefault();
 
     setEditSettings(!editSettings);
+    setChapterName(chapterSettings.chapterName);
     setChapterAddress(chapterSettings.chapterAddress);
     setChapterEmail(chapterSettings.chapterEmail);
     setPassword(chapterSettings.password);
@@ -97,11 +111,6 @@ const SettingScreen = ({ history }) => {
     e.preventDefault();
 
     setEditSettings(!editSettings);
-    // setChapterAddress(chapterSettings.chapterAddress);
-    // setChapterEmail(chapterSettings.chapterEmail);
-    // setPassword(chapterSettings.password);
-    // setChapterPhone(chapterSettings.chapterPhone);
-    // setChapterPaymentId(chapterSettings.chapterPayment);
   };
 
   const updateSettingsHandler = (e) => {
@@ -111,6 +120,7 @@ const SettingScreen = ({ history }) => {
       updateChapterSettings({
         chapterEmail,
         password,
+        chapterName,
         chapterAddress,
         chapterPhone,
         chapterPaymentId,
@@ -127,6 +137,7 @@ const SettingScreen = ({ history }) => {
       newChapterSettings(
         chapterEmail,
         password,
+        chapterName,
         chapterAddress,
         chapterPhone,
         chapterPaymentId
@@ -154,7 +165,7 @@ const SettingScreen = ({ history }) => {
           className='m-0 p-1'
         >
           <Card>
-            <Card.Header as='h5' className='text-center text-info'>
+            <Card.Header as='h3' className='text-center text-info'>
               Chapter Settings
             </Card.Header>
             <Card.Body>
@@ -169,10 +180,27 @@ const SettingScreen = ({ history }) => {
                     {chapterSettings && chapterSettings.length !== 0 && (
                       <ListGroup.Item>
                         <Row>
-                          <>
-                            <Col md={3}>Chapter Name:</Col>
+                          <Col md={3}>Chapter Name:</Col>
+                          {/*  */}
+                          {chapterSettings &&
+                          chapterSettings.length !== 0 &&
+                          !editSettings ? (
                             <Col>{chapterSettings.chapterName}</Col>
-                          </>
+                          ) : newSettings || editSettings ? (
+                            <>
+                              <Form.Group as={Col} controlId='chapterName'>
+                                <Form.Control
+                                  required
+                                  type='text'
+                                  placeholder='Name'
+                                  value={chapterName}
+                                  onChange={(e) =>
+                                    setChapterName(e.target.value)
+                                  }
+                                ></Form.Control>
+                              </Form.Group>
+                            </>
+                          ) : null}
                         </Row>
                       </ListGroup.Item>
                     )}

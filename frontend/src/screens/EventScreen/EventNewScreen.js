@@ -1,12 +1,9 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Row, Col, Card, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { register } from '../../actions/userActions';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import { USER_REGISTER_RESET } from '../../constants/userConstants';
 import swal from 'sweetalert';
 import { newEvent } from '../../actions/eventActions';
 import { EVENT_NEW_RESET } from '../../constants/eventConstants';
@@ -14,7 +11,7 @@ import { EVENT_NEW_RESET } from '../../constants/eventConstants';
 const EventNewScreen = ({ location, history }) => {
   // const [username, setUsername] = useState('');
 
-  const [message, setMessage] = useState(null);
+  // const [message, setMessage] = useState(null);
   const [validated, setValidated] = useState(false);
 
   const [eventName, setEventName] = useState('');
@@ -27,12 +24,7 @@ const EventNewScreen = ({ location, history }) => {
   const [adultFee, setAdultFee] = useState(0);
   const [minorFee, setMinorFee] = useState(0);
   const [cap, setCap] = useState(0);
-  const [startDate, setStartDate] = useState('');
-  // const [certificate, setCertificate] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [confirmPassword, setConfirmPassword] = useState('');
-  // const [uploading, setUploading] = useState(false);
+  // const [startDate, setStartDate] = useState('');
 
   const dispatch = useDispatch();
 
@@ -50,7 +42,6 @@ const EventNewScreen = ({ location, history }) => {
       history.push('/login');
     }
     if (success) {
-      // console.log(success);
       swal('Success!', 'New event createed successfully', 'success').then(
         (value) => {
           history.push(`/event/${newCreatedEvent.eventId}`);
@@ -61,29 +52,7 @@ const EventNewScreen = ({ location, history }) => {
       console.log(error);
       swal('Error!', error, 'error');
     }
-  }, [dispatch, history, success, error]);
-
-  // const uploadFileHandler = async (e) => {
-  //   const file = e.target.files[0];
-  //   const formData = new FormData();
-  //   formData.append('image', file);
-  //   setUploading(true);
-
-  //   try {
-  //     const config = {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     };
-
-  //     const { data } = await axios.post('/api/upload', formData, config);
-  //     setCertificate(data);
-  //     setUploading(false);
-  //   } catch (error) {
-  //     console.error(error);
-  //     setUploading(false);
-  //   }
-  // };
+  }, [dispatch, userInfo, history, success, error]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -93,14 +62,11 @@ const EventNewScreen = ({ location, history }) => {
       e.preventDefault();
       e.stopPropagation();
     } else {
-      // Dispatch Register
-      // setStartDate(eventStartDate + 'T' + eventStartTime);
       const eventDate = [
         { value: new Date(eventStartDate + 'T' + eventStartTime) },
         { value: new Date(eventEndDate + 'T' + eventEndTime) },
       ];
 
-      // console.log(startDate);
       console.log(eventStartDate);
       console.log(eventStartTime);
       console.log(eventDate);
@@ -109,10 +75,6 @@ const EventNewScreen = ({ location, history }) => {
         newEvent(
           eventName,
           eventDescription,
-          // eventStartDate,
-          // eventEndDate,
-          // eventStartTime,
-          // eventEndTime,
           eventDate,
           eventAddress,
           adultFee,
@@ -136,7 +98,7 @@ const EventNewScreen = ({ location, history }) => {
           New Event
         </Card.Header>
         <Card.Body>
-          {message && <Message variant='danger'>{message}</Message>}
+          {/* {message && <Message variant='danger'>{message}</Message>} */}
           {error && <Message variant='danger'>{error}</Message>}
           {loading && <Loader />}
           {success ? (

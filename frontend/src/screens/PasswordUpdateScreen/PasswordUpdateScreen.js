@@ -19,7 +19,6 @@ const PasswordUpdateScreen = ({ location, match, history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     console.log('Submited');
-    // Dispatch Login
     dispatch(passwordUpdate(password, id, token));
   };
 

@@ -44,6 +44,11 @@ import EmailScreen from './screens/EmailScreen/EmailScreen';
 import BlogScreen from './screens/BlogScreen/BlogScreen';
 import CreateBlogScreen from './screens/BlogScreen/CreateBlogScreen';
 import BlogScreenById from './screens/BlogScreen/BlogScreenById';
+import DonationTypeScreen from './screens/DonationTypeScreen/DonationTypeScreen';
+import RegisterScreen_New from './screens/RegistrationScreen/RegistrationScreen_New';
+import ImageByEventScreen from './screens/ImageByEventScreen/ImageByEventScreen';
+import HelpContactScreen from './screens/HelpContactScreen/HelpContactScreen';
+import QuickLinkScreen from './screens/QuickLinkScreen/QuickLinkScreen';
 
 const App = () => {
   return (
@@ -59,25 +64,30 @@ const App = () => {
               path='/password/reset/:id/:token'
               component={PasswordUpdateScreen}
             />
+            <Route path='/registernew' component={RegisterScreen_New} />
             <Route path='/register' component={RegisterScreen} />
             <Route path='/activate/:hash' component={EmailActivationScreen} />
             <Route path='/dashboardScreen' component={UserListScreen} />
             <Route path='/dashboard' component={DashboardScreen} />
             <Route path='/blog' component={BlogScreen} exact />
-            <Route path='/blog/new' component={CreateBlogScreen} />
-            <Route path='/blog/:id' component={BlogScreenById} />
+            <Route path='/blog/new' component={CreateBlogScreen} exact />
+            <Route path='/blogs/:id' component={BlogScreenById} />
             <Route path='/systemAdmin' component={SystemAdminScreen} />
             <Route path='/chapter' component={ChapterScreen} />
             <Route path='/mission' component={MissionScreen} />
             <Route path='/chapters/mission/:id' component={Mission} />
             <Route path='/announcement' component={AnnouncementScreen} />
+            <Route path='/help' component={HelpContactScreen} />
+            <Route path='/links' component={QuickLinkScreen} />
             <Route path='/announcements/:id' component={Announcement} />
             <Route path='/vission' component={VissionScreen} />
             <Route path='/chapters/vission/:id' component={Vission} />
             <Route path='/history' component={HistoryScreen} />
             <Route path='/chapters/history/:id' component={History} />
             <Route path='/paymentType' component={PaymentTypeScreen} />
+            <Route path='/donationType' component={DonationTypeScreen} />
             <Route path='/images' component={ImagesScreen} />
+            <Route path='/image/event' component={ImageByEventScreen} />
             <Route path='/payment' component={PaymentScreen} />
             <Route path='/donate' component={DonateScreen} />
             <Route path='/training' component={TrainingScreen} />

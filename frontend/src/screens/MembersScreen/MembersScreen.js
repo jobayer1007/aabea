@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Table, Button, Image, Row, Col, Card } from 'react-bootstrap';
+import { Table, Button, Row, Col, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
@@ -13,7 +13,6 @@ import {
   deleteAdminUser,
   getUserProfile,
 } from '../../actions/userActions';
-import * as S from './MembersScreen.Styles';
 import { listChapters } from '../../actions/chapterActions';
 import Sidebar from '../../components/Sidebar/Sidebar';
 // import { COLUMNS } from './MemberColumns';
@@ -37,12 +36,7 @@ const MembersScreen = ({ history }) => {
   } = userPendingList;
 
   const userList = useSelector((state) => state.userList);
-  const {
-    loading: userListLoading,
-    error: userListError,
-    success: userListSuccess,
-    users,
-  } = userList;
+  const { loading: userListLoading, error: userListError, users } = userList;
 
   usersRef.current = users;
 
@@ -113,15 +107,6 @@ const MembersScreen = ({ history }) => {
                       style={{ color: '#4285F4' }}
                     ></i>
                   </span>
-
-                  {/* <Button
-                    // style={{ color: '#F4B400' }}
-                    variant='warning'
-                    className='btn btn-sm ml-2 mr-2 btn-outline-warning rounded'
-                    onClick={() => createAdminHandler(rowIdx)}
-                  >
-                    Make admin
-                  </Button> */}
 
                   <Link
                     className='btn btn-outline-warning btn-sm ml-2 rounded'

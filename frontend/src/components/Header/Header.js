@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -14,12 +14,24 @@ import {
 import { logout } from '../../actions/userActions';
 import { Link } from 'react-router-dom';
 import PauseOnHover from '../ImageCarousel/PauseOnHover';
+import Loader from '../Loader';
+import Message from '../Message';
+import { getChapterBySubDomain } from '../../actions/chapterActions';
 
 const Header = () => {
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const chapterBySubDomain = useSelector((state) => state.chapterBySubDomain);
+  const { loading, error, chapterByDomain } = chapterBySubDomain;
+
+  const subDomain = window.location.host.split('.')[0];
+
+  useEffect(() => {
+    dispatch(getChapterBySubDomain(subDomain));
+  }, [dispatch]);
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -44,7 +56,16 @@ const Header = () => {
           </Col>
           <Col xs={3} className='text-center'>
             <span className='nav-chapterName text-info'>
-              <h2>Washington D.C Chapter</h2>
+              {loading ? (
+                <Loader />
+              ) : error ? (
+                <Message variant='danger'>{error}</Message>
+              ) : (
+                chapterByDomain &&
+                chapterByDomain.length !== 0 && (
+                  <h2>{chapterByDomain.chapterName}</h2>
+                )
+              )}
             </span>
           </Col>
         </Row>

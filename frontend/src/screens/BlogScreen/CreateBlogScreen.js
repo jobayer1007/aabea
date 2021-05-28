@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
 import { newBlog } from '../../actions/blogAction';
 import Loader from '../../components/Loader';
@@ -12,7 +13,7 @@ import { BLOG_NEW_RESET } from '../../constants/blogConstants';
 const CreateBlogScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  const [message, setMessage] = useState(null);
+  // const [message, setMessage] = useState(null);
   const [validated, setValidated] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -36,8 +37,10 @@ const CreateBlogScreen = ({ history }) => {
         dispatch({ type: BLOG_NEW_RESET });
         history.push('/blog');
       });
+    } else if (error) {
+      swal('Error!', error, 'error');
     }
-  }, [dispatch, history, userInfo, success]);
+  }, [dispatch, history, userInfo, success, error]);
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
@@ -77,13 +80,16 @@ const CreateBlogScreen = ({ history }) => {
 
   return (
     <Container>
+      <Link className='btn btn-light my-3 btn-sm btn-outline-danger' to='/blog'>
+        Cancel
+      </Link>
       {/* Card Start */}
       <Card border='info'>
         <Card.Header className='text-center text-info' as='h2'>
           New Blog
         </Card.Header>
         <Card.Body>
-          {message && <Message variant='danger'>{message}</Message>}
+          {/* {message && <Message variant='danger'>{message}</Message>} */}
           {error && <Message variant='danger'>{error}</Message>}
           {loading && <Loader />}
           {success ? (
@@ -126,7 +132,6 @@ const CreateBlogScreen = ({ history }) => {
                   </Form.Group>
                   <Form.Group as={Col} md='10' controlId='photo'>
                     <Form.Control
-                      required
                       type='text'
                       // placeholder='Enter your last certificate url..'
                       value={photoId}
@@ -155,7 +160,7 @@ const CreateBlogScreen = ({ history }) => {
                     ></Form.Control>
                   </Form.Group>
                 </Form.Row>
-
+                {/* */}
                 <Form.Group as={Row}>
                   <Col md={{ span: 10, offset: 2 }}>
                     <Button type='submit' variant='info' block>

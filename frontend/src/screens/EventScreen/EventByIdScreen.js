@@ -10,11 +10,9 @@ import {
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { getAnnouncementById } from '../../actions/announcementAction';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import parse from 'html-react-parser';
 import {
   eventAllContact,
   getEventById,
@@ -53,8 +51,8 @@ const EventByIdScreen = ({ history, match }) => {
   const [eventDescription, setEventDescription] = useState('');
   const [eventStartDate, setEventStartDate] = useState('');
   const [eventEndDate, setEventEndDate] = useState('');
-  const [eventStartTime, setEventStartTime] = useState('');
-  const [eventEndTime, setEventEndTime] = useState('');
+  // const [eventStartTime, setEventStartTime] = useState('');
+  // const [eventEndTime, setEventEndTime] = useState('');
   const [eventAddress, setEventAddress] = useState('');
   const [adultFee, setAdultFee] = useState(0);
   const [minorFee, setMinorFee] = useState(0);
@@ -67,12 +65,7 @@ const EventByIdScreen = ({ history, match }) => {
   const { loading, error, event } = eventById;
 
   const eventUpdate = useSelector((state) => state.eventUpdate);
-  const {
-    loading: eventUpdateLoading,
-    error: eventUpdateError,
-    success: eventUpdateSuccess,
-    event: updatedEvent,
-  } = eventUpdate;
+  const { success: eventUpdateSuccess } = eventUpdate;
 
   const eventContactNew = useSelector((state) => state.eventContactNew);
   const {
@@ -98,18 +91,12 @@ const EventByIdScreen = ({ history, match }) => {
   const { success: successDelete } = eventContactDelete;
 
   const eventPublish = useSelector((state) => state.eventPublish);
-  const {
-    loading: eventPublishLoading,
-    error: eventPublishError,
-    success: eventPublishSuccess,
-  } = eventPublish;
+  const { error: eventPublishError, success: eventPublishSuccess } =
+    eventPublish;
 
   const eventUnpublish = useSelector((state) => state.eventUnpublish);
-  const {
-    loading: eventUnpublishLoading,
-    error: eventUnpublishError,
-    success: eventUnpublishSuccess,
-  } = eventUnpublish;
+  const { error: eventUnpublishError, success: eventUnpublishSuccess } =
+    eventUnpublish;
 
   useEffect(() => {
     dispatch(getEventById(id));
@@ -118,22 +105,6 @@ const EventByIdScreen = ({ history, match }) => {
     if (userInfo) {
       dispatch({ type: EVENT_CONTACT_NEW_RESET });
     }
-    // else {
-    //   history.push('/login');
-    // }
-
-    // if (eventUpdateSuccess) {
-    //   setEventName(updatedEvent.eventName);
-    //   setEventDescription(updatedEvent.eventDescription);
-    //   setEventStartDate(new Date(updatedEvent.eventDate[0].value));
-    //   setEventEndDate(new Date(updatedEvent.eventDate[1].value));
-    //   // setEventStartTime();
-    //   // setEventEndTime();
-    //   setEventAddress(updatedEvent.eventAddress);
-    //   setAdultFee(updatedEvent.adultFee);
-    //   setMinorFee(updatedEvent.minorFee);
-    //   setCap(updatedEvent.cap);
-    // }
 
     if (success || eventContactUpdateSuccess) {
       setAddEventContact(false);
@@ -152,7 +123,7 @@ const EventByIdScreen = ({ history, match }) => {
         'Success!',
         eventPublishSuccess || eventUnpublishSuccess,
         'success'
-      ).then((value) => {
+      ).then(() => {
         history.push('/events');
         dispatch({ type: EVENT_PUBLISH_RESET });
         dispatch({ type: EVENT_UNPUBLISH_RESET });
@@ -243,8 +214,8 @@ const EventByIdScreen = ({ history, match }) => {
     setEventDescription(event.eventDescription);
     setEventStartDate(new Date(event.eventDate[0].value));
     setEventEndDate(new Date(event.eventDate[1].value));
-    setEventStartTime();
-    setEventEndTime();
+    // setEventStartTime();
+    // setEventEndTime();
     setEventAddress(event.eventAddress);
     setAdultFee(event.adultFee);
     setMinorFee(event.minorFee);
@@ -677,7 +648,13 @@ const EventByIdScreen = ({ history, match }) => {
 
                                   <Row>
                                     <Col md={4}>Phone :</Col>
-                                    <Col>{eventContact.contactPhone}</Col>
+                                    <Col>
+                                      <a
+                                        href={`tel: ${eventContact.contactPhone}`}
+                                      >
+                                        {eventContact.contactPhone}
+                                      </a>
+                                    </Col>
                                   </Row>
 
                                   {userInfo &&

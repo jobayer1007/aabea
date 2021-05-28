@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Col, Row, Card, ListGroup, Container } from 'react-bootstrap';
+import { Col, Row, Card, ListGroup, Container, Media } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { allAnnouncements } from '../../actions/announcementAction';
@@ -12,12 +12,23 @@ import { allVission } from '../../actions/vissionActions';
 import { allHistory } from '../../actions/historyActions';
 import { allCMembers } from '../../actions/committeeActions';
 import { allEvents } from '../../actions/eventActions';
+import { allHelps } from '../../actions/helpActions';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
 
   const announcementAll = useSelector((state) => state.announcementAll);
   const { loading, error, announcements } = announcementAll;
+
+  const helpAll = useSelector((state) => state.helpAll);
+  const {
+    loading: helpAllLoading,
+    error: helpAllError,
+    helpContacts,
+  } = helpAll;
+
+  const linkAll = useSelector((state) => state.linkAll);
+  const { loading: linkAllLoading, error: linkAllError, links } = linkAll;
 
   const eventAll = useSelector((state) => state.eventAll);
   const { loading: eventsLoading, error: eventsError, events } = eventAll;
@@ -42,13 +53,16 @@ const HomeScreen = () => {
     cMembers,
   } = cMemberAll;
 
+  const subDomain = window.location.host.split('.')[0];
+
   useEffect(() => {
-    dispatch(allAnnouncements());
-    dispatch(allEvents());
+    dispatch(allAnnouncements(subDomain));
+    dispatch(allHelps(subDomain));
+    dispatch(allEvents(subDomain));
     dispatch(allMission());
     dispatch(allVission());
     dispatch(allHistory());
-    dispatch(allCMembers());
+    dispatch(allCMembers(subDomain));
   }, [dispatch]);
   // console.log(cMembers);
   return (
@@ -97,7 +111,7 @@ const HomeScreen = () => {
                         <span className='text-info d-flex justify-content-between align-items-center'>
                           {event.eventName}
                           {event.eventStatus ? (
-                            <span class='badge badge-info badge-pill'>
+                            <span className='badge badge-info badge-pill'>
                               live
                             </span>
                           ) : null}
@@ -108,22 +122,71 @@ const HomeScreen = () => {
                 </ListGroup>
               )}
             </>
-
-            <Card.Body>
-              <Card.Link href='#'>Card Link</Card.Link>
-              <Card.Link href='#'>Another Link</Card.Link>
-            </Card.Body>
           </Card>
 
           <Card className='mb-2'>
+            <Card.Header className='text-info' as='h4'>
+              Contacts for help/support
+            </Card.Header>
             <Card.Body>
-              <Card.Title className='text-info'>Quick Links</Card.Title>
-              <Card.Link href='#'>Link 1</Card.Link>
-              <Card.Link href='#'>Link 2</Card.Link>
-              <Card.Link href='#'>Link 3</Card.Link>
-              <Card.Link href='#'>Link 4</Card.Link>
+              {helpAllLoading ? (
+                <Loader />
+              ) : helpAllError ? (
+                <Message variant='danger'>{helpAllError}</Message>
+              ) : helpContacts && helpContacts.length !== 0 ? (
+                <>
+                  {helpContacts.map((helpContact, index) => (
+                    <>
+                      <Media key={index}>
+                        <img
+                          width={64}
+                          height={64}
+                          className='mr-3'
+                          src={helpContact.profilePicture}
+                          alt='picture'
+                        />
+                        <Media.Body>
+                          <h5>{helpContact.contactName}</h5>
+                          <p>{helpContact.helpFor}</p>
+                          <p>
+                            Email :
+                            <a href={`mailTo: ${helpContact.contactEmail}`}>
+                              {helpContact.contactEmail}
+                            </a>
+                          </p>
+
+                          <p>
+                            Phone :
+                            <a href={`tel: ${helpContact.contactPhone}`}>
+                              {helpContact.contactPhone}
+                            </a>
+                          </p>
+                        </Media.Body>
+                      </Media>
+                      <hr />
+                    </>
+                  ))}
+                </>
+              ) : null}
             </Card.Body>
           </Card>
+
+          {linkAllLoading ? (
+            <Loader />
+          ) : linkAllError ? (
+            <Message variant='danger'>{linkAllError}</Message>
+          ) : links && links.length !== 0 ? (
+            <>
+              <Card className='mb-2'>
+                <Card.Header className='text-info'>Quick Links</Card.Header>
+                {links.map((link, index) => (
+                  <Card.Body key={index}>
+                    <Card.Link href={link.link}>{link.linkTitle}</Card.Link>
+                  </Card.Body>
+                ))}
+              </Card>
+            </>
+          ) : null}
         </Col>
 
         <Col md={{ order: 12 }} lg={{ span: 6, order: 2 }}>
@@ -209,7 +272,7 @@ const HomeScreen = () => {
             </>
           </Card>
 
-          <Card className='text-justify mb-2'>
+          {/* <Card className='text-justify mb-2'>
             <Card.Header className='text-info text-center' as='h4'>
               Any other Main Topic
             </Card.Header>
@@ -222,7 +285,7 @@ const HomeScreen = () => {
                 possimus inventore!
               </Card.Text>
             </Card.Body>
-          </Card>
+          </Card> */}
         </Col>
 
         <Col md={{ span: 6, order: 2 }} lg={{ span: 3, order: 12 }}>

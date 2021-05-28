@@ -11,17 +11,8 @@ import {
   Container,
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import FormContainer from '../../components/FormContainer';
-import {
-  getUserDetailsById,
-  getUserProfile,
-  updateUser,
-  updateUserProfile,
-} from '../../actions/userActions';
-import {
-  USER_UPDATE_PROFILE_RESET,
-  USER_UPDATE_RESET,
-} from '../../constants/userConstants';
+import { getUserProfile, updateUserProfile } from '../../actions/userActions';
+import { USER_UPDATE_PROFILE_RESET } from '../../constants/userConstants';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 
@@ -98,7 +89,7 @@ const EditProfileScreen = ({ match, history }) => {
 
     // }
     // }
-  }, [dispatch, history, user, successUpdate]);
+  }, [dispatch, userInfo, history, user, successUpdate]);
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];

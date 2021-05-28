@@ -17,58 +17,56 @@ import {
   ANNOUNCEMENT_DELETE_FAIL,
 } from '../constants/announcementConstants';
 
-export const newAnnouncement = (title, body, id) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: ANNOUNCEMENT_NEW_REQUEST,
-    });
+export const newAnnouncement =
+  (title, body, id) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ANNOUNCEMENT_NEW_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post(
-      '/api/announcements',
-      {
-        title,
-        body,
-        id,
-      },
-      config
-    );
+      const { data } = await axios.post(
+        '/api/announcements',
+        {
+          title,
+          body,
+          id,
+        },
+        config
+      );
 
-    dispatch({
-      type: ANNOUNCEMENT_NEW_SUCCESS,
-      payload: data,
-    });
+      dispatch({
+        type: ANNOUNCEMENT_NEW_SUCCESS,
+        payload: data,
+      });
 
-    // dispatch({
-    //   type: CHAPTER_LOGIN_SUCCESS,
-    //   payload: data,
-    // });
+      // dispatch({
+      //   type: CHAPTER_LOGIN_SUCCESS,
+      //   payload: data,
+      // });
 
-    // localStorage.setItem('CHAPTERInfo', JSON.stringify(data));
-  } catch (error) {
-    dispatch({
-      type: ANNOUNCEMENT_NEW_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      // localStorage.setItem('CHAPTERInfo', JSON.stringify(data));
+    } catch (error) {
+      dispatch({
+        type: ANNOUNCEMENT_NEW_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
-export const allAnnouncements = () => async (dispatch) => {
+export const allAnnouncements = (subDomain) => async (dispatch) => {
   try {
     dispatch({
       type: ANNOUNCEMENT_ALL_REQUEST,
@@ -80,7 +78,11 @@ export const allAnnouncements = () => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/announcements`, config);
+    const { data } = await axios.get(
+      `/api/announcements`,
+      { subDomain },
+      config
+    );
 
     dispatch({
       type: ANNOUNCEMENT_ALL_SUCCESS,
@@ -130,45 +132,43 @@ export const getAnnouncementById = (id) => async (dispatch) => {
   }
 };
 
-export const updateAnnouncementById = (id, title, body) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: ANNOUNCEMENT_UPDATE_BY_ID_REQUEST,
-    });
+export const updateAnnouncementById =
+  (id, title, body) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ANNOUNCEMENT_UPDATE_BY_ID_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.put(
-      `/api/announcements/${id}`,
-      { title, body },
-      config
-    );
+      const { data } = await axios.put(
+        `/api/announcements/${id}`,
+        { title, body },
+        config
+      );
 
-    dispatch({
-      type: ANNOUNCEMENT_UPDATE_BY_ID_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: ANNOUNCEMENT_UPDATE_BY_ID_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: ANNOUNCEMENT_UPDATE_BY_ID_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: ANNOUNCEMENT_UPDATE_BY_ID_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const deleteAnnouncement = (id) => async (dispatch, getState) => {
   try {

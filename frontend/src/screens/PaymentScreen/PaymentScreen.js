@@ -109,10 +109,10 @@ const PaymentScreen = ({ history }) => {
     setQty(e.target.value);
     setTotalPayment(paymentTypeAmount * qty);
   };
-  console.log(paymentTypeAmount);
-  console.log(paymentTypeName);
-  console.log(qty);
-  console.log(totalPayment);
+  // console.log(paymentTypeAmount);
+  // console.log(paymentTypeName);
+  // console.log(qty);
+  // console.log(totalPayment);
 
   return (
     <>

@@ -9,6 +9,7 @@ import { allblogs } from '../../actions/blogAction';
 import Loader from '../../components/Loader';
 import Message from '../../components/Message';
 import { BLOG_BY_ID_RESET } from '../../constants/blogConstants';
+import SearchBox from '../../components/SearchBox/SearchBox';
 
 const BlogScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ const BlogScreen = ({ history }) => {
       dispatch(allblogs());
       dispatch({ type: BLOG_BY_ID_RESET });
     }
-  }, [dispatch, userInfo]);
+  }, [dispatch, history, userInfo]);
 
   const newBlogHandler = (e) => {
     e.preventDefault();
@@ -62,7 +63,7 @@ const BlogScreen = ({ history }) => {
 
                       {/* Author */}
                       <p class='lead'>
-                        by <span>{blog.userId}</span>
+                        by <span>{blog.userName}</span>
                       </p>
 
                       <hr />
@@ -78,7 +79,7 @@ const BlogScreen = ({ history }) => {
                       {/* Post Content */}
                       <p class='lead'>
                         {parse(blog.body.substring(0, 100))}...
-                        <Link to={`/blog/${blog.blogId}`}>read more</Link>
+                        <Link to={`/blogs/${blog.blogId}`}>read more</Link>
                       </p>
                     </Col>
                   </Row>
@@ -92,7 +93,7 @@ const BlogScreen = ({ history }) => {
         </Col>
 
         <Col md={{ span: 4, order: 12 }} className='m-0 p-1'>
-          <Card>
+          <Card className='mb-2'>
             <Card.Header className='text-center' as='h2'>
               <Link
                 className='btn btn-outline-info btn-sm btn-block rounded'
@@ -104,12 +105,10 @@ const BlogScreen = ({ history }) => {
             </Card.Header>
           </Card>
 
-          {/* <!-- Blog Search Well --> */}
-          {/* <div class='well'>
-            <h4>Blog Search</h4>
-
-            {/* <!-- /.input-group --> */}
-          {/* </div> */}
+          <>
+            {/* <!-- Blog Search Well --> */}
+            <SearchBox />
+          </>
         </Col>
       </Row>
     </>

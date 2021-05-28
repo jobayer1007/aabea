@@ -1,14 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Card, Container } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
-import { getAnnouncementById } from '../../actions/announcementAction';
-import { useDispatch, useSelector } from 'react-redux';
-import Message from '../../components/Message';
-import Loader from '../../components/Loader';
-import parse from 'html-react-parser';
-
-const About = ({ history, match }) => {
+const About = () => {
   return (
     <Container>
       <Card>

@@ -107,7 +107,7 @@ const LoginScreen = ({ location, history }) => {
   return (
     <FormContainer>
       {/* Card start */}
-      <Card border='success'>
+      <Card border='info'>
         <Card.Header
           className='text-center'
           as='h2'

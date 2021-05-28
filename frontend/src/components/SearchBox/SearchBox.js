@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Col } from 'react-bootstrap';
 
 const SearchBox = ({ history }) => {
   const [keyword, setKeyword] = useState('');
@@ -7,25 +7,31 @@ const SearchBox = ({ history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (keyword.trim()) {
-      history.push(`/search/${keyword}`);
-    } else {
-      history.push('/');
-    }
+    // if (keyword.trim()) {
+    //   history.push(`/search/${keyword}`);
+    // } else {
+    //   history.push('/blog');
+    // }
   };
 
   return (
-    <Form onSubmit={submithandler} inline>
-      <Form.Control
-        type='text'
-        name='q'
-        onChange={(e) => setKeyword(e.target.value)}
-        placeholder='Search Memebr'
-        className='mr-sm-2 ml-sm-5'
-      ></Form.Control>
-      <Button type='submit' variant='outline-success' className='p-2'>
-        Search
-      </Button>
+    <Form onSubmit={submitHandler}>
+      <Form.Row>
+        <Form.Group as={Col} md='10'>
+          <Form.Control
+            type='text'
+            name='q'
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder='Search..'
+            // className='mr-sm-2 ml-sm-5'
+          ></Form.Control>
+        </Form.Group>
+        <Form.Group as={Col} md='2'>
+          <Button type='submit' variant='outline-info'>
+            Search
+          </Button>
+        </Form.Group>
+      </Form.Row>
     </Form>
   );
 };

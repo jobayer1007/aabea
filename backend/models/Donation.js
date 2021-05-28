@@ -10,7 +10,7 @@ const Donation = (sequelize, DataTypes) =>
     },
     email: {
       //// In case if Member , it will be member email
-      type: DataTypes.STRING(20),
+      type: DataTypes.STRING(50),
       allowNull: false,
       required: true,
       primaryKey: true,
@@ -47,10 +47,9 @@ const Donation = (sequelize, DataTypes) =>
     },
 
     donationType: {
-      type: DataTypes.ENUM(30),
+      type: DataTypes.STRING,
       required: true,
       defaultValue: 'general',
-      values: ['general', 'flood', 'corona'],
     },
 
     amount: {

@@ -1,20 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import {
-  Form,
-  Button,
-  Row,
-  Col,
-  Card,
-  Container,
-  ListGroup,
-} from 'react-bootstrap';
+import { Form, Row, Col, Card, Container, ListGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { register } from '../../actions/userActions';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import { USER_REGISTER_RESET } from '../../constants/userConstants';
 import swal from 'sweetalert';
 import { PayPalButton } from 'react-paypal-button-v2';
 import { registerEvent, getEventById } from '../../actions/eventActions';
@@ -26,7 +15,7 @@ const EventRegisterScreen = ({ match, history }) => {
   const [mInit, setMInit] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [eventName, setEventName] = useState('');
+  // const [eventName, setEventName] = useState('');
   const [isMember, setIsMember] = useState(false);
   const [memberId, setMemberId] = useState('');
   const [email, setEmail] = useState('');
@@ -37,19 +26,14 @@ const EventRegisterScreen = ({ match, history }) => {
   const dispatch = useDispatch();
 
   const eventRegister = useSelector((state) => state.eventRegister);
-  const {
-    error: eventRegisterError,
-    success: eventRegisterSuccess,
-  } = eventRegister;
-
-  // const userLogin = useSelector((state) => state.userLogin);
-  // const { userInfo } = userLogin;
+  const { error: eventRegisterError, success: eventRegisterSuccess } =
+    eventRegister;
 
   const eventById = useSelector((state) => state.eventById);
   const { loading, error, event } = eventById;
 
   useEffect(() => {
-    console.log(id);
+    // console.log(id);
     dispatch(getEventById(id));
 
     if (eventRegisterSuccess) {
@@ -78,7 +62,7 @@ const EventRegisterScreen = ({ match, history }) => {
     } else {
       setSdkReady(true);
     }
-  }, [dispatch, history, eventRegisterSuccess, eventRegisterError]);
+  }, [dispatch, id, history, eventRegisterSuccess, eventRegisterError]);
 
   // const submitHandler = (paymentResult) => {
 

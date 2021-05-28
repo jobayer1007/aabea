@@ -3,6 +3,9 @@ import {
   IMAGE_ALL_FAIL,
   IMAGE_ALL_REQUEST,
   IMAGE_ALL_SUCCESS,
+  IMAGE_BY_EVENT_FAIL,
+  IMAGE_BY_EVENT_REQUEST,
+  IMAGE_BY_EVENT_SUCCESS,
   IMAGE_BY_ID_FAIL,
   IMAGE_BY_ID_REQUEST,
   IMAGE_BY_ID_SUCCESS,
@@ -20,54 +23,51 @@ import {
   IMAGE_NEW_SUCCESS,
 } from '../constants/imageConstants';
 
-export const newImage = (
-  imageName,
-  imageDescription,
-  imageLink,
-  image
-) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: IMAGE_NEW_REQUEST,
-    });
+export const newImage =
+  (imageName, imageDescription, eventId, image) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: IMAGE_NEW_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post(
-      '/api/image/new',
-      {
-        imageName,
-        imageDescription,
-        imageLink,
-        image,
-      },
-      config
-    );
+      const { data } = await axios.post(
+        '/api/image/new',
+        {
+          imageName,
+          imageDescription,
+          eventId,
+          image,
+        },
+        config
+      );
 
-    dispatch({
-      type: IMAGE_NEW_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: IMAGE_NEW_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: IMAGE_NEW_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: IMAGE_NEW_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
-export const allImage = () => async (dispatch) => {
+export const allImage = (subDomain) => async (dispatch) => {
   try {
     dispatch({
       type: IMAGE_ALL_REQUEST,
@@ -79,7 +79,7 @@ export const allImage = () => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/image`, {}, config);
+    const { data } = await axios.get(`/api/image`, { subDomain }, config);
 
     dispatch({
       type: IMAGE_ALL_SUCCESS,
@@ -125,7 +125,7 @@ export const getImageById = (id) => async (dispatch) => {
   }
 };
 
-export const getNavbarImage = () => async (dispatch) => {
+export const getNavbarImage = (subDomain) => async (dispatch) => {
   try {
     dispatch({
       type: IMAGE_NAVBAR_REQUEST,
@@ -137,7 +137,11 @@ export const getNavbarImage = () => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/image/navbar`, {}, config);
+    const { data } = await axios.get(
+      `/api/image/navbar`,
+      { subDomain },
+      config
+    );
 
     dispatch({
       type: IMAGE_NAVBAR_SUCCESS,
@@ -154,7 +158,7 @@ export const getNavbarImage = () => async (dispatch) => {
   }
 };
 
-export const getHomeScreenImage = () => async (dispatch) => {
+export const getHomeScreenImage = (subDomain) => async (dispatch) => {
   try {
     dispatch({
       type: IMAGE_HOMESCREEN_REQUEST,
@@ -166,7 +170,11 @@ export const getHomeScreenImage = () => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/image/homeScreen`, {}, config);
+    const { data } = await axios.get(
+      `/api/image/homeScreen`,
+      { subDomain },
+      config
+    );
 
     dispatch({
       type: IMAGE_HOMESCREEN_SUCCESS,
@@ -175,6 +183,35 @@ export const getHomeScreenImage = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: IMAGE_HOMESCREEN_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getImageByEvent = (subDomain) => async (dispatch) => {
+  try {
+    dispatch({
+      type: IMAGE_BY_EVENT_REQUEST,
+    });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const { data } = await axios.get(`/api/image/event`, { subDomain }, config);
+
+    dispatch({
+      type: IMAGE_BY_EVENT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: IMAGE_BY_EVENT_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

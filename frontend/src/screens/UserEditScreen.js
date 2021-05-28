@@ -3,16 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Card, Row, Col, ListGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import FormContainer from '../components/FormContainer';
-import {
-  getUserDetailsById,
-  getUserProfile,
-  updateUser,
-  updateUserProfile,
-} from '../actions/userActions';
+import { getUserDetailsById, updateUser } from '../actions/userActions';
 import {
   USER_DETAILS_BY_ID_RESET,
-  USER_UPDATE_PROFILE_RESET,
   USER_UPDATE_RESET,
 } from '../constants/userConstants';
 import Message from '../components/Message';
@@ -92,7 +85,7 @@ const UserEditScreen = ({ match, history }) => {
 
     // }
     // }
-  }, [dispatch, history, user, successUpdate]);
+  }, [dispatch, userInfo, id, history, user, successUpdate]);
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];

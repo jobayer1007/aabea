@@ -9,7 +9,7 @@ const models = require('../models/index');
 exports.createNewReply = asyncHandler(async (req, res) => {
   const { reply, commentId, blogId } = req.body;
 
-  const user = await models.User.findOne({
+  const user = await models.Member.findOne({
     where: { memberId: req.user.memberId },
   });
   if (user) {
@@ -25,6 +25,8 @@ exports.createNewReply = asyncHandler(async (req, res) => {
         const newReply = await models.Reply.create({
           reply,
           userId: user.memberId,
+          userName: user.firstName + ' ' + user.lastName,
+          profilePicture: user.profilePicture,
           chapterId: user.chapterId,
           blogId,
           commentId,
@@ -55,7 +57,7 @@ exports.createNewReply = asyncHandler(async (req, res) => {
 exports.updateReplyById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   // console.log(id);
-  const reply = await models.Comment.findOne({
+  const reply = await models.Reply.findOne({
     where: { replyId: id },
   });
 

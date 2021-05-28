@@ -26,6 +26,17 @@ const Comment = (sequelize, DataTypes) =>
       notEmpty: true,
     },
 
+    userName: {
+      type: DataTypes.STRING,
+      required: true,
+      allowNull: false,
+      notEmpty: true,
+    },
+
+    profilePicture: {
+      type: DataTypes.STRING,
+    },
+
     chapterId: {
       type: DataTypes.UUID,
       allowNull: false,

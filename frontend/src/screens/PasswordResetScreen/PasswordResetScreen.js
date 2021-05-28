@@ -16,7 +16,6 @@ const PasswordResetScreen = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     console.log('Submited');
-    // Dispatch Login
     dispatch(passwordReset(email));
   };
 

@@ -26,6 +26,7 @@ import {
   userVerificationEmailResendReducer,
 } from './reducers/userReducers';
 import {
+  chapterBySubDomainReducer,
   chapterDeleteReducer,
   chapterListReducer,
   chapterRegisterReducer,
@@ -68,6 +69,7 @@ import {
 } from './reducers/historyReducers';
 import {
   imageAllReducer,
+  imageByEventReducer,
   imageByIdReducer,
   imageDeleteReducer,
   imageHomeScreenReducer,
@@ -125,6 +127,25 @@ import {
   replyNewReducer,
   replyUpdateReducer,
 } from './reducers/replyReducers';
+import {
+  donationTypeDeleteReducer,
+  donationTypeListReducer,
+  donationTypeRegisterReducer,
+} from './reducers/donationTypeReducers';
+import {
+  helpAllReducer,
+  helpByIdReducer,
+  helpDeleteReducer,
+  helpNewReducer,
+  helpUpdateReducer,
+} from './reducers/helpContactReducers';
+import {
+  linkAllReducer,
+  linkByIdReducer,
+  linkDeleteReducer,
+  linkNewReducer,
+  linkUpdateReducer,
+} from './reducers/quickLinkReducers';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -189,12 +210,17 @@ const reducer = combineReducers({
   imageById: imageByIdReducer,
   imageNavbar: imageNavbarReducer,
   imageHomeScreen: imageHomeScreenReducer,
+  imageByEvent: imageByEventReducer,
   imageAll: imageAllReducer,
   imageDelete: imageDeleteReducer,
 
   paymentTypeRegister: paymentTypeRegisterReducer,
   paymentTypeList: paymentTypeListReducer,
   paymentTypeDelete: paymentTypeDeleteReducer,
+
+  donationTypeRegister: donationTypeRegisterReducer,
+  donationTypeList: donationTypeListReducer,
+  donationTypeDelete: donationTypeDeleteReducer,
 
   cMemberNew: cMemberNewReducer,
   cMemberAll: cMemberAllReducer,
@@ -223,6 +249,8 @@ const reducer = combineReducers({
   chapterSettingsAll: chapterSettingsReducer,
   chapterSettingsUpdate: chapterSettingsUpdateReducer,
 
+  chapterBySubDomain: chapterBySubDomainReducer,
+
   emailNew: emailNewReducer,
   emailAll: emailAllReducer,
   emailById: emailByIdReducer,
@@ -246,6 +274,18 @@ const reducer = combineReducers({
   replyNew: replyNewReducer,
   replyUpdate: replyUpdateReducer,
   replyDelete: replyDeleteReducer,
+
+  helpNew: helpNewReducer,
+  helpAll: helpAllReducer,
+  helpById: helpByIdReducer,
+  helpUpdate: helpUpdateReducer,
+  helpDelete: helpDeleteReducer,
+
+  linkNew: linkNewReducer,
+  linkAll: linkAllReducer,
+  linkById: linkByIdReducer,
+  linkUpdate: linkUpdateReducer,
+  linkDelete: linkDeleteReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

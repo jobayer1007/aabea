@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Carousel, Image } from 'react-bootstrap';
 import Loader from '../Loader';
 import Message from '../Message';
-import { allImage, getHomeScreenImage } from '../../actions/imageActions';
+import { getHomeScreenImage } from '../../actions/imageActions';
 
 const ImageCarousel = () => {
   const dispatch = useDispatch();
@@ -12,8 +12,10 @@ const ImageCarousel = () => {
   const imageHomeScreen = useSelector((state) => state.imageHomeScreen);
   const { loading, error, homeScreenImages } = imageHomeScreen;
 
+  const subDomain = window.location.host.split('.')[0];
+
   useEffect(() => {
-    dispatch(getHomeScreenImage());
+    dispatch(getHomeScreenImage(subDomain));
   }, [dispatch]);
 
   return loading ? (

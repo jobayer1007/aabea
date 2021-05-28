@@ -17,7 +17,6 @@ import {
   newVission,
   updateVissionById,
 } from '../../actions/vissionActions';
-import * as S from './VissionScreen.Styles';
 import {
   VISSION_BY_ID_RESET,
   VISSION_NEW_RESET,

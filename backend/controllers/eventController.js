@@ -71,12 +71,16 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getAllEvents = asyncHandler(async (req, res) => {
   // Find Chapter
-  const subDomain = 'bd.aabea.org'; // at dev only
-  // const chapterName = 'Bangladesh';
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = req.body.subDomain;
+  }
+  console.log(subDomain);
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
-  // console.log(chapter.chapterId);
 
   if (chapter) {
     const events = await models.Event.findAll(
@@ -335,13 +339,8 @@ exports.updateEventContactById = asyncHandler(async (req, res) => {
         contactPhone: req.body.contactPhone || eContact.contactPhone,
       };
 
-      let {
-        memberId,
-        positionName,
-        contactName,
-        contactEmail,
-        contactPhone,
-      } = data;
+      let { memberId, positionName, contactName, contactEmail, contactPhone } =
+        data;
       const updatedEContact = await models.EventContact.update(
         {
           memberId,

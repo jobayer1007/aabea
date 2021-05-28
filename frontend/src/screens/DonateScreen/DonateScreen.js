@@ -16,6 +16,7 @@ import {
 import { USER_DONATE_RESET } from '../../constants/userConstants';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import swal from 'sweetalert';
+import { listDonationTypes } from '../../actions/donationTypeAction';
 
 const DonateScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const DonateScreen = ({ history }) => {
   const [mInit, setMInit] = useState('Mr');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [donationTypeName, setDonationTypeName] = useState('');
   const [donateAmount, setDonateAmount] = useState(5);
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -50,6 +52,13 @@ const DonateScreen = ({ history }) => {
     donateResulte,
   } = userDonate;
 
+  const donationTypeList = useSelector((state) => state.donationTypeList);
+  const {
+    loading: loadingDonationTypes,
+    error: errorDonationTypes,
+    donationTypes,
+  } = donationTypeList;
+
   useEffect(() => {
     if (userInfo) {
       dispatch(getUserProfile());
@@ -61,6 +70,8 @@ const DonateScreen = ({ history }) => {
       setEmail('');
       setDonateAmount(5);
     }
+
+    dispatch(listDonationTypes());
 
     const addPaypalScript = async () => {
       const { data: clientId } = await axios.get('/api/config/paypal');
@@ -78,6 +89,7 @@ const DonateScreen = ({ history }) => {
       swal('Success!', donateResulte, 'success').then(() => {
         dispatch({ type: USER_DONATE_RESET });
         setDonateAmount(0);
+        setDonationTypeName('');
       });
     }
     if (!window.paypal) {
@@ -88,9 +100,15 @@ const DonateScreen = ({ history }) => {
     // }
   }, [history, dispatch, userInfo, addDonation, donateResulte]);
 
+  const donationTypeChangeHandler = (e) => {
+    // e.preventDefault();
+
+    setDonationTypeName(e.target.value);
+  };
+
   const successDonationHandler = (paymentResult) => {
-    console.log(paymentResult);
-    dispatch(donateUser(userInfo.memberId, paymentResult));
+    // console.log(paymentResult);
+    dispatch(donateUser(userInfo.memberId, donationTypeName, paymentResult));
     setAddDonation(!addDonation);
   };
 
@@ -105,6 +123,7 @@ const DonateScreen = ({ history }) => {
         firstName,
         mInit,
         lastName,
+        donationTypeName,
         paymentResult
       )
     );
@@ -168,6 +187,36 @@ const DonateScreen = ({ history }) => {
                                 </Row>
                               </ListGroup.Item>
                             </ListGroup>
+                            {loadingDonationTypes ? (
+                              <Loader />
+                            ) : errorDonationTypes ? (
+                              <Message variant='danger'>
+                                {errorDonationTypes}
+                              </Message>
+                            ) : (
+                              donationTypes &&
+                              donationTypes.length !== 0 && (
+                                <Form.Group>
+                                  <label>Donation Cause</label>
+                                  <Form.Control
+                                    as='select'
+                                    onChange={donationTypeChangeHandler}
+                                  >
+                                    <option>Select cause</option>
+                                    {donationTypes.map(
+                                      (donationType, index) => (
+                                        <option
+                                          key={index}
+                                          value={donationType.donationTypeName}
+                                        >
+                                          {donationType.donationTypeName}
+                                        </option>
+                                      )
+                                    )}
+                                  </Form.Control>
+                                </Form.Group>
+                              )
+                            )}
 
                             <Form.Group controlId='donateAmount'>
                               <Form.Label>Donate Amount</Form.Label>
@@ -185,6 +234,12 @@ const DonateScreen = ({ history }) => {
                         </Col>
                         <Col md={4}>
                           <ListGroup variant='flush'>
+                            <ListGroup.Item>
+                              <Row>
+                                <Col>Donation Cause</Col>
+                                <Col>{donationTypeName}</Col>
+                              </Row>
+                            </ListGroup.Item>
                             <ListGroup.Item>
                               <Row>
                                 <Col>Donation Amount</Col>
@@ -327,6 +382,41 @@ const DonateScreen = ({ history }) => {
                       </Form.Group>
                     </Form.Row>
 
+                    {loadingDonationTypes ? (
+                      <Loader />
+                    ) : errorDonationTypes ? (
+                      <Message variant='danger'>{errorDonationTypes}</Message>
+                    ) : (
+                      donationTypes &&
+                      donationTypes.length !== 0 && (
+                        <Form.Row>
+                          <Form.Group as={Col} md='2'>
+                            <Form.Label>Donation Cause</Form.Label>
+                          </Form.Group>
+                          <Form.Group
+                            as={Col}
+                            md='10'
+                            controlId='donationTypeName'
+                          >
+                            <Form.Control
+                              as='select'
+                              onChange={donationTypeChangeHandler}
+                            >
+                              <option>Select cause</option>
+                              {donationTypes.map((donationType, index) => (
+                                <option
+                                  key={index}
+                                  value={donationType.donationTypeName}
+                                >
+                                  {donationType.donationTypeName}
+                                </option>
+                              ))}
+                            </Form.Control>
+                          </Form.Group>
+                        </Form.Row>
+                      )
+                    )}
+
                     <Form.Row>
                       <Form.Group as={Col} md='2'>
                         <Form.Label>Donate Amount</Form.Label>
@@ -346,6 +436,12 @@ const DonateScreen = ({ history }) => {
                 </Col>
                 <Col md={4}>
                   <ListGroup variant='flush'>
+                    <ListGroup.Item>
+                      <Row>
+                        <Col>Donation cause</Col>
+                        <Col>{donationTypeName}</Col>
+                      </Row>
+                    </ListGroup.Item>
                     <ListGroup.Item>
                       <Row>
                         <Col>Donation Amount</Col>

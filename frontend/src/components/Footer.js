@@ -8,7 +8,9 @@ const Footer = () => {
         <Row>
           <Col className='text-center py-3 m-5 '>
             Copyright &copy; {new Date().getFullYear()} : AABEA. All Rights
-            Reserved. Designed by Jobayer
+            Reserved. Designed and powered by{' '}
+            <a href='https://www.theteamj.com/'>The Teamj</a> and{' '}
+            <a href='https://www.goctq.com/'>GoCTQ</a>
           </Col>
         </Row>
       </Container>

@@ -1,5 +1,7 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import { Form, Button, Row, Col, Card, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,15 +41,12 @@ const RegisterScreen = ({ location, history }) => {
   const { loading, error, success } = userRegister;
 
   const redirect = location.search ? location.search.split('=')[1] : '/';
+  const subDomain = window.location.host.split('.')[0];
+  // const subDomain = www.bd.aabea.org.split('.')[0];
 
   useEffect(() => {
-    // if (success) {
-    //   dispatch({ type: USER_REGISTER_RESET });
-    //   history.push(redirect);
-    // }
-
     if (success) {
-      // console.log(success);
+      console.log(subDomain);
       swal('Success!', success, 'success').then((value) => {
         dispatch({ type: USER_REGISTER_RESET });
         history.push(redirect);
@@ -95,7 +94,7 @@ const RegisterScreen = ({ location, history }) => {
         // Dispatch Register
         dispatch(
           register(
-            // username,
+            subDomain,
             email,
             password,
             firstName,

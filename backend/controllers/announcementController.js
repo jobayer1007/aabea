@@ -1,6 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const models = require('../models/index');
 
+// const dotenv = require('dotenv');
+
 ///////////////////////////////////////////ANNOUNCEMENT////////////////////////////////////////////////
 
 // @desc    Create a new Announcement     /////////////////////////////////////////Announcement//////
@@ -15,7 +17,8 @@ exports.createNewAnnouncement = asyncHandler(async (req, res) => {
       title,
       body,
       chapterId: user.chapterId,
-      createdby: user.memberId,
+      createdBy: user.memberId,
+      lastUpdatedBy: user.memberId,
     });
     if (newAnnouncement) {
       res.json('New Announcement Created Successfully');
@@ -31,10 +34,32 @@ exports.createNewAnnouncement = asyncHandler(async (req, res) => {
 
 // @desc    GET all Announcements     ///////////////////////////////////////////////
 // @route   GET /api/announcements
-// @access  Private/SystemAdmin || Admin
+// @access  Public
 exports.getAnnouncements = asyncHandler(async (req, res) => {
-  const announcements = await models.Announcement.findAll();
-  res.json(announcements);
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = req.body.subDomain;
+  }
+  console.log(subDomain);
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+  if (chapter) {
+    const announcements = await models.Announcement.findAll({
+      where: { chapterId: chapter.chapterId },
+    });
+    if (announcements && announcements.length !== 0) {
+      res.send(announcements);
+    } else {
+      res.status(401);
+      throw new Error('No announcement');
+    }
+  } else {
+    res.status(401);
+    throw new Error('Invalid chapter reference');
+  }
 });
 
 // @desc    Get an  announcement by Id     ///////////////////////////////////////////////
@@ -76,6 +101,7 @@ exports.updateAnnouncementById = asyncHandler(async (req, res) => {
       {
         title,
         body,
+        lastUpdatedBy: req.user.memberId,
       },
       { where: { announcementId: id } }
     );

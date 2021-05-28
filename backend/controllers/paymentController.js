@@ -306,26 +306,29 @@ exports.memberDonation = asyncHandler(async (req, res) => {
     });
 
     if (member) {
-      const donate = await models.Donation.create({
-        chapterId: member.chapterId,
-        firstName: member.firstName,
-        mInit: member.mInit,
-        lastName: member.lastName,
-        email: member.primaryEmail,
-        memberId: member.memberId,
-        amount: req.body.purchase_units[0].amount.value,
-        payerId: req.body.payer.email_address,
-        paymentId: req.body.id,
-        paymentStatus: req.body.status,
-        paymentTime: req.body.update_time,
-      }); // Create default payment status
+      try {
+        const donate = await models.Donation.create({
+          chapterId: member.chapterId,
+          firstName: member.firstName,
+          mInit: member.mInit,
+          lastName: member.lastName,
+          email: member.primaryEmail,
+          memberId: member.memberId,
+          donationType: req.body.donationTypeName,
+          amount: req.body.paymentResult.purchase_units[0].amount.value,
+          payerId: req.body.paymentResult.payer.email_address,
+          paymentId: req.body.paymentResult.id,
+          paymentStatus: req.body.paymentResult.status,
+          paymentTime: req.body.paymentResult.update_time,
+        }); // Create default payment status
 
-      if (donate) {
-        console.log('Donation linked');
-        res.send('Donation successful');
-      } else {
+        if (donate) {
+          console.log('Donation linked');
+          res.send('Donation successful');
+        }
+      } catch (error) {
         res.status(401);
-        throw new Error('Payment not found');
+        throw new Error('Donation unsuccessfull' + error);
       }
     } else {
       res.status(401);
@@ -337,8 +340,8 @@ exports.memberDonation = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get loggedIn user PaymentS      ///////////////////////////////////////////////
-// @route   GET /api/users/payment
+// @desc    Get loggedIn user Donation details      ///////////////////////////////////////////////
+// @route   GET /api/users/:id/donate
 // @access  Private
 exports.getUserDonationDetails = asyncHandler(async (req, res) => {
   // console.log(req.user.memberId);
@@ -358,22 +361,15 @@ exports.getUserDonationDetails = asyncHandler(async (req, res) => {
 // @route   POST /api/users/donate
 // @access  Public
 exports.guestDonation = asyncHandler(async (req, res) => {
-  const {
-    subDomain,
-    guest,
-    email,
-    firstName,
-    mInit,
-    lastName,
-    paymentResult,
-  } = req.body;
-  console.log(`Domain: ${subDomain}`);
-  console.log(`guest: ${guest}`);
-  console.log(`email: ${email}`);
-  console.log(`firstName: ${firstName}`);
-  console.log(`mInit: ${mInit}`);
-  console.log(`lastName: ${lastName}`);
-  console.log(`amount: ${paymentResult.purchase_units[0].amount.value}`);
+  const { subDomain, guest, email, firstName, mInit, lastName, paymentResult } =
+    req.body;
+  // console.log(`Domain: ${subDomain}`);
+  // console.log(`guest: ${guest}`);
+  // console.log(`email: ${email}`);
+  // console.log(`firstName: ${firstName}`);
+  // console.log(`mInit: ${mInit}`);
+  // console.log(`lastName: ${lastName}`);
+  // console.log(`amount: ${paymentResult.purchase_units[0].amount.value}`);
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
@@ -392,11 +388,12 @@ exports.guestDonation = asyncHandler(async (req, res) => {
           lastName: member.lastName,
           email: member.primaryEmail,
           memberId: member.memberId,
-          amount: paymentResult.purchase_units[0].amount.value,
-          payerId: paymentResult.payer.email_address,
-          paymentId: paymentResult.id,
-          paymentStatus: paymentResult.status,
-          paymentTime: paymentResult.update_time,
+          donationType: req.body.donationTypeName,
+          amount: req.body.paymentResult.purchase_units[0].amount.value,
+          payerId: req.body.paymentResult.payer.email_address,
+          paymentId: req.body.paymentResult.id,
+          paymentStatus: req.body.paymentResult.status,
+          paymentTime: req.body.paymentResult.update_time,
         }); // Create default payment status
 
         if (donate) {

@@ -1,34 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap';
-import {
-  Table,
-  Button,
-  Image,
-  Row,
-  Col,
-  Card,
-  ListGroup,
-} from 'react-bootstrap';
+import { Row, Col, Card, ListGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 import {
-  listUsers,
-  deleteUser,
   getUserProfile,
   getUserDonationDetails,
 } from '../../actions/userActions';
-import * as S from './DashboardScreen.Styles';
 import Sidebar from '../../components/Sidebar/Sidebar';
 
 const DashboardScreen = ({ history }) => {
   const dispatch = useDispatch();
-
-  const [lastDonation, setLastDonation] = useState('');
-
-  const userList = useSelector((state) => state.userList);
-  const { loading, error, users } = userList;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -65,11 +48,6 @@ const DashboardScreen = ({ history }) => {
     }
   }, [dispatch, history, userInfo, successDelete]);
 
-  const deleteHandler = (id) => {
-    if (window.confirm('Are You Sure?')) {
-      dispatch(deleteUser(id));
-    }
-  };
   return (
     <>
       <Row>

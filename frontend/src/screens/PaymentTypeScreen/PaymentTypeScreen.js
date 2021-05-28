@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import * as S from './PaymentTypeScreen.Styles';
 import {
   deletePaymentType,
   listPaymentTypes,
@@ -215,7 +214,7 @@ const PaymentTypeScreen = ({ history }) => {
                             {userInfo &&
                               (userInfo.userRole === 'systemAdmin' ||
                                 userInfo.userRole === 'admin') && (
-                                <th>EDIT/DELETE</th>
+                                <th>ACTION</th>
                               )}
                           </tr>
                         </thead>
@@ -232,25 +231,26 @@ const PaymentTypeScreen = ({ history }) => {
                               {(userInfo.userRole === 'systemAdmin' ||
                                 userInfo.userRole === 'admin') && (
                                 <td>
-                                  <LinkContainer
+                                  {/* <LinkContainer
                                     to={`/paymentType/${paymentType.paymentTypeId}/edit`}
                                   >
                                     <Button variant='light' className='btn-sm'>
                                       <i className='fas fa-edit'></i>
                                     </Button>
-                                  </LinkContainer>
+                                  </LinkContainer> */}
 
-                                  <Button
-                                    variant='danger'
-                                    className='btn-sm'
+                                  <span
                                     onClick={() =>
                                       deletePaymentTypeHandler(
                                         paymentType.paymentTypeId
                                       )
                                     }
                                   >
-                                    <i className='fas fa-trash'></i>
-                                  </Button>
+                                    <i
+                                      className='fas fa-trash action ml-2'
+                                      style={{ color: 'red' }}
+                                    ></i>
+                                  </span>
                                 </td>
                               )}
                             </tr>

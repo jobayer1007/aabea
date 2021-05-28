@@ -29,7 +29,8 @@ const sequelize = new Sequelize(
 // @route   POST /api/chapters/new
 // @access  Private/SystemAdmin
 exports.createNewChapter = asyncHandler(async (req, res) => {
-  const { chapterName, chapterAddress, chapterEmail, chapterPhone } = req.body;
+  const { chapterName, chapterAddress, chapterEmail, chapterPhone, subDomain } =
+    req.body;
 
   const chapterNameExists = await models.Chapter.findOne({
     where: { chapterName: chapterName },
@@ -44,9 +45,12 @@ exports.createNewChapter = asyncHandler(async (req, res) => {
         chapterAddress,
         chapterEmail,
         chapterPhone,
+        subDomain,
+        createdBy: req.user.memberId,
+        lastUpdatedBy: req.user.memberId,
       });
       if (newChapter) {
-        res.json('New Chapter Created Successfully');
+        res.json('New Chapter created successfully');
       } else {
         res.status(400);
         throw new Error('Encountered problem while creating new chapter');
@@ -58,7 +62,9 @@ exports.createNewChapter = asyncHandler(async (req, res) => {
           chapterEmailExists.chapterEmail +
           ' already exist' +
           'where Chapter Name:' +
-          chapterEmailExists.chapterName
+          chapterEmailExists.chapterName +
+          ' and subDomain address:' +
+          chapterEmailExists.subDomain
       );
     }
   } else {
@@ -86,12 +92,36 @@ exports.getChapters = asyncHandler(async (req, res) => {
   // res.json(members);
 });
 
+// @desc    GET Chapter by domain     ///////////////////////////////////////////////
+// @route   GET /api/chapters/subDomain
+// @access  Private/SystemAdmin
+exports.getChapterBySubDomain = asyncHandler(async (req, res) => {
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = req.body.subDomain;
+  }
+  console.log(subDomain);
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+  if (chapter && chapter.length !== 0) {
+    res.json(chapter);
+  } else {
+    res.status(401);
+    throw new Error('No Chapter found');
+  }
+  // const members = await models.Member.findAll();
+  // res.json(members);
+});
+
 // @desc    Delete a PaymentType     /////////////////////////////////////////////// pending
 // @route   DELETE /api/chapters/:id
 // @access  Private/Admin
 exports.deleteChapter = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  console.log(id);
+  // console.log(id);
   const chapter = await models.Chapter.findOne({
     where: { chapterId: id },
   });
@@ -118,11 +148,8 @@ exports.deleteChapter = asyncHandler(async (req, res) => {
 // @route   POST /api/chapters/paymentType
 // @access  Private/Admin
 exports.createNewPaymentType = asyncHandler(async (req, res) => {
-  const {
-    paymentTypeName,
-    paymentTypeAmount,
-    paymentTypeDescription,
-  } = req.body;
+  const { paymentTypeName, paymentTypeAmount, paymentTypeDescription } =
+    req.body;
 
   const paymentType = await models.PaymentType.findOne({
     where: { paymentTypeName: paymentTypeName },
@@ -195,6 +222,79 @@ exports.deletePaymentType = asyncHandler(async (req, res) => {
   } else {
     res.status(401);
     throw new Error('Payment Type not found');
+  }
+});
+
+// @desc    Create a new Donation Type     ///////////////////////////////////////////////
+// @route   POST /api/chapters/donationType
+// @access  Private/Admin
+exports.createNewDonationType = asyncHandler(async (req, res) => {
+  const { donationTypeName, donationTypeDescription } = req.body;
+
+  const donationType = await models.DonationType.findOne({
+    where: { donationTypeName: donationTypeName },
+  }); // Check if the Chapter Name already registered
+  if (!donationType) {
+    const newDonationType = await models.DonationType.create({
+      donationTypeName,
+      donationTypeDescription,
+      chapterId: req.user.chapterId,
+    });
+    if (newDonationType) {
+      res.json('New Donation Type Created Successfully');
+    } else {
+      res.status(400);
+      throw new Error('Encountered problem while creating new donation Type');
+    }
+  } else {
+    res.status(400);
+    throw new Error(
+      'A Donation Type with Name:' +
+        donationType.donationTypeName +
+        ' already exist'
+    );
+  }
+});
+
+// @desc    GET all Donation Types     ///////////////////////////////////////////////
+// @route   GET /api/chapters/donationType
+// @access  Private
+exports.getDonationTypes = asyncHandler(async (req, res) => {
+  const donationTypes = await models.DonationType.findAll();
+
+  if (donationTypes && donationTypes.length !== 0) {
+    res.json(donationTypes);
+  } else {
+    res.status(404);
+    throw new Error('No Donation Types Found');
+  }
+});
+
+// @desc    Delete a Donation Type    /////////////////////////////////////////////// pending
+// @route   DELETE /api/chapters/donationType/:id
+// @access  Private/Admin
+exports.deleteDonationType = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const donationType = await models.DonationType.findOne({
+    where: { dnationTypeId: id },
+  });
+
+  if (donationType) {
+    models.DonationType.destroy({
+      where: { dnationTypeId: id },
+    })
+      .then((num) => {
+        if (num == 1) {
+          res.json({ message: 'Donation type has been deleted successfully' });
+        } else {
+          res.json({ message: 'Cannot delete the Donation type' });
+        }
+      })
+      .catch((err) => console.log(err));
+  } else {
+    res.status(401);
+    throw new Error('Donation Type not found');
   }
 });
 
@@ -561,6 +661,7 @@ exports.createNewChapterSettings = asyncHandler(async (req, res) => {
   const {
     chapterEmail,
     password,
+    chapterName,
     chapterAddress,
     chapterPhone,
     chapterPaymentId,
@@ -573,14 +674,14 @@ exports.createNewChapterSettings = asyncHandler(async (req, res) => {
     const t = await sequelize.transaction();
 
     try {
-      const chapter = await models.Chapter.findOne({
-        where: { chapterId: req.user.chapterId },
-      });
+      // const chapter = await models.Chapter.findOne({
+      //   where: { chapterId: req.user.chapterId },
+      // });
       await models.ChapterSettings.create(
         {
           chapterEmail,
           password,
-          chapterName: chapter.chapterName,
+          chapterName,
           chapterAddress,
           chapterPhone,
           chapterPayment: chapterPaymentId,
@@ -593,9 +694,11 @@ exports.createNewChapterSettings = asyncHandler(async (req, res) => {
 
       await models.Chapter.update(
         {
+          chapterName,
           chapterEmail,
           chapterAddress,
           chapterPhone,
+          lastUpdatedBy: req.user.memberId,
         },
         { where: { chapterId: req.user.chapterId } },
         { transaction: t }
@@ -638,7 +741,7 @@ exports.getChapterSettings = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Create a new Chapter Settings     ///////////////////////////////////////////////
+// @desc    Update Chapter Settings     ///////////////////////////////////////////////
 // @route   PUT /api/chapters/settings
 // @access  Private/admin
 exports.updateChapterSettings = asyncHandler(async (req, res) => {
@@ -649,6 +752,7 @@ exports.updateChapterSettings = asyncHandler(async (req, res) => {
     const data = {
       chapterEmail: req.body.chapterEmail || chapterExists.chapterEmail,
       password: req.body.password || chapterExists.password,
+      chapterName: req.body.chapterName || chapterExists.chapterName,
       chapterAddress: req.body.chapterAddress || chapterExists.chapterAddress,
       chapterPhone: req.body.chapterPhone || chapterExists.chapterPhone,
       chapterPayment: req.body.chapterPaymentId || chapterExists.chapterPayment,
@@ -657,6 +761,7 @@ exports.updateChapterSettings = asyncHandler(async (req, res) => {
     let {
       chapterEmail,
       password,
+      chapterName,
       chapterAddress,
       chapterPhone,
       chapterPayment,
@@ -669,6 +774,7 @@ exports.updateChapterSettings = asyncHandler(async (req, res) => {
         {
           chapterEmail,
           password,
+          chapterName,
           chapterAddress,
           chapterPhone,
           chapterPayment,
@@ -679,11 +785,7 @@ exports.updateChapterSettings = asyncHandler(async (req, res) => {
       );
 
       await models.Chapter.update(
-        {
-          chapterEmail,
-          chapterAddress,
-          chapterPhone,
-        },
+        { chapterName, chapterEmail, chapterAddress, chapterPhone },
         { where: { chapterId: req.user.chapterId } },
         { transaction: t }
       );

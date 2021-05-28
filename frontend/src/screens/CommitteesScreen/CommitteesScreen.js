@@ -12,7 +12,6 @@ import {
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import * as S from './CommitteeScreen.Styles';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
@@ -41,7 +40,7 @@ const CommitteeScreen = ({ history }) => {
   const [editCMember, setEditCMember] = useState(false);
   const [cMemberId, setCMemberId] = useState('');
   const [position, setPosition] = useState('');
-  const [tenure, setTenure] = useState([]);
+  // const [tenure, setTenure] = useState([]);
   const [bio, setBio] = useState('');
   const [tenureFrom, setTenureFrom] = useState('');
   const [tenureTo, setTenureTo] = useState('');
@@ -64,10 +63,8 @@ const CommitteeScreen = ({ history }) => {
   const { success: cMemberByIdSuccess, cMember } = cMemberById;
 
   const cMemberUpdate = useSelector((state) => state.cMemberUpdate);
-  const {
-    success: cMemberUpdateSuccess,
-    error: cMemberUpdateError,
-  } = cMemberUpdate;
+  const { success: cMemberUpdateSuccess, error: cMemberUpdateError } =
+    cMemberUpdate;
 
   const cMemberDelete = useSelector((state) => state.cMemberDelete);
   const { success: successDelete } = cMemberDelete;
@@ -87,7 +84,7 @@ const CommitteeScreen = ({ history }) => {
 
       setCMemberId('');
       setPosition('');
-      setTenure('');
+      // setTenure('');
       setTenureFrom('');
       setTenureTo('');
       dispatch({ type: COMMITTEE_MEMBER_BY_ID_RESET });
@@ -155,9 +152,9 @@ const CommitteeScreen = ({ history }) => {
     if (editCMember) {
       const period = [tenureFrom, tenureTo];
 
-      console.log(period);
-      console.log(cMemberId);
-      console.log(position);
+      // console.log(period);
+      // console.log(cMemberId);
+      // console.log(position);
       // console.log(tenure);
       console.log(bio);
       dispatch(updateCMemberById(id, cMemberId, position, bio, period));
@@ -165,12 +162,12 @@ const CommitteeScreen = ({ history }) => {
       // setId(userInfo.memberId);
       // setTenure(new Date(tenureFrom), new Date(tenureTo));
       const period = [tenureFrom, tenureTo];
-      setTenure(period);
-      console.log(period);
-      console.log(cMemberId);
-      console.log(position);
-      // console.log(tenure);
-      console.log(bio);
+      // setTenure(period);
+      // console.log(period);
+      // console.log(cMemberId);
+      // console.log(position);
+      // // console.log(tenure);
+      // console.log(bio);
       dispatch(newCMember(cMemberId, position, period, bio));
     }
   };

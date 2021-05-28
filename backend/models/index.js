@@ -88,7 +88,10 @@ db.Member = require('../models/Member')(sequelize, Sequelize);
 db.PendingRegister = require('../models/PendingRegister')(sequelize, Sequelize);
 db.Payment = require('../models/Payment')(sequelize, Sequelize);
 db.Donation = require('../models/Donation')(sequelize, Sequelize);
+db.DonationType = require('../models/DonationType')(sequelize, Sequelize);
 db.Announcement = require('../models/Announcement')(sequelize, Sequelize);
+db.Link = require('../models/Link')(sequelize, Sequelize);
+db.HelpContact = require('../models/HelpContact')(sequelize, Sequelize);
 db.Mission = require('../models/Mission')(sequelize, Sequelize);
 db.Vission = require('../models/Vission')(sequelize, Sequelize);
 db.History = require('../models/History')(sequelize, Sequelize);
@@ -136,6 +139,10 @@ db.Payment.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 db.Chapter.hasMany(db.PaymentType, { foreignKey: 'chapterId' });
 db.PaymentType.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 
+// CHAPTER TO DONATION TYPE
+db.Chapter.hasMany(db.DonationType, { foreignKey: 'chapterId' });
+db.DonationType.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
 // CHAPTER TO DONATION
 db.Chapter.hasMany(db.Donation, { foreignKey: 'chapterId' });
 db.Donation.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
@@ -143,6 +150,14 @@ db.Donation.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 // CHAPTER TO ANNOUNCEMENT
 db.Chapter.hasMany(db.Announcement, { foreignKey: 'chapterId' });
 db.Announcement.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+// CHAPTER TO LINK
+db.Chapter.hasMany(db.Link, { foreignKey: 'chapterId' });
+db.Link.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
+
+// CHAPTER TO HELPCONTACT
+db.Chapter.hasMany(db.HelpContact, { foreignKey: 'chapterId' });
+db.HelpContact.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 
 // CHAPTER TO Mission
 db.Chapter.hasMany(db.Mission, { foreignKey: 'chapterId' });

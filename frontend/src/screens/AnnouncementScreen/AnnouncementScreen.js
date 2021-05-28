@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Row, Col, Card, Form, Button, Table } from 'react-bootstrap';
+import { Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import parse from 'html-react-parser';
 
-import * as S from './AnnouncementScreen.Styles';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import {
   allAnnouncements,

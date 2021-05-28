@@ -1,4 +1,8 @@
 import {
+  CHAPTER_BY_SUBDOMAIN_FAIL,
+  CHAPTER_BY_SUBDOMAIN_REQUEST,
+  CHAPTER_BY_SUBDOMAIN_RESET,
+  CHAPTER_BY_SUBDOMAIN_SUCCESS,
   CHAPTER_DELETE_FAIL,
   CHAPTER_DELETE_REQUEST,
   CHAPTER_DELETE_SUCCESS,
@@ -112,6 +116,25 @@ export const chapterSettingsUpdateReducer = (state = {}, action) => {
     case CHAPTER_SETTINGS_UPDATE_FAIL:
       return { loading: false, error: action.payload };
     case CHAPTER_SETTINGS_UPDATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+//////////////////////// cHAPTER BY DOMAIN//////////////////////////
+export const chapterBySubDomainReducer = (
+  state = { chapterByDomain: {} },
+  action
+) => {
+  switch (action.type) {
+    case CHAPTER_BY_SUBDOMAIN_REQUEST:
+      return { ...state, loading: true };
+    case CHAPTER_BY_SUBDOMAIN_SUCCESS:
+      return { loading: false, success: true, chapterByDomain: action.payload };
+    case CHAPTER_BY_SUBDOMAIN_FAIL:
+      return { loading: false, error: action.payload };
+    case CHAPTER_BY_SUBDOMAIN_RESET:
       return {};
     default:
       return state;

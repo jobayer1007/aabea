@@ -1,5 +1,8 @@
 import axios from 'axios';
 import {
+  CHAPTER_BY_SUBDOMAIN_FAIL,
+  CHAPTER_BY_SUBDOMAIN_REQUEST,
+  CHAPTER_BY_SUBDOMAIN_SUCCESS,
   CHAPTER_DELETE_FAIL,
   CHAPTER_DELETE_REQUEST,
   CHAPTER_DELETE_SUCCESS,
@@ -21,55 +24,50 @@ import {
   CHAPTER_SETTINGS_UPDATE_SUCCESS,
 } from '../constants/chapterConstants';
 
-export const registerChapter = (
-  chapterEmail,
-  chapterName,
-  chapterAddress,
-  chapterPhone
-) => async (dispatch) => {
-  try {
-    dispatch({
-      type: CHAPTER_REGISTER_REQUEST,
-    });
+export const registerChapter =
+  (chapterEmail, chapterName, chapterAddress, chapterPhone, subDomain) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CHAPTER_REGISTER_REQUEST,
+      });
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post(
-      '/api/chapters/new',
-      {
-        chapterEmail,
-        chapterName,
-        chapterAddress,
-        chapterPhone,
-      },
-      config
-    );
+      const { data } = await axios.post(
+        '/api/chapters/new',
+        {
+          chapterEmail,
+          chapterName,
+          chapterAddress,
+          chapterPhone,
+          subDomain,
+        },
+        config
+      );
 
-    dispatch({
-      type: CHAPTER_REGISTER_SUCCESS,
-      payload: data,
-    });
-
-    // dispatch({
-    //   type: CHAPTER_LOGIN_SUCCESS,
-    //   payload: data,
-    // });
-
-    // localStorage.setItem('CHAPTERInfo', JSON.stringify(data));
-  } catch (error) {
-    dispatch({
-      type: CHAPTER_REGISTER_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: CHAPTER_REGISTER_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: CHAPTER_REGISTER_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const listChapters = () => async (dispatch, getState) => {
   try {
@@ -137,54 +135,50 @@ export const deleteChapter = (id) => async (dispatch, getState) => {
 
 /////////////Chapter Settings////////////////////////////////////////////////////
 
-export const newChapterSettings = (
-  chapterEmail,
-  password,
-  chapterAddress,
-  chapterPhone,
-  chapterPaymentId
-) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: CHAPTER_SETTINGS_NEW_REQUEST,
-    });
+export const newChapterSettings =
+  (chapterEmail, password, chapterAddress, chapterPhone, chapterPaymentId) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CHAPTER_SETTINGS_NEW_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post(
-      '/api/chapters/settings',
-      {
-        chapterEmail,
-        password,
-        chapterAddress,
-        chapterPhone,
-        chapterPaymentId,
-      },
-      config
-    );
+      const { data } = await axios.post(
+        '/api/chapters/settings',
+        {
+          chapterEmail,
+          password,
+          chapterAddress,
+          chapterPhone,
+          chapterPaymentId,
+        },
+        config
+      );
 
-    dispatch({
-      type: CHAPTER_SETTINGS_NEW_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: CHAPTER_SETTINGS_NEW_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: CHAPTER_SETTINGS_NEW_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: CHAPTER_SETTINGS_NEW_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const getChapterSettings = () => async (dispatch, getState) => {
   try {
@@ -219,35 +213,67 @@ export const getChapterSettings = () => async (dispatch, getState) => {
   }
 };
 
-export const updateChapterSettings = (settings) => async (
-  dispatch,
-  getState
-) => {
+export const updateChapterSettings =
+  (settings) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CHAPTER_SETTINGS_UPDATE_REQUEST,
+      });
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.put(
+        `/api/chapters/settings`,
+        settings,
+        config
+      );
+
+      dispatch({ type: CHAPTER_SETTINGS_UPDATE_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: CHAPTER_SETTINGS_UPDATE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+//////////////////// Chapter By Domain//////////////////////////
+export const getChapterBySubDomain = (subDomain) => async (dispatch) => {
   try {
     dispatch({
-      type: CHAPTER_SETTINGS_UPDATE_REQUEST,
+      type: CHAPTER_BY_SUBDOMAIN_REQUEST,
     });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
-    const { data } = await axios.put(
-      `/api/chapters/settings`,
-      settings,
+    const { data } = await axios.get(
+      `/api/chapters/subDomain`,
+      { subDomain },
       config
     );
 
-    dispatch({ type: CHAPTER_SETTINGS_UPDATE_SUCCESS, payload: data });
+    dispatch({
+      type: CHAPTER_BY_SUBDOMAIN_SUCCESS,
+      payload: data,
+    });
   } catch (error) {
     dispatch({
-      type: CHAPTER_SETTINGS_UPDATE_FAIL,
+      type: CHAPTER_BY_SUBDOMAIN_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

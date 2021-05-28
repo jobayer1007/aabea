@@ -120,77 +120,81 @@ exports.registerUser = asyncHandler(async (req, res) => {
   } = req.body;
 
   // Find Chapter
-  const subDomain = 'bd.aabea.org'; // at dev only
-  // const chapterName = 'Bangladesh';
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = req.body.subDomain;
+  }
+  console.log(subDomain);
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
-  console.log(chapter.chapterId);
 
-  const userExists = await models.Member.findOne({
-    where: { primaryEmail: email },
-  }); // Check if the Member already registered
+  if (chapter) {
+    const userExists = await models.Member.findOne({
+      where: { primaryEmail: email, chapterId: chapter.chapterId },
+    }); // Check if the Member already registered
 
-  if (!userExists) {
-    const userExistsInPendingRegister = await models.PendingRegister.findOne({
-      where: { email: email },
-    }); // // Check if the user already registered but email not verified
+    if (!userExists) {
+      const userExistsInPendingRegister = await models.PendingRegister.findOne({
+        where: { email: email, chapterId: chapter.chapterId },
+      }); // // Check if the user already registered but email not verified
 
-    if (userExistsInPendingRegister) {
-      res.status(400);
-      throw new Error(
-        'Please check your email address and verify your account'
-      );
-    } else {
-      // const id = generateUniqueId({
-      //   length: 32,
-      //   useLetters: false,
-      // });
-      // console.log(id);
-      const pendingUserRegister = await models.PendingRegister.create({
-        chapterId: chapter.chapterId,
-        email,
-        firstName,
-        mInit,
-        lastName,
-        address1,
-        city,
-        state,
-        zipcode,
-        primaryPhone,
-        degree,
-        degreeYear,
-        major,
-        collegeName,
-        certificate,
-        password: bcrypt.hashSync(password, 10),
-      });
-
-      if (pendingUserRegister) {
-        const sendVerificationEmail = await sendConfirmationEmail({
-          toUserEmail: pendingUserRegister.email,
-          toUser: pendingUserRegister.firstName,
-          hash: pendingUserRegister.pendingId,
+      if (userExistsInPendingRegister) {
+        res.status(400);
+        throw new Error(
+          'Please check your email address and verify your account'
+        );
+      } else {
+        const pendingUserRegister = await models.PendingRegister.create({
+          chapterId: chapter.chapterId,
+          email,
+          firstName,
+          mInit,
+          lastName,
+          address1,
+          city,
+          state,
+          zipcode,
+          primaryPhone,
+          degree,
+          degreeYear,
+          major,
+          collegeName,
+          certificate,
+          password: bcrypt.hashSync(password, 10),
         });
 
-        if (sendVerificationEmail) {
-          res.json('Please check your email to verify your account');
+        if (pendingUserRegister) {
+          const sendVerificationEmail = await sendConfirmationEmail({
+            toUserEmail: pendingUserRegister.email,
+            toUser: pendingUserRegister.firstName,
+            hash: pendingUserRegister.pendingId,
+          });
+
+          if (sendVerificationEmail) {
+            res.json('Please check your email to verify your account');
+          } else {
+            res.status(400);
+            throw new Error(
+              'Something Went Wrong with verification Email sending, Please contact the Administrator'
+            );
+          }
         } else {
           res.status(400);
           throw new Error(
-            'Something Went Wrong with verification Email sending, Please contact the Administrator'
+            'Something Went Wrong, Please contact the Administrator'
           );
         }
-      } else {
-        res.status(400);
-        throw new Error(
-          'Something Went Wrong, Please contact the Administrator'
-        );
       }
+    } else {
+      res.status(400);
+      throw new Error('User Already Exists');
     }
   } else {
-    res.status(400);
-    throw new Error('User Already Exists');
+    res.status(401);
+    throw new Error('Invalid chapter reference!');
   }
 });
 

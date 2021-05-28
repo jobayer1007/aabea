@@ -25,8 +25,8 @@ const ImageLibrary = (sequelize, DataTypes) =>
       allowNull: false,
       notEmpty: true,
     },
-    imageLink: {
-      type: DataTypes.JSONB,
+    eventId: {
+      type: DataTypes.STRING,
     },
     image: {
       type: DataTypes.STRING,

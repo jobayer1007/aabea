@@ -125,11 +125,44 @@ const Sidebar = () => {
                 {/* </Button> */}
               </Card.Title>
 
+              {/* Donation types */}
+              <Card.Title>
+                {/* <Button variant='outline-info' block> */}
+                <LinkContainer to='/donationType'>
+                  {/* <Nav.Link>Payment Types</Nav.Link> */}
+                  <Link
+                    className='btn btn-outline-info btn-sm btn-block rounded'
+                    // onClick={() => setAddChapter(!addChapter)}
+                  >
+                    Donation Type
+                  </Link>
+                </LinkContainer>
+                {/* </Button> */}
+              </Card.Title>
+
               {/* Images */}
               <Card.Title>
                 <LinkContainer to='/images'>
                   <Link className='btn btn-outline-info btn-sm btn-block rounded'>
                     Images
+                  </Link>
+                </LinkContainer>
+              </Card.Title>
+
+              {/* Help Contact */}
+              <Card.Title>
+                <LinkContainer to='/help'>
+                  <Link className='btn btn-outline-info btn-sm btn-block rounded'>
+                    Help Contact
+                  </Link>
+                </LinkContainer>
+              </Card.Title>
+
+              {/* Quick Links */}
+              <Card.Title>
+                <LinkContainer to='/links'>
+                  <Link className='btn btn-outline-info btn-sm btn-block rounded'>
+                    Quick Links
                   </Link>
                 </LinkContainer>
               </Card.Title>

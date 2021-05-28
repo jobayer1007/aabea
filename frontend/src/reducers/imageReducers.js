@@ -2,6 +2,10 @@ import {
   IMAGE_ALL_FAIL,
   IMAGE_ALL_REQUEST,
   IMAGE_ALL_SUCCESS,
+  IMAGE_BY_EVENT_FAIL,
+  IMAGE_BY_EVENT_REQUEST,
+  IMAGE_BY_EVENT_RESET,
+  IMAGE_BY_EVENT_SUCCESS,
   IMAGE_BY_ID_FAIL,
   IMAGE_BY_ID_REQUEST,
   IMAGE_BY_ID_RESET,
@@ -97,6 +101,21 @@ export const imageHomeScreenReducer = (
     case IMAGE_HOMESCREEN_FAIL:
       return { loading: false, error: action.payload };
     case IMAGE_HOMESCREEN_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const imageByEventReducer = (state = { images: [] }, action) => {
+  switch (action.type) {
+    case IMAGE_BY_EVENT_REQUEST:
+      return { loading: true };
+    case IMAGE_BY_EVENT_SUCCESS:
+      return { loading: false, images: action.payload };
+    case IMAGE_BY_EVENT_FAIL:
+      return { loading: false, error: action.payload };
+    case IMAGE_BY_EVENT_RESET:
       return {};
     default:
       return state;

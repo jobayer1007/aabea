@@ -1,16 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  Row,
-  Col,
-  Card,
-  Form,
-  Button,
-  Table,
-  DropdownButton,
-  ButtonGroup,
-  Dropdown,
-  InputGroup,
-} from 'react-bootstrap';
+import { Row, Col, Card, Form, Button, InputGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
@@ -20,21 +9,9 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import parse from 'html-react-parser';
 
 import Sidebar from '../../components/Sidebar/Sidebar';
-import {
-  allAnnouncements,
-  deleteAnnouncement,
-  getAnnouncementById,
-  newAnnouncement,
-  updateAnnouncementById,
-} from '../../actions/announcementAction';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import {
-  ANNOUNCEMENT_BY_ID_RESET,
-  ANNOUNCEMENT_NEW_RESET,
-  ANNOUNCEMENT_UPDATE_BY_ID_RESET,
-} from '../../constants/announcementConstants';
 import ColumnFilter from '../../components/Table/ColumnFilter';
 import RTable from '../../components/Table/RTable';
 import { allEmails, getEmailById } from '../../actions/emailActions';
@@ -64,7 +41,7 @@ const EmailScreen = ({ history }) => {
   const { loading: emailNewLoading, error: emailNewError, success } = emailNew;
 
   const emailById = useSelector((state) => state.emailById);
-  const { success: emailByIdSuccess, email } = emailById;
+  const { email } = emailById;
 
   // const announcementUpdate = useSelector((state) => state.announcementUpdate);
   // const { success: announcementUpdateSuccess } = announcementUpdate;

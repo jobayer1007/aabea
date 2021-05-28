@@ -41,68 +41,70 @@ import {
   EVENT_UPDATE_BY_ID_SUCCESS,
 } from '../constants/eventConstants';
 
-export const newEvent = (
-  eventName,
-  eventDescription,
-  // eventStartDate,
-  // eventEndDate,
-  // eventStartTime,
-  // eventEndTime,
-  eventDate,
-  eventAddress,
-  adultFee,
-  minorFee,
-  cap
-) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: EVENT_NEW_REQUEST,
-    });
+export const newEvent =
+  (
+    eventName,
+    eventDescription,
+    // eventStartDate,
+    // eventEndDate,
+    // eventStartTime,
+    // eventEndTime,
+    eventDate,
+    eventAddress,
+    adultFee,
+    minorFee,
+    cap
+  ) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: EVENT_NEW_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post(
-      '/api/events/new',
-      {
-        eventName,
-        eventDescription,
-        // eventStartDate,
-        // eventEndDate,
-        // eventStartTime,
-        // eventEndTime,
-        eventDate,
-        eventAddress,
-        adultFee,
-        minorFee,
-        cap,
-      },
-      config
-    );
+      const { data } = await axios.post(
+        '/api/events/new',
+        {
+          eventName,
+          eventDescription,
+          // eventStartDate,
+          // eventEndDate,
+          // eventStartTime,
+          // eventEndTime,
+          eventDate,
+          eventAddress,
+          adultFee,
+          minorFee,
+          cap,
+        },
+        config
+      );
 
-    dispatch({
-      type: EVENT_NEW_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: EVENT_NEW_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: EVENT_NEW_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: EVENT_NEW_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
-export const allEvents = () => async (dispatch) => {
+export const allEvents = (subDomain) => async (dispatch) => {
   try {
     dispatch({
       type: EVENT_ALL_REQUEST,
@@ -114,7 +116,7 @@ export const allEvents = () => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/events`, config);
+    const { data } = await axios.get(`/api/events`, { subDomain }, config);
 
     dispatch({
       type: EVENT_ALL_SUCCESS,
@@ -164,67 +166,69 @@ export const getEventById = (id) => async (dispatch) => {
   }
 };
 
-export const updateEventById = (
-  id,
-  eventName,
-  eventDescription,
-  // eventStartDate,
-  // eventEndDate,
-  // eventStartTime,
-  // eventEndTime,
-  eventDate,
-  eventAddress,
-  adultFee,
-  minorFee,
-  cap
-) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: EVENT_UPDATE_BY_ID_REQUEST,
-    });
+export const updateEventById =
+  (
+    id,
+    eventName,
+    eventDescription,
+    // eventStartDate,
+    // eventEndDate,
+    // eventStartTime,
+    // eventEndTime,
+    eventDate,
+    eventAddress,
+    adultFee,
+    minorFee,
+    cap
+  ) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: EVENT_UPDATE_BY_ID_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.put(
-      `/api/events/${id}`,
-      {
-        eventName,
-        eventDescription,
-        // eventStartDate,
-        // eventEndDate,
-        // eventStartTime,
-        // eventEndTime,
-        eventDate,
-        eventAddress,
-        adultFee,
-        minorFee,
-        cap,
-      },
-      config
-    );
+      const { data } = await axios.put(
+        `/api/events/${id}`,
+        {
+          eventName,
+          eventDescription,
+          // eventStartDate,
+          // eventEndDate,
+          // eventStartTime,
+          // eventEndTime,
+          eventDate,
+          eventAddress,
+          adultFee,
+          minorFee,
+          cap,
+        },
+        config
+      );
 
-    dispatch({
-      type: EVENT_UPDATE_BY_ID_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: EVENT_UPDATE_BY_ID_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: EVENT_UPDATE_BY_ID_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: EVENT_UPDATE_BY_ID_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const deleteEvent = (id) => async (dispatch, getState) => {
   try {
@@ -257,53 +261,49 @@ export const deleteEvent = (id) => async (dispatch, getState) => {
 };
 
 ////////////////////Event Contact///////////////////////////////////////
-export const newEventContact = (
-  id,
-  memberId,
-  positionName,
-  contactEmail,
-  contactPhone
-) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: EVENT_CONTACT_NEW_REQUEST,
-    });
+export const newEventContact =
+  (id, memberId, positionName, contactEmail, contactPhone) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: EVENT_CONTACT_NEW_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post(
-      `/api/events/newContact/${id}`,
-      {
-        memberId,
-        positionName,
-        contactEmail,
-        contactPhone,
-      },
-      config
-    );
+      const { data } = await axios.post(
+        `/api/events/newContact/${id}`,
+        {
+          memberId,
+          positionName,
+          contactEmail,
+          contactPhone,
+        },
+        config
+      );
 
-    dispatch({
-      type: EVENT_CONTACT_NEW_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: EVENT_CONTACT_NEW_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: EVENT_CONTACT_NEW_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: EVENT_CONTACT_NEW_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const eventAllContact = (id) => async (dispatch) => {
   try {
@@ -363,53 +363,49 @@ export const getEventContactById = (id) => async (dispatch) => {
   }
 };
 
-export const updateEventContactById = (
-  eventContactId,
-  memberId,
-  positionName,
-  contactEmail,
-  contactPhone
-) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: EVENT_CONTACT_UPDATE_BY_ID_REQUEST,
-    });
+export const updateEventContactById =
+  (eventContactId, memberId, positionName, contactEmail, contactPhone) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: EVENT_CONTACT_UPDATE_BY_ID_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.put(
-      `/api/events/contactby/${eventContactId}`,
-      {
-        memberId,
-        positionName,
-        contactEmail,
-        contactPhone,
-      },
-      config
-    );
+      const { data } = await axios.put(
+        `/api/events/contactby/${eventContactId}`,
+        {
+          memberId,
+          positionName,
+          contactEmail,
+          contactPhone,
+        },
+        config
+      );
 
-    dispatch({
-      type: EVENT_CONTACT_UPDATE_BY_ID_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: EVENT_CONTACT_UPDATE_BY_ID_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: EVENT_CONTACT_UPDATE_BY_ID_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: EVENT_CONTACT_UPDATE_BY_ID_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const deleteEventContact = (id) => async (dispatch, getState) => {
   try {
@@ -511,61 +507,63 @@ export const unpublishEvent = (id) => async (dispatch, getState) => {
 
 /////////////////////////Event Registration///////////////////////////////////////////////
 
-export const registerEvent = (
-  eventId,
-  eventName,
-  mInit,
-  firstName,
-  lastName,
-  isMember,
-  memberId,
-  email,
-  phone,
-  numberOfAdults,
-  numberOfMinors,
-  paymentResult
-) => async (dispatch) => {
-  try {
-    dispatch({
-      type: EVENT_REGISTER_REQUEST,
-    });
+export const registerEvent =
+  (
+    eventId,
+    eventName,
+    mInit,
+    firstName,
+    lastName,
+    isMember,
+    memberId,
+    email,
+    phone,
+    numberOfAdults,
+    numberOfMinors,
+    paymentResult
+  ) =>
+  async (dispatch) => {
+    try {
+      dispatch({
+        type: EVENT_REGISTER_REQUEST,
+      });
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-    const { data } = await axios.post(
-      '/api/events/register',
-      {
-        eventId,
-        eventName,
-        mInit,
-        firstName,
-        lastName,
-        isMember,
-        memberId,
-        email,
-        phone,
-        numberOfAdults,
-        numberOfMinors,
-        paymentResult,
-      },
-      config
-    );
+      const { data } = await axios.post(
+        '/api/events/register',
+        {
+          eventId,
+          eventName,
+          mInit,
+          firstName,
+          lastName,
+          isMember,
+          memberId,
+          email,
+          phone,
+          numberOfAdults,
+          numberOfMinors,
+          paymentResult,
+        },
+        config
+      );
 
-    dispatch({
-      type: EVENT_REGISTER_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: EVENT_REGISTER_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: EVENT_REGISTER_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: EVENT_REGISTER_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };

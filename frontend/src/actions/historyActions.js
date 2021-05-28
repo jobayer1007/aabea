@@ -17,7 +17,7 @@ import {
   HISTORY_UPDATE_BY_ID_SUCCESS,
 } from '../constants/historyConstants';
 
-export const newHistory = (id, title, body) => async (dispatch, getState) => {
+export const newHistory = (title, body, id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: HISTORY_NEW_REQUEST,
@@ -120,45 +120,43 @@ export const getHistoryById = (id) => async (dispatch) => {
   }
 };
 
-export const updateHistoryById = (id, title, body) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: HISTORY_UPDATE_BY_ID_REQUEST,
-    });
+export const updateHistoryById =
+  (id, title, body) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: HISTORY_UPDATE_BY_ID_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.put(
-      `/api/chapters/history/${id}`,
-      { title, body },
-      config
-    );
+      const { data } = await axios.put(
+        `/api/chapters/history/${id}`,
+        { title, body },
+        config
+      );
 
-    dispatch({
-      type: HISTORY_UPDATE_BY_ID_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: HISTORY_UPDATE_BY_ID_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: HISTORY_UPDATE_BY_ID_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: HISTORY_UPDATE_BY_ID_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const deleteHistory = (id) => async (dispatch, getState) => {
   try {

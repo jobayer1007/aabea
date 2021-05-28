@@ -1,28 +1,88 @@
 const dotenv = require('dotenv');
 dotenv.config();
+const Sequelize = require('sequelize');
+
 const asyncHandler = require('express-async-handler');
 const models = require('../models/index');
+
+const sequelize = new Sequelize(
+  process.env.PG_DATABASE,
+  process.env.PG_USER,
+  process.env.PG_PASSWORD,
+  {
+    host: 'localhost',
+    dialect: 'postgres',
+
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+  }
+);
 
 // @desc    Add a new Image     ///////////////////////////////////////////////
 // @route   POST /api/image/new
 // @access  Private/SystemAdmin || admin
 exports.addNewImage = asyncHandler(async (req, res) => {
-  const { imageName, imageDescription, imageLink, image } = req.body;
+  const { imageName, imageDescription, eventId, image } = req.body;
 
-  const newImage = await models.ImageLibrary.create({
-    imageName,
-    imageDescription,
-    imageLink,
-    image,
-    createdBy: req.user.memberId,
-    lastUpdatedBy: req.user.memberId,
-    chapterId: req.user.chapterId,
-  });
-  if (newImage) {
-    res.json(`New Image Added Successfully`);
+  const event = await models.Event.findOne({ where: { eventId: eventId } });
+  if (event) {
+    const t = await sequelize.transaction();
+
+    try {
+      await models.EventImageGallery.create(
+        {
+          eventId: eventId,
+          imageDescription: imageDescription,
+          image: image,
+          createdBy: req.user.memberId,
+          lastUpdatedBy: req.user.memberId,
+          chapterId: req.user.chapterId,
+        },
+        { transaction: t }
+      );
+
+      await models.ImageLibrary.create(
+        {
+          imageName,
+          imageDescription,
+          eventId,
+          image,
+          createdBy: req.user.memberId,
+          lastUpdatedBy: req.user.memberId,
+          chapterId: req.user.chapterId,
+        },
+        { transaction: t }
+      );
+
+      await t.commit();
+      res.json(`New Image Added Successfully`);
+    } catch (error) {
+      await t.rollback();
+      res.status(400);
+      throw new Error(
+        'Encountered problem while adding new image' + ' ' + error
+      );
+    }
   } else {
-    res.status(400);
-    throw new Error('Encountered problem while adding new image');
+    const newImage = await models.ImageLibrary.create({
+      imageName,
+      imageDescription,
+      eventId,
+      image,
+      createdBy: req.user.memberId,
+      lastUpdatedBy: req.user.memberId,
+      chapterId: req.user.chapterId,
+    });
+    if (newImage) {
+      res.json(`New Image Added Successfully`);
+    } else {
+      res.status(400);
+      throw new Error('Encountered problem while adding new image');
+    }
   }
 });
 
@@ -31,12 +91,16 @@ exports.addNewImage = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getAllImages = asyncHandler(async (req, res) => {
   // Find Chapter
-  const subDomain = 'bd.aabea.org'; // at dev only
-  // const chapterName = 'Bangladesh';
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = req.body.subDomain;
+  }
+  console.log(subDomain);
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
-  console.log('chapter.chapterId:' + chapter.chapterId);
 
   if (chapter) {
     const images = await models.ImageLibrary.findAll({
@@ -59,12 +123,16 @@ exports.getAllImages = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getAllNavbarImages = asyncHandler(async (req, res) => {
   // Find Chapter
-  const subDomain = 'bd.aabea.org'; // at dev only
-  // const chapterName = 'Bangladesh';
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = req.body.subDomain;
+  }
+  console.log(subDomain);
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
-  // console.log(chapter.chapterId);
 
   if (chapter) {
     const images = await models.ImageLibrary.findAll({
@@ -87,12 +155,16 @@ exports.getAllNavbarImages = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getAllHomeScreenImages = asyncHandler(async (req, res) => {
   // Find Chapter
-  const subDomain = 'bd.aabea.org'; // at dev only
-  // const chapterName = 'Bangladesh';
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = req.body.subDomain;
+  }
+  console.log(subDomain);
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
-  // console.log(chapter.chapterId);
 
   if (chapter) {
     const images = await models.ImageLibrary.findAll({
@@ -100,6 +172,43 @@ exports.getAllHomeScreenImages = asyncHandler(async (req, res) => {
     });
     if (images && images.length !== 0) {
       res.json(images);
+    } else {
+      res.status(404);
+      throw new Error('No image');
+    }
+  } else {
+    res.status(404);
+    throw new Error('Invalid Chapter Domain');
+  }
+});
+
+// @desc    GET all Images by Event     ///////////////////////////////////////////////
+// @route   GET /api/image/event
+// @access  Public
+exports.getAllImagesByEvent = asyncHandler(async (req, res) => {
+  // Find Chapter
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = req.body.subDomain;
+  }
+  console.log(subDomain);
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+
+  if (chapter) {
+    const eventGallery = await models.Event.findAll({
+      where: { chapterId: chapter.chapterId },
+      include: [
+        {
+          model: EventImageGallery,
+        },
+      ],
+    });
+    if (eventGallery && eventGallery.length !== 0) {
+      res.json(eventGallery);
     } else {
       res.status(404);
       throw new Error('No image');

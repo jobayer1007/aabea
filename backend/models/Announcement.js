@@ -29,9 +29,14 @@ const Announcement = (sequelize, DataTypes) =>
       allowNull: false,
       notEmpty: true,
     },
-    createdby: {
-      type: DataTypes.STRING,
-      required: true,
+    createdBy: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      notEmpty: true,
+    },
+
+    lastUpdatedBy: {
+      type: DataTypes.BIGINT,
       allowNull: false,
       notEmpty: true,
     },

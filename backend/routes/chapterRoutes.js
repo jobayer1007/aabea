@@ -7,11 +7,6 @@ const {
   getPaymentTypes,
   deletePaymentType,
   deleteChapter,
-  createNewAnnouncement,
-  getAnnouncements,
-  getAnnouncementById,
-  updateAnnouncementById,
-  deleteAnnouncement,
   createMission,
   getMission,
   updateMissionById,
@@ -30,13 +25,18 @@ const {
   createNewChapterSettings,
   getChapterSettings,
   updateChapterSettings,
+  createNewDonationType,
+  getDonationTypes,
+  deleteDonationType,
+  getChapterBySubDomain,
 } = require('../controllers/chapterController');
-const { protect, admin } = require('../middleware/authMiddleware');
+const { protect, admin, systemAdmin } = require('../middleware/authMiddleware');
 
 // Chapter/////////////////////////////////////////////////
-router.route('/new').post(createNewChapter);
+router.route('/new').post(protect, systemAdmin, createNewChapter);
 router.route('/').get(getChapters);
-router.route('/:id').delete(deleteChapter);
+router.route('/subDomain').get(getChapterBySubDomain);
+router.route('/:id').delete(protect, systemAdmin, deleteChapter);
 
 // Settings///////////////////////////////////////////////////////
 router
@@ -51,6 +51,13 @@ router
   .post(protect, admin, createNewPaymentType)
   .get(protect, getPaymentTypes);
 router.route('/paymentType/:id').delete(deletePaymentType);
+
+// Donation Type/////////////////////////////////////////////////
+router
+  .route('/donationType')
+  .post(protect, admin, createNewDonationType)
+  .get(getDonationTypes);
+router.route('/donationType/:id').delete(deleteDonationType);
 
 // Mission/////////////////////////////////////////////////
 router.route('/mission').post(createMission);

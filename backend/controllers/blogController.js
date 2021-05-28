@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Sequelize = require('sequelize');
 const { Comment, Reply } = require('../models/index');
+// const Comment = require('../models/Comment');
 const models = require('../models/index');
 
 const sequelize = new Sequelize(
@@ -28,7 +29,7 @@ const sequelize = new Sequelize(
 exports.createNewBlog = asyncHandler(async (req, res) => {
   const { title, body, category, photoId } = req.body;
 
-  const user = await models.User.findOne({
+  const user = await models.Member.findOne({
     where: { memberId: req.user.memberId },
   });
   if (user) {
@@ -41,6 +42,8 @@ exports.createNewBlog = asyncHandler(async (req, res) => {
         title,
         body,
         userId: user.memberId,
+        userName: user.firstName + ' ' + user.lastName,
+        profilePicture: user.profilePicture,
         categoryId: categoryExist.categoryId,
         photoId,
         chapterId: user.chapterId,
@@ -71,6 +74,8 @@ exports.createNewBlog = asyncHandler(async (req, res) => {
             title,
             body,
             userId: user.memberId,
+            userName: user.firstName + ' ' + user.lastName,
+            profilePicture: user.profilePicture,
             categoryId: newCategory.categoryId,
             photoId,
             chapterId: user.chapterId,
@@ -99,8 +104,26 @@ exports.createNewBlog = asyncHandler(async (req, res) => {
 // @route   GET /api/blog
 // @access  Private
 exports.getBlogs = asyncHandler(async (req, res) => {
-  const blogs = await models.Blog.findAll();
-  res.json(blogs);
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = req.body.subDomain;
+  }
+  console.log(subDomain);
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+
+  if (chapter) {
+    const blogs = await models.Blog.findAll({
+      where: { chapterId: chapter.chapterId },
+    });
+    res.json(blogs);
+  } else {
+    res.status(401);
+    throw new Error('Invalid chapter reference');
+  }
 });
 
 // @desc    Get an  blog by Id     ///////////////////////////////////////////////
@@ -108,16 +131,33 @@ exports.getBlogs = asyncHandler(async (req, res) => {
 // @access  Private
 exports.getBlogById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  // console.log(id);
+  console.log(id);
   try {
-    const blog = await models.Blog.findOne(
-      { where: { blogId: id } },
-      {
-        include: [{ model: Comment, include: [{ model: Reply }] }],
-      }
-      // { include: models.Comment }
-    );
+    // const blog = await models.Blog.findOne(
+    //   {
+    //     where: { blogId: id },
+    //     // include: [models.Comment({ include: [models.Reply] })],
+    //     include: [{ model: Comment }],
+    //   }
+    //   // { include: models.Comment }
+    // );
 
+    const blog = await models.Blog.findOne({
+      where: { blogId: id },
+      include: [
+        {
+          model: Comment,
+
+          include: [
+            {
+              model: Reply,
+            },
+          ],
+        },
+      ],
+    });
+
+    // console.log(blog);
     if (blog) {
       res.json(blog);
     }

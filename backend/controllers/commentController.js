@@ -1,5 +1,23 @@
+const Sequelize = require('sequelize');
 const asyncHandler = require('express-async-handler');
 const models = require('../models/index');
+
+const sequelize = new Sequelize(
+  process.env.PG_DATABASE,
+  process.env.PG_USER,
+  process.env.PG_PASSWORD,
+  {
+    host: 'localhost',
+    dialect: 'postgres',
+
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+  }
+);
 
 ///////////////////////////////////////////Comment////////////////////////////////////////////////
 
@@ -9,7 +27,7 @@ const models = require('../models/index');
 exports.createNewComment = asyncHandler(async (req, res) => {
   const { comment, blogId } = req.body;
 
-  const user = await models.User.findOne({
+  const user = await models.Member.findOne({
     where: { memberId: req.user.memberId },
   });
   if (user) {
@@ -20,6 +38,8 @@ exports.createNewComment = asyncHandler(async (req, res) => {
       const newComment = await models.Comment.create({
         comment,
         userId: user.memberId,
+        userName: user.firstName + ' ' + user.lastName,
+        profilePicture: user.profilePicture,
         chapterId: user.chapterId,
         blogId,
       });
@@ -84,6 +104,32 @@ exports.deleteComment = asyncHandler(async (req, res) => {
   });
 
   if (comment) {
+    const t = await sequelize.transaction();
+
+    try {
+      models.Reply.destroy(
+        {
+          where: { commentId: id },
+        },
+        { transaction: t }
+      );
+
+      models.Comment.destroy(
+        {
+          where: { commentId: id },
+        },
+        { transaction: t }
+      );
+
+      await t.commit();
+      res.send('Comment deleted successfully');
+    } catch (error) {
+      await t.rollback();
+      res.status(400);
+      throw new Error(
+        'Something Went Wrong, Please contact the Administrator' + error
+      );
+    }
     models.Comment.destroy({
       where: { commentId: id },
     })

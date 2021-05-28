@@ -122,77 +122,79 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_PENDING_DETAILS_RESET });
 };
 
-export const register = (
-  email,
-  password,
-  firstName,
-  mInit,
-  lastName,
-  address1,
-  city,
-  state,
-  zipcode,
-  primaryPhone,
-  degree,
-  degreeYear,
-  major,
-  collegeName,
-  certificate
-) => async (dispatch) => {
-  try {
-    dispatch({
-      type: USER_REGISTER_REQUEST,
-    });
+export const register =
+  (
+    email,
+    password,
+    firstName,
+    mInit,
+    lastName,
+    address1,
+    city,
+    state,
+    zipcode,
+    primaryPhone,
+    degree,
+    degreeYear,
+    major,
+    collegeName,
+    certificate
+  ) =>
+  async (dispatch) => {
+    try {
+      dispatch({
+        type: USER_REGISTER_REQUEST,
+      });
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-    const { data } = await axios.post(
-      '/api/users/register',
-      {
-        email,
-        password,
-        firstName,
-        mInit,
-        lastName,
-        address1,
-        city,
-        state,
-        zipcode,
-        primaryPhone,
-        degree,
-        degreeYear,
-        major,
-        collegeName,
-        certificate,
-      },
-      config
-    );
+      const { data } = await axios.post(
+        '/api/users/register',
+        {
+          email,
+          password,
+          firstName,
+          mInit,
+          lastName,
+          address1,
+          city,
+          state,
+          zipcode,
+          primaryPhone,
+          degree,
+          degreeYear,
+          major,
+          collegeName,
+          certificate,
+        },
+        config
+      );
 
-    dispatch({
-      type: USER_REGISTER_SUCCESS,
-      payload: data,
-    });
+      dispatch({
+        type: USER_REGISTER_SUCCESS,
+        payload: data,
+      });
 
-    // dispatch({
-    //   type: USER_LOGIN_SUCCESS,
-    //   payload: data,
-    // });
+      // dispatch({
+      //   type: USER_LOGIN_SUCCESS,
+      //   payload: data,
+      // });
 
-    // localStorage.setItem('userInfo', JSON.stringify(data));
-  } catch (error) {
-    dispatch({
-      type: USER_REGISTER_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      // localStorage.setItem('userInfo', JSON.stringify(data));
+    } catch (error) {
+      dispatch({
+        type: USER_REGISTER_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const getUserDetailsById = (id) => async (dispatch, getState) => {
   try {
@@ -429,46 +431,44 @@ export const getUserPaymentDetails = () => async (dispatch, getState) => {
   }
 };
 
-export const payUser = (id, paymentTypeName, qty, paymentResult) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: USER_PAY_REQUEST,
-    });
+export const payUser =
+  (id, paymentTypeName, qty, paymentResult) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_PAY_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post(
-      `/api/users/${id}/pay`,
-      { paymentTypeName, qty, paymentResult },
-      config
-    );
-    console.log('qty value: ' + qty);
+      const { data } = await axios.post(
+        `/api/users/${id}/pay`,
+        { paymentTypeName, qty, paymentResult },
+        config
+      );
+      console.log('qty value: ' + qty);
 
-    dispatch({
-      type: USER_PAY_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: USER_PAY_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: USER_PAY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_PAY_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const verifyUserEmail = (hash, email) => async (dispatch) => {
   try {
@@ -536,87 +536,100 @@ export const resendVerifyEmail = (email, password) => async (dispatch) => {
   }
 };
 
-export const donateUser = (id, paymentResult) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: USER_DONATE_REQUEST,
-    });
+export const donateUser =
+  (id, donationTypeName, paymentResult) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_DONATE_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post(
-      `/api/users/${id}/donate`,
-      paymentResult,
-      config
-    );
+      const { data } = await axios.post(
+        `/api/users/${id}/donate`,
+        { donationTypeName, paymentResult },
+        config
+      );
 
-    dispatch({
-      type: USER_DONATE_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: USER_DONATE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: USER_DONATE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_DONATE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
-export const donateUserGuest = (
-  subDomain,
-  guest,
-  email,
-  firstName,
-  mInit,
-  lastName,
-  paymentResult
-) => async (dispatch) => {
-  try {
-    dispatch({
-      type: USER_DONATE_REQUEST,
-    });
+export const donateUserGuest =
+  (
+    subDomain,
+    guest,
+    email,
+    firstName,
+    mInit,
+    lastName,
+    donationTypeName,
+    paymentResult
+  ) =>
+  async (dispatch) => {
+    try {
+      dispatch({
+        type: USER_DONATE_REQUEST,
+      });
 
-    // const {
-    //   userLogin: { userInfo },
-    // } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      // const {
+      //   userLogin: { userInfo },
+      // } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          // Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post(
-      `/api/users/donate`,
-      { subDomain, guest, email, firstName, mInit, lastName, paymentResult },
-      config
-    );
+      const { data } = await axios.post(
+        `/api/users/donate`,
+        {
+          subDomain,
+          guest,
+          email,
+          firstName,
+          mInit,
+          lastName,
+          donationTypeName,
+          paymentResult,
+        },
+        config
+      );
 
-    dispatch({
-      type: USER_DONATE_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: USER_DONATE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: USER_DONATE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_DONATE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const getUserDonationDetails = () => async (dispatch, getState) => {
   try {
@@ -877,38 +890,36 @@ export const passwordReset = (email) => async (dispatch) => {
   }
 };
 
-export const passwordUpdate = (password, id, token) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: USER_PASSWORD_UPDATE_REQUEST,
-    });
+export const passwordUpdate =
+  (password, id, token) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_PASSWORD_UPDATE_REQUEST,
+      });
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-    const { data } = await axios.put(
-      `/api/users/newPassword/${id}/${token}`,
-      { password },
-      config
-    );
+      const { data } = await axios.put(
+        `/api/users/newPassword/${id}/${token}`,
+        { password },
+        config
+      );
 
-    dispatch({
-      type: USER_PASSWORD_UPDATE_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: USER_PASSWORD_UPDATE_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: USER_PASSWORD_UPDATE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_PASSWORD_UPDATE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };

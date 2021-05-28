@@ -20,13 +20,11 @@ const EventImageGallery = (sequelize, DataTypes) =>
     },
     imageDescription: {
       type: DataTypes.TEXT,
-      required: true,
-      allowNull: false,
-      notEmpty: true,
+      // required: true,
+      // allowNull: false,
+      // notEmpty: true,
     },
-    imageLink: {
-      type: DataTypes.JSONB,
-    },
+
     image: {
       type: DataTypes.STRING,
       required: true,

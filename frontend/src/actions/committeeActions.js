@@ -17,52 +17,50 @@ import {
   COMMITTEE_MEMBER_DELETE_FAIL,
 } from '../constants/committeeConstants';
 
-export const newCMember = (memberId, position, period, bio) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: COMMITTEE_MEMBER_NEW_REQUEST,
-    });
+export const newCMember =
+  (memberId, position, period, bio) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: COMMITTEE_MEMBER_NEW_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post(
-      '/api/committee/new',
-      {
-        memberId,
-        position,
-        period,
-        bio,
-      },
-      config
-    );
+      const { data } = await axios.post(
+        '/api/committee/new',
+        {
+          memberId,
+          position,
+          period,
+          bio,
+        },
+        config
+      );
 
-    dispatch({
-      type: COMMITTEE_MEMBER_NEW_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: COMMITTEE_MEMBER_NEW_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: COMMITTEE_MEMBER_NEW_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: COMMITTEE_MEMBER_NEW_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
-export const allCMembers = () => async (dispatch) => {
+export const allCMembers = (subDomain) => async (dispatch) => {
   try {
     dispatch({
       type: COMMITTEE_MEMBER_ALL_REQUEST,
@@ -74,7 +72,7 @@ export const allCMembers = () => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/committee`, config);
+    const { data } = await axios.get(`/api/committee`, { subDomain }, config);
 
     console.log(data);
     dispatch({
@@ -125,48 +123,43 @@ export const getCMemberById = (id) => async (dispatch) => {
   }
 };
 
-export const updateCMemberById = (
-  id,
-  cMemberId,
-  position,
-  bio,
-  period
-) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: COMMITTEE_MEMBER_UPDATE_BY_ID_REQUEST,
-    });
+export const updateCMemberById =
+  (id, cMemberId, position, bio, period) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: COMMITTEE_MEMBER_UPDATE_BY_ID_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.put(
-      `/api/committee/${id}`,
-      { cMemberId, position, bio, period },
-      config
-    );
+      const { data } = await axios.put(
+        `/api/committee/${id}`,
+        { cMemberId, position, bio, period },
+        config
+      );
 
-    dispatch({
-      type: COMMITTEE_MEMBER_UPDATE_BY_ID_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: COMMITTEE_MEMBER_UPDATE_BY_ID_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: COMMITTEE_MEMBER_UPDATE_BY_ID_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: COMMITTEE_MEMBER_UPDATE_BY_ID_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const deleteCMember = (id) => async (dispatch, getState) => {
   try {

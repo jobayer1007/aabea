@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button, Row, Col, Card, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import * as S from './ChapterScreen.Styles';
 import {
   deleteChapter,
   listChapters,
@@ -25,6 +23,7 @@ const ChapterScreen = ({ history }) => {
   const [chapterEmail, setChapterEmail] = useState('');
   const [chapterAddress, setChapterAddress] = useState('');
   const [chapterPhone, setChapterPhone] = useState('');
+  const [subDomain, setSubDomain] = useState('');
 
   const chapterList = useSelector((state) => state.chapterList);
   const { loading, error, chapters } = chapterList;
@@ -56,6 +55,7 @@ const ChapterScreen = ({ history }) => {
       setChapterEmail('');
       setChapterAddress('');
       setChapterPhone('');
+      setSubDomain('');
     }
   }, [dispatch, history, userInfo, success, successDelete]);
 
@@ -69,7 +69,13 @@ const ChapterScreen = ({ history }) => {
     e.preventDefault();
 
     dispatch(
-      registerChapter(chapterEmail, chapterName, chapterAddress, chapterPhone)
+      registerChapter(
+        chapterEmail,
+        chapterName,
+        chapterAddress,
+        chapterPhone,
+        subDomain
+      )
     );
   };
 
@@ -124,8 +130,8 @@ const ChapterScreen = ({ history }) => {
                             <Form.Group controlId='chapterName'>
                               <Form.Label>Chapter Name</Form.Label>
                               <Form.Control
-                                type='chapterName'
-                                placeholder='Please Enter New Chapter Name..'
+                                type='text'
+                                placeholder='Example chapter..'
                                 value={chapterName}
                                 onChange={(e) => setChapterName(e.target.value)}
                               ></Form.Control>
@@ -134,8 +140,8 @@ const ChapterScreen = ({ history }) => {
                             <Form.Group controlId='chapterEmail'>
                               <Form.Label>Chapter Email</Form.Label>
                               <Form.Control
-                                type='chapterEmail'
-                                placeholder='Please Enter Admin Email Address for the New Chapter'
+                                type='email'
+                                placeholder='example@example.com'
                                 value={chapterEmail}
                                 onChange={(e) =>
                                   setChapterEmail(e.target.value)
@@ -146,8 +152,8 @@ const ChapterScreen = ({ history }) => {
                             <Form.Group controlId='chapterAddress'>
                               <Form.Label>Chapter Address</Form.Label>
                               <Form.Control
-                                type='chapterAddress'
-                                placeholder='Please Enter Address..'
+                                type='text'
+                                placeholder='Please enter address..'
                                 value={chapterAddress}
                                 onChange={(e) =>
                                   setChapterAddress(e.target.value)
@@ -158,12 +164,23 @@ const ChapterScreen = ({ history }) => {
                             <Form.Group controlId='chapterPhone'>
                               <Form.Label>Chapter Phone</Form.Label>
                               <Form.Control
-                                type='chapterPhone'
-                                placeholder='Please Enter Phone..'
+                                type='tel'
+                                placeholder='+1 888 888 8888'
+                                pattern='+1[7-9]{3}-[0-9]{3}-[0-9]{4}'
                                 value={chapterPhone}
                                 onChange={(e) =>
                                   setChapterPhone(e.target.value)
                                 }
+                              ></Form.Control>
+                            </Form.Group>
+
+                            <Form.Group controlId='subDomain'>
+                              <Form.Label>Domain</Form.Label>
+                              <Form.Control
+                                type='text'
+                                placeholder='example.aabea.org'
+                                value={subDomain}
+                                onChange={(e) => setSubDomain(e.target.value)}
                               ></Form.Control>
                             </Form.Group>
 
@@ -173,12 +190,6 @@ const ChapterScreen = ({ history }) => {
                           </Form>
                         ))
                       : null}
-                    {/* {message && <Message variant='danger'>{message}</Message>} */}
-                    {/* {registerError && (
-                        <Message variant='danger'>{registerError}</Message>
-                      )}
-                      {registerLoading && <Loader />}
-                      {} */}
                   </Card.Body>
                 </Card>
               </Col>
@@ -217,9 +228,10 @@ const ChapterScreen = ({ history }) => {
                             <th>CHAPTER EMAIL</th>
                             <th>CHAPTER PHONE</th>
                             <th>CHAPTER ADDRESS</th>
+                            <th>Domain</th>
                             {userInfo &&
                               userInfo.userRole === 'systemAdmin' && (
-                                <th>EDIT/DELETE</th>
+                                <th>ACTION</th>
                               )}
                           </tr>
                         </thead>
@@ -227,11 +239,6 @@ const ChapterScreen = ({ history }) => {
                         <tbody>
                           {chapters.map((chapter) => (
                             <tr key={chapter.chapterId}>
-                              {/* <td>{chapter.chapterId}</td> */}
-                              {/* <td>
-                                {' '}
-                                <Image src={user.image} thumbnail />
-                              </td> */}
                               <td> {chapter.chapterName}</td>
                               <td>
                                 <a href={`mailto: ${chapter.chapterEmail}`}>
@@ -239,53 +246,35 @@ const ChapterScreen = ({ history }) => {
                                   {chapter.chapterEmail}
                                 </a>
                               </td>
-                              <td> {chapter.chapterPhone}</td>
+                              <td>
+                                <a href={`tel: ${chapter.chapterPhone}`}>
+                                  {' '}
+                                  {chapter.chapterPhone}
+                                </a>
+                              </td>
                               <td> {chapter.chapterAddress}</td>
-                              {/* <td>
-                                {user.userRole === 'systemAdmin' ? (
-                                  <i
-                                    className='fas fa-check'
-                                    style={{ color: 'green' }}
-                                  ></i>
-                                ) : (
-                                  <i
-                                    className='fas fa-times'
-                                    style={{ color: 'red' }}
-                                  ></i>
-                                )}
-                              </td> */}
-                              {/* <td>
-                                {user.member.status === 'active' ? (
-                                  <i
-                                    className='fas fa-check'
-                                    style={{ color: 'green' }}
-                                  ></i>
-                                ) : (
-                                  <i
-                                    className='fas fa-times'
-                                    style={{ color: 'red' }}
-                                  ></i>
-                                )}
-                              </td> */}
+                              <td> {chapter.subDomain}</td>
+
                               {userInfo.userRole === 'systemAdmin' && (
                                 <td>
-                                  <LinkContainer
+                                  {/* <LinkContainer
                                     to={`/chapter/${chapter.chapterId}/edit`}
                                   >
                                     <Button variant='light' className='btn-sm'>
                                       <i className='fas fa-edit'></i>
                                     </Button>
-                                  </LinkContainer>
+                                  </LinkContainer> */}
 
-                                  <Button
-                                    variant='danger'
-                                    className='btn-sm'
+                                  <span
                                     onClick={() =>
                                       deleteChapterHandler(chapter.chapterId)
                                     }
                                   >
-                                    <i className='fas fa-trash'></i>
-                                  </Button>
+                                    <i
+                                      className='fas fa-trash action ml-2'
+                                      style={{ color: 'red' }}
+                                    ></i>
+                                  </span>
                                 </td>
                               )}
                             </tr>

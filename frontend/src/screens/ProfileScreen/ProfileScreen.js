@@ -7,27 +7,6 @@ import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 
 const ProfileScreen = ({ history }) => {
-  // const [firstName, setFirstName] = useState('');
-  // const [mInit, setMInit] = useState('');
-  // const [lastName, setLastName] = useState('');
-  // const [address1, setAddress1] = useState('');
-  // const [address2, setAddress2] = useState('');
-  // const [city, setCity] = useState('');
-  // const [state, setState] = useState('');
-  // const [zipcode, setZipcode] = useState('');
-  // const [primaryPhone, setPrimaryPhone] = useState('');
-  // const [alternatePhone, setAlternatePhone] = useState('');
-  // const [degree, setDegree] = useState('');
-  // const [degreeYear, setDegreeYear] = useState('');
-  // const [major, setMajor] = useState('');
-  // const [collegeName, setCollegeName] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [alternateEmail, setAlternateEmail] = useState('');
-  // const [image, setImage] = useState('');
-  // const [userRole, setUserRole] = useState('');
-  // const [status, setStatus] = useState('');
-  // const [uploading, setUploading] = useState(false);
-
   const dispatch = useDispatch();
 
   const userDetails = useSelector((state) => state.userDetails);

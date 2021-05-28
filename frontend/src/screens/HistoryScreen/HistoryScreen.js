@@ -17,7 +17,6 @@ import {
   newHistory,
   updateHistoryById,
 } from '../../actions/historyActions';
-import * as S from './HistoryScreen.Styles';
 import {
   HISTORY_BY_ID_RESET,
   HISTORY_NEW_RESET,

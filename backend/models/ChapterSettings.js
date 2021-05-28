@@ -6,7 +6,7 @@ const ChapterSettings = (sequelize, DataTypes) =>
   sequelize.define('chapterSettings', {
     chapterId: {
       type: DataTypes.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      // defaultValue: Sequelize.UUIDV4,
       // defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       primaryKey: true,

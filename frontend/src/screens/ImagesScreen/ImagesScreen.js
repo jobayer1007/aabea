@@ -21,7 +21,7 @@ const ImagesScreen = ({ history }) => {
   const [addImage, setAddImage] = useState(false);
   const [imageName, setImageName] = useState('');
   const [imageDescription, setImageDescription] = useState('');
-  const [imageLink, setImageLink] = useState('');
+  const [eventId, setEventId] = useState('');
   const [image, setImage] = useState('');
   const [uploading, setUploading] = useState(false);
 
@@ -34,16 +34,11 @@ const ImagesScreen = ({ history }) => {
   const imageNew = useSelector((state) => state.imageNew);
   const { loading: imageNewLoading, error: imageNewError, success } = imageNew;
 
-  // const imageById = useSelector((state) => state.imageById);
-  // const {
-  //   loading: imageByIdLoading,
-  //   error: imageByIdError,
-  //   success: imageByIdSuccess,
-  //   image : imageById,
-  // } = imageById;
-
   const imageDelete = useSelector((state) => state.imageDelete);
   const { success: successDelete } = imageDelete;
+
+  const eventAll = useSelector((state) => state.eventAll);
+  const { loading: eventAllLoading, error: eventAllError, events } = eventAll;
 
   useEffect(() => {
     if (
@@ -60,17 +55,10 @@ const ImagesScreen = ({ history }) => {
       setAddImage((addImage) => !addImage);
       setImageName('');
       setImageDescription('');
-      setImageLink('');
+      setEventId('');
       setImage('');
       dispatch({ type: IMAGE_BY_ID_RESET });
     }
-    // if (imageByIdSuccess) {
-    //   setAddHistory(true);
-    //   setEditHistory(true);
-    //   setTitle(historyId.title);
-    //   setBody(historyId.body);
-    //   setId(historyId.chapterId);
-    // }
   }, [dispatch, history, userInfo, success, successDelete]);
 
   const uploadFileHandler = async (e) => {
@@ -105,7 +93,7 @@ const ImagesScreen = ({ history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    dispatch(newImage(imageName, imageDescription, imageLink, image));
+    dispatch(newImage(imageName, imageDescription, eventId, image));
   };
   return (
     <>
@@ -166,7 +154,7 @@ const ImagesScreen = ({ history }) => {
                               >
                                 <option>Please Select an image type</option>
 
-                                <option value='logo'>Logo</option>
+                                {/* <option value='logo'>Logo</option> */}
                                 <option value='navbarImage'>
                                   Events photo
                                 </option>
@@ -175,6 +163,23 @@ const ImagesScreen = ({ history }) => {
                                 </option>
                               </Form.Control>
                             </Form.Group>
+
+                            {imageName && imageName === 'navbarImage' ? (
+                              <Form.Group controlId='imageName'>
+                                <Form.Label>Event</Form.Label>
+                                <Form.Control
+                                  as='select'
+                                  onChange={(e) => setEventId(e.target.value)}
+                                >
+                                  <option>Select event</option>
+                                  {events.map((event, index) => (
+                                    <option key={index} value={event.eventId}>
+                                      {event.eventName}
+                                    </option>
+                                  ))}
+                                </Form.Control>
+                              </Form.Group>
+                            ) : null}
 
                             <Form.Group controlId='imageDescription'>
                               <Form.Label>Image Description</Form.Label>
