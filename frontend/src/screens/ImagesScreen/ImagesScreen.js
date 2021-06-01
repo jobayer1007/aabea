@@ -17,6 +17,7 @@ import {
 
 const ImagesScreen = ({ history }) => {
   const dispatch = useDispatch();
+  const checkChapter = window.location.host.split('.')[0];
 
   const [addImage, setAddImage] = useState(false);
   const [imageName, setImageName] = useState('');
@@ -45,7 +46,7 @@ const ImagesScreen = ({ history }) => {
       userInfo &&
       (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
     ) {
-      dispatch(allImage());
+      dispatch(allImage(checkChapter));
       dispatch({ type: IMAGE_NEW_RESET });
       dispatch({ type: IMAGE_BY_ID_RESET });
     } else {

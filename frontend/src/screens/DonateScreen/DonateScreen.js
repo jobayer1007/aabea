@@ -20,6 +20,9 @@ import { listDonationTypes } from '../../actions/donationTypeAction';
 
 const DonateScreen = ({ history }) => {
   const dispatch = useDispatch();
+
+  const checkChapter = window.location.host.split('.')[0];
+
   const [sdkReady, setSdkReady] = useState(false);
   const [addDonation, setAddDonation] = useState(false);
 
@@ -114,10 +117,10 @@ const DonateScreen = ({ history }) => {
 
   const successDonationHandlerGuest = (paymentResult) => {
     console.log(paymentResult);
-    const subDomain = 'bd.aabea.org';
+
     dispatch(
       donateUserGuest(
-        subDomain,
+        checkChapter,
         guest,
         email,
         firstName,

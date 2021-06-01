@@ -19,7 +19,10 @@ const {
   registerEventGuest,
 } = require('../controllers/eventController');
 
-router.route('/').get(getAllEvents);
+// Event Registration
+router.route('/register').post(registerEventGuest);
+
+router.route('/chapter/:checkChapter').get(getAllEvents);
 router.route('/new').post(protect, admin, createNewEvent);
 router
   .route('/:id')
@@ -40,8 +43,5 @@ router
   .get(getEventContactById)
   .put(protect, admin, updateEventContactById)
   .delete(protect, admin, deleteEventContact);
-
-// Event Registration
-router.route('/register').post(registerEventGuest);
 
 module.exports = router;

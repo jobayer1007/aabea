@@ -101,18 +101,17 @@ exports.createNewBlog = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET all Blog     ///////////////////////////////////////////////
-// @route   GET /api/blog
+// @route   GET /api/blog/chapter/:checkChapter
 // @access  Private
 exports.getBlogs = asyncHandler(async (req, res) => {
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = req.body.subDomain;
-  }
-  console.log(subDomain);
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
 
   if (chapter) {
@@ -122,7 +121,7 @@ exports.getBlogs = asyncHandler(async (req, res) => {
     res.json(blogs);
   } else {
     res.status(401);
-    throw new Error('Invalid chapter reference');
+    throw new Error('Invalid chapter reference: ' + checkChapter);
   }
 });
 

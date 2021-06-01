@@ -41,12 +41,10 @@ const RegisterScreen = ({ location, history }) => {
   const { loading, error, success } = userRegister;
 
   const redirect = location.search ? location.search.split('=')[1] : '/';
-  const subDomain = window.location.host.split('.')[0];
-  // const subDomain = www.bd.aabea.org.split('.')[0];
+  const checkChapter = window.location.host.split('.')[0];
 
   useEffect(() => {
     if (success) {
-      console.log(subDomain);
       swal('Success!', success, 'success').then((value) => {
         dispatch({ type: USER_REGISTER_RESET });
         history.push(redirect);
@@ -94,7 +92,6 @@ const RegisterScreen = ({ location, history }) => {
         // Dispatch Register
         dispatch(
           register(
-            subDomain,
             email,
             password,
             firstName,
@@ -109,7 +106,8 @@ const RegisterScreen = ({ location, history }) => {
             degreeYear,
             major,
             collegeName,
-            certificate
+            certificate,
+            checkChapter
           )
         );
       }

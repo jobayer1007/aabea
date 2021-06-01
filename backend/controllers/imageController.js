@@ -87,19 +87,18 @@ exports.addNewImage = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET all Images     ///////////////////////////////////////////////
-// @route   GET /api/image
+// @route   GET /api/image/chapter/:checkChapter
 // @access  Public
 exports.getAllImages = asyncHandler(async (req, res) => {
   // Find Chapter
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = req.body.subDomain;
-  }
-  console.log(subDomain);
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
 
   if (chapter) {
@@ -114,24 +113,23 @@ exports.getAllImages = asyncHandler(async (req, res) => {
     }
   } else {
     res.status(404);
-    throw new Error('Invalid Chapter Domain');
+    throw new Error('Invalid Chapter Domain: ' + checkChapter);
   }
 });
 
 // @desc    GET all Navbar Images     ///////////////////////////////////////////////
-// @route   GET /api/image/navbar
+// @route   GET /api/image/navbar/chapter/:checkChapter
 // @access  Public
 exports.getAllNavbarImages = asyncHandler(async (req, res) => {
   // Find Chapter
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = req.body.subDomain;
-  }
-  console.log(subDomain);
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
 
   if (chapter) {
@@ -151,19 +149,18 @@ exports.getAllNavbarImages = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET all Navbar Images     ///////////////////////////////////////////////
-// @route   GET /api/image/homeScreen
+// @route   GET /api/image/homeScreen/chapter/:checkChapter
 // @access  Public
 exports.getAllHomeScreenImages = asyncHandler(async (req, res) => {
   // Find Chapter
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = req.body.subDomain;
-  }
-  console.log(subDomain);
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
 
   if (chapter) {
@@ -183,19 +180,18 @@ exports.getAllHomeScreenImages = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET all Images by Event     ///////////////////////////////////////////////
-// @route   GET /api/image/event
+// @route   GET /api/image/event/chapter/:checkChapter
 // @access  Public
 exports.getAllImagesByEvent = asyncHandler(async (req, res) => {
   // Find Chapter
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = req.body.subDomain;
-  }
-  console.log(subDomain);
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
 
   if (chapter) {
@@ -215,7 +211,7 @@ exports.getAllImagesByEvent = asyncHandler(async (req, res) => {
     }
   } else {
     res.status(404);
-    throw new Error('Invalid Chapter Domain');
+    throw new Error('Invalid Chapter Domain: ' + checkChapter);
   }
 });
 

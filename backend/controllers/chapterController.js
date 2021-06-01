@@ -92,20 +92,105 @@ exports.getChapters = asyncHandler(async (req, res) => {
   // res.json(members);
 });
 
+// @desc    Get an  Chapter by Id     ///////////////////////////////////////////////
+// @route   GET /api/chapters/:id
+// @access  Private/Admin || SystemAdmin
+exports.getChapterById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  // console.log(id);
+  const chapter = await models.Chapter.findOne({
+    where: { chapterId: id },
+  });
+
+  if (chapter) {
+    res.json(chapter);
+  } else {
+    res.status(401);
+    throw new Error('Chapter not found');
+  }
+});
+
+// @desc   Update an  Chapter by Id      ///////////////////////////////////////////////
+// @route   PUT /api/chapters/:id
+// @access  Private/Admin || SystemAdmin
+exports.updateChapterById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log('chapter Id: ' + id);
+  const chapter = await models.Chapter.findOne({
+    where: { chapterId: id },
+  });
+
+  if (chapter) {
+    const data = {
+      chapterName: req.body.chapterName || chapter.chapterName,
+      chapterAddress: req.body.chapterAddress || chapter.chapterAddress,
+      chapterEmail: req.body.chapterEmail || chapter.chapterEmail,
+      chapterPhone: req.body.chapterPhone || chapter.chapterPhone,
+      subDomain: req.body.subDomain || chapter.subDomain,
+    };
+
+    let { chapterName, chapterAddress, chapterEmail, chapterPhone, subDomain } =
+      data;
+    const t = await sequelize.transaction();
+
+    try {
+      await models.ChapterSettings.update(
+        {
+          chapterEmail,
+
+          chapterName,
+          chapterAddress,
+          chapterPhone,
+
+          lastUpdatedBy: req.user.memberId,
+        },
+        { where: { chapterId: id } },
+        { transaction: t }
+      );
+
+      await models.Chapter.update(
+        {
+          chapterName,
+          chapterAddress,
+          chapterEmail,
+          chapterPhone,
+          subDomain,
+          lastUpdatedBy: req.user.memberId,
+        },
+        { where: { chapterId: id } },
+        { transaction: t }
+      );
+
+      await t.commit();
+      res.send('Chapter updated successful');
+    } catch (error) {
+      await t.rollback();
+      res.status(401);
+      throw new Error(
+        'Something Went Wrong, Please contact the System Admin' + ' ' + error
+      );
+    }
+  } else {
+    res.status(401);
+    throw new Error('chapter not found');
+  }
+});
+
 // @desc    GET Chapter by domain     ///////////////////////////////////////////////
-// @route   GET /api/chapters/subDomain
+// @route   GET /api/chapters/chapter/:checkChapter
 // @access  Private/SystemAdmin
 exports.getChapterBySubDomain = asyncHandler(async (req, res) => {
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = req.body.subDomain;
-  }
-  console.log(subDomain);
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'ny'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
+  // console.log(checkChapter);
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
+  console.log(chapter);
   if (chapter && chapter.length !== 0) {
     res.json(chapter);
   } else {

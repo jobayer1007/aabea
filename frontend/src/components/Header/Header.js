@@ -27,10 +27,10 @@ const Header = () => {
   const chapterBySubDomain = useSelector((state) => state.chapterBySubDomain);
   const { loading, error, chapterByDomain } = chapterBySubDomain;
 
-  const subDomain = window.location.host.split('.')[0];
+  const checkChapter = window.location.host.split('.')[0];
 
   useEffect(() => {
-    dispatch(getChapterBySubDomain(subDomain));
+    dispatch(getChapterBySubDomain(checkChapter)); //done
   }, [dispatch]);
 
   const logoutHandler = () => {

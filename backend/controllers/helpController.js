@@ -4,7 +4,7 @@ const models = require('../models/index');
 // /////////////////////////////Help Contacts //////////////////////////////
 
 // @desc    Create a new Help Contact     ///////////////////////////////////////////////
-// @route   POST /api/help/
+// @route   POST /api/helps/
 // @access  Private/Admin
 exports.createNewHelpContact = asyncHandler(async (req, res) => {
   const { memberId, helpFor, contactEmail, contactPhone, isTrue } = req.body;
@@ -50,18 +50,20 @@ exports.createNewHelpContact = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET all Help Contacts     ///////////////////////////////////////////////
-// @route   GET /api/help/
+// @route   GET /api/helps/chapter/:checkChapter
 // @access  Public
 exports.getHelpContacts = asyncHandler(async (req, res) => {
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = req.body.subDomain;
-  }
-  console.log(subDomain);
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
+
+  console.log('from all helps controller: ' + checkChapter);
+
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
 
   if (chapter) {
@@ -70,7 +72,7 @@ exports.getHelpContacts = asyncHandler(async (req, res) => {
     });
 
     if (helpContacts) {
-      if (helpContacts && helpContacts.length !== 0) {
+      if (helpContacts) {
         res.json(helpContacts);
         // console.log(contacts);
       } else {
@@ -79,13 +81,16 @@ exports.getHelpContacts = asyncHandler(async (req, res) => {
       }
     } else {
       res.status(404);
-      throw new Error('Invalid chapter reference!');
+      throw new Error('Invalid chapter reference! :' + checkChapter);
     }
+  } else {
+    res.status(401);
+    throw new Error(`Invalid chapter reference: ${checkChapter}`);
   }
 });
 
 // @desc    Get a  Help Contact by Id     ///////////////////////////////////////////////
-// @route   GET /api/help/:id
+// @route   GET /api/helps/:id
 // @access  Private
 exports.getHelpContactById = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -106,7 +111,7 @@ exports.getHelpContactById = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update Help Contact by Id       ///////////////////////////////////////////////
-// @route   PUT /api/Help/:id
+// @route   PUT /api/Helps/:id
 // @access  Private/Admin || systemAdmin || Committee Member
 exports.updateHelpContactById = asyncHandler(async (req, res) => {
   const helpContact = await models.HelpContact.findOne({
@@ -168,7 +173,7 @@ exports.updateHelpContactById = asyncHandler(async (req, res) => {
 });
 
 // @desc    Delete a help Contact by Id     ///////////////////////////////////////////////
-// @route   DELETE /api/help/:id
+// @route   DELETE /api/helps/:id
 // @access  Private/Admin
 exports.deleteHelpContact = asyncHandler(async (req, res) => {
   const { id } = req.params;

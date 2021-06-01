@@ -71,24 +71,24 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getAllEvents = asyncHandler(async (req, res) => {
   // Find Chapter
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = req.body.subDomain;
-  }
-  console.log(subDomain);
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
+  // console.log(checkChapter);
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
 
   if (chapter) {
     const events = await models.Event.findAll(
-      { include: models.EventImageGallery },
-      { include: models.EventContact },
       {
         where: { chapterId: chapter.chapterId },
-      }
+      },
+      { include: models.EventImageGallery },
+      { include: models.EventContact }
     );
     if (events && events.length !== 0) {
       res.json(events);
@@ -99,7 +99,7 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
     }
   } else {
     res.status(404);
-    throw new Error('Invalid Chapter Domain');
+    throw new Error('Invalid Chapter Domain: ' + checkChapter);
   }
 });
 

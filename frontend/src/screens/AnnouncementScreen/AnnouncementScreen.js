@@ -60,13 +60,15 @@ const AnnouncementScreen = ({ history }) => {
   const announcementDelete = useSelector((state) => state.announcementDelete);
   const { success: successDelete } = announcementDelete;
 
+  const checkChapter = window.location.host.split('.')[0];
+
   useEffect(() => {
     if (
       userInfo &&
       (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
     ) {
       setId(userInfo.memberId);
-      dispatch(allAnnouncements());
+      dispatch(allAnnouncements(checkChapter));
       dispatch({ type: ANNOUNCEMENT_NEW_RESET });
     } else {
       history.push('/login');

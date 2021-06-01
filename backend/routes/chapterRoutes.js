@@ -29,14 +29,10 @@ const {
   getDonationTypes,
   deleteDonationType,
   getChapterBySubDomain,
+  getChapterById,
+  updateChapterById,
 } = require('../controllers/chapterController');
 const { protect, admin, systemAdmin } = require('../middleware/authMiddleware');
-
-// Chapter/////////////////////////////////////////////////
-router.route('/new').post(protect, systemAdmin, createNewChapter);
-router.route('/').get(getChapters);
-router.route('/subDomain').get(getChapterBySubDomain);
-router.route('/:id').delete(protect, systemAdmin, deleteChapter);
 
 // Settings///////////////////////////////////////////////////////
 router
@@ -60,8 +56,8 @@ router
 router.route('/donationType/:id').delete(deleteDonationType);
 
 // Mission/////////////////////////////////////////////////
-router.route('/mission').post(createMission);
-router.route('/mission').get(getMission);
+router.route('/mission').post(protect, createMission).get(getMission);
+
 router
   .route('/mission/:id')
   .get(getMissionById)
@@ -85,5 +81,15 @@ router
   .get(getHistoryById)
   .put(updateHistoryById)
   .delete(deleteHistory);
+
+// Chapter/////////////////////////////////////////////////
+router.route('/').get(getChapters);
+router.route('/chapter/:checkChapter').get(getChapterBySubDomain);
+router.route('/new').post(protect, systemAdmin, createNewChapter);
+router
+  .route('/:id')
+  .get(getChapterById)
+  .put(protect, systemAdmin, updateChapterById)
+  .delete(protect, systemAdmin, deleteChapter);
 
 module.exports = router;

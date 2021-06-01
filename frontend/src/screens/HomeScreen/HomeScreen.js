@@ -13,6 +13,7 @@ import { allHistory } from '../../actions/historyActions';
 import { allCMembers } from '../../actions/committeeActions';
 import { allEvents } from '../../actions/eventActions';
 import { allHelps } from '../../actions/helpActions';
+import { allLinks } from '../../actions/linkActions';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -53,16 +54,19 @@ const HomeScreen = () => {
     cMembers,
   } = cMemberAll;
 
-  const subDomain = window.location.host.split('.')[0];
+  const checkChapter = window.location.host.split('.')[0];
 
   useEffect(() => {
-    dispatch(allAnnouncements(subDomain));
-    dispatch(allHelps(subDomain));
-    dispatch(allEvents(subDomain));
+    console.log(checkChapter);
+    console.log(typeof checkChapter);
+    dispatch(allAnnouncements(checkChapter)); // done
+    dispatch(allHelps(checkChapter)); // done
+    dispatch(allLinks(checkChapter)); // done
+    dispatch(allEvents(checkChapter)); // done
     dispatch(allMission());
     dispatch(allVission());
     dispatch(allHistory());
-    dispatch(allCMembers(subDomain));
+    dispatch(allCMembers(checkChapter)); // done
   }, [dispatch]);
   // console.log(cMembers);
   return (
@@ -171,22 +175,22 @@ const HomeScreen = () => {
             </Card.Body>
           </Card>
 
-          {linkAllLoading ? (
-            <Loader />
-          ) : linkAllError ? (
-            <Message variant='danger'>{linkAllError}</Message>
-          ) : links && links.length !== 0 ? (
-            <>
-              <Card className='mb-2'>
-                <Card.Header className='text-info'>Quick Links</Card.Header>
-                {links.map((link, index) => (
+          <Card className='mb-2'>
+            <Card.Header className='text-info'>Quick Links</Card.Header>
+            {linkAllLoading ? (
+              <Loader />
+            ) : linkAllError ? (
+              <Message variant='danger'>{linkAllError}</Message>
+            ) : links && links.length !== 0 ? (
+              <>
+                {links.map((linku, index) => (
                   <Card.Body key={index}>
-                    <Card.Link href={link.link}>{link.linkTitle}</Card.Link>
+                    <Card.Link href={linku.link}>{linku.linkTitle}</Card.Link>
                   </Card.Body>
                 ))}
-              </Card>
-            </>
-          ) : null}
+              </>
+            ) : null}
+          </Card>
         </Col>
 
         <Col md={{ order: 12 }} lg={{ span: 6, order: 2 }}>

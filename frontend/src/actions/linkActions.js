@@ -34,7 +34,7 @@ export const newLink = (linkTitle, link) => async (dispatch, getState) => {
     };
 
     const { data } = await axios.post(
-      '/api/link',
+      '/api/links',
       {
         linkTitle,
         link,
@@ -57,7 +57,7 @@ export const newLink = (linkTitle, link) => async (dispatch, getState) => {
   }
 };
 
-export const allLinkss = (subDomain) => async (dispatch) => {
+export const allLinks = (checkChapter) => async (dispatch) => {
   try {
     dispatch({
       type: QUICK_LINK_ALL_REQUEST,
@@ -69,7 +69,11 @@ export const allLinkss = (subDomain) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/link`, { subDomain }, config);
+    const { data } = await axios.get(
+      `/api/links/chapter/${checkChapter}`,
+      {},
+      config
+    );
 
     dispatch({
       type: QUICK_LINK_ALL_SUCCESS,
@@ -99,7 +103,7 @@ export const getLinkById = (id) => async (dispatch) => {
     };
 
     const { data } = await axios.get(
-      `/api/link/${id}`,
+      `/api/links/${id}`,
 
       config
     );
@@ -137,7 +141,7 @@ export const updateLinkById =
       };
 
       const { data } = await axios.put(
-        `/api/link/${id}`,
+        `/api/links/${id}`,
         {
           linkTitle,
           link,
@@ -176,7 +180,7 @@ export const deleteLink = (id) => async (dispatch, getState) => {
       },
     };
 
-    await axios.delete(`/api/link/${id}`, config);
+    await axios.delete(`/api/links/${id}`, config);
 
     dispatch({ type: QUICK_LINK_DELETE_SUCCESS });
   } catch (error) {

@@ -104,7 +104,7 @@ export const newEvent =
     }
   };
 
-export const allEvents = (subDomain) => async (dispatch) => {
+export const allEvents = (checkChapter) => async (dispatch) => {
   try {
     dispatch({
       type: EVENT_ALL_REQUEST,
@@ -116,7 +116,10 @@ export const allEvents = (subDomain) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/events`, { subDomain }, config);
+    const { data } = await axios.get(
+      `/api/events/chapter/${checkChapter}`,
+      config
+    );
 
     dispatch({
       type: EVENT_ALL_SUCCESS,

@@ -11,7 +11,7 @@ const userRoutes = require('./routes/userRoutes');
 const committeeRoutes = require('./routes/committeeRoutes');
 const announcementRoutes = require('./routes/announcementRoutes');
 const linkRoutes = require('./routes/linkRoutes');
-const helpContactRoutes = require('./routes/helpContactRoutes');
+const helpRoutes = require('./routes/helpRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const emailRoutes = require('./routes/emailRoutes');
 const imageRoutes = require('./routes/imageRoutes');
@@ -37,8 +37,6 @@ app.use('/api/chapters', chapterRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/committee', committeeRoutes);
-app.use('/api/link', linkRoutes);
-app.use('/api/help', helpContactRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/emails', emailRoutes);
@@ -47,6 +45,8 @@ app.use('/api/category', categoryRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api/reply', replyRoutes);
+app.use('/api/links', linkRoutes);
+app.use('/api/helps', helpRoutes);
 
 app.get('/api/config/paypal', (req, res) =>
   res.send(process.env.PAYPAL_CLIENT_ID)

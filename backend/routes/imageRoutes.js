@@ -13,10 +13,10 @@ const {
   getAllImagesByEvent,
 } = require('../controllers/imageController');
 
-router.route('/').get(getAllImages);
-router.route('/navbar').get(getAllNavbarImages);
-router.route('/homeScreen').get(getAllHomeScreenImages);
-router.route('/event').get(getAllImagesByEvent);
+router.route('/chapter/:checkChapter').get(getAllImages);
+router.route('/navbar/chapter/:checkChapter').get(getAllNavbarImages);
+router.route('/homeScreen/chapter/:checkChapter').get(getAllHomeScreenImages);
+router.route('/event/chapter/:checkChapter').get(getAllImagesByEvent);
 router.route('/new').post(protect, admin, addNewImage);
 router.route('/:id').get(getImageById).delete(protect, admin, deleteImage);
 

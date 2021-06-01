@@ -11,10 +11,10 @@ import ColumnFilter from '../../components/Table/ColumnFilter';
 import RTable from '../../components/Table/RTable';
 import {
   newLink,
-  allLinkss,
   deleteLink,
   getLinkById,
   updateLinkById,
+  allLinks,
 } from '../../actions/linkActions';
 import {
   QUICK_LINK_BY_ID_RESET,
@@ -59,7 +59,7 @@ const QuickLinkScreen = ({ history }) => {
       (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
     ) {
       // setId(userInfo.memberId);
-      dispatch(allLinkss());
+      dispatch(allLinks());
       dispatch({ type: QUICK_LINK_NEW_RESET });
     } else {
       history.push('/login');

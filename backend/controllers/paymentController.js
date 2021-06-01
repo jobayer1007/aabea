@@ -361,9 +361,16 @@ exports.getUserDonationDetails = asyncHandler(async (req, res) => {
 // @route   POST /api/users/donate
 // @access  Public
 exports.guestDonation = asyncHandler(async (req, res) => {
-  const { subDomain, guest, email, firstName, mInit, lastName, paymentResult } =
-    req.body;
-  // console.log(`Domain: ${subDomain}`);
+  const {
+    checkChapter,
+    guest,
+    email,
+    firstName,
+    mInit,
+    lastName,
+    paymentResult,
+  } = req.body;
+  // console.log(`Domain: ${checkChapter}`);
   // console.log(`guest: ${guest}`);
   // console.log(`email: ${email}`);
   // console.log(`firstName: ${firstName}`);
@@ -371,7 +378,7 @@ exports.guestDonation = asyncHandler(async (req, res) => {
   // console.log(`lastName: ${lastName}`);
   // console.log(`amount: ${paymentResult.purchase_units[0].amount.value}`);
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
   // console.log(chapter);
   if (chapter) {

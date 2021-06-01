@@ -60,7 +60,7 @@ export const newCMember =
     }
   };
 
-export const allCMembers = (subDomain) => async (dispatch) => {
+export const allCMembers = (checkChapter) => async (dispatch) => {
   try {
     dispatch({
       type: COMMITTEE_MEMBER_ALL_REQUEST,
@@ -72,7 +72,10 @@ export const allCMembers = (subDomain) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/committee`, { subDomain }, config);
+    const { data } = await axios.get(
+      `/api/committee/chapter/${checkChapter}`,
+      config
+    );
 
     console.log(data);
     dispatch({

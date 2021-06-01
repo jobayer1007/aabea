@@ -6,7 +6,10 @@ import {
   CHAPTER_DELETE_FAIL,
   CHAPTER_DELETE_REQUEST,
   CHAPTER_DELETE_SUCCESS,
+  CHAPTER_DETAILS_FAIL,
+  CHAPTER_DETAILS_REQUEST,
   CHAPTER_DETAILS_RESET,
+  CHAPTER_DETAILS_SUCCESS,
   CHAPTER_LIST_FAIL,
   CHAPTER_LIST_REQUEST,
   CHAPTER_LIST_SUCCESS,
@@ -22,6 +25,9 @@ import {
   CHAPTER_SETTINGS_UPDATE_FAIL,
   CHAPTER_SETTINGS_UPDATE_REQUEST,
   CHAPTER_SETTINGS_UPDATE_SUCCESS,
+  CHAPTER_UPDATE_FAIL,
+  CHAPTER_UPDATE_REQUEST,
+  CHAPTER_UPDATE_SUCCESS,
 } from '../constants/chapterConstants';
 
 export const registerChapter =
@@ -102,6 +108,82 @@ export const listChapters = () => async (dispatch, getState) => {
     });
   }
 };
+
+export const getChapterById = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: CHAPTER_DETAILS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(
+      `/api/chapters/${id}`,
+
+      config
+    );
+
+    dispatch({
+      type: CHAPTER_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CHAPTER_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const updateChapterById =
+  (id, chapterName, chapterAddress, chapterEmail, chapterPhone, subDomain) =>
+  async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CHAPTER_UPDATE_REQUEST,
+      });
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.put(
+        `/api/chapters/${id}`,
+        { chapterName, chapterAddress, chapterEmail, chapterPhone, subDomain },
+        config
+      );
+
+      dispatch({
+        type: CHAPTER_UPDATE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: CHAPTER_UPDATE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const deleteChapter = (id) => async (dispatch, getState) => {
   try {
@@ -249,7 +331,7 @@ export const updateChapterSettings =
   };
 
 //////////////////// Chapter By Domain//////////////////////////
-export const getChapterBySubDomain = (subDomain) => async (dispatch) => {
+export const getChapterBySubDomain = (checkChapter) => async (dispatch) => {
   try {
     dispatch({
       type: CHAPTER_BY_SUBDOMAIN_REQUEST,
@@ -262,8 +344,7 @@ export const getChapterBySubDomain = (subDomain) => async (dispatch) => {
     };
 
     const { data } = await axios.get(
-      `/api/chapters/subDomain`,
-      { subDomain },
+      `/api/chapters/chapter/${checkChapter}`,
       config
     );
 

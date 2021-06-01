@@ -37,13 +37,15 @@ const EventScreen = ({ history }) => {
   const eventDelete = useSelector((state) => state.eventDelete);
   const { success: successDelete } = eventDelete;
 
+  const checkChapter = window.location.host.split('.')[0];
+
   useEffect(() => {
     if (
       userInfo &&
       (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
     ) {
       // setId(userInfo.memberId);
-      dispatch(allEvents());
+      dispatch(allEvents(checkChapter));
       // dispatch({ type: EVENT_NEW_RESET });
     } else {
       history.push('/login');

@@ -4,7 +4,7 @@ const models = require('../models/index');
 ///////////////////////////////////////////ANNOUNCEMENT////////////////////////////////////////////////
 
 // @desc    Create a new Link     /////////////////////////////////////////Announcement//////
-// @route   POST /api/link
+// @route   POST /api/links/
 // @access  Private/SystemAdmin || Admin
 exports.createNewLink = asyncHandler(async (req, res) => {
   const { linkTitle, link } = req.body;
@@ -33,18 +33,18 @@ exports.createNewLink = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET all LINKS     ///////////////////////////////////////////////
-// @route   GET /api/link
+// @route   GET /api/links/chapter/:checkChapter
 // @access  Private/SystemAdmin || Admin
 exports.getLinks = asyncHandler(async (req, res) => {
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = req.body.subDomain;
-  }
-  console.log(subDomain);
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
+  console.log(checkChapter);
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
 
   if (chapter) {
@@ -63,11 +63,14 @@ exports.getLinks = asyncHandler(async (req, res) => {
       res.status(404);
       throw new Error('Invalid chapter reference!');
     }
+  } else {
+    res.status(401);
+    throw new Error(`Invalid chapter reference: ${checkChapter}`);
   }
 });
 
 // @desc    Get an  link by Id     ///////////////////////////////////////////////
-// @route   GET /api/link/:id
+// @route   GET /api/links/:id
 // @access  Private/Admin || SystemAdmin
 exports.getLinkById = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -84,7 +87,7 @@ exports.getLinkById = asyncHandler(async (req, res) => {
 });
 
 // @desc   Update a link by Id      ///////////////////////////////////////////////
-// @route   PUT /api/link/:id
+// @route   PUT /api/links/:id
 // @access  Private/Admin || SystemAdmin
 exports.updateLinkById = asyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -121,7 +124,7 @@ exports.updateLinkById = asyncHandler(async (req, res) => {
 });
 
 // @desc    Delete a Link     /////////////////////////////////////////////// pending
-// @route   DELETE /api/link/:id
+// @route   DELETE /api/links/:id
 // @access  Private/Admin
 exports.deleteLink = asyncHandler(async (req, res) => {
   const { id } = req.params;

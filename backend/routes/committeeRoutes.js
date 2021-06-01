@@ -11,7 +11,7 @@ const {
   deleteCommitteeMember,
 } = require('../controllers/committeeController');
 
-router.route('/').get(getCommitteeMembers);
+router.route('/chapter/:checkChapter').get(getCommitteeMembers);
 router.route('/new').post(protect, admin, createNewCommitteeMember);
 router
   .route('/:id')

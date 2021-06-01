@@ -36,7 +36,7 @@ export const newHelp =
       };
 
       const { data } = await axios.post(
-        '/api/help',
+        '/api/helps',
         {
           memberId,
           helpFor,
@@ -62,7 +62,7 @@ export const newHelp =
     }
   };
 
-export const allHelps = (subDomain) => async (dispatch) => {
+export const allHelps = (checkChapter) => async (dispatch) => {
   try {
     dispatch({
       type: HELP_CONTACT_ALL_REQUEST,
@@ -74,7 +74,12 @@ export const allHelps = (subDomain) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/help`, { subDomain }, config);
+    console.log('from help action: ' + checkChapter);
+    const { data } = await axios.get(
+      `/api/helps/chapter/${checkChapter}`,
+
+      config
+    );
 
     dispatch({
       type: HELP_CONTACT_ALL_SUCCESS,
@@ -104,7 +109,7 @@ export const getHelpById = (id) => async (dispatch) => {
     };
 
     const { data } = await axios.get(
-      `/api/help/${id}`,
+      `/api/helps/${id}`,
 
       config
     );
@@ -143,7 +148,7 @@ export const updateHelpById =
       };
 
       const { data } = await axios.put(
-        `/api/help/${id}`,
+        `/api/helps/${id}`,
         {
           memberId,
           helpFor,
@@ -186,7 +191,7 @@ export const deleteHelp = (id) => async (dispatch, getState) => {
       },
     };
 
-    await axios.delete(`/api/help/${id}`, config);
+    await axios.delete(`/api/helps/${id}`, config);
 
     dispatch({ type: HELP_CONTACT_DELETE_SUCCESS });
   } catch (error) {

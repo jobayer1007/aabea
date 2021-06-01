@@ -23,3 +23,7 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+aabea.conf
+mi.aabea.conf
+ny.aabea.conf

@@ -6,16 +6,16 @@ const {
   getHelpContactById,
   updateHelpContactById,
   deleteHelpContact,
-} = require('../controllers/helpContactController');
+} = require('../controllers/helpController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
-// Announcement/////////////////////////////////////////////////
-router.route('/').post(protect, admin, createNewHelpContact);
-router.route('/').get(getHelpContacts);
+// Help Contacts/////////////////////////////////////////////////
+router.route('/chapter/:checkChapter').get(getHelpContacts);
 router
   .route('/:id')
   .get(getHelpContactById)
   .put(protect, admin, updateHelpContactById)
   .delete(protect, admin, deleteHelpContact);
+router.route('/').post(protect, admin, createNewHelpContact);
 
 module.exports = router;

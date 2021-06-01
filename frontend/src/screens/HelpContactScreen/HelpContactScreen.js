@@ -59,13 +59,15 @@ const HelpContactScreen = ({ history }) => {
   const helpDelete = useSelector((state) => state.helpDelete);
   const { success: successDelete } = helpDelete;
 
+  const checkChapter = window.location.host.split('.')[0];
+
   useEffect(() => {
     if (
       userInfo &&
       (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
     ) {
       // setId(userInfo.memberId);
-      dispatch(allHelps());
+      dispatch(allHelps(checkChapter));
       dispatch({ type: HELP_CONTACT_NEW_RESET });
     } else {
       history.push('/login');

@@ -6,6 +6,10 @@ import {
   CHAPTER_DELETE_FAIL,
   CHAPTER_DELETE_REQUEST,
   CHAPTER_DELETE_SUCCESS,
+  CHAPTER_DETAILS_FAIL,
+  CHAPTER_DETAILS_REQUEST,
+  CHAPTER_DETAILS_RESET,
+  CHAPTER_DETAILS_SUCCESS,
   CHAPTER_LIST_FAIL,
   CHAPTER_LIST_REQUEST,
   CHAPTER_LIST_RESET,
@@ -26,6 +30,10 @@ import {
   CHAPTER_SETTINGS_UPDATE_REQUEST,
   CHAPTER_SETTINGS_UPDATE_RESET,
   CHAPTER_SETTINGS_UPDATE_SUCCESS,
+  CHAPTER_UPDATE_REQUEST,
+  CHAPTER_UPDATE_SUCCESS,
+  CHAPTER_UPDATE_FAIL,
+  CHAPTER_UPDATE_RESET,
 } from '../constants/chapterConstants';
 
 export const chapterRegisterReducer = (state = {}, action) => {
@@ -53,6 +61,36 @@ export const chapterListReducer = (state = { chapters: [] }, action) => {
       return { loading: false, error: action.payload };
     case CHAPTER_LIST_RESET:
       return { chapters: [] };
+    default:
+      return state;
+  }
+};
+
+export const chapterByIdReducer = (state = { chapter: {} }, action) => {
+  switch (action.type) {
+    case CHAPTER_DETAILS_REQUEST:
+      return { ...state, loading: true };
+    case CHAPTER_DETAILS_SUCCESS:
+      return { loading: false, success: true, chapter: action.payload };
+    case CHAPTER_DETAILS_FAIL:
+      return { loading: false, error: action.payload };
+    case CHAPTER_DETAILS_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const chapterUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CHAPTER_UPDATE_REQUEST:
+      return { loading: true };
+    case CHAPTER_UPDATE_SUCCESS:
+      return { loading: false, success: true, chapter: action.payload };
+    case CHAPTER_UPDATE_FAIL:
+      return { loading: false, error: action.payload };
+    case CHAPTER_UPDATE_RESET:
+      return {};
     default:
       return state;
   }

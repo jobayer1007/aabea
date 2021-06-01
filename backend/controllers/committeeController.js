@@ -81,15 +81,15 @@ exports.createNewCommitteeMember = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getCommitteeMembers = asyncHandler(async (req, res) => {
   // Find Chapter
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = req.body.subDomain;
-  }
-  console.log(subDomain);
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
+  // console.log(checkChapter);
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
 
   if (chapter) {
@@ -112,7 +112,7 @@ exports.getCommitteeMembers = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get a  committee member by Id     ///////////////////////////////////////////////
+// @desc    Get a committee member by Id     ///////////////////////////////////////////////
 // @route   GET /api/committee/:id
 // @access  Public
 exports.getCommitteeMemberById = asyncHandler(async (req, res) => {

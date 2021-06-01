@@ -20,11 +20,13 @@ const BlogScreen = ({ history }) => {
   const blogAll = useSelector((state) => state.blogAll);
   const { loading, error, blogs } = blogAll;
 
+  const checkChapter = window.location.host.split('.')[0];
+
   useEffect(() => {
     if (!userInfo) {
       history.push('/login');
     } else {
-      dispatch(allblogs());
+      dispatch(allblogs(checkChapter));
       dispatch({ type: BLOG_BY_ID_RESET });
     }
   }, [dispatch, history, userInfo]);

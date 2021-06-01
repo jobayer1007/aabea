@@ -13,10 +13,10 @@ const PauseOnHover = () => {
   const imageNavbar = useSelector((state) => state.imageNavbar);
   const { loading, error, images } = imageNavbar;
 
-  const subDomain = window.location.host.split('.')[0];
+  const checkChapter = window.location.host.split('.')[0];
 
   useEffect(() => {
-    dispatch(getNavbarImage(subDomain));
+    dispatch(getNavbarImage(checkChapter));
   }, [dispatch]);
 
   var settings = {

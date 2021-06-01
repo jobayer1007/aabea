@@ -138,13 +138,16 @@ export const register =
     degreeYear,
     major,
     collegeName,
-    certificate
+    certificate,
+    checkChapter
   ) =>
   async (dispatch) => {
     try {
       dispatch({
         type: USER_REGISTER_REQUEST,
       });
+
+      // console.log('from the registration action' + test1);
 
       const config = {
         headers: {
@@ -170,6 +173,7 @@ export const register =
           major,
           collegeName,
           certificate,
+          checkChapter,
         },
         config
       );
@@ -576,7 +580,7 @@ export const donateUser =
 
 export const donateUserGuest =
   (
-    subDomain,
+    checkChapter,
     guest,
     email,
     firstName,
@@ -604,7 +608,7 @@ export const donateUserGuest =
       const { data } = await axios.post(
         `/api/users/donate`,
         {
-          subDomain,
+          checkChapter,
           guest,
           email,
           firstName,

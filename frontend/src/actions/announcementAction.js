@@ -66,7 +66,7 @@ export const newAnnouncement =
     }
   };
 
-export const allAnnouncements = (subDomain) => async (dispatch) => {
+export const allAnnouncements = (checkChapter) => async (dispatch) => {
   try {
     dispatch({
       type: ANNOUNCEMENT_ALL_REQUEST,
@@ -77,10 +77,10 @@ export const allAnnouncements = (subDomain) => async (dispatch) => {
         'Content-Type': 'application/json',
       },
     };
-
+    // console.log('from action page: ' + checkChapter);
     const { data } = await axios.get(
-      `/api/announcements`,
-      { subDomain },
+      `/api/announcements/chapter/${checkChapter}`,
+
       config
     );
 
@@ -112,7 +112,7 @@ export const getAnnouncementById = (id) => async (dispatch) => {
     };
 
     const { data } = await axios.get(
-      `/api/announcements/${id}`,
+      `/api/announcements/announcement/${id}`,
 
       config
     );
@@ -150,7 +150,7 @@ export const updateAnnouncementById =
       };
 
       const { data } = await axios.put(
-        `/api/announcements/${id}`,
+        `/api/announcements/announcement/${id}`,
         { title, body },
         config
       );
@@ -186,7 +186,7 @@ export const deleteAnnouncement = (id) => async (dispatch, getState) => {
       },
     };
 
-    await axios.delete(`/api/announcements/${id}`, config);
+    await axios.delete(`/api/announcements/announcement/${id}`, config);
 
     dispatch({ type: ANNOUNCEMENT_DELETE_SUCCESS });
   } catch (error) {

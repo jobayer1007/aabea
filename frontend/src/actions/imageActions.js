@@ -67,7 +67,7 @@ export const newImage =
     }
   };
 
-export const allImage = (subDomain) => async (dispatch) => {
+export const allImage = (checkChapter) => async (dispatch) => {
   try {
     dispatch({
       type: IMAGE_ALL_REQUEST,
@@ -79,7 +79,10 @@ export const allImage = (subDomain) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/image`, { subDomain }, config);
+    const { data } = await axios.get(
+      `/api/image/chapter/${checkChapter}`,
+      config
+    );
 
     dispatch({
       type: IMAGE_ALL_SUCCESS,
@@ -125,7 +128,7 @@ export const getImageById = (id) => async (dispatch) => {
   }
 };
 
-export const getNavbarImage = (subDomain) => async (dispatch) => {
+export const getNavbarImage = (checkChapter) => async (dispatch) => {
   try {
     dispatch({
       type: IMAGE_NAVBAR_REQUEST,
@@ -138,8 +141,7 @@ export const getNavbarImage = (subDomain) => async (dispatch) => {
     };
 
     const { data } = await axios.get(
-      `/api/image/navbar`,
-      { subDomain },
+      `/api/image/navbar/chapter/${checkChapter}`,
       config
     );
 
@@ -158,7 +160,7 @@ export const getNavbarImage = (subDomain) => async (dispatch) => {
   }
 };
 
-export const getHomeScreenImage = (subDomain) => async (dispatch) => {
+export const getHomeScreenImage = (checkChapter) => async (dispatch) => {
   try {
     dispatch({
       type: IMAGE_HOMESCREEN_REQUEST,
@@ -171,8 +173,7 @@ export const getHomeScreenImage = (subDomain) => async (dispatch) => {
     };
 
     const { data } = await axios.get(
-      `/api/image/homeScreen`,
-      { subDomain },
+      `/api/image/homeScreen/chapter/${checkChapter}`,
       config
     );
 
@@ -191,7 +192,7 @@ export const getHomeScreenImage = (subDomain) => async (dispatch) => {
   }
 };
 
-export const getImageByEvent = (subDomain) => async (dispatch) => {
+export const getImageByEvent = (checkChapter) => async (dispatch) => {
   try {
     dispatch({
       type: IMAGE_BY_EVENT_REQUEST,
@@ -203,7 +204,10 @@ export const getImageByEvent = (subDomain) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/image/event`, { subDomain }, config);
+    const { data } = await axios.get(
+      `/api/image/event/chapter/${checkChapter}`,
+      config
+    );
 
     dispatch({
       type: IMAGE_BY_EVENT_SUCCESS,

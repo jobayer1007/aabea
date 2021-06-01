@@ -36,15 +36,16 @@ exports.createNewAnnouncement = asyncHandler(async (req, res) => {
 // @route   GET /api/announcements
 // @access  Public
 exports.getAnnouncements = asyncHandler(async (req, res) => {
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = req.body.subDomain;
-  }
-  console.log(subDomain);
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
+
+  console.log('From announcement controller :' + checkChapter);
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
   if (chapter) {
     const announcements = await models.Announcement.findAll({
@@ -58,7 +59,7 @@ exports.getAnnouncements = asyncHandler(async (req, res) => {
     }
   } else {
     res.status(401);
-    throw new Error('Invalid chapter reference');
+    throw new Error(`Invalid chapter reference: ${checkChapter}`);
   }
 });
 

@@ -10,8 +10,8 @@ const {
 const { protect, admin } = require('../middleware/authMiddleware');
 
 // Announcement/////////////////////////////////////////////////
+router.route('/chapter/:checkChapter').get(getBlogs);
 router.route('/').post(protect, createNewBlog);
-router.route('/').get(getBlogs);
 router
   .route('/:id')
   .get(protect, getBlogById)

@@ -60,7 +60,7 @@ export const newBlog =
     }
   };
 
-export const allblogs = () => async (dispatch) => {
+export const allblogs = (checkChapter) => async (dispatch) => {
   try {
     dispatch({
       type: BLOG_ALL_REQUEST,
@@ -72,7 +72,10 @@ export const allblogs = () => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.get(`/api/blog`, config);
+    const { data } = await axios.get(
+      `/api/blog/chapter/${checkChapter}`,
+      config
+    );
 
     dispatch({
       type: BLOG_ALL_SUCCESS,

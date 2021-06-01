@@ -26,6 +26,7 @@ import {
   userVerificationEmailResendReducer,
 } from './reducers/userReducers';
 import {
+  chapterByIdReducer,
   chapterBySubDomainReducer,
   chapterDeleteReducer,
   chapterListReducer,
@@ -33,6 +34,7 @@ import {
   chapterSettingsNewReducer,
   chapterSettingsReducer,
   chapterSettingsUpdateReducer,
+  chapterUpdateReducer,
 } from './reducers/chapterReducers';
 import {
   paymentTypeDeleteReducer,
@@ -179,7 +181,9 @@ const reducer = combineReducers({
   userDonateDetails: userDonationDetailsReducer,
 
   chapterRegister: chapterRegisterReducer,
-  chapterList: chapterListReducer,
+  chapterAll: chapterListReducer,
+  chapterById: chapterByIdReducer,
+  chapterUpdate: chapterUpdateReducer,
   chapterDelete: chapterDeleteReducer,
 
   announcementNew: announcementNewReducer,

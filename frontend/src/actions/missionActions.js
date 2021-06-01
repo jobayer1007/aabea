@@ -120,45 +120,43 @@ export const getMissionById = (id) => async (dispatch, getState) => {
   }
 };
 
-export const updateMissionById = (id, title, body) => async (
-  dispatch,
-  getState
-) => {
-  try {
-    dispatch({
-      type: MISSION_UPDATE_BY_ID_REQUEST,
-    });
+export const updateMissionById =
+  (id, title, body) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: MISSION_UPDATE_BY_ID_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.put(
-      `/api/chapters/mission/${id}`,
-      { title, body },
-      config
-    );
+      const { data } = await axios.put(
+        `/api/chapters/mission/${id}`,
+        { title, body },
+        config
+      );
 
-    dispatch({
-      type: MISSION_UPDATE_BY_ID_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: MISSION_UPDATE_BY_ID_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: MISSION_UPDATE_BY_ID_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: MISSION_UPDATE_BY_ID_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const deleteMission = (id) => async (dispatch, getState) => {
   try {

@@ -117,18 +117,19 @@ exports.registerUser = asyncHandler(async (req, res) => {
     major,
     collegeName,
     certificate,
+    checkChapter,
   } = req.body;
 
   // Find Chapter
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = req.body.subDomain;
-  }
-  console.log(subDomain);
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  // const { subDomain } = req.body;
+  // console.log('From registration controller: ' + test1);
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: subDomain },
+    where: { subDomain: checkChapter },
   });
 
   if (chapter) {
@@ -194,7 +195,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
     }
   } else {
     res.status(401);
-    throw new Error('Invalid chapter reference!');
+    throw new Error(`Invalid chapter reference! ${test1}`);
   }
 });
 

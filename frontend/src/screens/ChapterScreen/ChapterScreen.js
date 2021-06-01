@@ -1,83 +1,215 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button, Row, Col, Card, Form } from 'react-bootstrap';
+import React, { useEffect, useState, useRef } from 'react';
+import { Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+
+import Sidebar from '../../components/Sidebar/Sidebar';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
+import ColumnFilter from '../../components/Table/ColumnFilter';
+import RTable from '../../components/Table/RTable';
+import {
+  CHAPTER_DETAILS_RESET,
+  CHAPTER_REGISTER_REQUEST,
+  CHAPTER_UPDATE_RESET,
+} from '../../constants/chapterConstants';
 import {
   deleteChapter,
+  getChapterById,
   listChapters,
   registerChapter,
+  updateChapterById,
 } from '../../actions/chapterActions';
-import {
-  CHAPTER_LIST_RESET,
-  CHAPTER_REGISTER_RESET,
-} from '../../constants/chapterConstants';
-import Sidebar from '../../components/Sidebar/Sidebar';
 
 const ChapterScreen = ({ history }) => {
   const dispatch = useDispatch();
 
   const [addChapter, setAddChapter] = useState(false);
+  const [editChapter, setEditChapter] = useState(false);
   const [chapterName, setChapterName] = useState('');
   const [chapterEmail, setChapterEmail] = useState('');
   const [chapterAddress, setChapterAddress] = useState('');
   const [chapterPhone, setChapterPhone] = useState('');
   const [subDomain, setSubDomain] = useState('');
+  const [id, setId] = useState('');
 
-  const chapterList = useSelector((state) => state.chapterList);
-  const { loading, error, chapters } = chapterList;
+  const chaptersRef = useRef();
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const chapterAll = useSelector((state) => state.chapterAll);
+  const { loading, error, chapters } = chapterAll;
+
+  chaptersRef.current = chapters;
+
   const chapterRegister = useSelector((state) => state.chapterRegister);
   const {
-    loading: registerLoading,
-    error: registerError,
+    loading: chapterRegisterLoading,
+    error: chapterRegisterError,
     success,
   } = chapterRegister;
+
+  const chapterById = useSelector((state) => state.chapterById);
+  const { success: chapterByIdSuccess, chapter } = chapterById;
+
+  const chapterUpdate = useSelector((state) => state.chapterUpdate);
+  const { success: chapterUpdateSuccess } = chapterUpdate;
 
   const chapterDelete = useSelector((state) => state.chapterDelete);
   const { success: successDelete } = chapterDelete;
 
   useEffect(() => {
-    if (userInfo) {
+    if (
+      userInfo &&
+      (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
+    ) {
       dispatch(listChapters());
-      dispatch({ type: CHAPTER_LIST_RESET });
-      dispatch({ type: CHAPTER_REGISTER_RESET });
+      dispatch({ type: CHAPTER_REGISTER_REQUEST });
     } else {
       history.push('/login');
     }
-    if (success) {
-      setAddChapter((addChapter) => !addChapter);
+    if (success || chapterUpdateSuccess) {
+      setAddChapter(false);
+      setEditChapter(false);
+
       setChapterName('');
       setChapterEmail('');
       setChapterAddress('');
       setChapterPhone('');
       setSubDomain('');
+      setId('');
+      dispatch({ type: CHAPTER_DETAILS_RESET });
     }
-  }, [dispatch, history, userInfo, success, successDelete]);
+    if (chapterByIdSuccess) {
+      setAddChapter(true);
+      setEditChapter(true);
+      setChapterName(chapter.chapterName);
+      setChapterEmail(chapter.chapterEmail);
+      setChapterAddress(chapter.chapterAddress);
+      setChapterPhone(chapter.chapterPhone);
+      setSubDomain(chapter.subDomain);
 
-  const deleteChapterHandler = (chapterId) => {
-    if (window.confirm('Are You Sure?')) {
-      dispatch(deleteChapter(chapterId));
+      setId(chapter.chapterId);
     }
+  }, [
+    dispatch,
+    history,
+    userInfo,
+    success,
+    chapterByIdSuccess,
+    chapter,
+    chapterUpdateSuccess,
+    successDelete,
+  ]);
+
+  const editChapterHandler = (rowIndex) => {
+    const id = chaptersRef.current[rowIndex].chapterId;
+    dispatch({ type: CHAPTER_UPDATE_RESET });
+    // console.log(rowIndex);
+    // console.log(id);
+    dispatch(getChapterById(id));
+  };
+
+  const deleteChapterHandler = (rowIndex) => {
+    const id = chaptersRef.current[rowIndex].chapterId;
+
+    if (window.confirm('Are You Sure?')) {
+      dispatch(deleteChapter(id));
+    }
+  };
+
+  const addNewChapter = (e) => {
+    e.preventDefault();
+
+    setAddChapter(!addChapter);
+    setChapterName('');
+    setChapterEmail('');
+    setChapterAddress('');
+    setChapterPhone('');
+    setSubDomain('');
+    setEditChapter(false);
+    dispatch({ type: CHAPTER_DETAILS_RESET });
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
 
-    dispatch(
-      registerChapter(
-        chapterEmail,
-        chapterName,
-        chapterAddress,
-        chapterPhone,
-        subDomain
-      )
-    );
+    if (editChapter) {
+      dispatch(
+        updateChapterById(
+          id,
+          chapterName,
+          chapterAddress,
+          chapterEmail,
+          chapterPhone,
+          subDomain
+        )
+      );
+    } else {
+      // setId(userInfo.memberId);
+      // console.log(id);
+      dispatch(
+        registerChapter(
+          chapterEmail,
+          chapterName,
+          chapterAddress,
+          chapterPhone,
+          subDomain
+        )
+      );
+    }
   };
+
+  const columnsAdmin = [
+    {
+      Header: 'CHAPTER NAME',
+      accessor: 'chapterName',
+      Filter: ColumnFilter,
+    },
+    // {
+    //   Header: 'Name',
+    //   accessor: 'userName',
+    // },
+    {
+      Header: 'CHAPTER EMAIL',
+      accessor: 'chapterEmail',
+      Filter: ColumnFilter,
+    },
+    {
+      Header: 'CHAPTER PHONE',
+      accessor: 'chapterPhone',
+      Filter: ColumnFilter,
+    },
+    {
+      Header: 'SUBDOAMIN',
+      accessor: 'subDomain',
+      Filter: ColumnFilter,
+    },
+    {
+      Header: 'CHAPTER ADDRESS',
+      accessor: 'chapterAddress',
+      Filter: ColumnFilter,
+    },
+    {
+      Header: 'Actions',
+      accessor: 'actions',
+      Cell: (props) => {
+        const rowIdx = props.row.id;
+        return (
+          <div>
+            <span onClick={() => editChapterHandler(rowIdx)}>
+              <i className='far fa-edit action mr-2'></i>
+            </span>
+
+            <span onClick={() => deleteChapterHandler(rowIdx)}>
+              <i className='fas fa-trash action'></i>
+            </span>
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
     <>
@@ -100,7 +232,7 @@ const ChapterScreen = ({ history }) => {
         >
           <>
             {/* <CardColumns> */}
-            {/* 1st card section : member Status~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
+
             <Row>
               <Col
                 md={{ span: 12, order: 1 }}
@@ -109,20 +241,25 @@ const ChapterScreen = ({ history }) => {
                 className='mb-2 p-0'
               >
                 <Card border='info'>
-                  <Card.Header className='text-center text-info' as='h2'>
+                  <Card.Header className='text-center' as='h2'>
                     <Link
                       className='btn btn-outline-info btn-sm btn-block rounded'
-                      onClick={() => setAddChapter(!addChapter)}
+                      // onClick={() => setAddAnnouncement(!addAnnouncement)}
+                      onClick={addNewChapter}
                     >
-                      Add New Chapter
+                      New Chapter
                     </Link>
                   </Card.Header>
+
                   <Card.Body>
                     {addChapter
-                      ? (registerError && (
-                          <Message variant='danger'>{registerError}</Message>
+                      ? (chapterRegisterError && (
+                          <Message variant='danger'>
+                            {chapterRegisterError}
+                          </Message>
                         )) ||
-                        (registerLoading && <Loader />) ||
+                        // (chapterRegisterLoading && <Loader />)
+                        //  ||
                         (success ? (
                           <Message variant='success'>{success}</Message>
                         ) : (
@@ -131,42 +268,17 @@ const ChapterScreen = ({ history }) => {
                               <Form.Label>Chapter Name</Form.Label>
                               <Form.Control
                                 type='text'
-                                placeholder='Example chapter..'
+                                placeholder='Please Enter A chapter name..'
                                 value={chapterName}
                                 onChange={(e) => setChapterName(e.target.value)}
                               ></Form.Control>
                             </Form.Group>
 
-                            <Form.Group controlId='chapterEmail'>
-                              <Form.Label>Chapter Email</Form.Label>
-                              <Form.Control
-                                type='email'
-                                placeholder='example@example.com'
-                                value={chapterEmail}
-                                onChange={(e) =>
-                                  setChapterEmail(e.target.value)
-                                }
-                              ></Form.Control>
-                            </Form.Group>
-
-                            <Form.Group controlId='chapterAddress'>
-                              <Form.Label>Chapter Address</Form.Label>
+                            <Form.Group controlId='chapterPhone'>
+                              <Form.Label>Phone</Form.Label>
                               <Form.Control
                                 type='text'
-                                placeholder='Please enter address..'
-                                value={chapterAddress}
-                                onChange={(e) =>
-                                  setChapterAddress(e.target.value)
-                                }
-                              ></Form.Control>
-                            </Form.Group>
-
-                            <Form.Group controlId='chapterPhone'>
-                              <Form.Label>Chapter Phone</Form.Label>
-                              <Form.Control
-                                type='tel'
-                                placeholder='+1 888 888 8888'
-                                pattern='+1[7-9]{3}-[0-9]{3}-[0-9]{4}'
+                                placeholder='Please Enter phone number..'
                                 value={chapterPhone}
                                 onChange={(e) =>
                                   setChapterPhone(e.target.value)
@@ -174,37 +286,65 @@ const ChapterScreen = ({ history }) => {
                               ></Form.Control>
                             </Form.Group>
 
+                            <Form.Group controlId='chapterEmail'>
+                              <Form.Label>Email</Form.Label>
+                              <Form.Control
+                                type='email'
+                                placeholder='Please Enter email address..'
+                                value={chapterEmail}
+                                onChange={(e) =>
+                                  setChapterEmail(e.target.value)
+                                }
+                              ></Form.Control>
+                            </Form.Group>
+
                             <Form.Group controlId='subDomain'>
-                              <Form.Label>Domain</Form.Label>
+                              <Form.Label>SubDomain</Form.Label>
                               <Form.Control
                                 type='text'
-                                placeholder='example.aabea.org'
+                                placeholder='Please Enter subdomain..'
                                 value={subDomain}
                                 onChange={(e) => setSubDomain(e.target.value)}
                               ></Form.Control>
                             </Form.Group>
 
-                            <Button type='submit' variant='info' block>
-                              <i className='fas fa-plus' /> Add
-                            </Button>
+                            <Form.Group controlId='chapterAddress'>
+                              <Form.Label>Chapter Address</Form.Label>
+                              <Form.Control
+                                type='text'
+                                placeholder='Please Enter chapter address..'
+                                value={chapterAddress}
+                                onChange={(e) =>
+                                  setChapterAddress(e.target.value)
+                                }
+                              ></Form.Control>
+                            </Form.Group>
+
+                            {editChapter ? (
+                              <Button type='submit' variant='info' block>
+                                <i className='fas fa-plus' /> Update
+                              </Button>
+                            ) : (
+                              <Button type='submit' variant='info' block>
+                                <i className='fas fa-plus' /> Add
+                              </Button>
+                            )}
                           </Form>
                         ))
                       : null}
                   </Card.Body>
                 </Card>
               </Col>
-              {/* 1st card section end~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
 
-              {/* 5th card section : All Chapter List ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
               <Col
                 md={{ span: 12, order: 12 }}
                 lg={{ span: 12, order: 12 }}
                 className='mb-2 p-0'
                 id='all-chapter'
               >
-                <Card className='text-center' border='info'>
-                  <Card.Header as='h5' className='text-info'>
-                    All Chapter List
+                <Card border='info'>
+                  <Card.Header as='h5' className='text-center text-info'>
+                    Chapters
                   </Card.Header>
 
                   <>
@@ -213,81 +353,13 @@ const ChapterScreen = ({ history }) => {
                     ) : error ? (
                       <Message variant='danger'>{error}</Message>
                     ) : (
-                      <Table
-                        striped
-                        bordered
-                        hover
-                        responsive
-                        className='table-sm'
-                      >
-                        <thead>
-                          <tr>
-                            {/* <th>ID</th> */}
-                            {/* <th>IMAGE</th> */}
-                            <th>CHAPTER NAME</th>
-                            <th>CHAPTER EMAIL</th>
-                            <th>CHAPTER PHONE</th>
-                            <th>CHAPTER ADDRESS</th>
-                            <th>Domain</th>
-                            {userInfo &&
-                              userInfo.userRole === 'systemAdmin' && (
-                                <th>ACTION</th>
-                              )}
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          {chapters.map((chapter) => (
-                            <tr key={chapter.chapterId}>
-                              <td> {chapter.chapterName}</td>
-                              <td>
-                                <a href={`mailto: ${chapter.chapterEmail}`}>
-                                  {' '}
-                                  {chapter.chapterEmail}
-                                </a>
-                              </td>
-                              <td>
-                                <a href={`tel: ${chapter.chapterPhone}`}>
-                                  {' '}
-                                  {chapter.chapterPhone}
-                                </a>
-                              </td>
-                              <td> {chapter.chapterAddress}</td>
-                              <td> {chapter.subDomain}</td>
-
-                              {userInfo.userRole === 'systemAdmin' && (
-                                <td>
-                                  {/* <LinkContainer
-                                    to={`/chapter/${chapter.chapterId}/edit`}
-                                  >
-                                    <Button variant='light' className='btn-sm'>
-                                      <i className='fas fa-edit'></i>
-                                    </Button>
-                                  </LinkContainer> */}
-
-                                  <span
-                                    onClick={() =>
-                                      deleteChapterHandler(chapter.chapterId)
-                                    }
-                                  >
-                                    <i
-                                      className='fas fa-trash action ml-2'
-                                      style={{ color: 'red' }}
-                                    ></i>
-                                  </span>
-                                </td>
-                              )}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
+                      <>
+                        <RTable users={chapters} COLUMNS={columnsAdmin} />
+                      </>
                     )}
                   </>
                 </Card>
               </Col>
-              {/* 5th card section : All Chapter List End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
-
-              {/* </CardColumns> */}
             </Row>
           </>
         </Col>
