@@ -13,10 +13,12 @@ const PasswordResetScreen = () => {
   const userPasswordReset = useSelector((state) => state.userPasswordReset);
   const { loading, error, success } = userPasswordReset;
 
+  const checkChapter = window.location.host;
+
   const submitHandler = (e) => {
     e.preventDefault();
     console.log('Submited');
-    dispatch(passwordReset(email));
+    dispatch(passwordReset(checkChapter, email));
   };
 
   return (

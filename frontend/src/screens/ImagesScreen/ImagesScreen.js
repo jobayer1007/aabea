@@ -17,7 +17,7 @@ import {
 
 const ImagesScreen = ({ history }) => {
   const dispatch = useDispatch();
-  const checkChapter = window.location.host.split('.')[0];
+  const checkChapter = window.location.host;
 
   const [addImage, setAddImage] = useState(false);
   const [imageName, setImageName] = useState('');
@@ -94,7 +94,9 @@ const ImagesScreen = ({ history }) => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    dispatch(newImage(imageName, imageDescription, eventId, image));
+    dispatch(
+      newImage(imageName, imageDescription, eventId, image, checkChapter)
+    );
   };
   return (
     <>

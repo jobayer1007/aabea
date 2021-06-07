@@ -12,6 +12,7 @@ import {
   USER_DELETE_ADMIN_SUCCESS,
   USER_DELETE_FAIL,
   USER_DELETE_REQUEST,
+  USER_DELETE_RESET,
   USER_DELETE_SUCCESS,
   USER_DETAILS_BY_ID_FAIL,
   USER_DETAILS_BY_ID_REQUEST,
@@ -203,7 +204,8 @@ export const userDeleteReducer = (state = {}, action) => {
       return { loading: false, success: true };
     case USER_DELETE_FAIL:
       return { loading: false, error: action.payload };
-
+    case USER_DELETE_RESET:
+      return {};
     default:
       return state;
   }

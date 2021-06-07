@@ -51,12 +51,14 @@ const SettingScreen = ({ history }) => {
     error: chapterSettingsUpdateError,
   } = chapterSettingsUpdate;
 
+  const checkChapter = window.location.host;
+
   useEffect(() => {
     if (
       userInfo &&
       (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
     ) {
-      dispatch(getChapterSettings());
+      dispatch(getChapterSettings(checkChapter));
     } else {
       history.push('/login');
     }
@@ -104,7 +106,7 @@ const SettingScreen = ({ history }) => {
     setChapterEmail(chapterSettings.chapterEmail);
     setPassword(chapterSettings.password);
     setChapterPhone(chapterSettings.chapterPhone);
-    setChapterPaymentId(chapterSettings.chapterPayment);
+    setChapterPaymentId(chapterSettings.chapterSetting.chapterPayment);
   };
 
   const cancelHandler = (e) => {
@@ -117,14 +119,15 @@ const SettingScreen = ({ history }) => {
     e.preventDefault();
 
     dispatch(
-      updateChapterSettings({
+      updateChapterSettings(
+        checkChapter,
         chapterEmail,
         password,
         chapterName,
         chapterAddress,
         chapterPhone,
-        chapterPaymentId,
-      })
+        chapterPaymentId
+      )
     );
   };
 
@@ -140,7 +143,8 @@ const SettingScreen = ({ history }) => {
         chapterName,
         chapterAddress,
         chapterPhone,
-        chapterPaymentId
+        chapterPaymentId,
+        checkChapter
       )
     );
   };

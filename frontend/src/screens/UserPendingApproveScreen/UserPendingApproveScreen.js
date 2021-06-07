@@ -32,7 +32,7 @@ const UserPendingApproveScreen = ({ match, history }) => {
     ) {
       if (successApprove) {
         dispatch({ type: USER_APPROVE_RESET });
-        history.push('/systemAdmin');
+        history.push('/members');
       } else {
         if (!pendingUser.pendingId || pendingUser.pendingId !== pendingId) {
           console.log(pendingId);
@@ -56,14 +56,14 @@ const UserPendingApproveScreen = ({ match, history }) => {
       {userInfo && userInfo.userRole === 'systemAdmin' ? (
         <Link
           className='btn btn-light my-3 btn-sm btn-outline-info'
-          to='/systemAdmin'
+          to='/dashboard'
         >
           Go Back
         </Link>
       ) : (
         <Link
           className='btn btn-light my-3 btn-sm btn-outline-info'
-          to='/dashboard'
+          to='/members'
         >
           Go Back
         </Link>

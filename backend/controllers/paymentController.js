@@ -173,12 +173,9 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
             res.status(201).json('Payment Successfull.');
           } catch (error) {
             await t.rollback();
-            res
-              .status(402)
-              .send(
-                'msg: Encountered a problem while making Payments, error:' +
-                  error
-              );
+            res.send(
+              'msg: Encountered a problem while making Payments, error:' + error
+            );
           }
         } else {
           res.status(401);
@@ -377,8 +374,10 @@ exports.guestDonation = asyncHandler(async (req, res) => {
   // console.log(`mInit: ${mInit}`);
   // console.log(`lastName: ${lastName}`);
   // console.log(`amount: ${paymentResult.purchase_units[0].amount.value}`);
+  const subDomain = checkChapter.split('.')[0];
+
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: checkChapter },
+    where: { subDomain: subDomain },
   });
   // console.log(chapter);
   if (chapter) {

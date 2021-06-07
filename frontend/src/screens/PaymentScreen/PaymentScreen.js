@@ -50,6 +50,8 @@ const PaymentScreen = ({ history }) => {
   const userPay = useSelector((state) => state.userPay);
   const { success: successPay, error: errorPay } = userPay;
 
+  const checkChapter = window.location.host;
+
   useEffect(() => {
     if (!userInfo) {
       history.push('/login');
@@ -59,8 +61,17 @@ const PaymentScreen = ({ history }) => {
       dispatch(listPaymentTypes());
       dispatch(getUserPaymentDetails());
 
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
       const addPaypalScript = async () => {
-        const { data: clientId } = await axios.get('/api/config/paypal');
+        const { data: clientId } = await axios.get(
+          `/api/chapters/paypal/${checkChapter}`,
+          config
+        );
         const script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;

@@ -24,7 +24,7 @@ import {
 } from '../constants/imageConstants';
 
 export const newImage =
-  (imageName, imageDescription, eventId, image) =>
+  (imageName, imageDescription, eventId, image, checkChapter) =>
   async (dispatch, getState) => {
     try {
       dispatch({
@@ -48,6 +48,7 @@ export const newImage =
           imageDescription,
           eventId,
           image,
+          checkChapter,
         },
         config
       );

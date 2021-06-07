@@ -228,7 +228,7 @@ const DashboardScreen = ({ history }) => {
                                 <Message variant='danger'>
                                   {donateErrors}
                                 </Message>
-                              ) : donations ? (
+                              ) : donations && donations.length !== 0 ? (
                                 // new Date(
                                 //   Math.max.apply(
                                 //     null,
@@ -243,6 +243,7 @@ const DashboardScreen = ({ history }) => {
                                   })
                                   .sort()
                                   .reverse()[0]
+                                  .substring(0, 10)
                               ) : (
                                 // donations.map((a, index) => (
                                 //   <Col key={index}>{a.donationDate}</Col>

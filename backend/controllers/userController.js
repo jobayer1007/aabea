@@ -12,6 +12,7 @@ const {
   getPasswordResetURL,
   resetPasswordTemplate,
   transporter,
+  sendPasswordResetEmail,
 } = require('./mailer');
 const models = require('../models/index');
 const { generateToken, passwordResetToken } = require('../utils/generateToken');
@@ -122,17 +123,25 @@ exports.registerUser = asyncHandler(async (req, res) => {
 
   // Find Chapter
   // let subDomain;
+  // let checkChapter1;
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
+  //   // checkChapter1 = 'http://localhost:3000';
   // } else {
+  //   const { subDomain } = req.body;
+  //   console.log('From registration controller: ' + subDomain);
   // }
-  // const { subDomain } = req.body;
-  // console.log('From registration controller: ' + test1);
+  const subDomain = checkChapter.split('.')[0];
+
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: checkChapter },
+    where: { subDomain: subDomain },
   });
 
   if (chapter) {
+    const chapterSetting = await models.ChapterSettings.findOne({
+      where: { chapterId: chapter.chapterId },
+    });
+
     const userExists = await models.Member.findOne({
       where: { primaryEmail: email, chapterId: chapter.chapterId },
     }); // Check if the Member already registered
@@ -169,9 +178,12 @@ exports.registerUser = asyncHandler(async (req, res) => {
 
         if (pendingUserRegister) {
           const sendVerificationEmail = await sendConfirmationEmail({
+            fromAdmin: chapterSetting.chapterEmail,
+            pass: chapterSetting.password,
             toUserEmail: pendingUserRegister.email,
             toUser: pendingUserRegister.firstName,
             hash: pendingUserRegister.pendingId,
+            domain: checkChapter,
           });
 
           if (sendVerificationEmail) {
@@ -195,7 +207,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
     }
   } else {
     res.status(401);
-    throw new Error(`Invalid chapter reference! ${test1}`);
+    throw new Error(`Invalid chapter reference! ${checkChapter}`);
   }
 });
 
@@ -246,7 +258,7 @@ exports.verifyUserEmail = asyncHandler(async (req, res) => {
 // @route   POST /api/users/verifyResend
 // @access  Public
 exports.verifyEmailResend = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, checkChapter } = req.body;
 
   const userPending = await models.PendingRegister.findOne({
     where: { email: email },
@@ -261,11 +273,17 @@ exports.verifyEmailResend = asyncHandler(async (req, res) => {
         message: 'Invalid Credentials!',
       });
     } else {
+      const chapterSetting = await models.ChapterSettings.findOne({
+        where: { chapterId: userPending.chapterId },
+      });
       if (userPending.emailVerified === false) {
         const sendVerificationEmail = await sendConfirmationEmail({
+          fromAdmin: chapterSetting.chapterEmail,
+          pass: chapterSetting.password,
           toUserEmail: userPending.email,
           toUser: userPending.firstName,
           hash: userPending.pendingId,
+          domain: checkChapter,
         });
 
         if (sendVerificationEmail) {
@@ -287,11 +305,22 @@ exports.verifyEmailResend = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET all Pending Users     ///////////////////////////////////////////////
-// @route   GET /api/users/pending
+// @route   GET /api/users/pending/chapter/:checkChapter
 // @access  Private/Admin
 exports.getPendingUsers = asyncHandler(async (req, res) => {
+  // Find Chapter
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
+  const subDomain = checkChapter.split('.')[0];
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
   const pendingUsers = await models.PendingRegister.findAll({
-    where: { emailVerified: true, chapterId: req.user.chapterId },
+    where: { emailVerified: true, chapterId: chapter.chapterId },
   });
   res.json(pendingUsers);
 });
@@ -301,13 +330,13 @@ exports.getPendingUsers = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 exports.getPendingUserById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  console.log(id);
+  // console.log(id);
   const pendingUser = await models.PendingRegister.findOne({
     where: { pendingId: id },
   });
-  console.log('ID:' + pendingUser.pendingId);
-  console.log('Email Verified:' + pendingUser.emailVerified);
-  console.log('Status:' + pendingUser.status);
+  // console.log('ID:' + pendingUser.pendingId);
+  // console.log('Email Verified:' + pendingUser.emailVerified);
+  // console.log('Status:' + pendingUser.status);
 
   if (pendingUser) {
     res.json(pendingUser);
@@ -338,7 +367,7 @@ exports.approveUser = asyncHandler(async (req, res) => {
       const member = await models.Member.create(
         {
           memberId: generateId(users),
-          chapterId: req.user.chapterId,
+          chapterId: pendingUser.chapterId,
           primaryEmail: pendingUser.email,
           firstName: pendingUser.firstName,
           mInit: pendingUser.mInit,
@@ -366,7 +395,7 @@ exports.approveUser = asyncHandler(async (req, res) => {
       await models.User.create(
         {
           // userRole,
-          chapterId: req.user.chapterId,
+          chapterId: pendingUser.chapterId,
           memberId: member.memberId,
           userName: pendingUser.firstName + ' ' + pendingUser.lastName,
           email: pendingUser.email,
@@ -379,13 +408,25 @@ exports.approveUser = asyncHandler(async (req, res) => {
 
       await pendingUser.destroy({ transaction: t });
 
+      const chapterSetting = await models.ChapterSettings.findOne({
+        where: { chapterId: pendingUser.chapterId },
+      });
+
+      await sendCongratulationsEmail(
+        {
+          fromAdmin: chapterSetting.chapterEmail,
+          pass: chapterSetting.password,
+          toUserEmail: member.primaryEmail,
+          toUser: member.firstName,
+          domain: checkChapter,
+        },
+        { transaction: t }
+      );
+
       // If the execution reaches this line, no errors were thrown.
       // We commit the transaction.
       await t.commit();
-      await sendCongratulationsEmail({
-        toUserEmail: member.primaryEmail,
-        toUser: member.firstName,
-      });
+
       res.status(201).json('account has been Approved Successfully.');
     } catch (error) {
       // If the execution reaches this line, an error was thrown.
@@ -404,15 +445,25 @@ exports.approveUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET all Users     ///////////////////////////////////////////////
-// @route   GET /api/users
+// @route   GET /api/users/chapter/:checkChapter
 // @access  Private/Admin
 exports.getUsers = asyncHandler(async (req, res) => {
-  const users = await models.User.findAll(
-    { include: models.Member },
-    {
-      where: { chapterId: req.user.chapterId },
-    }
-  );
+  // Find Chapter
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
+  const subDomain = checkChapter.split('.')[0];
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+  const users = await models.User.findAll({
+    include: models.Member,
+
+    where: { chapterId: chapter.chapterId },
+  });
   if (users && users.length !== 0) {
     res.json(users);
   } else {
@@ -742,37 +793,51 @@ exports.updateUser = asyncHandler(async (req, res) => {
 exports.deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
   console.log(id);
-  const user = await models.User.findOne({
-    where: { memberId: id },
-  });
-  console.log(user.memberId);
-  console.log(user.memberId);
+  // const user = await models.User.findOne({
+  //   where: { memberId: id },
+  // });
+  // console.log(user.memberId);
+  // console.log(user.memberId);
 
   // First, we start a transaction and save it into a variable
   const t = await sequelize.transaction();
 
   try {
-    const cMember = await models.Committee.findOne({
-      where: { memberId: id },
+    /// check if pending member ///
+    const pendingMember = await models.PendingRegister.findOne({
+      where: { pendingId: id },
     });
 
-    if (cMember) {
-      models.Committee.destroy(
+    if (pendingMember) {
+      models.PendingRegister.destroy(
         {
-          where: { memberId: id },
+          where: { pendingId: id },
+        },
+        { transaction: t }
+      );
+    } else {
+      const cMember = await models.Committee.findOne({
+        where: { memberId: id },
+      });
+
+      if (cMember) {
+        models.Committee.destroy(
+          {
+            where: { memberId: id },
+          },
+          { transaction: t }
+        );
+      }
+
+      models.User.destroy({ where: { memberId: id } }, { transaction: t });
+
+      models.Member.destroy(
+        {
+          where: { memberId: user.memberId },
         },
         { transaction: t }
       );
     }
-
-    models.User.destroy({ where: { memberId: id } }, { transaction: t });
-
-    models.Member.destroy(
-      {
-        where: { memberId: user.memberId },
-      },
-      { transaction: t }
-    );
 
     await t.commit();
     res.json({ message: 'User has been deleted successfully' });
@@ -857,33 +922,68 @@ exports.deleteAdminUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    Send Password Reset Email     ///////////////////////////////////////////////
-// @route   POST /api/users/:email
+// @route   POST /api/users/:checkChapter
 // @access  Public
 exports.sendPasswordResetEmail = asyncHandler(async (req, res) => {
-  const { email } = req.params;
+  const { checkChapter } = req.params;
+  const { email } = req.body;
 
-  const user = await models.User.findOne({ where: { email: email } });
+  // Find Chapter
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // }
+  const subDomain = checkChapter.split('.')[0];
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+
+  const user = await models.User.findOne({
+    where: { email: email, chapterId: chapter.chapterId },
+  });
 
   if (user) {
-    console.log(user.email);
+    // console.log(user.email);
     // res.json(user);
+    const chapterSetting = await models.ChapterSettings.findOne({
+      where: { chapterId: user.chapterId },
+    });
 
     const token = passwordResetToken(user);
-    const url = getPasswordResetURL(user, token);
-    const emailTemplate = resetPasswordTemplate(user, url);
-    console.log(token);
-    const sendEmail = () => {
-      transporter.sendMail(emailTemplate, (err, info) => {
-        if (err) {
-          res.status(500).json('Error sending email');
-        }
-        console.log(`** Email sent **`, info.response);
-        res.json(
-          'An email with the password reset link has been sent into your mailbox. Please check your email.'
-        );
-      });
-    };
-    sendEmail();
+    const url = getPasswordResetURL({ user, token, domain: checkChapter });
+    // const emailTemplate = resetPasswordTemplate({
+    //   fromAdmin: chapterSetting.chapterEmail,
+    //   pass: chapterSetting.password,
+    //   user,
+    //   url,
+    // });
+    // console.log(token);
+    // const sendEmail = () => {
+    //   transporter.sendMail(emailTemplate, (err, info) => {
+    //     if (err) {
+    //       res.status(500).json('Error sending email');
+    //     }
+    //     console.log(`** Email sent **`, info.response);
+    //     res.json(
+    //       'An email with the password reset link has been sent into your mailbox. Please check your email.'
+    //     );
+    //   });
+    // };
+    // sendEmail();
+    const sendMail = await sendPasswordResetEmail({
+      fromAdmin: chapterSetting.chapterEmail,
+      pass: chapterSetting.password,
+      toUserEmail: user.email,
+      user,
+      url,
+    });
+    if (sendMail) {
+      res.json(
+        'An email with the password reset link has been sent into your mailbox. Please check your email.'
+      );
+    } else {
+      res.status(500).json('Error sending email');
+    }
   } else {
     res.status(401);
     throw new Error('Invalid User / No user with that email');

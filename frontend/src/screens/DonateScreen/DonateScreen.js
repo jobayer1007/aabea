@@ -21,8 +21,6 @@ import { listDonationTypes } from '../../actions/donationTypeAction';
 const DonateScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  const checkChapter = window.location.host.split('.')[0];
-
   const [sdkReady, setSdkReady] = useState(false);
   const [addDonation, setAddDonation] = useState(false);
 
@@ -62,6 +60,8 @@ const DonateScreen = ({ history }) => {
     donationTypes,
   } = donationTypeList;
 
+  const checkChapter = window.location.host;
+
   useEffect(() => {
     if (userInfo) {
       dispatch(getUserProfile());
@@ -76,8 +76,17 @@ const DonateScreen = ({ history }) => {
 
     dispatch(listDonationTypes());
 
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
     const addPaypalScript = async () => {
-      const { data: clientId } = await axios.get('/api/config/paypal');
+      const { data: clientId } = await axios.get(
+        `/api/chapters/paypal/${checkChapter}`,
+        config
+      );
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;

@@ -33,15 +33,15 @@ const ImageCarousel = () => {
       {homeScreenImages &&
         homeScreenImages.map((image, index) => (
           <Carousel.Item key={index}>
-            <Link to={`/image/${image.imageId}`}>
-              <Image
-                src={image.image}
-                alt={image.imageDescription}
-                fluid
-                style={{ height: '500px', width: '100%' }}
-                className='chapterIconicImage'
-              />
-            </Link>
+            {/* <Link to={`/image/${image.imageId}`}> */}
+            <Image
+              src={image.image}
+              alt={image.imageDescription}
+              fluid
+              style={{ height: '500px', width: '100%' }}
+              className='chapterIconicImage'
+            />
+            {/* </Link> */}
           </Carousel.Item>
         ))}
     </Carousel>

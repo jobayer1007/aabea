@@ -31,6 +31,8 @@ const LoginScreen = ({ location, history }) => {
     ? location.search.split('=')[1]
     : '/dashboard';
 
+  const checkChapter = window.location.host;
+
   useEffect(() => {
     dispatch({ type: USER_PASSWORD_RESET_RESET });
 
@@ -75,7 +77,7 @@ const LoginScreen = ({ location, history }) => {
               break;
 
             case 'resend':
-              dispatch(resendVerifyEmail(email, password));
+              dispatch(resendVerifyEmail(email, password, checkChapter));
 
               break;
 
@@ -125,7 +127,7 @@ const LoginScreen = ({ location, history }) => {
                 type='email'
                 placeholder='Enter Email..'
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value.toLowerCase())}
               ></Form.Control>
             </Form.Group>
 

@@ -120,7 +120,7 @@ db.Reply = require('../models/Reply')(sequelize, Sequelize);
 db.Chapter.hasMany(db.Email, { foreignKey: 'chapterId' });
 db.Email.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 
-db.Chapter.hasMany(db.ChapterSettings, { foreignKey: 'chapterId' });
+db.Chapter.hasOne(db.ChapterSettings, { foreignKey: 'chapterId' });
 db.ChapterSettings.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 
 // CHAPTER TO MEMBER

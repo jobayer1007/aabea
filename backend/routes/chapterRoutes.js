@@ -31,13 +31,17 @@ const {
   getChapterBySubDomain,
   getChapterById,
   updateChapterById,
+  getPaypalId,
 } = require('../controllers/chapterController');
 const { protect, admin, systemAdmin } = require('../middleware/authMiddleware');
 
 // Settings///////////////////////////////////////////////////////
+router.route('/settings').post(protect, admin, createNewChapterSettings);
+// Paypal
+router.route('/paypal/:checkChapter').get(getPaypalId);
+
 router
-  .route('/settings')
-  .post(protect, admin, createNewChapterSettings)
+  .route('/settings/:checkChapter')
   .get(protect, admin, getChapterSettings)
   .put(protect, admin, updateChapterSettings);
 

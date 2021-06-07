@@ -45,7 +45,7 @@ router.route('/donate').post(guestDonation);
 router.route('/register').post(registerUser);
 router.route('/verifyResend').post(verifyEmailResend);
 router.route('/activate/:hash').post(verifyUserEmail);
-router.route('/pending').get(protect, getPendingUsers);
+router.route('/pending/chapter/:checkChapter').get(protect, getPendingUsers);
 router
   .route('/:id/pending')
   .get(protect, getPendingUserById)
@@ -54,12 +54,12 @@ router
   .route('/:id/admin')
   .post(protect, admin, createAdminUser)
   .delete(protect, admin, deleteAdminUser);
-router.route('/dashboard').get(protect, getUsers);
+router.route('/chapter/:checkChapter').get(protect, getUsers);
 router.route('/:id').get(getUserById).put(protect, admin, updateUser);
 router.route('/:id').delete(protect, admin, deleteUser);
 
 // Password Reset
-router.route('/:email').post(sendPasswordResetEmail);
+router.route('/:checkChapter').post(sendPasswordResetEmail);
 router.route('/newPassword/:id/:token').put(receiveNewPassword);
 
 // Add a User/////////////////////////////////////////////////

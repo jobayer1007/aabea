@@ -54,12 +54,14 @@ const HomeScreen = () => {
     cMembers,
   } = cMemberAll;
 
-  const checkChapter = window.location.host.split('.')[0];
+  const checkChapter = window.location.host;
+  // const subDomain = window.location.host.split('.')[0];
 
   useEffect(() => {
-    console.log(checkChapter);
-    console.log(typeof checkChapter);
-    dispatch(allAnnouncements(checkChapter)); // done
+    console.log('domain: ' + checkChapter);
+    // console.log(checkChapter);
+    // console.log(typeof checkChapter);
+    dispatch(allAnnouncements(checkChapter)); // Done
     dispatch(allHelps(checkChapter)); // done
     dispatch(allLinks(checkChapter)); // done
     dispatch(allEvents(checkChapter)); // done
@@ -301,11 +303,14 @@ const HomeScreen = () => {
             cMembers.length !== 0 &&
             cMembers.map((cMember, index) => (
               <Card key={index} className='text-justify mb-2'>
-                <Card.Img
-                  variant='top'
-                  src={cMember.member.profilePicture}
-                  style={{ width: '100%' }}
-                />
+                {cMember.member.profilePicture && (
+                  <Card.Img
+                    variant='top'
+                    src={cMember.member.profilePicture}
+                    style={{ width: '100%' }}
+                  />
+                )}
+
                 <Card.Header className='text-info'>
                   {cMember.position.toUpperCase()}
                   <Card.Title className='text-info'>

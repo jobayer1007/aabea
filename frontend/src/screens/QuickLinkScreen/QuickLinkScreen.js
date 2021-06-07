@@ -53,13 +53,15 @@ const QuickLinkScreen = ({ history }) => {
   const linkDelete = useSelector((state) => state.linkDelete);
   const { success: successDelete } = linkDelete;
 
+  const checkChapter = window.location.host;
+
   useEffect(() => {
     if (
       userInfo &&
       (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
     ) {
       // setId(userInfo.memberId);
-      dispatch(allLinks());
+      dispatch(allLinks(checkChapter));
       dispatch({ type: QUICK_LINK_NEW_RESET });
     } else {
       history.push('/login');

@@ -42,9 +42,9 @@ exports.getLinks = asyncHandler(async (req, res) => {
   // } else {
   // }
   const { checkChapter } = req.params;
-  console.log(checkChapter);
+  const subDomain = checkChapter.split('.')[0];
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: checkChapter },
+    where: { subDomain: subDomain },
   });
 
   if (chapter) {

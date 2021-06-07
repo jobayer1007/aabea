@@ -303,7 +303,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
   }
 };
 
-export const listUsers = () => async (dispatch, getState) => {
+export const listUsers = (checkChapter) => async (dispatch, getState) => {
   try {
     dispatch({
       type: USER_LIST_REQUEST,
@@ -319,7 +319,10 @@ export const listUsers = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/users/dashboard`, config);
+    const { data } = await axios.get(
+      `/api/users/chapter/${checkChapter}`,
+      config
+    );
     // dispatch({ type: USER_DETAILS_RESET });
 
     dispatch({
@@ -507,38 +510,39 @@ export const verifyUserEmail = (hash, email) => async (dispatch) => {
   }
 };
 
-export const resendVerifyEmail = (email, password) => async (dispatch) => {
-  try {
-    dispatch({
-      type: USER_VERIFY_EMAIL_RESEND_REQUEST,
-    });
+export const resendVerifyEmail =
+  (email, password, checkChapter) => async (dispatch) => {
+    try {
+      dispatch({
+        type: USER_VERIFY_EMAIL_RESEND_REQUEST,
+      });
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-    const { data } = await axios.post(
-      '/api/users/verifyResend',
-      { email, password },
-      config
-    );
+      const { data } = await axios.post(
+        '/api/users/verifyResend',
+        { email, password, checkChapter },
+        config
+      );
 
-    dispatch({
-      type: USER_VERIFY_EMAIL_RESEND_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: USER_VERIFY_EMAIL_RESEND_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: USER_VERIFY_EMAIL_RESEND_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_VERIFY_EMAIL_RESEND_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const donateUser =
   (id, donationTypeName, paymentResult) => async (dispatch, getState) => {
@@ -668,39 +672,43 @@ export const getUserDonationDetails = () => async (dispatch, getState) => {
   }
 };
 
-export const listPendingUsers = () => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: USER_PENDING_LIST_REQUEST,
-    });
+export const listPendingUsers =
+  (checkChapter) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_PENDING_LIST_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.get(`/api/users/pending`, config);
-    // dispatch({ type: USER_DETAILS_RESET });
+      const { data } = await axios.get(
+        `/api/users/pending/chapter/${checkChapter}`,
+        config
+      );
+      // dispatch({ type: USER_DETAILS_RESET });
 
-    dispatch({
-      type: USER_PENDING_LIST_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: USER_PENDING_LIST_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: USER_PENDING_LIST_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_PENDING_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const getPendingUserDetails = (id) => async (dispatch, getState) => {
   try {
@@ -865,7 +873,7 @@ export const deleteAdminUser = (id) => async (dispatch, getState) => {
   }
 };
 
-export const passwordReset = (email) => async (dispatch) => {
+export const passwordReset = (checkChapter, email) => async (dispatch) => {
   try {
     dispatch({
       type: USER_PASSWORD_RESET_REQUEST,
@@ -877,7 +885,11 @@ export const passwordReset = (email) => async (dispatch) => {
       },
     };
 
-    const { data } = await axios.post(`/api/users/${email}`, config);
+    const { data } = await axios.post(
+      `/api/users/${checkChapter}`,
+      { email },
+      config
+    );
 
     dispatch({
       type: USER_PASSWORD_RESET_SUCCESS,

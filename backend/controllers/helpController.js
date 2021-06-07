@@ -60,10 +60,10 @@ exports.getHelpContacts = asyncHandler(async (req, res) => {
   // }
   const { checkChapter } = req.params;
 
-  console.log('from all helps controller: ' + checkChapter);
+  const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: checkChapter },
+    where: { subDomain: subDomain },
   });
 
   if (chapter) {

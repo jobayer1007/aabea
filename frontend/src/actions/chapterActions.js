@@ -218,7 +218,15 @@ export const deleteChapter = (id) => async (dispatch, getState) => {
 /////////////Chapter Settings////////////////////////////////////////////////////
 
 export const newChapterSettings =
-  (chapterEmail, password, chapterAddress, chapterPhone, chapterPaymentId) =>
+  (
+    chapterEmail,
+    password,
+    chapterName,
+    chapterAddress,
+    chapterPhone,
+    chapterPaymentId,
+    checkChapter
+  ) =>
   async (dispatch, getState) => {
     try {
       dispatch({
@@ -240,9 +248,11 @@ export const newChapterSettings =
         {
           chapterEmail,
           password,
+          chapterName,
           chapterAddress,
           chapterPhone,
           chapterPaymentId,
+          checkChapter,
         },
         config
       );
@@ -262,41 +272,54 @@ export const newChapterSettings =
     }
   };
 
-export const getChapterSettings = () => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: CHAPTER_SETTINGS_REQUEST,
-    });
+export const getChapterSettings =
+  (checkChapter) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CHAPTER_SETTINGS_REQUEST,
+      });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.get(`/api/chapters/settings`, config);
+      const { data } = await axios.get(
+        `/api/chapters/settings/${checkChapter}`,
+        config
+      );
 
-    dispatch({
-      type: CHAPTER_SETTINGS_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: CHAPTER_SETTINGS_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({
+        type: CHAPTER_SETTINGS_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: CHAPTER_SETTINGS_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const updateChapterSettings =
-  (settings) => async (dispatch, getState) => {
+  (
+    checkChapter,
+    chapterEmail,
+    password,
+    chapterName,
+    chapterAddress,
+    chapterPhone,
+    chapterPaymentId
+  ) =>
+  async (dispatch, getState) => {
     try {
       dispatch({
         type: CHAPTER_SETTINGS_UPDATE_REQUEST,
@@ -312,9 +335,17 @@ export const updateChapterSettings =
         },
       };
 
+      console.log(checkChapter);
       const { data } = await axios.put(
-        `/api/chapters/settings`,
-        settings,
+        `/api/chapters/settings/${checkChapter}`,
+        {
+          chapterEmail,
+          password,
+          chapterName,
+          chapterAddress,
+          chapterPhone,
+          chapterPaymentId,
+        },
         config
       );
 

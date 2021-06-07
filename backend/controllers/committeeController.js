@@ -77,7 +77,7 @@ exports.createNewCommitteeMember = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET all committee member     ///////////////////////////////////////////////
-// @route   GET /api/committee
+// @route   GET /api/committee/chapter/:checkChapter
 // @access  Public
 exports.getCommitteeMembers = asyncHandler(async (req, res) => {
   // Find Chapter
@@ -87,18 +87,17 @@ exports.getCommitteeMembers = asyncHandler(async (req, res) => {
   // } else {
   // }
   const { checkChapter } = req.params;
-  // console.log(checkChapter);
+  const subDomain = checkChapter.split('.')[0]; // Production only
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: checkChapter },
+    where: { subDomain: subDomain },
   });
 
   if (chapter) {
-    const cMembers = await models.Committee.findAll(
-      { include: models.Member },
-      {
-        where: { chapterId: chapter.chapterId },
-      }
-    );
+    const cMembers = await models.Committee.findAll({
+      include: models.Member,
+
+      where: { chapterId: chapter.chapterId },
+    });
     if (cMembers && cMembers.length !== 0) {
       res.json(cMembers);
       // console.log(cMembers);

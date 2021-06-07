@@ -67,7 +67,7 @@ exports.createNewEvent = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET all Events     ///////////////////////////////////////////////
-// @route   GET /api/events
+// @route   GET /api/events/chapter/:checkChapter
 // @access  Public
 exports.getAllEvents = asyncHandler(async (req, res) => {
   // Find Chapter
@@ -77,9 +77,9 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
   // } else {
   // }
   const { checkChapter } = req.params;
-  // console.log(checkChapter);
+  const subDomain = checkChapter.split('.')[0];
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: checkChapter },
+    where: { subDomain: subDomain },
   });
 
   if (chapter) {

@@ -1,17 +1,24 @@
 const nodemailer = require('nodemailer');
 
-exports.sendConfirmationEmail = function ({ toUserEmail, toUser, hash }) {
+exports.sendConfirmationEmail = function ({
+  fromAdmin,
+  pass,
+  toUserEmail,
+  toUser,
+  hash,
+  domain,
+}) {
   return new Promise((res, rej) => {
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
-        user: process.env.GOOGLE_USER,
-        pass: process.env.GOOGLE_PASSWORD,
+        user: fromAdmin,
+        pass: pass,
       },
     });
 
     const message = {
-      from: process.env.GOOGLE_USER,
+      from: fromAdmin,
       to: toUserEmail,
       // to: process.env.GOOGLE_USER,
       subject: 'AABEA Team - Activate Account',
@@ -19,7 +26,7 @@ exports.sendConfirmationEmail = function ({ toUserEmail, toUser, hash }) {
         <h3>Hello ${toUser}</h3>
         <p>Welcome to AABEA. Thank you for your registration request. Just one more step...</p>
         <p>TO activate your account please follow the below link: </p>
-        <p class='text-center'><a href="${process.env.DOMAIN}/activate/${hash}" target="_" >Activate Your Account</a></p>
+        <p class='text-center'><a href="http://${domain}/activate/${hash}" target="_" >Activate Your Account</a></p>
         <p>Thank You</p>
         <p>AABEA TEAM</p>
       `,
@@ -35,18 +42,24 @@ exports.sendConfirmationEmail = function ({ toUserEmail, toUser, hash }) {
   });
 };
 
-exports.sendCongratulationsEmail = function ({ toUserEmail, toUser }) {
+exports.sendCongratulationsEmail = function ({
+  fromAdmin,
+  pass,
+  toUserEmail,
+  toUser,
+  domain,
+}) {
   return new Promise((res, rej) => {
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
-        user: process.env.GOOGLE_USER,
-        pass: process.env.GOOGLE_PASSWORD,
+        user: fromAdmin,
+        pass: pass,
       },
     });
 
     const message = {
-      from: process.env.GOOGLE_USER,
+      from: fromAdmin,
       to: toUserEmail,
       // to: process.env.GOOGLE_USER,
       subject: 'AABEA Team - Congratulations!',
@@ -55,7 +68,7 @@ exports.sendCongratulationsEmail = function ({ toUserEmail, toUser }) {
         <p>Congratulations! Your account registration request has been approved.</p>
         <p>You can now Log In.</p>
         <p>To Log In Follow the Link below:</p>
-        <p class='text-center'><a href="${process.env.DOMAIN}/login" target="_" >Log In</a></p>
+        <p class='text-center'><a href="http://${domain}/login" target="_" >Log In</a></p>
         <p>Thank You and Welcome to AABEA</p>
         <p>Best Wishes,</p>
         <p>AABEA TEAM</p>
@@ -82,23 +95,66 @@ exports.transporter = nodemailer.createTransport({
   },
 });
 
-exports.getPasswordResetURL = (user, token) =>
-  `http://localhost:3000/password/reset/${user.memberId}/${token}`;
+exports.getPasswordResetURL = ({ user, token, domain }) =>
+  `http://${domain}/password/reset/${user.memberId}/${token}`;
 
-exports.resetPasswordTemplate = (user, url) => {
-  const from = process.env.GOOGLE_USER;
-  // to: toUserEmail,
-  const to = process.env.GOOGLE_USER;
-  const subject = '🌻 AABEA Password Reset 🌻';
-  const html = `
-  <p>Hey ${user.name || user.email},</p>
-  <p>We heard that you lost your AABEA password. Sorry about that!</p>
-  <p>But don’t worry! You can use the following link to reset your password:</p>
-  <a href=${url}>${url}</a>
-  <p>If you don’t use this link within 1 hour, it will expire.</p>
-  <p>Do something outside today! </p>
-  <p>–Your friends at AABEA</p>
-  `;
+// exports.resetPasswordTemplate = ({fromAdmin,
+//   pass,user, url}) => {
+//   const from = fromAdmin;
+//   // to: toUserEmail,
+//   const to = user.email;
+//   const subject = '🌻 AABEA Password Reset 🌻';
+//   const html = `
+//   <p>Hey ${user.name || user.email},</p>
+//   <p>We heard that you lost your AABEA password. Sorry about that!</p>
+//   <p>But don’t worry! You can use the following link to reset your password:</p>
+//   <a href=${url}>${url}</a>
+//   <p>If you don’t use this link within 1 hour, it will expire.</p>
+//   <p>Do something outside today! </p>
+//   <p>–Your friends at AABEA</p>
+//   `;
 
-  return { from, to, subject, html };
+//   return { from, to, subject, html };
+// };
+
+exports.sendPasswordResetEmail = function ({
+  fromAdmin,
+  pass,
+  toUserEmail,
+  user,
+  url,
+}) {
+  return new Promise((res, rej) => {
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: fromAdmin,
+        pass: pass,
+      },
+    });
+
+    const message = {
+      from: fromAdmin,
+      to: toUserEmail,
+      // to: process.env.GOOGLE_USER,
+      subject: '🌻 AABEA Password Reset 🌻',
+      html: `
+      <p>Hey ${user.name || user.email},</p>
+      <p>We heard that you lost your AABEA password. Sorry about that!</p>
+      <p>But don’t worry! You can use the following link to reset your password:</p>
+      <a href=${url}>${url}</a>
+      <p>If you don’t use this link within 1 hour, it will expire.</p>
+      <p>Do something outside today! </p>
+      <p>–Your friends at AABEA</p>
+      `,
+    };
+
+    transporter.sendMail(message, function (err, info) {
+      if (err) {
+        rej(err);
+      } else {
+        res(info);
+      }
+    });
+  });
 };

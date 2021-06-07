@@ -43,9 +43,11 @@ exports.getAnnouncements = asyncHandler(async (req, res) => {
   // }
   const { checkChapter } = req.params;
 
-  console.log('From announcement controller :' + checkChapter);
+  const subDomain = checkChapter.split('.')[0];
+
+  // console.log('From announcement controller :' + checkChapter);
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: checkChapter },
+    where: { subDomain: subDomain },
   });
   if (chapter) {
     const announcements = await models.Announcement.findAll({

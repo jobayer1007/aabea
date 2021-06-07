@@ -32,6 +32,8 @@ const EventRegisterScreen = ({ match, history }) => {
   const eventById = useSelector((state) => state.eventById);
   const { loading, error, event } = eventById;
 
+  const checkChapter = window.location.host;
+
   useEffect(() => {
     // console.log(id);
     dispatch(getEventById(id));
@@ -45,8 +47,17 @@ const EventRegisterScreen = ({ match, history }) => {
       swal('Error!', eventRegisterError, 'error');
     }
 
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
     const addPaypalScript = async () => {
-      const { data: clientId } = await axios.get('/api/config/paypal');
+      const { data: clientId } = await axios.get(
+        `/api/chapters/paypal/${checkChapter}`,
+        config
+      );
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
@@ -198,6 +209,7 @@ const EventRegisterScreen = ({ match, history }) => {
                                   <Col>
                                     <Form.Group controlId='memberId'>
                                       <Form.Control
+                                        required
                                         type='text'
                                         placeholder='Please Enter the member Id..'
                                         value={memberId}
@@ -215,6 +227,7 @@ const EventRegisterScreen = ({ match, history }) => {
                                   <Col>
                                     <Form.Group controlId='memberId'>
                                       <Form.Control
+                                        required
                                         type='text'
                                         placeholder='Please enter a referrel Member Id..'
                                         value={memberId}
@@ -243,6 +256,7 @@ const EventRegisterScreen = ({ match, history }) => {
                                 <Col>
                                   <Form.Group controlId='phone'>
                                     <Form.Control
+                                      required
                                       type='phone'
                                       placeholder='Enter Your Phone Number..'
                                       value={phone}
@@ -259,6 +273,7 @@ const EventRegisterScreen = ({ match, history }) => {
                                 <Col>
                                   <Form.Group controlId='email'>
                                     <Form.Control
+                                      required
                                       type='email'
                                       placeholder='Enter Email..'
                                       value={email}
@@ -284,7 +299,9 @@ const EventRegisterScreen = ({ match, history }) => {
                                 <Col>
                                   <Form.Group controlId='numberOfAdults'>
                                     <Form.Control
+                                      required
                                       type='number'
+                                      min='1'
                                       placeholder='Enter number of adults'
                                       value={numberOfAdults}
                                       onChange={(e) =>
@@ -302,7 +319,9 @@ const EventRegisterScreen = ({ match, history }) => {
                                 <Col>
                                   <Form.Group controlId='minors'>
                                     <Form.Control
+                                      required
                                       type='number'
+                                      min='0'
                                       placeholder='Enter number of minors..'
                                       value={numberOfMinors}
                                       onChange={(e) =>

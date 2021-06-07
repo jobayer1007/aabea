@@ -110,8 +110,10 @@ exports.getBlogs = asyncHandler(async (req, res) => {
   // } else {
   // }
   const { checkChapter } = req.params;
+  const subDomain = checkChapter.split('.')[0];
+
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: checkChapter },
+    where: { subDomain: subDomain },
   });
 
   if (chapter) {

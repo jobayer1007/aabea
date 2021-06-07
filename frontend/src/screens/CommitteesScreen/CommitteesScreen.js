@@ -69,12 +69,14 @@ const CommitteeScreen = ({ history }) => {
   const cMemberDelete = useSelector((state) => state.cMemberDelete);
   const { success: successDelete } = cMemberDelete;
 
+  const checkChapter = window.location.host;
+
   useEffect(() => {
     if (userInfo) {
       // setId(userInfo.memberId);
       dispatch({ type: COMMITTEE_MEMBER_NEW_RESET });
     }
-    dispatch(allCMembers());
+    dispatch(allCMembers(checkChapter));
     // else {
     //   history.push('/login');
     // }
@@ -381,7 +383,7 @@ const CommitteeScreen = ({ history }) => {
                                       (userInfo.userRole === 'systemAdmin' ||
                                         userInfo.userRole === 'admin') && (
                                         <td>
-                                          <Button
+                                          {/* <Button
                                             variant='light'
                                             className='btn-sm'
                                             onClick={() =>
@@ -389,9 +391,20 @@ const CommitteeScreen = ({ history }) => {
                                             }
                                           >
                                             <i className='fas fa-edit'></i>
-                                          </Button>
+                                          </Button> */}
 
-                                          <Button
+                                          <span
+                                            onClick={() =>
+                                              editCMemberHandler(cMember.cId)
+                                            }
+                                          >
+                                            <i
+                                              className='far fa-edit action'
+                                              style={{ color: '#4285F4' }}
+                                            ></i>
+                                          </span>
+
+                                          {/* <Button
                                             variant='danger'
                                             className='btn-sm'
                                             onClick={() =>
@@ -399,7 +412,18 @@ const CommitteeScreen = ({ history }) => {
                                             }
                                           >
                                             <i className='fas fa-trash'></i>
-                                          </Button>
+                                          </Button> */}
+
+                                          <span
+                                            onClick={() =>
+                                              deleteCMemberHandler(cMember.cId)
+                                            }
+                                          >
+                                            <i
+                                              className='fas fa-trash action ml-2'
+                                              style={{ color: 'red' }}
+                                            ></i>
+                                          </span>
                                         </td>
                                       )}
                                   </tr>

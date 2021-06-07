@@ -19,6 +19,8 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import RTable from '../../components/Table/RTable';
 import ColumnFilter from '../../components/Table/ColumnFilter';
 import { Link } from 'react-router-dom';
+import swal from 'sweetalert';
+import { USER_DELETE_RESET } from '../../constants/userConstants';
 
 const MembersScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -43,8 +45,12 @@ const MembersScreen = ({ history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const chapterDelete = useSelector((state) => state.chapterDelete);
-  const { success: successDelete } = chapterDelete;
+  const userDelete = useSelector((state) => state.userDelete);
+  const { error: errorDelete, success: successDelete } = userDelete;
+
+  const userPendingDelete = useSelector((state) => state.userPendingDelete);
+  const { error: errorUserPendingDelete, success: successUserPendingDelete } =
+    userPendingDelete;
 
   const userCreateAdmin = useSelector((state) => state.userCreateAdmin);
   const { success: successAdmin } = userCreateAdmin;
@@ -52,12 +58,14 @@ const MembersScreen = ({ history }) => {
   const userDeleteAdmin = useSelector((state) => state.userDeleteAdmin);
   const { success: successDeleteAdmin } = userDeleteAdmin;
 
+  const checkChapter = window.location.host;
+
   useEffect(() => {
     if (userInfo) {
       dispatch(getUserProfile());
-      dispatch(listChapters());
-      dispatch(listPendingUsers());
-      dispatch(listUsers());
+      // dispatch(listChapters());
+      dispatch(listPendingUsers(checkChapter));
+      dispatch(listUsers(checkChapter));
 
       if (
         userInfo.userRole === 'admin' ||
@@ -159,6 +167,12 @@ const MembersScreen = ({ history }) => {
           },
         ]);
       }
+
+      if (successDelete) {
+        swal('Success!', successDelete, 'success').then((value) => {
+          dispatch({ type: USER_DELETE_RESET });
+        });
+      }
     } else {
       history.push('/login');
     }
@@ -167,6 +181,7 @@ const MembersScreen = ({ history }) => {
     history,
     userInfo,
     successDelete,
+    successUserPendingDelete,
     successAdmin,
     successDeleteAdmin,
   ]);
@@ -190,6 +205,7 @@ const MembersScreen = ({ history }) => {
   const deletePendingUserHandler = (id) => {
     if (window.confirm('Are you sure?')) {
       dispatch(deletePendingUser(id));
+      // console.log('pending user deleted');
     }
   };
 
@@ -257,7 +273,7 @@ const MembersScreen = ({ history }) => {
                         >
                           <thead>
                             <tr>
-                              <th>ID</th>
+                              {/* <th>ID</th> */}
                               {/* <th>IMAGE</th> */}
                               <th>NAME</th>
                               <th>EMAIL</th>
@@ -277,7 +293,7 @@ const MembersScreen = ({ history }) => {
                           <tbody>
                             {pendingUsers.map((pendingUser) => (
                               <tr key={pendingUser.pendingId}>
-                                <td>{pendingUser.pendingId}</td>
+                                {/* <td>{pendingUser.pendingId}</td> */}
                                 {/* <td>
                                   {' '}
                                   <Image src={user.image} thumbnail />
@@ -313,16 +329,22 @@ const MembersScreen = ({ history }) => {
                                       <LinkContainer
                                         to={`/users/${pendingUser.pendingId}/pending`}
                                       >
-                                        <Button
+                                        {/* <Button
                                           variant='light'
                                           className='btn-sm'
                                         >
                                           <i className='fas fa-edit'></i>
-                                        </Button>
+                                        </Button> */}
+                                        <span>
+                                          <i
+                                            className='far fa-edit action'
+                                            style={{ color: '#4285F4' }}
+                                          ></i>
+                                        </span>
                                       </LinkContainer>
                                     </td>
                                     <td>
-                                      <Button
+                                      {/* <Button
                                         variant='danger'
                                         className='btn-sm'
                                         onClick={() =>
@@ -331,8 +353,24 @@ const MembersScreen = ({ history }) => {
                                           )
                                         }
                                       >
-                                        <i className='fas fa-trash'></i>
-                                      </Button>
+                                        <i
+                                          className='fas fa-trash action ml-2'
+                                          style={{ color: 'red' }}
+                                        ></i>
+                                      </Button> */}
+
+                                      <span
+                                        onClick={() =>
+                                          deletePendingUserHandler(
+                                            pendingUser.pendingId
+                                          )
+                                        }
+                                      >
+                                        <i
+                                          className='fas fa-trash action ml-2'
+                                          style={{ color: 'red' }}
+                                        ></i>
+                                      </span>
                                     </td>
                                   </>
                                 )}

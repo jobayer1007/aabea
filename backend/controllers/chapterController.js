@@ -182,13 +182,13 @@ exports.updateChapterById = asyncHandler(async (req, res) => {
 exports.getChapterBySubDomain = asyncHandler(async (req, res) => {
   // let subDomain;
   // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'ny'; // at dev only
+  //   subDomain = 'bd'; // at dev only
   // } else {
   // }
   const { checkChapter } = req.params;
-  // console.log(checkChapter);
+  const subDomain = checkChapter.split('.')[0];
   const chapter = await models.Chapter.findOne({
-    where: { subDomain: checkChapter },
+    where: { subDomain: subDomain },
   });
   console.log(chapter);
   if (chapter && chapter.length !== 0) {
@@ -750,88 +750,138 @@ exports.createNewChapterSettings = asyncHandler(async (req, res) => {
     chapterAddress,
     chapterPhone,
     chapterPaymentId,
+    checkChapter,
   } = req.body;
 
-  const chapterEmailExists = await models.ChapterSettings.findOne({
-    where: { chapterEmail: chapterEmail },
+  // Find Chapter
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  //   const { checkChapter } = req.params;
+  // }
+  const subDomain = checkChapter.split('.')[0];
+
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
   });
-  if (!chapterEmailExists) {
-    const t = await sequelize.transaction();
 
-    try {
-      // const chapter = await models.Chapter.findOne({
-      //   where: { chapterId: req.user.chapterId },
-      // });
-      await models.ChapterSettings.create(
-        {
-          chapterEmail,
-          password,
-          chapterName,
-          chapterAddress,
-          chapterPhone,
-          chapterPayment: chapterPaymentId,
-          createdBy: req.user.memberId,
-          lastUpdatedBy: req.user.memberId,
-          chapterId: req.user.chapterId,
-        },
-        { transaction: t }
-      );
+  if (chapter) {
+    const chapterEmailExists = await models.ChapterSettings.findOne({
+      where: { chapterEmail: chapterEmail },
+    });
+    if (!chapterEmailExists) {
+      const t = await sequelize.transaction();
 
-      await models.Chapter.update(
-        {
-          chapterName,
-          chapterEmail,
-          chapterAddress,
-          chapterPhone,
-          lastUpdatedBy: req.user.memberId,
-        },
-        { where: { chapterId: req.user.chapterId } },
-        { transaction: t }
-      );
+      try {
+        // const chapter = await models.Chapter.findOne({
+        //   where: { chapterId: req.user.chapterId },
+        // });
+        await models.ChapterSettings.create(
+          {
+            chapterEmail,
+            password,
+            chapterName,
+            chapterAddress,
+            chapterPhone,
+            chapterPayment: chapterPaymentId,
+            createdBy: req.user.memberId,
+            lastUpdatedBy: req.user.memberId,
+            chapterId: chapter.chapterId,
+          },
+          { transaction: t }
+        );
 
-      await t.commit();
-      res.send('Chapter settings created successful');
-    } catch (error) {
-      await t.rollback();
+        await models.Chapter.update(
+          {
+            chapterName,
+            chapterEmail,
+            chapterAddress,
+            chapterPhone,
+            lastUpdatedBy: req.user.memberId,
+          },
+          { where: { chapterId: chapter.chapterId } },
+          { transaction: t }
+        );
+
+        await t.commit();
+        res.send('Chapter settings created successful');
+      } catch (error) {
+        await t.rollback();
+        res.status(400);
+        throw new Error(
+          'Something Went Wrong, Please contact the System Admin' + error
+        );
+      }
+    } else {
       res.status(400);
       throw new Error(
-        'Something Went Wrong, Please contact the System Admin' + error
+        'A Chapter with Chapter Email:' +
+          chapterEmailExists.chapterEmail +
+          ' already exist' +
+          'where Chapter Name:' +
+          chapterEmailExists.chapterName
       );
     }
   } else {
-    res.status(400);
-    throw new Error(
-      'A Chapter with Chapter Email:' +
-        chapterEmailExists.chapterEmail +
-        ' already exist' +
-        'where Chapter Name:' +
-        chapterEmailExists.chapterName
-    );
+    res.status(404);
+    throw new Error('Invalid Chapter Domain: ' + checkChapter);
   }
 });
 
 // @desc    GET Chapter Settings     ///////////////////////////////////////////////
-// @route   GET /api/chapters/settings
+// @route   GET /api/chapters/settings/:checkChapter
 // @access  Private/admin
 exports.getChapterSettings = asyncHandler(async (req, res) => {
-  try {
-    const chapterSettings = await models.ChapterSettings.findOne({
-      where: { chapterId: req.user.chapterId },
-    });
+  // Find Chapter
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  // subDomain = 'bd'; // at dev only
+  // } else {
+  // }
+  const { checkChapter } = req.params;
+  const subDomain = checkChapter.split('.')[0];
 
-    res.json(chapterSettings);
-  } catch (error) {
-    res.status(401);
-    throw new Error('Invalid Chapter Reference' + error);
+  const chapterExists = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+
+  console.log(chapterExists.chapterId);
+
+  if (chapterExists) {
+    try {
+      const chapter = await models.ChapterSettings.findOne({
+        include: models.Chapter,
+        where: { chapterId: chapterExists.chapterId },
+      });
+
+      res.json(chapter);
+    } catch (error) {
+      res.status(401);
+      throw new Error('Invalid Chapter Reference' + error);
+    }
+  } else {
+    res.status(404);
+    throw new Error('Invalid Chapter Reference');
   }
 });
 
 // @desc    Update Chapter Settings     ///////////////////////////////////////////////
-// @route   PUT /api/chapters/settings
+// @route   PUT /api/chapters/settings/:checkChapter
 // @access  Private/admin
 exports.updateChapterSettings = asyncHandler(async (req, res) => {
-  const chapterExists = await models.ChapterSettings.findOne({
-    where: { chapterId: req.user.chapterId },
+  // Find Chapter
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  // subDomain = 'bd'; // at dev only
+  // } else {
+  // const { checkChapter } = req.params;
+  // }
+  const { checkChapter } = req.params;
+  const subDomain = checkChapter.split('.')[0];
+
+  const chapterExists = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
   });
   if (chapterExists) {
     const data = {
@@ -851,6 +901,8 @@ exports.updateChapterSettings = asyncHandler(async (req, res) => {
       chapterPhone,
       chapterPayment,
     } = data;
+    console.log('chapterEmail :' + chapterEmail);
+    console.log(checkChapter);
 
     const t = await sequelize.transaction();
 
@@ -865,13 +917,18 @@ exports.updateChapterSettings = asyncHandler(async (req, res) => {
           chapterPayment,
           lastUpdatedBy: req.user.memberId,
         },
-        { where: { chapterId: req.user.chapterId } },
+        { where: { chapterId: chapterExists.chapterId } },
         { transaction: t }
       );
 
       await models.Chapter.update(
-        { chapterName, chapterEmail, chapterAddress, chapterPhone },
-        { where: { chapterId: req.user.chapterId } },
+        {
+          chapterName,
+          chapterEmail,
+          chapterAddress,
+          chapterPhone,
+        },
+        { where: { chapterId: chapterExists.chapterId } },
         { transaction: t }
       );
 
@@ -887,5 +944,40 @@ exports.updateChapterSettings = asyncHandler(async (req, res) => {
   } else {
     res.status(400);
     throw new Error('Invalid Chapter Reference');
+  }
+});
+
+// @desc    Get Chapter Paypal ID     ///////////////////////////////////////////////
+// @route   GET /api/chapters/paypal/:checkChapter
+// @access  Public
+
+exports.getPaypalId = asyncHandler(async (req, res) => {
+  // Find Chapter
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // }
+  const { checkChapter } = req.params;
+  // console.log(checkChapter);
+  const subDomain = checkChapter.split('.')[0];
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+  console.log(chapter);
+  if (chapter) {
+    const chapterSetting = await models.ChapterSettings.findOne({
+      where: { chapterId: chapter.chapterId },
+    });
+    console.log(chapterSetting);
+    if (chapterSetting) {
+      res.send(chapterSetting.chapterPayment);
+      console.log(chapterSetting.chapterPayment);
+    } else {
+      res.status(404);
+      throw new Error('Invalid reference: ' + checkChapter);
+    }
+  } else {
+    res.status(404);
+    throw new Error('Invalid Chapter reference: ' + checkChapter);
   }
 });

@@ -63,12 +63,12 @@ const Member = (sequelize, DataTypes) =>
       },
     },
     primaryPhone: {
-      type: DataTypes.STRING(12),
+      type: DataTypes.STRING(20),
       required: true,
       allowNull: false,
     },
     alternatePhone: {
-      type: DataTypes.STRING(12),
+      type: DataTypes.STRING(20),
     },
     degree: {
       type: DataTypes.STRING(50),
