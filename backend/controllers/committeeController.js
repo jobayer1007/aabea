@@ -85,6 +85,8 @@ exports.getCommitteeMembers = asyncHandler(async (req, res) => {
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
   // } else {
+  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0]; // Production only
   // }
   const { checkChapter } = req.params;
   const subDomain = checkChapter.split('.')[0]; // Production only

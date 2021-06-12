@@ -2,12 +2,12 @@ const Sequelize = require('sequelize');
 const dotenv = require('dotenv');
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
-const { sendConfirmationEmail } = require('./mailer');
 const User = require('../models/User');
 const Member = require('../models/Member');
 const models = require('../models/index');
 const generateToken = require('../utils/generateToken');
 const { generateId } = require('../utils/generateId');
+const { sendRegistrationConfirmationEmail } = require('./mailer');
 
 const sequelize = new Sequelize(
   process.env.PG_DATABASE,
@@ -75,6 +75,8 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
   // } else {
+  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const { checkChapter } = req.params;
   const subDomain = checkChapter.split('.')[0];
@@ -334,7 +336,8 @@ exports.updateEventContactById = asyncHandler(async (req, res) => {
       const data = {
         memberId: req.body.memberId || eContact.memberId,
         positionName: req.body.positionName || eContact.positionName,
-        contactName: member.mInit + member.firstName + member.lastName,
+        contactName:
+          member.mInit + ' ' + member.firstName + ' ' + member.lastName,
         contactEmail: req.body.contactEmail || eContact.contactEmail,
         contactPhone: req.body.contactPhone || eContact.contactPhone,
       };
@@ -503,7 +506,7 @@ exports.registerEventGuest = asyncHandler(async (req, res) => {
           { transaction: t }
         );
 
-        await models.EventPayment.create(
+        const paymentSummary = await models.EventPayment.create(
           {
             eventId,
             registrationId: guestRegister.registrationId,
@@ -517,8 +520,23 @@ exports.registerEventGuest = asyncHandler(async (req, res) => {
           { transaction: t }
         );
 
+        const chapterSetting = await models.ChapterSettings.findOne({
+          where: { chapterId: event.chapterId },
+        });
+
+        await sendRegistrationConfirmationEmail(
+          {
+            fromAdmin: chapterSetting.chapterEmail,
+            pass: chapterSetting.password,
+            event,
+            guestRegister,
+            paymentSummary,
+          },
+          { transaction: t }
+        );
+
         await t.commit();
-        res.send('Event Registration successful');
+        res.send(paymentSummary);
       } catch (error) {
         await t.rollback();
         res.status(400);
@@ -534,5 +552,23 @@ exports.registerEventGuest = asyncHandler(async (req, res) => {
   } else {
     res.status(400);
     throw new Error('Event not found');
+  }
+});
+
+// @desc    Register a new guest     ///////////////////////////////////////////////
+// @route   GET /api/events/register/:memberId
+// @access  Public
+exports.registerMemberCheck = asyncHandler(async (req, res) => {
+  const { memberId } = req.params;
+  console.log(memberId);
+  const member = await models.Member.findOne({
+    where: { memberId: memberId },
+  });
+  console.log(member);
+  if (member) {
+    res.send(member.memberId);
+  } else {
+    res.status(404);
+    throw new Error('Invalid Member Reference');
   }
 });

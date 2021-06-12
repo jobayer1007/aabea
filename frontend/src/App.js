@@ -49,6 +49,8 @@ import RegisterScreen_New from './screens/RegistrationScreen/RegistrationScreen_
 import ImageByEventScreen from './screens/ImageByEventScreen/ImageByEventScreen';
 import HelpContactScreen from './screens/HelpContactScreen/HelpContactScreen';
 import QuickLinkScreen from './screens/QuickLinkScreen/QuickLinkScreen';
+import ImageByIdScreen from './screens/ImagesScreen/ImageByIdScreen';
+import EventRegistrationPayment from './screens/EventScreen/EventRegistrationPayment';
 
 const App = () => {
   return (
@@ -88,6 +90,7 @@ const App = () => {
             <Route path='/donationType' component={DonationTypeScreen} />
             <Route path='/images' component={ImagesScreen} />
             <Route path='/image/event' component={ImageByEventScreen} />
+            <Route path='/image/:id' component={ImageByIdScreen} />
             <Route path='/payment' component={PaymentScreen} />
             <Route path='/donate' component={DonateScreen} />
             <Route path='/training' component={TrainingScreen} />
@@ -97,6 +100,10 @@ const App = () => {
             <Route path='/emails' component={EmailScreen} />
             <Route path='/events' component={EventScreen} />
             <Route path='/event/register/:id' component={EventRegisterScreen} />
+            <Route
+              path='/event/registration/payment'
+              component={EventRegistrationPayment}
+            />
             <Route path='/eventsnew' component={EventNewScreen} />
             <Route path='/event/:id' component={EventByIdScreen} exact />
             <Route path='/settings' component={SettingScreen} />

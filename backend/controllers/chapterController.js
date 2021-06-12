@@ -184,6 +184,8 @@ exports.getChapterBySubDomain = asyncHandler(async (req, res) => {
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
   // } else {
+  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const { checkChapter } = req.params;
   const subDomain = checkChapter.split('.')[0];
@@ -194,7 +196,7 @@ exports.getChapterBySubDomain = asyncHandler(async (req, res) => {
   if (chapter && chapter.length !== 0) {
     res.json(chapter);
   } else {
-    res.status(401);
+    res.status(404);
     throw new Error('No Chapter found');
   }
   // const members = await models.Member.findAll();
@@ -758,7 +760,7 @@ exports.createNewChapterSettings = asyncHandler(async (req, res) => {
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
   // } else {
-  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const subDomain = checkChapter.split('.')[0];
 
@@ -836,8 +838,10 @@ exports.getChapterSettings = asyncHandler(async (req, res) => {
   // Find Chapter
   // let subDomain;
   // if (process.env.NODE_ENV === 'development') {
-  // subDomain = 'bd'; // at dev only
+  //   subDomain = 'bd'; // at dev only
   // } else {
+  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const { checkChapter } = req.params;
   const subDomain = checkChapter.split('.')[0];
@@ -873,9 +877,10 @@ exports.updateChapterSettings = asyncHandler(async (req, res) => {
   // Find Chapter
   // let subDomain;
   // if (process.env.NODE_ENV === 'development') {
-  // subDomain = 'bd'; // at dev only
+  //   subDomain = 'bd'; // at dev only
   // } else {
-  // const { checkChapter } = req.params;
+  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const { checkChapter } = req.params;
   const subDomain = checkChapter.split('.')[0];
@@ -901,8 +906,6 @@ exports.updateChapterSettings = asyncHandler(async (req, res) => {
       chapterPhone,
       chapterPayment,
     } = data;
-    console.log('chapterEmail :' + chapterEmail);
-    console.log(checkChapter);
 
     const t = await sequelize.transaction();
 
@@ -956,9 +959,11 @@ exports.getPaypalId = asyncHandler(async (req, res) => {
   // let subDomain;
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
+  // } else {
+  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const { checkChapter } = req.params;
-  // console.log(checkChapter);
   const subDomain = checkChapter.split('.')[0];
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },

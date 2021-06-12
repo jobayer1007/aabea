@@ -1,18 +1,28 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Form, Row, Col, Card, Container, ListGroup } from 'react-bootstrap';
+import {
+  Form,
+  Row,
+  Col,
+  Card,
+  Container,
+  ListGroup,
+  Button,
+} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 import swal from 'sweetalert';
 import { PayPalButton } from 'react-paypal-button-v2';
 import { registerEvent, getEventById } from '../../actions/eventActions';
+import { addToCart } from '../../actions/cartAction';
+import { CART_RESET } from '../../constants/cartConstants';
 
 const EventRegisterScreen = ({ match, history }) => {
   const { id } = match.params;
 
   const [sdkReady, setSdkReady] = useState(false);
-  const [mInit, setMInit] = useState('');
+  const [mInit, setMInit] = useState('Mr');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   // const [eventName, setEventName] = useState('');
@@ -32,6 +42,9 @@ const EventRegisterScreen = ({ match, history }) => {
   const eventById = useSelector((state) => state.eventById);
   const { loading, error, event } = eventById;
 
+  const cart = useSelector((state) => state.cart);
+  const { success, cartItems, error: cartError } = cart;
+
   const checkChapter = window.location.host;
 
   useEffect(() => {
@@ -43,8 +56,14 @@ const EventRegisterScreen = ({ match, history }) => {
       swal('Success!', eventRegisterSuccess, 'success').then(() => {
         history.push('/');
       });
-    } else if (eventRegisterError) {
-      swal('Error!', eventRegisterError, 'error');
+    } else if (eventRegisterError || cartError) {
+      swal('Error!', eventRegisterError || cartError, 'error').then(() => {
+        dispatch({ type: CART_RESET });
+      });
+    }
+
+    if (success) {
+      history.push(`/event/registration/payment`);
     }
 
     const config = {
@@ -73,7 +92,15 @@ const EventRegisterScreen = ({ match, history }) => {
     } else {
       setSdkReady(true);
     }
-  }, [dispatch, id, history, eventRegisterSuccess, eventRegisterError]);
+  }, [
+    dispatch,
+    id,
+    history,
+    eventRegisterSuccess,
+    eventRegisterError,
+    success,
+    cartError,
+  ]);
 
   // const submitHandler = (paymentResult) => {
 
@@ -81,8 +108,42 @@ const EventRegisterScreen = ({ match, history }) => {
 
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);
+    // dispatch(
+    //   registerEvent(
+    //     id,
+    //     event.eventName,
+    //     mInit,
+    //     firstName,
+    //     lastName,
+    //     isMember,
+    //     memberId,
+    //     email,
+    //     phone,
+    //     numberOfAdults,
+    //     numberOfMinors,
+    //     paymentResult
+    //   )
+    // );
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    // console.log(
+    //   id,
+    //   event.eventName,
+    //   mInit,
+    //   firstName,
+    //   lastName,
+    //   isMember,
+    //   memberId,
+    //   email,
+    //   phone,
+    //   numberOfAdults,
+    //   numberOfMinors
+    // );
     dispatch(
-      registerEvent(
+      addToCart(
         id,
         event.eventName,
         mInit,
@@ -93,8 +154,7 @@ const EventRegisterScreen = ({ match, history }) => {
         email,
         phone,
         numberOfAdults,
-        numberOfMinors,
-        paymentResult
+        numberOfMinors
       )
     );
   };
@@ -107,10 +167,76 @@ const EventRegisterScreen = ({ match, history }) => {
             Event Registration
           </Card.Header>
           <Card.Body>
-            <Row>
-              <Col md={8}>
-                <Form>
+            <Form onSubmit={submitHandler}>
+              <Row>
+                <Col md={8}>
                   <ListGroup variant='flush'>
+                    <ListGroup.Item>
+                      <Row>
+                        <Col md={3}>Member ? :</Col>
+                        <Col>
+                          <ListGroup variant='flush'>
+                            <ListGroup.Item>
+                              <Row>
+                                <Col>
+                                  <Form.Control
+                                    required
+                                    as='select'
+                                    type='text'
+                                    value={isMember}
+                                    onChange={(e) =>
+                                      setIsMember(e.target.value)
+                                    }
+                                  >
+                                    <option value='false'>No</option>
+                                    <option value='true'>Yes</option>
+                                  </Form.Control>
+                                </Col>
+                              </Row>
+                            </ListGroup.Item>
+
+                            {isMember ? (
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col>
+                                    <Form.Group controlId='memberId'>
+                                      <Form.Control
+                                        required
+                                        type='number'
+                                        placeholder='Please Enter the member Id..'
+                                        value={memberId}
+                                        onChange={(e) =>
+                                          setMemberId(e.target.value)
+                                        }
+                                      ></Form.Control>
+                                    </Form.Group>
+                                  </Col>
+                                </Row>
+                              </ListGroup.Item>
+                            ) : (
+                              <ListGroup.Item>
+                                <Row>
+                                  <Col>
+                                    <Form.Group controlId='memberIdGuset'>
+                                      <Form.Control
+                                        required
+                                        type='number'
+                                        placeholder='Please enter a referrel Member Id..'
+                                        value={memberId}
+                                        onChange={(e) =>
+                                          setMemberId(e.target.value)
+                                        }
+                                      ></Form.Control>
+                                    </Form.Group>
+                                  </Col>
+                                </Row>
+                              </ListGroup.Item>
+                            )}
+                          </ListGroup>
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+
                     <ListGroup.Item>
                       <Form.Row>
                         <Form.Group as={Col} md='2'>
@@ -177,72 +303,6 @@ const EventRegisterScreen = ({ match, history }) => {
                           </ListGroup>
                         </Col>
                       </Form.Row>
-                    </ListGroup.Item>
-
-                    <ListGroup.Item>
-                      <Row>
-                        <Col md={3}>Member ? :</Col>
-                        <Col>
-                          <ListGroup variant='flush'>
-                            <ListGroup.Item>
-                              <Row>
-                                <Col>
-                                  <Form.Control
-                                    required
-                                    as='select'
-                                    type='text'
-                                    value={isMember}
-                                    onChange={(e) =>
-                                      setIsMember(e.target.value)
-                                    }
-                                  >
-                                    <option value='false'>No</option>
-                                    <option value='true'>Yes</option>
-                                  </Form.Control>
-                                </Col>
-                              </Row>
-                            </ListGroup.Item>
-
-                            {isMember ? (
-                              <ListGroup.Item>
-                                <Row>
-                                  <Col>
-                                    <Form.Group controlId='memberId'>
-                                      <Form.Control
-                                        required
-                                        type='text'
-                                        placeholder='Please Enter the member Id..'
-                                        value={memberId}
-                                        onChange={(e) =>
-                                          setMemberId(e.target.value)
-                                        }
-                                      ></Form.Control>
-                                    </Form.Group>
-                                  </Col>
-                                </Row>
-                              </ListGroup.Item>
-                            ) : (
-                              <ListGroup.Item>
-                                <Row>
-                                  <Col>
-                                    <Form.Group controlId='memberId'>
-                                      <Form.Control
-                                        required
-                                        type='text'
-                                        placeholder='Please enter a referrel Member Id..'
-                                        value={memberId}
-                                        onChange={(e) =>
-                                          setMemberId(e.target.value)
-                                        }
-                                      ></Form.Control>
-                                    </Form.Group>
-                                  </Col>
-                                </Row>
-                              </ListGroup.Item>
-                            )}
-                          </ListGroup>
-                        </Col>
-                      </Row>
                     </ListGroup.Item>
 
                     <ListGroup.Item>
@@ -341,81 +401,85 @@ const EventRegisterScreen = ({ match, history }) => {
                       Update
                     </Button> */}
                   </ListGroup>
-                </Form>
-              </Col>
-              <Col md={4}>
-                <Card>
-                  <ListGroup variant='flush'>
-                    <ListGroup.Item>
-                      <h5 className='text-info'>Registration Summary</h5>
-                    </ListGroup.Item>
+                </Col>
+                <Col md={4}>
+                  <Card>
+                    <ListGroup variant='flush'>
+                      <ListGroup.Item>
+                        <h5 className='text-info'>Registration Summary</h5>
+                      </ListGroup.Item>
 
-                    {loading ? (
-                      <Loader />
-                    ) : error ? (
-                      <Message variant='danger'>{error}</Message>
-                    ) : event ? (
-                      event && (
-                        <>
-                          <ListGroup.Item>
-                            <Row>
-                              <Col>Event Name:</Col>
-                              <Col>{event.eventName}</Col>
-                            </Row>
-                          </ListGroup.Item>
+                      {loading ? (
+                        <Loader />
+                      ) : error ? (
+                        <Message variant='danger'>{error}</Message>
+                      ) : event ? (
+                        event && (
+                          <>
+                            <ListGroup.Item>
+                              <Row>
+                                <Col>Event Name:</Col>
+                                <Col>{event.eventName}</Col>
+                              </Row>
+                            </ListGroup.Item>
 
-                          <ListGroup.Item>
-                            <Row>
-                              <Col>No. Of Adults:</Col>
-                              <Col>{numberOfAdults}</Col>
-                            </Row>
-                          </ListGroup.Item>
+                            <ListGroup.Item>
+                              <Row>
+                                <Col>No. Of Adults:</Col>
+                                <Col>{numberOfAdults}</Col>
+                              </Row>
+                            </ListGroup.Item>
 
-                          <ListGroup.Item>
-                            <Row>
-                              <Col>No. Of Minors:</Col>
-                              <Col>{numberOfMinors}</Col>
-                            </Row>
-                          </ListGroup.Item>
+                            <ListGroup.Item>
+                              <Row>
+                                <Col>No. Of Minors:</Col>
+                                <Col>{numberOfMinors}</Col>
+                              </Row>
+                            </ListGroup.Item>
 
-                          <ListGroup.Item>
-                            <Row>
-                              <Col>Total Payment</Col>
-                              <Col>
-                                $
-                                {numberOfAdults * event.adultFee +
-                                  numberOfMinors * event.minorFee}
-                              </Col>
-                            </Row>
-                          </ListGroup.Item>
+                            <ListGroup.Item>
+                              <Row>
+                                <Col>Total Payment</Col>
+                                <Col>
+                                  $
+                                  {numberOfAdults * event.adultFee +
+                                    numberOfMinors * event.minorFee}
+                                </Col>
+                              </Row>
+                            </ListGroup.Item>
 
-                          <ListGroup.Item>
-                            <Row>
-                              <Col>
-                                Please make the payment to complete registration
-                              </Col>
-                            </Row>
-                          </ListGroup.Item>
-                          <ListGroup.Item>
-                            {!sdkReady ? (
-                              <Loader />
-                            ) : (
-                              <PayPalButton
-                                amount={
-                                  numberOfAdults * event.adultFee +
-                                  numberOfMinors * event.minorFee
-                                }
-                                onSuccess={successPaymentHandler}
-                              />
-                            )}
-                          </ListGroup.Item>
-                        </>
-                      )
-                    ) : null}
-                  </ListGroup>
-                </Card>
-              </Col>
-            </Row>
+                            <ListGroup.Item>
+                              <Row>
+                                <Col>
+                                  Please proceed to payment to complete the
+                                  registration
+                                </Col>
+                              </Row>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                              {/* {!sdkReady ? (
+                                <Loader />
+                              ) : (
+                                <PayPalButton
+                                  amount={
+                                    numberOfAdults * event.adultFee +
+                                    numberOfMinors * event.minorFee
+                                  }
+                                  onSuccess={successPaymentHandler}
+                                />
+                              )} */}
+                              <Button type='submit' variant='info' block>
+                                Procced to payment
+                              </Button>
+                            </ListGroup.Item>
+                          </>
+                        )
+                      ) : null}
+                    </ListGroup>
+                  </Card>
+                </Col>
+              </Row>
+            </Form>
           </Card.Body>
           {/* <Card.Footer className='text-muted'>2 days ago</Card.Footer> */}
         </Card>

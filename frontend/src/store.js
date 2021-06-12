@@ -148,6 +148,7 @@ import {
   linkNewReducer,
   linkUpdateReducer,
 } from './reducers/quickLinkReducers';
+import { cartReducer } from './reducers/cartReducers';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -248,6 +249,7 @@ const reducer = combineReducers({
   eventUnpublish: eventUnpublishReducer,
 
   eventRegister: eventRegisterReducer,
+  cart: cartReducer,
 
   chapterSettingsNew: chapterSettingsNewReducer,
   chapterSettingsAll: chapterSettingsReducer,
@@ -292,11 +294,18 @@ const reducer = combineReducers({
   linkDelete: linkDeleteReducer,
 });
 
+const cartItemsFromStorage = localStorage.getItem('cartItems')
+  ? JSON.parse(localStorage.getItem('cartItems'))
+  : null;
+
 const userInfoFromStorage = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo'))
   : null;
 
 const initialState = {
+  // cart: {
+  //   cartItems: cartItemsFromStorage,
+  // },
   userLogin: { userInfo: userInfoFromStorage },
 };
 

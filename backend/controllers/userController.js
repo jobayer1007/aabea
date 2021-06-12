@@ -123,13 +123,10 @@ exports.registerUser = asyncHandler(async (req, res) => {
 
   // Find Chapter
   // let subDomain;
-  // let checkChapter1;
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
-  //   // checkChapter1 = 'http://localhost:3000';
   // } else {
-  //   const { subDomain } = req.body;
-  //   console.log('From registration controller: ' + subDomain);
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const subDomain = checkChapter.split('.')[0];
 
@@ -313,6 +310,8 @@ exports.getPendingUsers = asyncHandler(async (req, res) => {
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
   // } else {
+  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const { checkChapter } = req.params;
   const subDomain = checkChapter.split('.')[0];
@@ -453,6 +452,8 @@ exports.getUsers = asyncHandler(async (req, res) => {
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
   // } else {
+  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const { checkChapter } = req.params;
   const subDomain = checkChapter.split('.')[0];
@@ -932,6 +933,8 @@ exports.sendPasswordResetEmail = asyncHandler(async (req, res) => {
   // let subDomain;
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
+  // } else {
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const subDomain = checkChapter.split('.')[0];
   const chapter = await models.Chapter.findOne({

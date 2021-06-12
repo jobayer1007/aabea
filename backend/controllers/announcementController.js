@@ -33,16 +33,15 @@ exports.createNewAnnouncement = asyncHandler(async (req, res) => {
 });
 
 // @desc    GET all Announcements     ///////////////////////////////////////////////
-// @route   GET /api/announcements
+// @route   GET /api/announcements/chapter/:checkChapter
 // @access  Public
 exports.getAnnouncements = asyncHandler(async (req, res) => {
+  const { checkChapter } = req.params;
   // let subDomain;
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
   // } else {
   // }
-  const { checkChapter } = req.params;
-
   const subDomain = checkChapter.split('.')[0];
 
   // console.log('From announcement controller :' + checkChapter);

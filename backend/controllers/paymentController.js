@@ -9,6 +9,11 @@ const User = require('../models/User');
 const Member = require('../models/Member');
 const models = require('../models/index');
 const generateToken = require('../utils/generateToken');
+const {
+  sendPaymentConfirmationEmail,
+  sendDonationConfirmationEmail,
+  sendGuestDonationConfirmationEmail,
+} = require('./mailer');
 
 const sequelize = new Sequelize(
   process.env.PG_DATABASE,
@@ -95,6 +100,9 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
       where: { memberId: req.user.memberId },
     });
     if (member) {
+      const chapterSetting = await models.ChapterSettings.findOne({
+        where: { chapterId: member.chapterId },
+      });
       if (
         member.status === 'inactive' &&
         req.body.paymentTypeName === 'nominationFee'
@@ -107,25 +115,47 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
         member.status === 'active' &&
         req.body.paymentTypeName === 'nominationFee'
       ) {
-        const payment = await models.Payment.create({
-          chapterId: member.chapterId,
-          memberId: member.memberId,
-          amount: req.body.paymentResult.purchase_units[0].amount.value,
-          year: new Date().getFullYear(),
-          payerId: req.body.paymentResult.payer.email_address,
-          paymentId: req.body.paymentResult.id,
-          paymentStatus: req.body.paymentResult.status,
-          paymentTime: req.body.paymentResult.update_time,
-          paymentType: req.body.paymentTypeName,
+        const nominationFeeCheck = await models.Payment.findOne({
+          where: {
+            memberId: member.memberId,
+            paymentType: 'nominationFee',
+            year: new Date().getFullYear(),
+          },
         });
 
-        if (payment) {
-          res.send('Your Nomination Fee has been Paid Successfully');
+        if (nominationFeeCheck) {
+          res.send('You have already paid the nomination fee');
         } else {
-          res.status(401);
-          throw new Error(
-            'Sorry! Your Nomination Fee Payment was unsuccessfull'
-          );
+          try {
+            const payment = await models.Payment.create({
+              chapterId: member.chapterId,
+              memberId: member.memberId,
+              year: new Date().getFullYear(),
+              paymentType: req.body.paymentTypeName,
+              amount: req.body.paymentResult.purchase_units[0].amount.value,
+              payerId: req.body.paymentResult.payer.email_address,
+              paymentId: req.body.paymentResult.id,
+              paymentStatus: req.body.paymentResult.status,
+              paymentTime: req.body.paymentResult.update_time,
+            });
+
+            if (payment) {
+              await sendPaymentConfirmationEmail({
+                fromAdmin: chapterSetting.chapterEmail,
+                pass: chapterSetting.password,
+                member,
+                payment,
+              });
+              res.send('Your Nomination Fee has been Paid Successfully');
+            }
+          } catch (error) {
+            res.status(401);
+            throw new Error(
+              'Sorry! Your Nomination Fee Payment was unsuccessfull' +
+                ' ' +
+                error
+            );
+          }
         }
       } else {
         const paymentType = await models.PaymentType.findOne({
@@ -169,6 +199,22 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
               { transaction: t }
             );
 
+            const payment = {
+              paymentType: req.body.paymentTypeName,
+              amount: req.body.paymentResult.purchase_units[0].amount.value,
+              payerId: req.body.paymentResult.payer.email_address,
+              paymentId: req.body.paymentResult.id,
+              paymentStatus: req.body.paymentResult.status,
+              paymentTime: req.body.paymentResult.update_time,
+            };
+
+            await sendPaymentConfirmationEmail({
+              fromAdmin: chapterSetting.chapterEmail,
+              pass: chapterSetting.password,
+              member,
+              payment,
+            });
+
             await t.commit();
             res.status(201).json('Payment Successfull.');
           } catch (error) {
@@ -186,103 +232,6 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
       res.status(401);
       throw new Error('Member not found');
     }
-
-    // Roll
-    // const t = await sequelize.transaction();
-
-    // try {
-    //   // Then, we do some calls passing this transaction as an option:
-
-    //   ,
-    //     { transaction: t }
-    //   );
-
-    //  ,
-    //     { transaction: t }
-    //   );
-
-    //   await pendingUser.destroy({ transaction: t });
-
-    //   await t.commit();
-    //   res.status(201).json('account has been Activated Successfully.');
-    // } catch (error) {
-    //   // If the execution reaches this line, an error was thrown.
-    //   // We rollback the transaction.
-    //   await t.rollback();
-    //   res
-    //     .status(400)
-    //     .send(
-    //       'msg: Encountered a problem while approving member, error:' + error
-    //     );
-    // }
-    // Roll end
-
-    // if (member) {
-    //   // try {
-    //   for (let i = 0; i < totalYear; i++) {
-    //     const year = new Date(member.NextPaymentDueIn).getFullYear() + i;
-    //     console.log(year);
-    //     const payment = await models.Payment.create({
-    //       // paymentType,
-    //       memberId: member.memberId,
-    //       amount: req.body.paymentResult.purchase_units[0].amount.value,
-    //       year: year,
-    //       payerId: req.body.paymentResult.payer.email_address,
-    //       paymentId: req.body.paymentResult.id,
-    //       paymentStatus: req.body.paymentResult.status,
-    //       paymentTime: req.body.paymentResult.update_time,
-    //       paymentType: req.body.paymentTypeName,
-    //     });
-
-    //     if (payment) {
-    //       console.log('payment inserted:' + i);
-    //       // res.send('payment inserted:' + i);
-    //     } else {
-    //       res.status(401);
-    //       throw new Error('couldnt create payment');
-    //     }
-    //   }
-    //   console.log('Outside For loop');
-
-    //   res.send('payment inserted:');
-    // } catch (error) {
-    //   return res.json(
-    //     'Encountered a problem while saving payment, error:' + error
-    //   );
-    // }
-
-    // const payment = await models.Payment.create({
-    //   // paymentType,
-    //   memberId: member.memberId,
-    //   amount: req.body.purchase_units[0].amount.value,
-    //   year: new Date().getFullYear(),
-    //   payerId: req.body.payer.email_address,
-    //   paymentId: req.body.id,
-    //   paymentStatus: req.body.status,
-    //   paymentTime: req.body.update_time,
-    //   paymentType: req.body.paymentTypeName,
-    // }); // Create default payment status
-    // const paymentLinkedMember = await member.addPayment(payment);
-    // if (payment) {
-    //   console.log('payment linked');
-
-    //   member.isPaid = true;
-    //   const updatedMember = await member.save();
-
-    //   if (updatedMember) {
-    //     res.send('payment successful');
-    //   } else {
-    //     res.status(401);
-    //     throw new Error('Something went wrong with payment');
-    //   }
-    // } else {
-    //   res.status(401);
-    //   throw new Error('Payment not found');
-    // }
-    // } else {
-    //   res.status(401);
-    //   throw new Error('Member not found');
-    // }
   } else {
     res.status(401);
     throw new Error('User not found');
@@ -303,6 +252,9 @@ exports.memberDonation = asyncHandler(async (req, res) => {
     });
 
     if (member) {
+      const chapterSetting = await models.ChapterSettings.findOne({
+        where: { chapterId: member.chapterId },
+      });
       try {
         const donate = await models.Donation.create({
           chapterId: member.chapterId,
@@ -320,7 +272,12 @@ exports.memberDonation = asyncHandler(async (req, res) => {
         }); // Create default payment status
 
         if (donate) {
-          console.log('Donation linked');
+          await sendDonationConfirmationEmail({
+            fromAdmin: chapterSetting.chapterEmail,
+            pass: chapterSetting.password,
+            member,
+            donate,
+          });
           res.send('Donation successful');
         }
       } catch (error) {
@@ -367,13 +324,13 @@ exports.guestDonation = asyncHandler(async (req, res) => {
     lastName,
     paymentResult,
   } = req.body;
-  // console.log(`Domain: ${checkChapter}`);
-  // console.log(`guest: ${guest}`);
-  // console.log(`email: ${email}`);
-  // console.log(`firstName: ${firstName}`);
-  // console.log(`mInit: ${mInit}`);
-  // console.log(`lastName: ${lastName}`);
-  // console.log(`amount: ${paymentResult.purchase_units[0].amount.value}`);
+
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  //   subDomain = checkChapter.split('.')[0];
+  // }
   const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
@@ -381,6 +338,9 @@ exports.guestDonation = asyncHandler(async (req, res) => {
   });
   // console.log(chapter);
   if (chapter) {
+    const chapterSetting = await models.ChapterSettings.findOne({
+      where: { chapterId: chapter.chapterId },
+    });
     if (guest) {
       const member = await models.Member.findOne({
         where: { primaryEmail: email },
@@ -403,16 +363,18 @@ exports.guestDonation = asyncHandler(async (req, res) => {
         }); // Create default payment status
 
         if (donate) {
-          console.log('Donation linked');
+          await sendDonationConfirmationEmail({
+            fromAdmin: chapterSetting.chapterEmail,
+            pass: chapterSetting.password,
+            member,
+            donate,
+          });
           res.send('Donation successful');
         } else {
           res.status(401);
           throw new Error('Payment not found');
         }
       } else {
-        // res.status(401);
-        // throw new Error('Member not found');
-
         const donate = await models.Donation.create({
           chapterId: chapter.chapterId,
           firstName: firstName,
@@ -427,6 +389,11 @@ exports.guestDonation = asyncHandler(async (req, res) => {
           paymentTime: paymentResult.update_time,
         }); // Create default payment status
         if (donate) {
+          await sendGuestDonationConfirmationEmail({
+            fromAdmin: chapterSetting.chapterEmail,
+            pass: chapterSetting.password,
+            donate,
+          });
           res.send(
             'Donation successful! Thank you for your donation. However, we counld not find your provided email address to our member list.'
           );
@@ -450,6 +417,11 @@ exports.guestDonation = asyncHandler(async (req, res) => {
         paymentTime: paymentResult.update_time,
       }); // Create default payment status
       if (donate) {
+        await sendGuestDonationConfirmationEmail({
+          fromAdmin: chapterSetting.chapterEmail,
+          pass: chapterSetting.password,
+          donate,
+        });
         res.send('Donation successful! Thank you for your donation.');
       } else {
         res.status(401);

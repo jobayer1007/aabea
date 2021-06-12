@@ -26,7 +26,7 @@ const ImageLibrary = (sequelize, DataTypes) =>
       notEmpty: true,
     },
     eventId: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(5),
     },
     image: {
       type: DataTypes.STRING,

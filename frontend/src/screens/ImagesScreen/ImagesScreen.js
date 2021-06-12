@@ -1,6 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Row, Col, Card, Form, Image } from 'react-bootstrap';
+import {
+  Table,
+  Button,
+  Row,
+  Col,
+  Card,
+  Form,
+  Image,
+  ListGroup,
+} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Sidebar from '../../components/Sidebar/Sidebar';
@@ -8,12 +17,19 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 
-import { allImage, deleteImage, newImage } from '../../actions/imageActions';
+import {
+  allImage,
+  deleteImage,
+  getHomeScreenImage,
+  getImageByEvent,
+  newImage,
+} from '../../actions/imageActions';
 import * as S from './ImagesScreen.Styles';
 import {
   IMAGE_BY_ID_RESET,
   IMAGE_NEW_RESET,
 } from '../../constants/imageConstants';
+import { allEvents } from '../../actions/eventActions';
 
 const ImagesScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -28,6 +44,20 @@ const ImagesScreen = ({ history }) => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const imageHomeScreen = useSelector((state) => state.imageHomeScreen);
+  const {
+    loading: homeScreenImagesLoading,
+    error: homeScreenImagesError,
+    homeScreenImages,
+  } = imageHomeScreen;
+
+  const imageByEvent = useSelector((state) => state.imageByEvent);
+  const {
+    loading: imageByEventLoading,
+    error: imageByEventError,
+    images: imageByEventImages,
+  } = imageByEvent;
 
   const imageAll = useSelector((state) => state.imageAll);
   const { loading, error, images } = imageAll;
@@ -47,6 +77,9 @@ const ImagesScreen = ({ history }) => {
       (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
     ) {
       dispatch(allImage(checkChapter));
+      dispatch(getHomeScreenImage(checkChapter));
+      dispatch(getImageByEvent(checkChapter));
+      dispatch(allEvents(checkChapter));
       dispatch({ type: IMAGE_NEW_RESET });
       dispatch({ type: IMAGE_BY_ID_RESET });
     } else {
@@ -230,9 +263,107 @@ const ImagesScreen = ({ history }) => {
                 className='mb-2 p-0'
                 id='all-chapter'
               >
-                <Card className='text-center' border='info'>
+                {/* Chapter Iconic Images */}
+                <Card className='text-center mb-2' border='info'>
                   <Card.Header as='h3' className='text-info'>
-                    Images
+                    Chapter Iconic Images
+                  </Card.Header>
+
+                  <Card.Body>
+                    {homeScreenImagesLoading ? (
+                      <Loader />
+                    ) : homeScreenImagesError ? (
+                      <Message variant='danger'>
+                        {homeScreenImagesError}
+                      </Message>
+                    ) : (
+                      homeScreenImages && (
+                        <ListGroup variant='flush'>
+                          <ListGroup.Item>
+                            <Row className='justify-content-between'>
+                              {homeScreenImages.map((image, index) => (
+                                <Col md={2} key={index} className='m-1 p-0'>
+                                  <Link to={`/image/${image.imageId}`}>
+                                    <Image
+                                      src={image.image}
+                                      alt={image.imageName}
+                                      fluid
+                                      rounded
+                                      style={{ height: '100%', width: '100%' }}
+                                    />
+                                  </Link>
+                                </Col>
+                              ))}
+                            </Row>
+                          </ListGroup.Item>
+                        </ListGroup>
+                      )
+                    )}
+                  </Card.Body>
+                </Card>
+
+                {/* Event Images */}
+                <Card className='text-center mb-2' border='info'>
+                  <Card.Header as='h3' className='text-info'>
+                    Event Images
+                  </Card.Header>
+
+                  <Card.Body>
+                    {imageByEventLoading ? (
+                      <Loader />
+                    ) : imageByEventError ? (
+                      <Message variant='danger'>{imageByEventError}</Message>
+                    ) : (
+                      imageByEventImages && (
+                        <ListGroup variant='flush'>
+                          {imageByEventImages.map((event, index) => (
+                            <ListGroup.Item key={index} className='mb-2'>
+                              <Card.Title className='text-info'>
+                                {event.eventName}
+                              </Card.Title>
+                              <Row className='justify-content-center'>
+                                {event.eventImageGalleries &&
+                                event.eventImageGalleries.length !== 0 ? (
+                                  event.eventImageGalleries.map(
+                                    (evetImage, index) => (
+                                      <Col
+                                        md={3}
+                                        key={index}
+                                        className='m-1 p-0'
+                                      >
+                                        <Link
+                                          to={`/image/${evetImage.imageId}`}
+                                        >
+                                          <Image
+                                            src={evetImage.image}
+                                            alt={evetImage.imageName}
+                                            fluid
+                                            rounded
+                                            style={{
+                                              height: '100%',
+                                              width: '100%',
+                                            }}
+                                          />
+                                        </Link>{' '}
+                                      </Col>
+                                    )
+                                  )
+                                ) : (
+                                  <h5>No Image</h5>
+                                )}
+                              </Row>
+                            </ListGroup.Item>
+                          ))}
+                        </ListGroup>
+                      )
+                    )}
+                  </Card.Body>
+                </Card>
+
+                {/* All Images */}
+                <Card className='text-center mb-2' border='info'>
+                  <Card.Header as='h3' className='text-info'>
+                    All Images
                   </Card.Header>
 
                   <Card.Body>
@@ -251,6 +382,7 @@ const ImagesScreen = ({ history }) => {
                         <thead>
                           <tr>
                             <th>Image Type</th>
+                            <th>Description</th>
                             <th>Image</th>
                             {userInfo &&
                               (userInfo.userRole === 'systemAdmin' ||
@@ -269,12 +401,15 @@ const ImagesScreen = ({ history }) => {
                                 <Image src={user.image} thumbnail />
                               </td> */}
                               <td> {image.imageName}</td>
+                              <td> {image.imageDescription}</td>
                               <td>
                                 {' '}
                                 <Image
                                   src={image.image}
                                   alt={image.image}
-                                  thumbnail
+                                  fluid
+                                  rounded
+                                  style={{ height: '165px', width: '200px' }}
                                 />
                                 {/* <Card.Img src={image.image} variant='top' /> */}
                               </td>
@@ -282,7 +417,7 @@ const ImagesScreen = ({ history }) => {
                                 (userInfo.userRole === 'systemAdmin' ||
                                   userInfo.userRole === 'admin') && (
                                   <td>
-                                    <Button
+                                    {/* <Button
                                       variant='danger'
                                       className='btn-sm'
                                       onClick={() =>
@@ -290,7 +425,18 @@ const ImagesScreen = ({ history }) => {
                                       }
                                     >
                                       <i className='fas fa-trash'></i>
-                                    </Button>
+                                    </Button> */}
+
+                                    <span
+                                      onClick={() =>
+                                        deleteImageHandler(image.imageId)
+                                      }
+                                    >
+                                      <i
+                                        className='fas fa-trash action ml-2'
+                                        style={{ color: 'red' }}
+                                      ></i>
+                                    </span>
                                   </td>
                                 )}
                             </tr>

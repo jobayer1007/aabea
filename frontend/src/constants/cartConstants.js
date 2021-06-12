@@ -1,0 +1,4 @@
+export const CART_NEW_REQUEST = 'CART_NEW_REQUEST';
+export const CART_NEW_SUCCESS = 'CART_NEW_SUCCESS';
+export const CART_NEW_FAIL = 'CART_NEW_FAIL';
+export const CART_RESET = 'CART_RESET';

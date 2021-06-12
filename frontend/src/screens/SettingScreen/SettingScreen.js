@@ -106,7 +106,7 @@ const SettingScreen = ({ history }) => {
     setChapterEmail(chapterSettings.chapterEmail);
     setPassword(chapterSettings.password);
     setChapterPhone(chapterSettings.chapterPhone);
-    setChapterPaymentId(chapterSettings.chapterSetting.chapterPayment);
+    setChapterPaymentId(chapterSettings.chapterPayment);
   };
 
   const cancelHandler = (e) => {

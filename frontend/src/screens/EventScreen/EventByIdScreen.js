@@ -371,8 +371,14 @@ const EventByIdScreen = ({ history, match }) => {
                                   <>
                                     <Col md={4}>Start Date :</Col>
                                     {event.eventDate &&
-                                    event.eventDate.length !== 0 ? (
-                                      <Col>{event.eventDate[0].value}</Col>
+                                    event.eventDate.length !== 0 &&
+                                    event.eventDate[0].value ? (
+                                      <Col>
+                                        {event.eventDate[0].value.substring(
+                                          0,
+                                          10
+                                        )}
+                                      </Col>
                                     ) : null}
                                   </>
                                 )}
@@ -405,8 +411,14 @@ const EventByIdScreen = ({ history, match }) => {
                                   <>
                                     <Col md={4}>End Date :</Col>
                                     {event.eventDate &&
-                                    event.eventDate.length !== 0 ? (
-                                      <Col>{event.eventDate[1].value}</Col>
+                                    event.eventDate.length !== 0 &&
+                                    event.eventDate[1].value ? (
+                                      <Col>
+                                        {event.eventDate[1].value.substring(
+                                          0,
+                                          10
+                                        )}
+                                      </Col>
                                     ) : null}
                                   </>
                                 )}
@@ -626,11 +638,9 @@ const EventByIdScreen = ({ history, match }) => {
                     <>
                       <ListGroup variant='flush'>
                         {eventContacts && eventContacts.length !== 0
-                          ? eventContacts.map((eventContact) => (
+                          ? eventContacts.map((eventContact, index) => (
                               <>
-                                <ListGroup.Item
-                                  key={eventContact.eventContactId}
-                                >
+                                <ListGroup.Item key={index}>
                                   <Row>
                                     <Col md={4}>Position :</Col>
                                     <Col>{eventContact.positionName}</Col>

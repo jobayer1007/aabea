@@ -81,7 +81,7 @@ const PauseOnHover = () => {
                     src={image.image}
                     alt={image.imageDescription}
                     fluid
-                    style={{ width: '100%' }}
+                    style={{ width: '100%', padding: '0.2px' }}
                     className='navbarEventImage'
                   />
 

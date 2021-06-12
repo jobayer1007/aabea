@@ -4,6 +4,7 @@ const Sequelize = require('sequelize');
 
 const asyncHandler = require('express-async-handler');
 const models = require('../models/index');
+const { Event, EventImageGallery } = require('../models/index');
 
 const sequelize = new Sequelize(
   process.env.PG_DATABASE,
@@ -34,7 +35,7 @@ exports.addNewImage = asyncHandler(async (req, res) => {
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
   // } else {
-  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const subDomain = checkChapter.split('.')[0];
 
@@ -48,11 +49,12 @@ exports.addNewImage = asyncHandler(async (req, res) => {
       const t = await sequelize.transaction();
 
       try {
-        await models.EventImageGallery.create(
+        const ImageLibrary = await models.ImageLibrary.create(
           {
-            eventId: eventId,
-            imageDescription: imageDescription,
-            image: image,
+            imageName,
+            imageDescription,
+            eventId,
+            image,
             createdBy: req.user.memberId,
             lastUpdatedBy: req.user.memberId,
             chapterId: chapter.chapterId,
@@ -60,12 +62,12 @@ exports.addNewImage = asyncHandler(async (req, res) => {
           { transaction: t }
         );
 
-        await models.ImageLibrary.create(
+        await models.EventImageGallery.create(
           {
-            imageName,
-            imageDescription,
-            eventId,
-            image,
+            imageId: ImageLibrary.imageId,
+            eventId: eventId,
+            imageDescription: imageDescription,
+            image: image,
             createdBy: req.user.memberId,
             lastUpdatedBy: req.user.memberId,
             chapterId: chapter.chapterId,
@@ -114,6 +116,8 @@ exports.getAllImages = asyncHandler(async (req, res) => {
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
   // } else {
+  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const { checkChapter } = req.params;
   const subDomain = checkChapter.split('.')[0];
@@ -124,6 +128,8 @@ exports.getAllImages = asyncHandler(async (req, res) => {
 
   if (chapter) {
     const images = await models.ImageLibrary.findAll({
+      // include: models.Event,
+      // include: { model: Event, include: EventImageGallery },
       where: { chapterId: chapter.chapterId },
     });
     if (images && images.length !== 0) {
@@ -147,6 +153,8 @@ exports.getAllNavbarImages = asyncHandler(async (req, res) => {
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
   // } else {
+  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const { checkChapter } = req.params;
   const subDomain = checkChapter.split('.')[0];
@@ -180,6 +188,8 @@ exports.getAllHomeScreenImages = asyncHandler(async (req, res) => {
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
   // } else {
+  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const { checkChapter } = req.params;
   const subDomain = checkChapter.split('.')[0];
@@ -213,6 +223,8 @@ exports.getAllImagesByEvent = asyncHandler(async (req, res) => {
   // if (process.env.NODE_ENV === 'development') {
   //   subDomain = 'bd'; // at dev only
   // } else {
+  //   const { checkChapter } = req.params;
+  //   subDomain = checkChapter.split('.')[0];
   // }
   const { checkChapter } = req.params;
   const subDomain = checkChapter.split('.')[0];
@@ -222,13 +234,18 @@ exports.getAllImagesByEvent = asyncHandler(async (req, res) => {
   });
 
   if (chapter) {
+    // const eventGallery = await models.Event.findAll({
+    //   where: { chapterId: chapter.chapterId },
+    //   include: [
+    //     {
+    //       model: EventImageGallery,
+    //     },
+    //   ],
+    // });
+
     const eventGallery = await models.Event.findAll({
+      include: models.EventImageGallery,
       where: { chapterId: chapter.chapterId },
-      include: [
-        {
-          model: EventImageGallery,
-        },
-      ],
     });
     if (eventGallery && eventGallery.length !== 0) {
       res.json(eventGallery);
@@ -271,17 +288,49 @@ exports.deleteImage = asyncHandler(async (req, res) => {
   });
 
   if (image) {
-    models.ImageLibrary.destroy({
+    const imageEvent = await models.EventImageGallery.findOne({
       where: { imageId: id },
-    })
-      .then((num) => {
-        if (num == 1) {
-          res.json('The Image has been deleted successfully');
-        } else {
-          res.json('Cannot delete the image');
-        }
+    });
+
+    if (imageEvent) {
+      const t = await sequelize.transaction();
+
+      try {
+        models.EventImageGallery.destroy(
+          {
+            where: { imageId: id },
+          },
+          { transaction: t }
+        );
+
+        models.ImageLibrary.destroy(
+          {
+            where: { imageId: id },
+          },
+          { transaction: t }
+        );
+        await t.commit();
+        res.json('The Image has been deleted successfully');
+      } catch (error) {
+        await t.rollback();
+        res.status(401);
+        throw new Error(
+          'Encountered problem while deleting the image' + ' ' + error
+        );
+      }
+    } else {
+      models.ImageLibrary.destroy({
+        where: { imageId: id },
       })
-      .catch((err) => console.log(err));
+        .then((num) => {
+          if (num == 1) {
+            res.json('The Image has been deleted successfully');
+          } else {
+            res.json('Cannot delete the image');
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   } else {
     res.status(401);
     throw new Error('Image was not found');

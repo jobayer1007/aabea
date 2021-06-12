@@ -17,10 +17,12 @@ const {
   publishEvent,
   unPublishEvent,
   registerEventGuest,
+  registerMemberCheck,
 } = require('../controllers/eventController');
 
 // Event Registration
 router.route('/register').post(registerEventGuest);
+router.route('/register/:memberId').get(registerMemberCheck);
 
 router.route('/chapter/:checkChapter').get(getAllEvents);
 router.route('/new').post(protect, admin, createNewEvent);

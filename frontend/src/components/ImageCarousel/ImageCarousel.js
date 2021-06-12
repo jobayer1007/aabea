@@ -12,7 +12,7 @@ const ImageCarousel = () => {
   const imageHomeScreen = useSelector((state) => state.imageHomeScreen);
   const { loading, error, homeScreenImages } = imageHomeScreen;
 
-  const checkChapter = window.location.host.split('.')[0];
+  const checkChapter = window.location.host;
 
   useEffect(() => {
     dispatch(getHomeScreenImage(checkChapter));

@@ -200,8 +200,11 @@ db.Committee.belongsTo(db.Member, { foreignKey: 'memberId' });
 db.Chapter.hasMany(db.ImageLibrary, { foreignKey: 'chapterId' });
 db.ImageLibrary.belongsTo(db.Chapter, { foreignKey: 'chapterId' });
 
-db.Member.hasMany(db.ImageLibrary, { foreignKey: 'memberId' });
-db.ImageLibrary.belongsTo(db.Member, { foreignKey: 'memberId' });
+db.Event.hasMany(db.ImageLibrary, { foreignKey: 'eventId' });
+db.ImageLibrary.belongsTo(db.Event, { foreignKey: 'eventId' });
+
+// db.Member.hasMany(db.ImageLibrary, { foreignKey: 'memberId' });
+// db.ImageLibrary.belongsTo(db.Member, { foreignKey: 'memberId' });
 
 // Event
 db.Chapter.hasMany(db.Event, { foreignKey: 'chapterId' });
