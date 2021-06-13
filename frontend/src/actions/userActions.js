@@ -1,6 +1,9 @@
 import axios from 'axios';
 
 import {
+  USER_ALL_LIST_FAIL,
+  USER_ALL_LIST_REQUEST,
+  USER_ALL_LIST_SUCCESS,
   USER_APPROVE_FAIL,
   USER_APPROVE_REQUEST,
   USER_APPROVE_SUCCESS,
@@ -124,6 +127,7 @@ export const logout = () => (dispatch) => {
 
 export const register =
   (
+    captcha,
     email,
     password,
     firstName,
@@ -158,6 +162,7 @@ export const register =
       const { data } = await axios.post(
         '/api/users/register',
         {
+          captcha,
           email,
           password,
           firstName,
@@ -337,6 +342,39 @@ export const listUsers = (checkChapter) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const listAllUsers = () => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_ALL_LIST_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/users/all`, config);
+
+    dispatch({
+      type: USER_ALL_LIST_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ALL_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

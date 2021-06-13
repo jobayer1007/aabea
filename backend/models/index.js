@@ -216,6 +216,11 @@ db.EventContact.belongsTo(db.Event, { foreignKey: 'eventId' });
 db.Event.hasMany(db.EventRegistration, { foreignKey: 'eventId' });
 db.EventRegistration.belongsTo(db.Event, { foreignKey: 'eventId' });
 
+db.EventRegistration.hasOne(db.EventPayment, { foreignKey: 'registrationId' });
+db.EventPayment.belongsTo(db.EventRegistration, {
+  foreignKey: 'registrationId',
+});
+
 db.Event.hasMany(db.EventPayment, { foreignKey: 'eventId' });
 db.EventPayment.belongsTo(db.Event, { foreignKey: 'eventId' });
 

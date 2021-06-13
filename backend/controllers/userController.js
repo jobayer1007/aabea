@@ -122,13 +122,13 @@ exports.registerUser = asyncHandler(async (req, res) => {
   } = req.body;
 
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   subDomain = checkChapter.split('.')[0];
-  // }
-  const subDomain = checkChapter.split('.')[0];
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
+  // const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
@@ -140,7 +140,10 @@ exports.registerUser = asyncHandler(async (req, res) => {
     });
 
     const userExists = await models.Member.findOne({
-      where: { primaryEmail: email, chapterId: chapter.chapterId },
+      where: {
+        primaryEmail: email,
+        // chapterId: chapter.chapterId
+      },
     }); // Check if the Member already registered
 
     if (!userExists) {
@@ -306,15 +309,14 @@ exports.verifyEmailResend = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 exports.getPendingUsers = asyncHandler(async (req, res) => {
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   const { checkChapter } = req.params;
-  //   subDomain = checkChapter.split('.')[0];
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
@@ -390,6 +392,7 @@ exports.approveUser = asyncHandler(async (req, res) => {
         { transaction: t }
       );
 
+      console.log(member);
       // const user = await member.addUser(
       await models.User.create(
         {
@@ -408,7 +411,11 @@ exports.approveUser = asyncHandler(async (req, res) => {
       await pendingUser.destroy({ transaction: t });
 
       const chapterSetting = await models.ChapterSettings.findOne({
-        where: { chapterId: pendingUser.chapterId },
+        where: { chapterId: member.chapterId },
+      });
+
+      const chapter = await models.Chapter.findOne({
+        where: { chapterId: member.chapterId },
       });
 
       await sendCongratulationsEmail(
@@ -417,7 +424,7 @@ exports.approveUser = asyncHandler(async (req, res) => {
           pass: chapterSetting.password,
           toUserEmail: member.primaryEmail,
           toUser: member.firstName,
-          domain: checkChapter,
+          domain: chapter.subDomain,
         },
         { transaction: t }
       );
@@ -445,18 +452,17 @@ exports.approveUser = asyncHandler(async (req, res) => {
 
 // @desc    GET all Users     ///////////////////////////////////////////////
 // @route   GET /api/users/chapter/:checkChapter
-// @access  Private/Admin
+// @access  Private
 exports.getUsers = asyncHandler(async (req, res) => {
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   const { checkChapter } = req.params;
-  //   subDomain = checkChapter.split('.')[0];
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
@@ -464,6 +470,21 @@ exports.getUsers = asyncHandler(async (req, res) => {
     include: models.Member,
 
     where: { chapterId: chapter.chapterId },
+  });
+  if (users && users.length !== 0) {
+    res.json(users);
+  } else {
+    res.status(404);
+    throw new Error('No User');
+  }
+});
+
+// @desc    GET all chapter's Users     ///////////////////////////////////////////////
+// @route   GET /api/users/all
+// @access  Private
+exports.getAllUsers = asyncHandler(async (req, res) => {
+  const users = await models.User.findAll({
+    include: models.Member,
   });
   if (users && users.length !== 0) {
     res.json(users);
@@ -930,13 +951,13 @@ exports.sendPasswordResetEmail = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   subDomain = checkChapter.split('.')[0];
-  // }
-  const subDomain = checkChapter.split('.')[0];
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
+  // const subDomain = checkChapter.split('.')[0];
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });

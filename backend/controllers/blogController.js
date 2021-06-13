@@ -104,13 +104,12 @@ exports.createNewBlog = asyncHandler(async (req, res) => {
 // @route   GET /api/blog/chapter/:checkChapter
 // @access  Private
 exports.getBlogs = asyncHandler(async (req, res) => {
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },

@@ -325,13 +325,13 @@ exports.guestDonation = asyncHandler(async (req, res) => {
     paymentResult,
   } = req.body;
 
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   subDomain = checkChapter.split('.')[0];
-  // }
-  const subDomain = checkChapter.split('.')[0];
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
+  // const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },

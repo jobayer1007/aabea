@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { protect, admin, systemAdmin } = require('../middleware/authMiddleware');
+const {
+  protect,
+  admin,
+  systemAdmin,
+  captcha,
+} = require('../middleware/authMiddleware');
 const {
   getUsers,
   getUserById,
@@ -20,6 +25,7 @@ const {
   verifyEmailResend,
   sendPasswordResetEmail,
   receiveNewPassword,
+  getAllUsers,
 } = require('../controllers/userController');
 const {
   getUserPaymentDetails,
@@ -42,7 +48,7 @@ router.route('/donate').get(protect, getUserDonationDetails);
 router.route('/:id/donate').post(protect, memberDonation);
 router.route('/donate').post(guestDonation);
 
-router.route('/register').post(registerUser);
+router.route('/register').post(captcha, registerUser);
 router.route('/verifyResend').post(verifyEmailResend);
 router.route('/activate/:hash').post(verifyUserEmail);
 router.route('/pending/chapter/:checkChapter').get(protect, getPendingUsers);
@@ -55,6 +61,7 @@ router
   .post(protect, admin, createAdminUser)
   .delete(protect, admin, deleteAdminUser);
 router.route('/chapter/:checkChapter').get(protect, getUsers);
+router.route('/all').get(protect, getAllUsers);
 router.route('/:id').get(getUserById).put(protect, admin, updateUser);
 router.route('/:id').delete(protect, admin, deleteUser);
 

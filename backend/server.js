@@ -48,9 +48,9 @@ app.use('/api/reply', replyRoutes);
 app.use('/api/links', linkRoutes);
 app.use('/api/helps', helpRoutes);
 
-// app.get('/api/config/paypal', (req, res) =>
-//   res.send(process.env.PAYPAL_CLIENT_ID)
-// );
+app.get('/api/config/captchaClient', (req, res) =>
+  res.send(process.env.CAPTCHA_SITE_KEY)
+);
 
 // const syncStatus = false;
 

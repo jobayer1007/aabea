@@ -53,7 +53,8 @@ export const newEvent =
     eventAddress,
     adultFee,
     minorFee,
-    cap
+    cap,
+    checkChapter
   ) =>
   async (dispatch, getState) => {
     try {
@@ -85,6 +86,7 @@ export const newEvent =
           adultFee,
           minorFee,
           cap,
+          checkChapter,
         },
         config
       );

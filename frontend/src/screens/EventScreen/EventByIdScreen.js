@@ -32,6 +32,8 @@ import {
   EVENT_UNPUBLISH_RESET,
 } from '../../constants/eventConstants';
 import swal from 'sweetalert';
+import RTable from '../../components/Table/RTable';
+import ColumnFilter from '../../components/Table/ColumnFilter';
 
 const EventByIdScreen = ({ history, match }) => {
   const id = match.params.id;
@@ -57,6 +59,8 @@ const EventByIdScreen = ({ history, match }) => {
   const [adultFee, setAdultFee] = useState(0);
   const [minorFee, setMinorFee] = useState(0);
   const [cap, setCap] = useState(0);
+
+  const [columnsAdmin, setColumnsAdmin] = useState([]);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -104,6 +108,95 @@ const EventByIdScreen = ({ history, match }) => {
 
     if (userInfo) {
       dispatch({ type: EVENT_CONTACT_NEW_RESET });
+
+      if (
+        userInfo.userRole === 'admin' ||
+        userInfo.userRole === 'systemAdmin'
+      ) {
+        setColumnsAdmin([
+          {
+            Header: 'Registration Id',
+            accessor: 'registrationId',
+            Filter: ColumnFilter,
+          },
+          // {
+          //   Header: 'Name',
+          //   accessor: 'userName',
+          // },
+          {
+            Header: 'First Name',
+            accessor: 'firstName',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'lastName',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'Email',
+            accessor: 'email',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'Phone',
+            accessor: 'phone',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'Member Id',
+            accessor: 'memberId',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'Adult/s',
+            accessor: 'numberOfAdults',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'Minor/s',
+            accessor: 'numberOfMinors',
+            Filter: ColumnFilter,
+          },
+          {
+            Header: 'Payment',
+            accessor: 'eventPayment.amount',
+            Filter: ColumnFilter,
+          },
+
+          // {
+          //   Header: 'Actions',
+          //   accessor: 'actions',
+          //   Cell: (props) => {
+          //     const rowIdx = props.row.id;
+          //     return (
+          //       <>
+          //         <span onClick={() => editUserHandler(rowIdx)}>
+          //           <i
+          //             className='far fa-edit action'
+          //             style={{ color: '#4285F4' }}
+          //           ></i>
+          //         </span>
+
+          //         <Link
+          //           className='btn btn-outline-warning btn-sm ml-2 rounded'
+          //           onClick={() => createAdminHandler(rowIdx)}
+          //         >
+          //           Make admin
+          //         </Link>
+
+          //         <span onClick={() => deleteUserHandler(rowIdx)}>
+          //           <i
+          //             className='fas fa-trash action ml-2'
+          //             style={{ color: 'red' }}
+          //           ></i>
+          //         </span>
+          //       </>
+          //     );
+          //   },
+          // },
+        ]);
+      }
     }
 
     if (success || eventContactUpdateSuccess) {
@@ -290,487 +383,515 @@ const EventByIdScreen = ({ history, match }) => {
       ) : event ? (
         event && (
           <>
-            <Row>
-              <Col md={8} className='m-0 p-1'>
-                <Card>
-                  <ListGroup variant='flush'>
-                    <ListGroup.Item>
-                      <Row>
-                        <Col md={3}>Event Name:</Col>
-                        {userInfo &&
-                        (userInfo.userRole === 'systemAdmin' ||
-                          userInfo.userRole === 'admin') &&
-                        editEvent ? (
-                          <Form.Group as={Col} controlId='eventName'>
-                            <Form.Control
-                              required
-                              type='text'
-                              placeholder='Event Name'
-                              value={eventName}
-                              onChange={(e) => setEventName(e.target.value)}
-                            ></Form.Control>
-                          </Form.Group>
-                        ) : (
-                          <Col>{event.eventName}</Col>
-                        )}
-                      </Row>
-                    </ListGroup.Item>
+            <Card className='mb-2'>
+              <Row>
+                <Col md={8} className='m-0 p-1'>
+                  <Card>
+                    <ListGroup variant='flush'>
+                      <ListGroup.Item>
+                        <Row>
+                          <Col md={3}>Event Name:</Col>
+                          {userInfo &&
+                          (userInfo.userRole === 'systemAdmin' ||
+                            userInfo.userRole === 'admin') &&
+                          editEvent ? (
+                            <Form.Group as={Col} controlId='eventName'>
+                              <Form.Control
+                                required
+                                type='text'
+                                placeholder='Event Name'
+                                value={eventName}
+                                onChange={(e) => setEventName(e.target.value)}
+                              ></Form.Control>
+                            </Form.Group>
+                          ) : (
+                            <Col>{event.eventName}</Col>
+                          )}
+                        </Row>
+                      </ListGroup.Item>
 
-                    <ListGroup.Item>
-                      <Row>
-                        <Col md={3}>Description:</Col>
-                        {userInfo &&
-                        (userInfo.userRole === 'systemAdmin' ||
-                          userInfo.userRole === 'admin') &&
-                        editEvent ? (
-                          <Form.Group as={Col} controlId='eventDescription'>
-                            <Form.Control
-                              required
-                              type='text'
-                              placeholder='Event Description'
-                              value={eventDescription}
-                              onChange={(e) =>
-                                setEventDescription(e.target.value)
-                              }
-                            ></Form.Control>
-                          </Form.Group>
-                        ) : (
-                          <Col>{event.eventDescription}</Col>
-                        )}
-                      </Row>
-                    </ListGroup.Item>
+                      <ListGroup.Item>
+                        <Row>
+                          <Col md={3}>Description:</Col>
+                          {userInfo &&
+                          (userInfo.userRole === 'systemAdmin' ||
+                            userInfo.userRole === 'admin') &&
+                          editEvent ? (
+                            <Form.Group as={Col} controlId='eventDescription'>
+                              <Form.Control
+                                required
+                                type='text'
+                                placeholder='Event Description'
+                                value={eventDescription}
+                                onChange={(e) =>
+                                  setEventDescription(e.target.value)
+                                }
+                              ></Form.Control>
+                            </Form.Group>
+                          ) : (
+                            <Col>{event.eventDescription}</Col>
+                          )}
+                        </Row>
+                      </ListGroup.Item>
 
-                    <ListGroup.Item>
-                      <Row>
-                        <Col md={3}>Date:</Col>
-                        <Col>
-                          <ListGroup variant='flush'>
-                            <ListGroup.Item className='p-0'>
+                      <ListGroup.Item>
+                        <Row>
+                          <Col md={3}>Date:</Col>
+                          <Col>
+                            <ListGroup variant='flush'>
+                              <ListGroup.Item className='p-0'>
+                                <Row>
+                                  {userInfo &&
+                                  (userInfo.userRole === 'systemAdmin' ||
+                                    userInfo.userRole === 'admin') &&
+                                  editEvent ? (
+                                    <Form.Group
+                                      as={Col}
+                                      // md='5'
+                                      controlId='eventStartDate'
+                                    >
+                                      <Form.Label>Start Date:</Form.Label>
+                                      <Form.Control
+                                        required
+                                        type='text'
+                                        placeholder='Enter Your Start Date'
+                                        value={eventStartDate}
+                                        onChange={(e) =>
+                                          setEventStartDate(e.target.value)
+                                        }
+                                      ></Form.Control>
+                                    </Form.Group>
+                                  ) : (
+                                    <>
+                                      <Col md={4}>Start Date :</Col>
+                                      {event.eventDate &&
+                                      event.eventDate.length !== 0 &&
+                                      event.eventDate[0].value ? (
+                                        <Col>
+                                          {event.eventDate[0].value.substring(
+                                            0,
+                                            10
+                                          )}
+                                        </Col>
+                                      ) : null}
+                                    </>
+                                  )}
+                                </Row>
+                              </ListGroup.Item>
+
+                              <ListGroup.Item className='p-0'>
+                                <Row>
+                                  {userInfo &&
+                                  (userInfo.userRole === 'systemAdmin' ||
+                                    userInfo.userRole === 'admin') &&
+                                  editEvent ? (
+                                    <Form.Group
+                                      as={Col}
+                                      // md='5'
+                                      controlId='eventEndDate'
+                                    >
+                                      <Form.Label>End Date:</Form.Label>
+                                      <Form.Control
+                                        required
+                                        type='text'
+                                        placeholder='Enter The End Date'
+                                        value={eventEndDate}
+                                        onChange={(e) =>
+                                          setEventEndDate(e.target.value)
+                                        }
+                                      ></Form.Control>
+                                    </Form.Group>
+                                  ) : (
+                                    <>
+                                      <Col md={4}>End Date :</Col>
+                                      {event.eventDate &&
+                                      event.eventDate.length !== 0 &&
+                                      event.eventDate[1].value ? (
+                                        <Col>
+                                          {event.eventDate[1].value.substring(
+                                            0,
+                                            10
+                                          )}
+                                        </Col>
+                                      ) : null}
+                                    </>
+                                  )}
+                                </Row>
+                              </ListGroup.Item>
+                            </ListGroup>
+                          </Col>
+                        </Row>
+                      </ListGroup.Item>
+
+                      <ListGroup.Item>
+                        <Row>
+                          <Col md={3}>Event Location:</Col>
+                          {userInfo &&
+                          (userInfo.userRole === 'systemAdmin' ||
+                            userInfo.userRole === 'admin') &&
+                          editEvent ? (
+                            <Form.Group as={Col} controlId='eventAddress'>
+                              <Form.Control
+                                required
+                                type='text'
+                                placeholder='Enter Location Address'
+                                value={eventAddress}
+                                onChange={(e) =>
+                                  setEventAddress(e.target.value)
+                                }
+                              ></Form.Control>
+                            </Form.Group>
+                          ) : (
+                            <Col>{event.eventAddress}</Col>
+                          )}
+                        </Row>
+                      </ListGroup.Item>
+
+                      <ListGroup.Item>
+                        <Row>
+                          <Col md={3}>Adult Fee:</Col>
+                          {userInfo &&
+                          (userInfo.userRole === 'systemAdmin' ||
+                            userInfo.userRole === 'admin') &&
+                          editEvent ? (
+                            <Form.Group as={Col} controlId='adultFee'>
+                              <Form.Control
+                                required
+                                type='number'
+                                min='0'
+                                placeholder='Set Audult Fee'
+                                value={adultFee}
+                                onChange={(e) => setAdultFee(e.target.value)}
+                              ></Form.Control>
+                            </Form.Group>
+                          ) : (
+                            <Col>$ {event.adultFee}</Col>
+                          )}
+                        </Row>
+                      </ListGroup.Item>
+
+                      <ListGroup.Item>
+                        <Row>
+                          <Col md={3}>Minor Fee:</Col>
+                          {userInfo &&
+                          (userInfo.userRole === 'systemAdmin' ||
+                            userInfo.userRole === 'admin') &&
+                          editEvent ? (
+                            <Form.Group as={Col} controlId='minorFee'>
+                              <Form.Control
+                                required
+                                type='number'
+                                min='0'
+                                placeholder='Set Minor Fee'
+                                value={minorFee}
+                                onChange={(e) => setMinorFee(e.target.value)}
+                              ></Form.Control>
+                            </Form.Group>
+                          ) : (
+                            <Col>$ {event.minorFee}</Col>
+                          )}
+                        </Row>
+                      </ListGroup.Item>
+
+                      {userInfo &&
+                        (userInfo.userRole === 'systemAdmin' ||
+                          userInfo.userRole === 'admin') && (
+                          <>
+                            <ListGroup.Item>
                               <Row>
-                                {userInfo &&
-                                (userInfo.userRole === 'systemAdmin' ||
-                                  userInfo.userRole === 'admin') &&
-                                editEvent ? (
-                                  <Form.Group
-                                    as={Col}
-                                    // md='5'
-                                    controlId='eventStartDate'
-                                  >
-                                    <Form.Label>Start Date:</Form.Label>
+                                <Col md={3}>Cap:</Col>
+                                {editEvent ? (
+                                  <Form.Group as={Col} controlId='cap'>
                                     <Form.Control
                                       required
-                                      type='text'
-                                      placeholder='Enter Your Start Date'
-                                      value={eventStartDate}
-                                      onChange={(e) =>
-                                        setEventStartDate(e.target.value)
-                                      }
+                                      type='number'
+                                      min='0'
+                                      placeholder='Set cap'
+                                      value={cap}
+                                      onChange={(e) => setCap(e.target.value)}
                                     ></Form.Control>
                                   </Form.Group>
                                 ) : (
-                                  <>
-                                    <Col md={4}>Start Date :</Col>
-                                    {event.eventDate &&
-                                    event.eventDate.length !== 0 &&
-                                    event.eventDate[0].value ? (
-                                      <Col>
-                                        {event.eventDate[0].value.substring(
-                                          0,
-                                          10
-                                        )}
-                                      </Col>
-                                    ) : null}
-                                  </>
+                                  <Col>{event.cap}</Col>
                                 )}
                               </Row>
                             </ListGroup.Item>
+                          </>
+                        )}
+                    </ListGroup>
+                  </Card>
 
-                            <ListGroup.Item className='p-0'>
-                              <Row>
-                                {userInfo &&
-                                (userInfo.userRole === 'systemAdmin' ||
-                                  userInfo.userRole === 'admin') &&
-                                editEvent ? (
-                                  <Form.Group
-                                    as={Col}
-                                    // md='5'
-                                    controlId='eventEndDate'
-                                  >
-                                    <Form.Label>End Date:</Form.Label>
-                                    <Form.Control
-                                      required
-                                      type='text'
-                                      placeholder='Enter The End Date'
-                                      value={eventEndDate}
-                                      onChange={(e) =>
-                                        setEventEndDate(e.target.value)
-                                      }
-                                    ></Form.Control>
-                                  </Form.Group>
-                                ) : (
-                                  <>
-                                    <Col md={4}>End Date :</Col>
-                                    {event.eventDate &&
-                                    event.eventDate.length !== 0 &&
-                                    event.eventDate[1].value ? (
-                                      <Col>
-                                        {event.eventDate[1].value.substring(
-                                          0,
-                                          10
-                                        )}
-                                      </Col>
-                                    ) : null}
-                                  </>
-                                )}
-                              </Row>
-                            </ListGroup.Item>
-                          </ListGroup>
+                  {/* Buttons */}
+                  <Row>
+                    {userInfo &&
+                    (userInfo.userRole === 'systemAdmin' ||
+                      userInfo.userRole === 'admin') ? (
+                      <>
+                        <Col className='m-0 p-1'>
+                          {/* <Card.Footer className='text-muted'> */}
+                          {editEvent ? (
+                            <Link
+                              className='btn btn-outline-info btn-sm btn-block  rounded'
+                              onClick={updateEventHandler}
+                            >
+                              Update
+                            </Link>
+                          ) : (
+                            <Link
+                              className='btn btn-outline-info btn-sm btn-block  rounded'
+                              onClick={editEventHandler}
+                            >
+                              Edit
+                            </Link>
+                          )}
+
+                          {/* </Card.Footer> */}
                         </Col>
-                      </Row>
-                    </ListGroup.Item>
+                        <Col className='m-0 p-1'>
+                          {/* <Card.Footer className='text-muted'> */}
+                          {editEvent ? (
+                            <Link
+                              className='btn btn-outline-danger btn-sm btn-block  rounded'
+                              onClick={editEventHandler}
+                            >
+                              Cancel
+                            </Link>
+                          ) : !event.eventStatus ? (
+                            <Link
+                              className='btn btn-outline-warning btn-sm btn-block rounded'
+                              onClick={publishEventHandler}
+                            >
+                              Publish
+                            </Link>
+                          ) : (
+                            <Link
+                              className='btn btn-outline-warning btn-sm btn-block rounded'
+                              onClick={unpublishEventHandler}
+                            >
+                              Un-Publish
+                            </Link>
+                          )}
 
-                    <ListGroup.Item>
-                      <Row>
-                        <Col md={3}>Event Location:</Col>
-                        {userInfo &&
-                        (userInfo.userRole === 'systemAdmin' ||
-                          userInfo.userRole === 'admin') &&
-                        editEvent ? (
-                          <Form.Group as={Col} controlId='eventAddress'>
-                            <Form.Control
-                              required
-                              type='text'
-                              placeholder='Enter Location Address'
-                              value={eventAddress}
-                              onChange={(e) => setEventAddress(e.target.value)}
-                            ></Form.Control>
-                          </Form.Group>
-                        ) : (
-                          <Col>{event.eventAddress}</Col>
-                        )}
-                      </Row>
-                    </ListGroup.Item>
+                          {/* </Card.Footer> */}
+                        </Col>
+                      </>
+                    ) : event && event.eventStatus ? (
+                      <Col className='m-0 p-1'>
+                        <Link
+                          className='btn btn-outline-info btn-sm btn-block  rounded'
+                          to={`/event/register/${event.eventId}`}
+                        >
+                          Register
+                        </Link>
+                      </Col>
+                    ) : null}
+                  </Row>
+                </Col>
 
-                    <ListGroup.Item>
-                      <Row>
-                        <Col md={3}>Adult Fee:</Col>
-                        {userInfo &&
-                        (userInfo.userRole === 'systemAdmin' ||
-                          userInfo.userRole === 'admin') &&
-                        editEvent ? (
-                          <Form.Group as={Col} controlId='adultFee'>
-                            <Form.Control
-                              required
-                              type='number'
-                              min='0'
-                              placeholder='Set Audult Fee'
-                              value={adultFee}
-                              onChange={(e) => setAdultFee(e.target.value)}
-                            ></Form.Control>
-                          </Form.Group>
-                        ) : (
-                          <Col>$ {event.adultFee}</Col>
-                        )}
-                      </Row>
-                    </ListGroup.Item>
-
-                    <ListGroup.Item>
-                      <Row>
-                        <Col md={3}>Minor Fee:</Col>
-                        {userInfo &&
-                        (userInfo.userRole === 'systemAdmin' ||
-                          userInfo.userRole === 'admin') &&
-                        editEvent ? (
-                          <Form.Group as={Col} controlId='minorFee'>
-                            <Form.Control
-                              required
-                              type='number'
-                              min='0'
-                              placeholder='Set Minor Fee'
-                              value={minorFee}
-                              onChange={(e) => setMinorFee(e.target.value)}
-                            ></Form.Control>
-                          </Form.Group>
-                        ) : (
-                          <Col>$ {event.minorFee}</Col>
-                        )}
-                      </Row>
-                    </ListGroup.Item>
-
+                <Col md={4} className='m-0 p-1'>
+                  <Card>
                     {userInfo &&
                       (userInfo.userRole === 'systemAdmin' ||
                         userInfo.userRole === 'admin') && (
                         <>
-                          <ListGroup.Item>
-                            <Row>
-                              <Col md={3}>Cap:</Col>
-                              {editEvent ? (
-                                <Form.Group as={Col} controlId='cap'>
-                                  <Form.Control
-                                    required
-                                    type='number'
-                                    min='0'
-                                    placeholder='Set cap'
-                                    value={cap}
-                                    onChange={(e) => setCap(e.target.value)}
-                                  ></Form.Control>
-                                </Form.Group>
-                              ) : (
-                                <Col>{event.cap}</Col>
-                              )}
-                            </Row>
-                          </ListGroup.Item>
+                          <Card.Header className='text-center' as='h5'>
+                            <Link
+                              className='btn btn-outline-info btn-sm btn-block  rounded'
+                              onClick={addNewEventContact}
+                            >
+                              Create new contact for event
+                            </Link>
+                          </Card.Header>
+
+                          <Card.Body>
+                            {addEventContact
+                              ? (eventContactNewError && (
+                                  <Message variant='danger'>
+                                    {eventContactNewError}
+                                  </Message>
+                                )) ||
+                                (eventContactNewLoading && <Loader />) ||
+                                (success ? (
+                                  <Message variant='success'>{success}</Message>
+                                ) : (
+                                  <Form onSubmit={submitHandler}>
+                                    <Form.Group controlId='title'>
+                                      <Form.Label>Position Name</Form.Label>
+                                      <Form.Control
+                                        type='text'
+                                        placeholder='Position Name'
+                                        value={positionName}
+                                        onChange={(e) =>
+                                          setPositionName(e.target.value)
+                                        }
+                                      ></Form.Control>
+                                    </Form.Group>
+
+                                    <Form.Group controlId='title'>
+                                      <Form.Label>Member Id</Form.Label>
+                                      <Form.Control
+                                        type='text'
+                                        placeholder='ID'
+                                        value={memberId}
+                                        onChange={(e) =>
+                                          setMemberId(e.target.value)
+                                        }
+                                      ></Form.Control>
+                                    </Form.Group>
+
+                                    <Form.Group controlId='title'>
+                                      <Form.Label>Contact Email</Form.Label>
+                                      <Form.Control
+                                        type='email'
+                                        placeholder='Email'
+                                        value={contactEmail}
+                                        onChange={(e) =>
+                                          setContactEmail(e.target.value)
+                                        }
+                                      ></Form.Control>
+                                    </Form.Group>
+
+                                    <Form.Group controlId='title'>
+                                      <Form.Label>Contact Phone</Form.Label>
+                                      <Form.Control
+                                        type='text'
+                                        placeholder='Phone Number'
+                                        value={contactPhone}
+                                        onChange={(e) =>
+                                          setContactPhone(e.target.value)
+                                        }
+                                      ></Form.Control>
+                                    </Form.Group>
+
+                                    {editEventContact ? (
+                                      <Button
+                                        type='submit'
+                                        variant='info'
+                                        block
+                                        // onClick={() =>
+                                        //   updateAnnouncementHandler(
+                                        //     announcement.announcementId
+                                        //   )
+                                        // }
+                                      >
+                                        <i className='fas fa-plus' /> Update
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        type='submit'
+                                        variant='info'
+                                        block
+                                      >
+                                        <i className='fas fa-plus' /> Add
+                                      </Button>
+                                    )}
+                                  </Form>
+                                ))
+                              : null}
+                          </Card.Body>
                         </>
                       )}
-                  </ListGroup>
-                </Card>
-              </Col>
 
-              <Col md={4} className='m-0 p-1'>
-                <Card>
-                  {userInfo &&
-                    (userInfo.userRole === 'systemAdmin' ||
-                      userInfo.userRole === 'admin') && (
+                    <Card.Header className='text-info text-center'>
+                      Contacts:
+                    </Card.Header>
+
+                    {eventContactsLoading ? (
+                      <Loader />
+                    ) : eventContactsError ? (
+                      <Message variant='danger'>{eventContactsError}</Message>
+                    ) : (
                       <>
-                        <Card.Header className='text-center' as='h5'>
-                          <Link
-                            className='btn btn-outline-info btn-sm btn-block  rounded'
-                            onClick={addNewEventContact}
-                          >
-                            Create new contact for event
-                          </Link>
-                        </Card.Header>
+                        <ListGroup variant='flush'>
+                          {eventContacts && eventContacts.length !== 0
+                            ? eventContacts.map((eventContact, index) => (
+                                <>
+                                  <ListGroup.Item key={index}>
+                                    <Row>
+                                      <Col md={4}>Position :</Col>
+                                      <Col>{eventContact.positionName}</Col>
+                                    </Row>
 
-                        <Card.Body>
-                          {addEventContact
-                            ? (eventContactNewError && (
-                                <Message variant='danger'>
-                                  {eventContactNewError}
-                                </Message>
-                              )) ||
-                              (eventContactNewLoading && <Loader />) ||
-                              (success ? (
-                                <Message variant='success'>{success}</Message>
-                              ) : (
-                                <Form onSubmit={submitHandler}>
-                                  <Form.Group controlId='title'>
-                                    <Form.Label>Position Name</Form.Label>
-                                    <Form.Control
-                                      type='text'
-                                      placeholder='Position Name'
-                                      value={positionName}
-                                      onChange={(e) =>
-                                        setPositionName(e.target.value)
-                                      }
-                                    ></Form.Control>
-                                  </Form.Group>
+                                    <Row>
+                                      <Col md={4}>Name :</Col>
+                                      <Col>{eventContact.contactName}</Col>
+                                    </Row>
 
-                                  <Form.Group controlId='title'>
-                                    <Form.Label>Member Id</Form.Label>
-                                    <Form.Control
-                                      type='text'
-                                      placeholder='ID'
-                                      value={memberId}
-                                      onChange={(e) =>
-                                        setMemberId(e.target.value)
-                                      }
-                                    ></Form.Control>
-                                  </Form.Group>
+                                    <Row>
+                                      <Col md={4}>Email :</Col>
+                                      <Col>{eventContact.contactEmail}</Col>
+                                    </Row>
 
-                                  <Form.Group controlId='title'>
-                                    <Form.Label>Contact Email</Form.Label>
-                                    <Form.Control
-                                      type='email'
-                                      placeholder='Email'
-                                      value={contactEmail}
-                                      onChange={(e) =>
-                                        setContactEmail(e.target.value)
-                                      }
-                                    ></Form.Control>
-                                  </Form.Group>
+                                    <Row>
+                                      <Col md={4}>Phone :</Col>
+                                      <Col>
+                                        <a
+                                          href={`tel: ${eventContact.contactPhone}`}
+                                        >
+                                          {eventContact.contactPhone}
+                                        </a>
+                                      </Col>
+                                    </Row>
 
-                                  <Form.Group controlId='title'>
-                                    <Form.Label>Contact Phone</Form.Label>
-                                    <Form.Control
-                                      type='text'
-                                      placeholder='Phone Number'
-                                      value={contactPhone}
-                                      onChange={(e) =>
-                                        setContactPhone(e.target.value)
-                                      }
-                                    ></Form.Control>
-                                  </Form.Group>
+                                    {userInfo &&
+                                      (userInfo.userRole === 'systemAdmin' ||
+                                        userInfo.userRole === 'admin') && (
+                                        <div className='text-center'>
+                                          <span
+                                            onClick={() =>
+                                              editEventContactHandler(
+                                                eventContact.eventContactId
+                                              )
+                                            }
+                                          >
+                                            <i className='far fa-edit action mr-2'></i>
+                                          </span>
 
-                                  {editEventContact ? (
-                                    <Button
-                                      type='submit'
-                                      variant='info'
-                                      block
-                                      // onClick={() =>
-                                      //   updateAnnouncementHandler(
-                                      //     announcement.announcementId
-                                      //   )
-                                      // }
-                                    >
-                                      <i className='fas fa-plus' /> Update
-                                    </Button>
-                                  ) : (
-                                    <Button type='submit' variant='info' block>
-                                      <i className='fas fa-plus' /> Add
-                                    </Button>
-                                  )}
-                                </Form>
+                                          <span
+                                            onClick={() =>
+                                              deleteEventContactHandler(
+                                                eventContact.eventContactId
+                                              )
+                                            }
+                                          >
+                                            <i className='fas fa-trash action'></i>
+                                          </span>
+                                        </div>
+                                      )}
+                                  </ListGroup.Item>
+                                </>
                               ))
-                            : null}
-                        </Card.Body>
+                            : null}{' '}
+                        </ListGroup>
                       </>
                     )}
+                  </Card>
+                </Col>
+              </Row>
+            </Card>
 
-                  <Card.Header className='text-info text-center'>
-                    Contacts:
-                  </Card.Header>
-
-                  {eventContactsLoading ? (
-                    <Loader />
-                  ) : eventContactsError ? (
-                    <Message variant='danger'>{eventContactsError}</Message>
-                  ) : (
-                    <>
-                      <ListGroup variant='flush'>
-                        {eventContacts && eventContacts.length !== 0
-                          ? eventContacts.map((eventContact, index) => (
-                              <>
-                                <ListGroup.Item key={index}>
-                                  <Row>
-                                    <Col md={4}>Position :</Col>
-                                    <Col>{eventContact.positionName}</Col>
-                                  </Row>
-
-                                  <Row>
-                                    <Col md={4}>Name :</Col>
-                                    <Col>{eventContact.contactName}</Col>
-                                  </Row>
-
-                                  <Row>
-                                    <Col md={4}>Email :</Col>
-                                    <Col>{eventContact.contactEmail}</Col>
-                                  </Row>
-
-                                  <Row>
-                                    <Col md={4}>Phone :</Col>
-                                    <Col>
-                                      <a
-                                        href={`tel: ${eventContact.contactPhone}`}
-                                      >
-                                        {eventContact.contactPhone}
-                                      </a>
-                                    </Col>
-                                  </Row>
-
-                                  {userInfo &&
-                                    (userInfo.userRole === 'systemAdmin' ||
-                                      userInfo.userRole === 'admin') && (
-                                      <div className='text-center'>
-                                        <span
-                                          onClick={() =>
-                                            editEventContactHandler(
-                                              eventContact.eventContactId
-                                            )
-                                          }
-                                        >
-                                          <i className='far fa-edit action mr-2'></i>
-                                        </span>
-
-                                        <span
-                                          onClick={() =>
-                                            deleteEventContactHandler(
-                                              eventContact.eventContactId
-                                            )
-                                          }
-                                        >
-                                          <i className='fas fa-trash action'></i>
-                                        </span>
-                                      </div>
-                                    )}
-                                </ListGroup.Item>
-                              </>
-                            ))
-                          : null}{' '}
-                      </ListGroup>
-                    </>
-                  )}
-                </Card>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col md={8}>
+            {userInfo &&
+            (userInfo.userRole === 'systemAdmin' ||
+              userInfo.userRole === 'admin') ? (
+              <Card className='text-center p-0'>
+                <Card.Header as='h5' className='text-info'>
+                  Member Register List
+                </Card.Header>
                 <Row>
-                  {userInfo &&
-                  (userInfo.userRole === 'systemAdmin' ||
-                    userInfo.userRole === 'admin') ? (
-                    <>
-                      <Col className='m-0 p-1'>
-                        {/* <Card.Footer className='text-muted'> */}
-                        {editEvent ? (
-                          <Link
-                            className='btn btn-outline-info btn-sm btn-block  rounded'
-                            onClick={updateEventHandler}
-                          >
-                            Update
-                          </Link>
-                        ) : (
-                          <Link
-                            className='btn btn-outline-info btn-sm btn-block  rounded'
-                            onClick={editEventHandler}
-                          >
-                            Edit
-                          </Link>
-                        )}
-
-                        {/* </Card.Footer> */}
-                      </Col>
-                      <Col className='m-0 p-1'>
-                        {/* <Card.Footer className='text-muted'> */}
-                        {editEvent ? (
-                          <Link
-                            className='btn btn-outline-danger btn-sm btn-block  rounded'
-                            onClick={editEventHandler}
-                          >
-                            Cancel
-                          </Link>
-                        ) : !event.eventStatus ? (
-                          <Link
-                            className='btn btn-outline-warning btn-sm btn-block rounded'
-                            onClick={publishEventHandler}
-                          >
-                            Publish
-                          </Link>
-                        ) : (
-                          <Link
-                            className='btn btn-outline-warning btn-sm btn-block rounded'
-                            onClick={unpublishEventHandler}
-                          >
-                            Un-Publish
-                          </Link>
-                        )}
-
-                        {/* </Card.Footer> */}
-                      </Col>
-                    </>
-                  ) : event && event.eventStatus ? (
-                    <Col className='m-0 p-1'>
-                      <Link
-                        className='btn btn-outline-info btn-sm btn-block  rounded'
-                        to={`/event/register/${event.eventId}`}
-                      >
-                        Register
-                      </Link>
-                    </Col>
-                  ) : null}
+                  <Col className='p-0'>
+                    {event.eventRegistrations &&
+                    event.eventRegistrations.length !== 0 ? (
+                      <RTable
+                        users={event.eventRegistrations}
+                        COLUMNS={columnsAdmin}
+                      />
+                    ) : (
+                      <span>No registration found</span>
+                    )}
+                  </Col>
                 </Row>
-              </Col>
-            </Row>
+              </Card>
+            ) : null}
           </>
         )
       ) : null}

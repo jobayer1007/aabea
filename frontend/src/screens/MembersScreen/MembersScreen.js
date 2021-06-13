@@ -1,6 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Table, Button, Row, Col, Card } from 'react-bootstrap';
+import {
+  Table,
+  Button,
+  Row,
+  Col,
+  Card,
+  Form,
+  DropdownButton,
+  Dropdown,
+} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
@@ -12,6 +21,7 @@ import {
   createAdminUser,
   deleteAdminUser,
   getUserProfile,
+  listAllUsers,
 } from '../../actions/userActions';
 import { listChapters } from '../../actions/chapterActions';
 import Sidebar from '../../components/Sidebar/Sidebar';
@@ -25,6 +35,8 @@ import { USER_DELETE_RESET } from '../../constants/userConstants';
 const MembersScreen = ({ history }) => {
   const dispatch = useDispatch();
   const [columnsAdmin, setColumnsAdmin] = useState([]);
+  // const [chapter, setChapter] = useState(true);
+  // const [chapterUsers, setChapterUsers] = useState();
   const usersRef = useRef();
 
   // const chapterList = useSelector((state) => state.chapterList);
@@ -40,7 +52,14 @@ const MembersScreen = ({ history }) => {
   const userList = useSelector((state) => state.userList);
   const { loading: userListLoading, error: userListError, users } = userList;
 
-  usersRef.current = users;
+  const userAllList = useSelector((state) => state.userAllList);
+  const {
+    loading: userAllListLoading,
+    error: userAllListError,
+    users: allUserList,
+  } = userAllList;
+
+  usersRef.current = allUserList;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -66,6 +85,13 @@ const MembersScreen = ({ history }) => {
       // dispatch(listChapters());
       dispatch(listPendingUsers(checkChapter));
       dispatch(listUsers(checkChapter));
+      dispatch(listAllUsers());
+
+      // if (chapter === 'allChapter') {
+      //   setUsers(allUserList);
+      // } else {
+      //   setUsers(chapterUsers);
+      // }
 
       if (
         userInfo.userRole === 'admin' ||
@@ -185,13 +211,14 @@ const MembersScreen = ({ history }) => {
     successAdmin,
     successDeleteAdmin,
   ]);
+
   const editUserHandler = (rowIndex) => {
     const id = usersRef.current[rowIndex].memberId;
     // console.log(rowIndex);
 
     history.push(`/admin/users/${id}/edit`);
     // props.history.push("/tutorials/" + id);
-    console.log(id);
+    // console.log(id);
   };
 
   const deleteUserHandler = (rowIndex) => {
@@ -445,7 +472,6 @@ const MembersScreen = ({ history }) => {
                                     <td> {user.userName}</td>
                                     <td>
                                       <a href={`mailto: ${user.email}`}>
-                                        {' '}
                                         {user.email}
                                       </a>
                                     </td>
@@ -477,7 +503,7 @@ const MembersScreen = ({ history }) => {
                                     )} */}
                                     {(userInfo.userRole === 'systemAdmin' ||
                                       userInfo.userRole === 'admin') &&
-                                      (user.userRole === 'member' ? (
+                                      (users.userRole === 'member' ? (
                                         <td>
                                           <Button
                                             variant='warning'
@@ -526,19 +552,35 @@ const MembersScreen = ({ history }) => {
                 id='all-member'
               >
                 <Card className='text-center' border='info'>
-                  <Card.Header as='h3' className='text-info'>
-                    Chapter Members
+                  <Card.Header as='h5' className='text-info'>
+                    Members
+                    {/* <Col
+                      className='text-center'
+                      required
+                      as='select'
+                      type='text'
+                      value={chapter}
+                      onChange={(e) => setChapter(e.target.value)}
+                    >
+                      <option value='true'>Chapter members</option>
+                      <option value='false'>All Chapter members</option>
+                    </Col> */}
                   </Card.Header>
 
                   <>
-                    {userListLoading ? (
+                    {userAllListLoading ? (
                       <Loader />
-                    ) : userListError ? (
-                      <Message variant='danger'>{userListError}</Message>
+                    ) : userAllListError ? (
+                      <Message variant='danger'>{userAllListError}</Message>
                     ) : (
                       <>
-                        {users && users.length !== 0 && (
-                          <RTable users={users} COLUMNS={columnsAdmin} />
+                        {allUserList && allUserList.length !== 0 && (
+                          <>
+                            <RTable
+                              users={allUserList}
+                              COLUMNS={columnsAdmin}
+                            />
+                          </>
                         )}
                       </>
                     )}

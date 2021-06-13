@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import {
+  userAllListReducer,
   userApproveReducer,
   userCreateAdminReducer,
   userDeleteAdminReducer,
@@ -164,6 +165,7 @@ const reducer = combineReducers({
   userUpdateProfile: userUpdateProfileReducer,
 
   userList: userListReducer,
+  userAllList: userAllListReducer,
 
   userPendingList: userPendingListReducer,
   userPendingDetails: userPendingDetailsReducer,

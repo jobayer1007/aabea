@@ -1,5 +1,7 @@
 import axios from 'axios';
-import React, { Component, useEffect, useState } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
+
+import React, { Component, useEffect, useRef, useState } from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
@@ -34,6 +36,8 @@ const RegisterScreen = ({ location, history }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [uploading, setUploading] = useState(false);
+
+  const reRef = useRef();
 
   const dispatch = useDispatch();
 
@@ -77,8 +81,10 @@ const RegisterScreen = ({ location, history }) => {
     }
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
+
+    // const captcha = document.querySelector('#g-recaptcha-response').value;
 
     const form = e.currentTarget;
     if (form.checkValidity() === false) {
@@ -89,9 +95,12 @@ const RegisterScreen = ({ location, history }) => {
         setMessage('password do not match');
         swal('Error!', message, 'error');
       } else {
+        const captcha = await reRef.current.getValue();
+        console.log(captcha);
         // Dispatch Register
         dispatch(
           register(
+            captcha,
             email,
             password,
             firstName,
@@ -110,6 +119,7 @@ const RegisterScreen = ({ location, history }) => {
             checkChapter
           )
         );
+        await reRef.current.reset();
       }
     }
 
@@ -162,7 +172,11 @@ const RegisterScreen = ({ location, history }) => {
                       placeholder='First Name'
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
+                      maxLength='20'
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
                   {/* </Col> */}
                   {/* <Col md={5}> */}
@@ -173,7 +187,11 @@ const RegisterScreen = ({ location, history }) => {
                       type='text'
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
+                      maxLength='20'
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
                   {/* </Col> */}
                   {/* </Row> */}
@@ -191,7 +209,11 @@ const RegisterScreen = ({ location, history }) => {
                       placeholder='1234 Main St...'
                       value={address1}
                       onChange={(e) => setAddress1(e.target.value)}
+                      maxLength='50'
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group
@@ -205,7 +227,11 @@ const RegisterScreen = ({ location, history }) => {
                       placeholder='Enter State..'
                       value={state}
                       onChange={(e) => setState(e.target.value)}
+                      maxLength='20'
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group
@@ -219,7 +245,11 @@ const RegisterScreen = ({ location, history }) => {
                       placeholder='Enter City..'
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
+                      maxLength='30'
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group
@@ -233,7 +263,11 @@ const RegisterScreen = ({ location, history }) => {
                       placeholder='Enter Zipcode..'
                       value={zipcode}
                       onChange={(e) => setZipcode(e.target.value)}
+                      maxLength='15'
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group as={Col} md='2'>
@@ -246,7 +280,11 @@ const RegisterScreen = ({ location, history }) => {
                       placeholder='Enter Your Phone Number..'
                       value={primaryPhone}
                       onChange={(e) => setPrimaryPhone(e.target.value)}
+                      maxLength='20'
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group as={Col} md='2'>
@@ -259,7 +297,11 @@ const RegisterScreen = ({ location, history }) => {
                       placeholder='Enter Your Last Degree Received..'
                       value={degree}
                       onChange={(e) => setDegree(e.target.value)}
+                      maxLength='50'
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group as={Col} md='5' controlId='degreeYear'>
@@ -269,7 +311,11 @@ const RegisterScreen = ({ location, history }) => {
                       placeholder='Enter The Year of Degree Awarded..'
                       value={degreeYear}
                       onChange={(e) => setDegreeYear(e.target.value)}
+                      maxLength='4'
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group
@@ -283,7 +329,11 @@ const RegisterScreen = ({ location, history }) => {
                       placeholder='Enter Your Major..'
                       value={major}
                       onChange={(e) => setMajor(e.target.value)}
+                      maxLength='30'
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group as={Col} md='5' controlId='collegeName'>
@@ -293,20 +343,17 @@ const RegisterScreen = ({ location, history }) => {
                       placeholder='Enter Your University/College Name..'
                       value={collegeName}
                       onChange={(e) => setCollegeName(e.target.value)}
+                      maxLength='50'
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group as={Col} md='2'>
                     <Form.Label>Certificate</Form.Label>
                   </Form.Group>
                   <Form.Group as={Col} md='10' controlId='certificate'>
-                    <Form.Control
-                      required
-                      type='text'
-                      // placeholder='Enter your last certificate url..'
-                      value={certificate}
-                      onChange={(e) => setCertificate(e.target.value)}
-                    ></Form.Control>
                     <Form.File
                       id='image-file'
                       label='Choose File'
@@ -314,6 +361,16 @@ const RegisterScreen = ({ location, history }) => {
                       onChange={uploadFileHandler}
                     ></Form.File>
                     {uploading && <Loader />}
+                    <Form.Control
+                      required
+                      type='text'
+                      // placeholder='Enter your last certificate url..'
+                      value={certificate}
+                      onChange={(e) => setCertificate(e.target.value)}
+                    ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group as={Col} md='2'>
@@ -327,6 +384,9 @@ const RegisterScreen = ({ location, history }) => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value.toLowerCase())}
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group
@@ -341,6 +401,9 @@ const RegisterScreen = ({ location, history }) => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
 
                   <Form.Group
@@ -355,9 +418,27 @@ const RegisterScreen = ({ location, history }) => {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       isInvalid={password !== confirmPassword}
+                      // validated={password === confirmPassword}
                     ></Form.Control>
+                    <Form.Control.Feedback type='invalid'>
+                      **Required
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Form.Row>
+
+                <Row>
+                  <Col md={{ span: 10, offset: 2 }}>
+                    {/* <div
+                      className='g-recaptcha'
+                      data-sitekey='6LeVuS0bAAAAANZ8QwazNTaMGFPl3kXkR7aP0uR4'
+                    ></div> */}
+                    <ReCAPTCHA
+                      sitekey='6LeVuS0bAAAAANZ8QwazNTaMGFPl3kXkR7aP0uR4'
+                      ref={reRef}
+                      id='widgetId2'
+                    />
+                  </Col>
+                </Row>
 
                 <Form.Group as={Row}>
                   <Col md={{ span: 10, offset: 2 }}>

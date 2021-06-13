@@ -180,15 +180,14 @@ exports.updateChapterById = asyncHandler(async (req, res) => {
 // @route   GET /api/chapters/chapter/:checkChapter
 // @access  Private/SystemAdmin
 exports.getChapterBySubDomain = asyncHandler(async (req, res) => {
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   const { checkChapter } = req.params;
-  //   subDomain = checkChapter.split('.')[0];
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
@@ -756,13 +755,13 @@ exports.createNewChapterSettings = asyncHandler(async (req, res) => {
   } = req.body;
 
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   subDomain = checkChapter.split('.')[0];
-  // }
-  const subDomain = checkChapter.split('.')[0];
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
+  // const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
@@ -836,15 +835,14 @@ exports.createNewChapterSettings = asyncHandler(async (req, res) => {
 // @access  Private/admin
 exports.getChapterSettings = asyncHandler(async (req, res) => {
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   const { checkChapter } = req.params;
-  //   subDomain = checkChapter.split('.')[0];
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
 
   const chapterExists = await models.Chapter.findOne({
     where: { subDomain: subDomain },
@@ -875,15 +873,14 @@ exports.getChapterSettings = asyncHandler(async (req, res) => {
 // @access  Private/admin
 exports.updateChapterSettings = asyncHandler(async (req, res) => {
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   const { checkChapter } = req.params;
-  //   subDomain = checkChapter.split('.')[0];
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
 
   const chapterExists = await models.Chapter.findOne({
     where: { subDomain: subDomain },
@@ -956,15 +953,14 @@ exports.updateChapterSettings = asyncHandler(async (req, res) => {
 
 exports.getPaypalId = asyncHandler(async (req, res) => {
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   const { checkChapter } = req.params;
-  //   subDomain = checkChapter.split('.')[0];
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });

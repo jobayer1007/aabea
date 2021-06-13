@@ -205,6 +205,7 @@ const RegisterScreen_New = () => {
                 type='text'
                 placeholder='First Name'
                 className='form-control'
+                maxlength='20'
               />
             </FormGroup>
             <FormGroup as={Col} md='4'>
@@ -213,6 +214,7 @@ const RegisterScreen_New = () => {
                 type='text'
                 placeholder='Last Name'
                 className='form-control'
+                maxlength='20'
               />
             </FormGroup>
 

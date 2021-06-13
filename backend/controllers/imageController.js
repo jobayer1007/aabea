@@ -31,13 +31,13 @@ exports.addNewImage = asyncHandler(async (req, res) => {
     req.body;
 
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   subDomain = checkChapter.split('.')[0];
-  // }
-  const subDomain = checkChapter.split('.')[0];
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
+  // const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
@@ -112,15 +112,14 @@ exports.addNewImage = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getAllImages = asyncHandler(async (req, res) => {
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   const { checkChapter } = req.params;
-  //   subDomain = checkChapter.split('.')[0];
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
@@ -149,15 +148,14 @@ exports.getAllImages = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getAllNavbarImages = asyncHandler(async (req, res) => {
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   const { checkChapter } = req.params;
-  //   subDomain = checkChapter.split('.')[0];
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
@@ -184,15 +182,14 @@ exports.getAllNavbarImages = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getAllHomeScreenImages = asyncHandler(async (req, res) => {
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   const { checkChapter } = req.params;
-  //   subDomain = checkChapter.split('.')[0];
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
@@ -219,15 +216,14 @@ exports.getAllHomeScreenImages = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getAllImagesByEvent = asyncHandler(async (req, res) => {
   // Find Chapter
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   const { checkChapter } = req.params;
-  //   subDomain = checkChapter.split('.')[0];
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },

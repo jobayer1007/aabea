@@ -53,15 +53,14 @@ exports.createNewHelpContact = asyncHandler(async (req, res) => {
 // @route   GET /api/helps/chapter/:checkChapter
 // @access  Public
 exports.getHelpContacts = asyncHandler(async (req, res) => {
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   const { checkChapter } = req.params;
-  //   subDomain = checkChapter.split('.')[0];
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },

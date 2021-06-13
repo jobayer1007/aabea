@@ -34,6 +34,8 @@ const EventNewScreen = ({ location, history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const checkChapter = window.location.host;
+
   useEffect(() => {
     if (
       userInfo &&
@@ -67,10 +69,6 @@ const EventNewScreen = ({ location, history }) => {
         { value: new Date(eventEndDate + 'T' + eventEndTime) },
       ];
 
-      console.log(eventStartDate);
-      console.log(eventStartTime);
-      console.log(eventDate);
-
       dispatch(
         newEvent(
           eventName,
@@ -79,7 +77,8 @@ const EventNewScreen = ({ location, history }) => {
           eventAddress,
           adultFee,
           minorFee,
-          cap
+          cap,
+          checkChapter
         )
       );
     }

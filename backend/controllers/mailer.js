@@ -68,7 +68,7 @@ exports.sendCongratulationsEmail = function ({
         <p>Congratulations! Your account registration request has been approved.</p>
         <p>You can now Log In.</p>
         <p>To Log In Follow the Link below:</p>
-        <p class='text-center'><a href="http://${domain}/login" target="_" >Log In</a></p>
+        <p class='text-center'><a href="http://${domain}.garbalife.com/login" target="_" >Log In</a></p>
         <p>Thank You and Welcome to AABEA</p>
         <p>Best Wishes,</p>
         <p>AABEA TEAM</p>

@@ -37,12 +37,13 @@ exports.createNewAnnouncement = asyncHandler(async (req, res) => {
 // @access  Public
 exports.getAnnouncements = asyncHandler(async (req, res) => {
   const { checkChapter } = req.params;
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  // }
-  const subDomain = checkChapter.split('.')[0];
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dekjv only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
+  // const subDomain = checkChapter.split('.')[0];
 
   // console.log('From announcement controller :' + checkChapter);
   const chapter = await models.Chapter.findOne({

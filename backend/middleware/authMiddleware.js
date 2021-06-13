@@ -1,3 +1,4 @@
+const fetch = require('node-fetch');
 const jwt = require('jsonwebtoken');
 // import jwt from 'jsonwebtoken';
 const asyncHandler = require('express-async-handler');
@@ -58,3 +59,46 @@ exports.systemAdmin = (req, res, next) => {
 };
 
 // export { protect, admin };
+
+///////////Captcha///////////////////////////////////////////////
+
+exports.captcha = asyncHandler(async (req, res, next) => {
+  // let token;
+  if (
+    req.body.captcha === undefined ||
+    req.body.captcha === '' ||
+    req.body.captcha === null
+  ) {
+    res.status(401);
+    throw new Error('Please select captcha');
+  }
+  try {
+    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_SECRET_KEY}&response=${req.body.captcha}&remoteip=${req.ip}`;
+
+    // console.log(process.env.NODE_ENV)
+    // const config = {
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // };
+    console.log('Captcha Received:' + req.body.captcha);
+    console.log('URL:' + verifyUrl);
+
+    const response = await fetch(
+      `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_SECRET_KEY}&response=${req.body.captcha}&remoteip=${req.ip}`,
+      { method: 'POST' }
+    );
+    const data = await response.json();
+    console.log(data);
+    if (data.success) {
+      next();
+    } else {
+      res.status(401);
+      throw new Error('Failed captcha verification');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(401);
+    throw new Error('Failed captcha verification!' + ' ' + error);
+  }
+});

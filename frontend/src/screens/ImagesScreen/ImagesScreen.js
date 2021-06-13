@@ -208,11 +208,13 @@ const ImagesScreen = ({ history }) => {
                                   onChange={(e) => setEventId(e.target.value)}
                                 >
                                   <option>Select event</option>
-                                  {events.map((event, index) => (
-                                    <option key={index} value={event.eventId}>
-                                      {event.eventName}
-                                    </option>
-                                  ))}
+                                  {events &&
+                                    events.length !== 0 &&
+                                    events.map((event, index) => (
+                                      <option key={index} value={event.eventId}>
+                                        {event.eventName}
+                                      </option>
+                                    ))}
                                 </Form.Control>
                               </Form.Group>
                             ) : null}

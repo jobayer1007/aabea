@@ -36,15 +36,14 @@ exports.createNewLink = asyncHandler(async (req, res) => {
 // @route   GET /api/links/chapter/:checkChapter
 // @access  Private/SystemAdmin || Admin
 exports.getLinks = asyncHandler(async (req, res) => {
-  // let subDomain;
-  // if (process.env.NODE_ENV === 'development') {
-  //   subDomain = 'bd'; // at dev only
-  // } else {
-  //   const { checkChapter } = req.params;
-  //   subDomain = checkChapter.split('.')[0];
-  // }
+  let subDomain;
+  if (process.env.NODE_ENV === 'development') {
+    subDomain = 'bd'; // at dev only
+  } else {
+    subDomain = checkChapter.split('.')[0];
+  }
   const { checkChapter } = req.params;
-  const subDomain = checkChapter.split('.')[0];
+  // const subDomain = checkChapter.split('.')[0];
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
