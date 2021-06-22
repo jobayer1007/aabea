@@ -22,7 +22,7 @@ const Event = (sequelize, DataTypes) =>
     },
 
     eventDescription: {
-      type: DataTypes.STRING(250),
+      type: DataTypes.TEXT,
       required: true,
       allowNull: false,
       notEmpty: true,
@@ -36,7 +36,7 @@ const Event = (sequelize, DataTypes) =>
     },
 
     eventAddress: {
-      type: DataTypes.STRING(250),
+      type: DataTypes.STRING,
       required: true,
     },
 

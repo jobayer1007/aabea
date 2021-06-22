@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Row, Col, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import FormContainer from '../components/FormContainer';
-import { login, logout, resendVerifyEmail } from '../actions/userActions';
-import Message from '../components/Message';
-import Loader from '../components/Loader';
+import FormContainer from '../../components/FormContainer';
+import { login, logout, resendVerifyEmail } from '../../actions/userActions';
+import Message from '../../components/Message';
+import Loader from '../../components/Loader';
 import swal from 'sweetalert';
 import {
   USER_LOGOUT,
   USER_PASSWORD_RESET_RESET,
-} from '../constants/userConstants';
+} from '../../constants/userConstants';
 
 const LoginScreen = ({ location, history }) => {
   const [userRole, setUserRole] = useState('member');
@@ -91,6 +91,7 @@ const LoginScreen = ({ location, history }) => {
     dispatch,
     history,
     userInfo,
+    checkChapter,
     success,
     email,
     password,

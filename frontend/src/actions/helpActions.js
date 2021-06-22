@@ -74,7 +74,7 @@ export const allHelps = (checkChapter) => async (dispatch) => {
       },
     };
 
-    console.log('from help action: ' + checkChapter);
+    // console.log('from help action: ' + checkChapter);
     const { data } = await axios.get(
       `/api/helps/chapter/${checkChapter}`,
 
@@ -130,13 +130,14 @@ export const getHelpById = (id) => async (dispatch) => {
 };
 
 export const updateHelpById =
-  (memberId, helpFor, contactEmail, contactPhone, profilePicture, isTrue, id) =>
+  (memberId, helpFor, contactEmail, contactPhone, isTrue, id) =>
   async (dispatch, getState) => {
     try {
       dispatch({
         type: HELP_CONTACT_UPDATE_BY_ID_REQUEST,
       });
 
+      // console.log(id);
       const {
         userLogin: { userInfo },
       } = getState();
@@ -154,7 +155,7 @@ export const updateHelpById =
           helpFor,
           contactEmail,
           contactPhone,
-          profilePicture,
+
           isTrue,
         },
         config

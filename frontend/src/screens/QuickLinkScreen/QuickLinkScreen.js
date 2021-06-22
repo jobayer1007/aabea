@@ -87,6 +87,7 @@ const QuickLinkScreen = ({ history }) => {
     dispatch,
     history,
     userInfo,
+    checkChapter,
     success,
     linkByIdSuccess,
     link,
@@ -211,6 +212,7 @@ const QuickLinkScreen = ({ history }) => {
                       className='btn btn-outline-info btn-sm btn-block rounded'
                       // onClick={() => setAddAnnouncement(!addAnnouncement)}
                       onClick={addNewLink}
+                      to=''
                     >
                       New Link
                     </Link>

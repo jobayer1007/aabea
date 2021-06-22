@@ -1,19 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button, Row, Col, Card, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
-import {
-  deletePaymentType,
-  listPaymentTypes,
-  registerPaymentType,
-} from '../../actions/paymentTypeActions';
-import {
-  PAYMENT_TYPE_LIST_RESET,
-  PAYMENT_TYPE_REGISTER_RESET,
-} from '../../constants/paymentTypeConstants';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import {
   deleteDonationType,
@@ -68,6 +58,12 @@ const DonationTypeScreen = ({ history }) => {
     }
   }, [dispatch, history, userInfo, successDonationTypeDelete, success]);
 
+  const addNewDonationType = (e) => {
+    e.preventDefault();
+
+    setAddDonationType(!addDonationType);
+  };
+
   const deleteDonationTypeHandler = (id) => {
     if (window.confirm('Are You Sure?')) {
       dispatch(deleteDonationType(id));
@@ -119,7 +115,8 @@ const DonationTypeScreen = ({ history }) => {
                     <Card.Header className='text-center' as='h2'>
                       <Link
                         className='btn btn-outline-info btn-sm btn-block rounded'
-                        onClick={() => setAddDonationType(!addDonationType)}
+                        onClick={addNewDonationType}
+                        to=''
                       >
                         Add New Donation Type
                       </Link>
@@ -143,6 +140,7 @@ const DonationTypeScreen = ({ history }) => {
                                   onChange={(e) =>
                                     setDonationTypeName(e.target.value)
                                   }
+                                  required
                                 ></Form.Control>
                               </Form.Group>
 
@@ -167,6 +165,7 @@ const DonationTypeScreen = ({ history }) => {
                                   onChange={(e) =>
                                     setDonationTypeDescription(e.target.value)
                                   }
+                                  required
                                 ></Form.Control>
                               </Form.Group>
 
@@ -234,14 +233,6 @@ const DonationTypeScreen = ({ history }) => {
                               {(userInfo.userRole === 'systemAdmin' ||
                                 userInfo.userRole === 'admin') && (
                                 <td>
-                                  {/* <LinkContainer
-                                    to={`/donationType/${donationType.donationTypeId}/edit`}
-                                  >
-                                    <Button variant='light' className='btn-sm'>
-                                      <i className='fas fa-edit'></i>
-                                    </Button>
-                                  </LinkContainer> */}
-
                                   <span
                                     onClick={() =>
                                       deleteDonationTypeHandler(

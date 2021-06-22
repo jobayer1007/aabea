@@ -29,7 +29,7 @@ const BlogScreen = ({ history }) => {
       dispatch(allblogs(checkChapter));
       dispatch({ type: BLOG_BY_ID_RESET });
     }
-  }, [dispatch, history, userInfo]);
+  }, [dispatch, history, userInfo, checkChapter]);
 
   const newBlogHandler = (e) => {
     e.preventDefault();

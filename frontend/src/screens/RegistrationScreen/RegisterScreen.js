@@ -1,9 +1,7 @@
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-import React, { Component, useEffect, useRef, useState } from 'react';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Form, Button, Row, Col, Card, Container } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';

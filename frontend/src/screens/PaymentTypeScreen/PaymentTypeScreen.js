@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button, Row, Col, Card, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -64,6 +63,12 @@ const PaymentTypeScreen = ({ history }) => {
     success,
   ]);
 
+  const addNewPaymentType = (e) => {
+    e.preventDefault();
+
+    setAddPaymentType(!addPaymentType);
+  };
+
   const deletePaymentTypeHandler = (id) => {
     if (window.confirm('Are You Sure?')) {
       dispatch(deletePaymentType(id));
@@ -116,7 +121,8 @@ const PaymentTypeScreen = ({ history }) => {
                     <Card.Header className='text-center' as='h2'>
                       <Link
                         className='btn btn-outline-info btn-sm btn-block rounded'
-                        onClick={() => setAddPaymentType(!addPaymentType)}
+                        onClick={addNewPaymentType}
+                        to=''
                       >
                         Add New Payment Type
                       </Link>

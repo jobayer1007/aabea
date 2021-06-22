@@ -164,6 +164,7 @@ const HistoryScreen = ({ history }) => {
                       <Link
                         className='btn btn-outline-info btn-sm btn-block rounded'
                         onClick={addNewHistory}
+                        to=''
                       >
                         Add History
                       </Link>

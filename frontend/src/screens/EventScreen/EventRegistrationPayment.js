@@ -1,36 +1,27 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import {
-  Form,
-  Row,
-  Col,
-  Card,
-  Container,
-  ListGroup,
-  Button,
-} from 'react-bootstrap';
+import { Form, Row, Col, Card, Container, ListGroup } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 import swal from 'sweetalert';
 import { PayPalButton } from 'react-paypal-button-v2';
-import { registerEvent, getEventById } from '../../actions/eventActions';
-import { addToCart } from '../../actions/cartAction';
+import { registerEvent } from '../../actions/eventActions';
 
 const EventRegistrationPayment = ({ match, history }) => {
   // const { id } = match.params;
 
   const [sdkReady, setSdkReady] = useState(false);
   const [successRegistration, setSuccessRegistration] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  // const [eventName, setEventName] = useState('');
-  const [isMember, setIsMember] = useState(false);
-  const [memberId, setMemberId] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [numberOfAdults, setNumberOfAdults] = useState(1);
-  const [numberOfMinors, setNumberOfMinors] = useState(0);
+  // const [firstName, setFirstName] = useState('');
+  // const [lastName, setLastName] = useState('');
+  // // const [eventName, setEventName] = useState('');
+  // const [isMember, setIsMember] = useState(false);
+  // const [memberId, setMemberId] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [phone, setPhone] = useState('');
+  // const [numberOfAdults, setNumberOfAdults] = useState(1);
+  // const [numberOfMinors, setNumberOfMinors] = useState(0);
 
   const dispatch = useDispatch();
 
@@ -101,6 +92,7 @@ const EventRegistrationPayment = ({ match, history }) => {
     dispatch,
     // id,
     history,
+    checkChapter,
     eventRegisterSuccess,
     eventRegisterError,
     success,

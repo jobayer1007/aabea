@@ -1,15 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import {
-  Table,
-  Button,
-  Row,
-  Col,
-  Card,
-  Form,
-  DropdownButton,
-  Dropdown,
-} from 'react-bootstrap';
+import { Table, Button, Row, Col, Card, Accordion } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
@@ -23,7 +14,6 @@ import {
   getUserProfile,
   listAllUsers,
 } from '../../actions/userActions';
-import { listChapters } from '../../actions/chapterActions';
 import Sidebar from '../../components/Sidebar/Sidebar';
 // import { COLUMNS } from './MemberColumns';
 import RTable from '../../components/Table/RTable';
@@ -35,6 +25,7 @@ import { USER_DELETE_RESET } from '../../constants/userConstants';
 const MembersScreen = ({ history }) => {
   const dispatch = useDispatch();
   const [columnsAdmin, setColumnsAdmin] = useState([]);
+  const [columnsAllChapter, setColumnsAllChapter] = useState([]);
   // const [chapter, setChapter] = useState(true);
   // const [chapterUsers, setChapterUsers] = useState();
   const usersRef = useRef();
@@ -86,12 +77,6 @@ const MembersScreen = ({ history }) => {
       dispatch(listPendingUsers(checkChapter));
       dispatch(listUsers(checkChapter));
       dispatch(listAllUsers());
-
-      // if (chapter === 'allChapter') {
-      //   setUsers(allUserList);
-      // } else {
-      //   setUsers(chapterUsers);
-      // }
 
       if (
         userInfo.userRole === 'admin' ||
@@ -145,6 +130,7 @@ const MembersScreen = ({ history }) => {
                   <Link
                     className='btn btn-outline-warning btn-sm ml-2 rounded'
                     onClick={() => createAdminHandler(rowIdx)}
+                    to=''
                   >
                     Make admin
                   </Link>
@@ -194,10 +180,46 @@ const MembersScreen = ({ history }) => {
         ]);
       }
 
+      setColumnsAllChapter([
+        {
+          Header: 'Id',
+          accessor: 'memberId',
+          Filter: ColumnFilter,
+        },
+        // {
+        //   Header: 'Name',
+        //   accessor: 'userName',
+        // },
+        {
+          Header: 'First Name',
+          accessor: 'member.firstName',
+          Filter: ColumnFilter,
+        },
+        {
+          Header: 'Last Name',
+          accessor: 'member.lastName',
+          Filter: ColumnFilter,
+        },
+        {
+          Header: 'City',
+          accessor: 'member.city',
+          Filter: ColumnFilter,
+        },
+        {
+          Header: 'State',
+          accessor: 'member.state',
+          Filter: ColumnFilter,
+        },
+      ]);
+
       if (successDelete) {
         swal('Success!', successDelete, 'success').then((value) => {
           dispatch({ type: USER_DELETE_RESET });
         });
+      }
+
+      if (errorDelete || errorUserPendingDelete) {
+        swal('Error!', errorDelete || errorUserPendingDelete, 'error');
       }
     } else {
       history.push('/login');
@@ -206,10 +228,16 @@ const MembersScreen = ({ history }) => {
     dispatch,
     history,
     userInfo,
+    checkChapter,
     successDelete,
     successUserPendingDelete,
     successAdmin,
     successDeleteAdmin,
+    errorDelete,
+    errorUserPendingDelete,
+    // editUserHandler,
+    // createAdminHandler,
+    // deleteUserHandler,
   ]);
 
   const editUserHandler = (rowIndex) => {
@@ -415,8 +443,8 @@ const MembersScreen = ({ history }) => {
 
               {/* 6th card section : Admin List ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
               <Col
-                md={{ span: 12, order: 12 }}
-                lg={{ span: 12, order: 12 }}
+                md={{ span: 12, order: 10 }}
+                lg={{ span: 12, order: 10 }}
                 className='mb-2 p-0'
                 id='all-member'
               >
@@ -476,31 +504,7 @@ const MembersScreen = ({ history }) => {
                                       </a>
                                     </td>
                                     <td>{user.member.primaryPhone}</td>
-                                    {/* {(userInfo.userRole === 'systemAdmin' ||
-                                      userInfo.userRole === 'admin') && (
-                                      <td>
-                                        <LinkContainer
-                                          to={`/users/${user.memberId}/edit`}
-                                        >
-                                          <Button
-                                            variant='light'
-                                            className='btn-sm'
-                                          >
-                                            <i className='fas fa-edit'></i>
-                                          </Button>
-                                        </LinkContainer>
 
-                                        <Button
-                                          variant='danger'
-                                          className='btn-sm'
-                                          onClick={() =>
-                                            deleteUserHandler(user.memberId)
-                                          }
-                                        >
-                                          <i className='fas fa-trash'></i>
-                                        </Button>
-                                      </td>
-                                    )} */}
                                     {(userInfo.userRole === 'systemAdmin' ||
                                       userInfo.userRole === 'admin') &&
                                       (users.userRole === 'member' ? (
@@ -544,50 +548,70 @@ const MembersScreen = ({ history }) => {
               </Col>
               {/* 6th card section : Admin List End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
 
-              {/* 7th card section : All Member List ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
               <Col
                 md={{ span: 12, order: 12 }}
                 lg={{ span: 12, order: 12 }}
                 className='mb-2 p-0'
                 id='all-member'
               >
-                <Card className='text-center' border='info'>
-                  <Card.Header as='h5' className='text-info'>
-                    Members
-                    {/* <Col
-                      className='text-center'
-                      required
-                      as='select'
-                      type='text'
-                      value={chapter}
-                      onChange={(e) => setChapter(e.target.value)}
+                <Accordion defaultActiveKey='0'>
+                  <Card className='text-center' border='info'>
+                    <Accordion.Toggle
+                      as={Card.Header}
+                      eventKey='0'
+                      className='text-info h5'
                     >
-                      <option value='true'>Chapter members</option>
-                      <option value='false'>All Chapter members</option>
-                    </Col> */}
-                  </Card.Header>
-
-                  <>
-                    {userAllListLoading ? (
-                      <Loader />
-                    ) : userAllListError ? (
-                      <Message variant='danger'>{userAllListError}</Message>
-                    ) : (
+                      Chapter Members
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey='0'>
                       <>
-                        {allUserList && allUserList.length !== 0 && (
+                        {userListLoading ? (
+                          <Loader />
+                        ) : userListError ? (
+                          <Message variant='danger'>{userListError}</Message>
+                        ) : (
                           <>
-                            <RTable
-                              users={allUserList}
-                              COLUMNS={columnsAdmin}
-                            />
+                            {users && users.length !== 0 && (
+                              <>
+                                <RTable users={users} COLUMNS={columnsAdmin} />
+                              </>
+                            )}
                           </>
                         )}
                       </>
-                    )}
-                  </>
-                </Card>
+                    </Accordion.Collapse>
+                  </Card>
+                  <Card className='text-center' border='info'>
+                    <Accordion.Toggle
+                      as={Card.Header}
+                      eventKey='1'
+                      className='text-info h5'
+                    >
+                      All Members
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey='1'>
+                      <>
+                        {userAllListLoading ? (
+                          <Loader />
+                        ) : userAllListError ? (
+                          <Message variant='danger'>{userAllListError}</Message>
+                        ) : (
+                          <>
+                            {allUserList && allUserList.length !== 0 && (
+                              <>
+                                <RTable
+                                  users={allUserList}
+                                  COLUMNS={columnsAllChapter}
+                                />
+                              </>
+                            )}
+                          </>
+                        )}
+                      </>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
               </Col>
-              {/* 7th card section : All Member List End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */}
               {/* </CardColumns> */}
             </Row>
           </>

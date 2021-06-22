@@ -25,7 +25,7 @@ const PaymentScreen = ({ history }) => {
   const [paymentTypeName, setPaymentTypeName] = useState('');
   const [paymentTypeAmount, setPaymentTypeAmount] = useState('');
   const [qty, setQty] = useState(1);
-  const [totalPayment, setTotalPayment] = useState(0);
+  // const [totalPayment, setTotalPayment] = useState(0);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -98,7 +98,7 @@ const PaymentScreen = ({ history }) => {
         setSdkReady(true);
       }
     }
-  }, [history, dispatch, userInfo, successPay, errorPay]);
+  }, [history, dispatch, userInfo, checkChapter, successPay, errorPay]);
 
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);
@@ -118,7 +118,7 @@ const PaymentScreen = ({ history }) => {
     // e.preventDefault();
 
     setQty(e.target.value);
-    setTotalPayment(paymentTypeAmount * qty);
+    // setTotalPayment(paymentTypeAmount * qty);
   };
   // console.log(paymentTypeAmount);
   // console.log(paymentTypeName);

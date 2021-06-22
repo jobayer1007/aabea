@@ -25,5 +25,6 @@ yarn-debug.log*
 yarn-error.log*
 
 aabea.conf
+dc.aabea.conf
 mi.aabea.conf
 ny.aabea.conf

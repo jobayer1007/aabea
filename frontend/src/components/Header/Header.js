@@ -31,7 +31,7 @@ const Header = () => {
 
   useEffect(() => {
     dispatch(getChapterBySubDomain(checkChapter)); //done
-  }, [dispatch]);
+  }, [dispatch, checkChapter]);
 
   const logoutHandler = () => {
     dispatch(logout());

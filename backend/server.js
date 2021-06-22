@@ -20,6 +20,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const replyRoutes = require('./routes/replyRoutes');
+const documentRoutes = require('./routes/documentRoutes');
 const { join } = require('path');
 
 dotenv.config();
@@ -47,6 +48,7 @@ app.use('/api/comment', commentRoutes);
 app.use('/api/reply', replyRoutes);
 app.use('/api/links', linkRoutes);
 app.use('/api/helps', helpRoutes);
+app.use('/api/doc', documentRoutes);
 
 app.get('/api/config/captchaClient', (req, res) =>
   res.send(process.env.CAPTCHA_SITE_KEY)
@@ -71,6 +73,7 @@ app.get('/api/config/captchaClient', (req, res) =>
 // const __dirname = path.resolve();
 // app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')));
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(path.resolve(), '/frontend/build')));
 

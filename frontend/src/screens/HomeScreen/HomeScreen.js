@@ -58,7 +58,7 @@ const HomeScreen = () => {
   // const subDomain = window.location.host.split('.')[0];
 
   useEffect(() => {
-    console.log('domain: ' + checkChapter);
+    // console.log('domain: ' + checkChapter);
     // console.log(checkChapter);
     // console.log(typeof checkChapter);
     dispatch(allAnnouncements(checkChapter)); // Done
@@ -69,7 +69,7 @@ const HomeScreen = () => {
     dispatch(allVission());
     dispatch(allHistory());
     dispatch(allCMembers(checkChapter)); // done
-  }, [dispatch]);
+  }, [dispatch, checkChapter]);
   // console.log(cMembers);
   return (
     <Container fluid>
@@ -88,7 +88,7 @@ const HomeScreen = () => {
               ) : (
                 <ListGroup variant='flush'>
                   {announcements.map((announcement, index) => (
-                    <ListGroup.Item key={index}>
+                    <ListGroup.Item key={announcement.announcementId}>
                       <Link
                         to={`/announcements/${announcement.announcementId}`}
                       >
@@ -100,6 +100,7 @@ const HomeScreen = () => {
               )}
             </>
           </Card>
+
           <Card className='mb-2'>
             <Card.Header className='text-info' as='h4'>
               Events :
@@ -112,7 +113,7 @@ const HomeScreen = () => {
               ) : (
                 <ListGroup variant='flush'>
                   {events.map((event, index) => (
-                    <ListGroup.Item key={index}>
+                    <ListGroup.Item key={event.eventId}>
                       <Link to={`/event/${event.eventId}`}>
                         <span className='text-info d-flex justify-content-between align-items-center'>
                           {event.eventName}
@@ -142,14 +143,14 @@ const HomeScreen = () => {
               ) : helpContacts && helpContacts.length !== 0 ? (
                 <>
                   {helpContacts.map((helpContact, index) => (
-                    <>
-                      <Media key={index}>
+                    <div key={helpContact.helpContactId}>
+                      <Media>
                         <img
                           width={64}
                           height={64}
                           className='mr-3'
                           src={helpContact.profilePicture}
-                          alt='picture'
+                          alt=''
                         />
                         <Media.Body>
                           <h5>{helpContact.contactName}</h5>
@@ -170,7 +171,7 @@ const HomeScreen = () => {
                         </Media.Body>
                       </Media>
                       <hr />
-                    </>
+                    </div>
                   ))}
                 </>
               ) : null}
@@ -186,7 +187,7 @@ const HomeScreen = () => {
             ) : links && links.length !== 0 ? (
               <>
                 {links.map((linku, index) => (
-                  <Card.Body key={index}>
+                  <Card.Body key={linku.linkId}>
                     <Card.Link href={linku.link}>{linku.linkTitle}</Card.Link>
                   </Card.Body>
                 ))}
@@ -212,13 +213,13 @@ const HomeScreen = () => {
               ) : (
                 <>
                   {missions.map((mission, index) => (
-                    <Card.Body key={index}>
-                      <Card.Text>
+                    <Card.Body key={mission.chapterId}>
+                      <>
                         {parse(mission.body.substring(0, 300))}...
                         <Link to={`/chapters/mission/${mission.chapterId}`}>
                           Read more
                         </Link>
-                      </Card.Text>
+                      </>
                     </Card.Body>
                   ))}
                 </>
@@ -238,13 +239,13 @@ const HomeScreen = () => {
               ) : (
                 <>
                   {vissions.map((vission, index) => (
-                    <Card.Body key={index}>
-                      <Card.Text>
+                    <Card.Body key={vission.chapterId}>
+                      <>
                         {parse(vission.body.substring(0, 300))}...
                         <Link to={`/chapters/vission/${vission.chapterId}`}>
                           Read more
                         </Link>
-                      </Card.Text>
+                      </>
                     </Card.Body>
                   ))}
                 </>
@@ -264,13 +265,13 @@ const HomeScreen = () => {
               ) : (
                 <>
                   {histories.map((history, index) => (
-                    <Card.Body key={index}>
-                      <Card.Text>
+                    <Card.Body key={history.chapterId}>
+                      <>
                         {parse(history.body.substring(0, 300))}...
                         <Link to={`/chapters/history/${history.chapterId}`}>
                           Read more
                         </Link>
-                      </Card.Text>
+                      </>
                     </Card.Body>
                   ))}
                 </>
@@ -302,7 +303,7 @@ const HomeScreen = () => {
           ) : (
             cMembers.length !== 0 &&
             cMembers.map((cMember, index) => (
-              <Card key={index} className='text-justify mb-2'>
+              <Card key={cMember.cId} className='text-justify mb-2'>
                 {cMember.member.profilePicture && (
                   <Card.Img
                     variant='top'

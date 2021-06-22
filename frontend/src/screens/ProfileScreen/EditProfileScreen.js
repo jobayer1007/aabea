@@ -34,6 +34,7 @@ const EditProfileScreen = ({ match, history }) => {
   const [major, setMajor] = useState('');
   const [collegeName, setCollegeName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [alternateEmail, setAlternateEmail] = useState('');
   const [certificates, setCertificates] = useState('');
   const [profilePicture, setProfilePicture] = useState('');
@@ -137,6 +138,7 @@ const EditProfileScreen = ({ match, history }) => {
         collegeName,
         certificates,
         profilePicture,
+        password,
       })
     );
   };
@@ -419,7 +421,7 @@ const EditProfileScreen = ({ match, history }) => {
                                         Primary Phone Number
                                       </Form.Label>
                                       <Form.Control
-                                        type='primaryPhone'
+                                        type='phone'
                                         placeholder='Enter Your Phone Number..'
                                         value={primaryPhone}
                                         onChange={(e) =>
@@ -433,7 +435,7 @@ const EditProfileScreen = ({ match, history }) => {
                                         Alternate Phone Number
                                       </Form.Label>
                                       <Form.Control
-                                        type='alternatePhone'
+                                        type='phone'
                                         placeholder='Enter additional Phone Number..'
                                         value={alternatePhone}
                                         onChange={(e) =>
@@ -462,12 +464,24 @@ const EditProfileScreen = ({ match, history }) => {
                                       ></Form.Control>
                                     </Form.Group>
 
+                                    <Form.Group controlId='password'>
+                                      <Form.Label>password</Form.Label>
+                                      <Form.Control
+                                        type='password'
+                                        placeholder='password'
+                                        value={password}
+                                        onChange={(e) =>
+                                          setPassword(e.target.value)
+                                        }
+                                      ></Form.Control>
+                                    </Form.Group>
+
                                     <Form.Group controlId='alternateEmail'>
                                       <Form.Label>
                                         Alternate Email Address
                                       </Form.Label>
                                       <Form.Control
-                                        type='alternateEmail'
+                                        type='email'
                                         placeholder='Enter another Email..'
                                         value={alternateEmail}
                                         onChange={(e) =>
@@ -476,7 +490,7 @@ const EditProfileScreen = ({ match, history }) => {
                                       ></Form.Control>
                                     </Form.Group>
                                   </Col>
-                                </Row>{' '}
+                                </Row>
                               </ListGroup.Item>
                             </ListGroup>
                           </Col>

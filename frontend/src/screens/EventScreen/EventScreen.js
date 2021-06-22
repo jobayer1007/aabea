@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import Moment from 'react-moment';
 import { Row, Col, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import parse from 'html-react-parser';
@@ -28,55 +29,21 @@ const EventScreen = ({ history }) => {
   const eventNew = useSelector((state) => state.eventNew);
   const { success } = eventNew;
 
-  // const eventById = useSelector((state) => state.eventById);
-  // const { success: eventByIdSuccess, event } = eventById;
-
-  // const eventUpdate = useSelector((state) => state.eventUpdate);
-  // const { success: eventUpdateSuccess } = eventUpdate;
-
   const eventDelete = useSelector((state) => state.eventDelete);
   const { success: successDelete } = eventDelete;
 
-  const checkChapter = window.location.host.split('.')[0];
+  const checkChapter = window.location.host;
 
   useEffect(() => {
     if (
       userInfo &&
       (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
     ) {
-      // setId(userInfo.memberId);
       dispatch(allEvents(checkChapter));
-      // dispatch({ type: EVENT_NEW_RESET });
     } else {
       history.push('/login');
     }
-    // if (success || eventUpdateSuccess) {
-    //   setAddEvent(false);
-    //   setEditEvent(false);
-
-    //   setTitle('');
-    //   setBody('');
-    //   dispatch({ type: ANNOUNCEMENT_BY_ID_RESET });
-    // }
-    // if (announcementByIdSuccess) {
-    //   setAddAnnouncement(true);
-    //   setEditAnnouncement(true);
-    //   setTitle(announcement.title);
-    //   setBody(announcement.body);
-    //   setId(announcement.announcementId);
-
-    //   // setId(announcement.announcementId);
-    // }
-  }, [
-    dispatch,
-    history,
-    userInfo,
-    success,
-    // announcementByIdSuccess,
-    // announcement,
-    // announcementUpdateSuccess,
-    successDelete,
-  ]);
+  }, [dispatch, history, userInfo, checkChapter, success, successDelete]);
 
   const editEventHandler = (rowIndex) => {
     const id = eventsRef.current[rowIndex].eventId;
@@ -117,19 +84,18 @@ const EventScreen = ({ history }) => {
       Header: 'Event Start Date',
       accessor: 'eventDate[0].value',
       Filter: ColumnFilter,
-      // Cell: ({ value }) => {
-      //   const startDate = new Date(value);
-      //   return [startDate];
-      // },
+      Cell: ({ value }) => {
+        return <Moment>{value}</Moment>;
+      },
     },
 
     {
       Header: 'Event End Date',
       accessor: 'eventDate[1].value',
       Filter: ColumnFilter,
-      // Cell: ({ value }) => {
-      //   return format(new Date(value));
-      // },
+      Cell: ({ value }) => {
+        return <Moment>{value}</Moment>;
+      },
     },
 
     {

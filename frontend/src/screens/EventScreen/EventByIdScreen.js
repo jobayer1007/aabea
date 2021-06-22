@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Moment from 'react-moment';
 import {
   Button,
   Card,
@@ -208,6 +209,8 @@ const EventByIdScreen = ({ history, match }) => {
       setPositionName('');
       setContactEmail('');
       setContactPhone('');
+      dispatch({ type: EVENT_CONTACT_NEW_RESET });
+
       dispatch({ type: EVENT_CONTACT_BY_ID_RESET });
     }
 
@@ -239,15 +242,17 @@ const EventByIdScreen = ({ history, match }) => {
   }, [
     dispatch,
     history,
+    userInfo,
     id,
     success,
     eventUpdateSuccess,
     eventContactByIdSuccess,
+    eventContact,
     eventContactUpdateSuccess,
     successDelete,
     eventPublishSuccess,
     eventUnpublishSuccess,
-    eventUnpublishSuccess,
+    eventPublishError,
     eventUnpublishError,
   ]);
 
@@ -261,6 +266,7 @@ const EventByIdScreen = ({ history, match }) => {
     setContactPhone('');
     setEditEventContact(false);
     dispatch({ type: EVENT_CONTACT_BY_ID_RESET });
+    dispatch({ type: EVENT_CONTACT_NEW_RESET });
   };
 
   const submitHandler = (e) => {
@@ -288,7 +294,6 @@ const EventByIdScreen = ({ history, match }) => {
   const editEventContactHandler = (id) => {
     dispatch({ type: EVENT_CONTACT_UPDATE_BY_ID_RESET });
     // console.log(rowIndex);
-    console.log(id);
     dispatch(getEventContactById(id));
   };
 
@@ -459,6 +464,9 @@ const EventByIdScreen = ({ history, match }) => {
                                         onChange={(e) =>
                                           setEventStartDate(e.target.value)
                                         }
+                                        min={
+                                          new Date().toISOString().split('T')[0]
+                                        }
                                       ></Form.Control>
                                     </Form.Group>
                                   ) : (
@@ -467,12 +475,10 @@ const EventByIdScreen = ({ history, match }) => {
                                       {event.eventDate &&
                                       event.eventDate.length !== 0 &&
                                       event.eventDate[0].value ? (
-                                        <Col>
-                                          {event.eventDate[0].value.substring(
-                                            0,
-                                            10
-                                          )}
-                                        </Col>
+                                        // <Col>{event.eventDate[0].value}</Col>
+                                        <Moment>
+                                          {event.eventDate[0].value}
+                                        </Moment>
                                       ) : null}
                                     </>
                                   )}
@@ -499,6 +505,7 @@ const EventByIdScreen = ({ history, match }) => {
                                         onChange={(e) =>
                                           setEventEndDate(e.target.value)
                                         }
+                                        min={eventStartDate}
                                       ></Form.Control>
                                     </Form.Group>
                                   ) : (
@@ -507,12 +514,10 @@ const EventByIdScreen = ({ history, match }) => {
                                       {event.eventDate &&
                                       event.eventDate.length !== 0 &&
                                       event.eventDate[1].value ? (
-                                        <Col>
-                                          {event.eventDate[1].value.substring(
-                                            0,
-                                            10
-                                          )}
-                                        </Col>
+                                        // <Col>{event.eventDate[1].value}</Col>
+                                        <Moment>
+                                          {event.eventDate[1].value}
+                                        </Moment>
                                       ) : null}
                                     </>
                                   )}
@@ -718,6 +723,7 @@ const EventByIdScreen = ({ history, match }) => {
                                     <Form.Group controlId='title'>
                                       <Form.Label>Position Name</Form.Label>
                                       <Form.Control
+                                        required
                                         type='text'
                                         placeholder='Position Name'
                                         value={positionName}
@@ -730,7 +736,9 @@ const EventByIdScreen = ({ history, match }) => {
                                     <Form.Group controlId='title'>
                                       <Form.Label>Member Id</Form.Label>
                                       <Form.Control
-                                        type='text'
+                                        required
+                                        type='number'
+                                        min='0'
                                         placeholder='ID'
                                         value={memberId}
                                         onChange={(e) =>
@@ -742,6 +750,7 @@ const EventByIdScreen = ({ history, match }) => {
                                     <Form.Group controlId='title'>
                                       <Form.Label>Contact Email</Form.Label>
                                       <Form.Control
+                                        required
                                         type='email'
                                         placeholder='Email'
                                         value={contactEmail}
@@ -754,7 +763,8 @@ const EventByIdScreen = ({ history, match }) => {
                                     <Form.Group controlId='title'>
                                       <Form.Label>Contact Phone</Form.Label>
                                       <Form.Control
-                                        type='text'
+                                        required
+                                        type='tel'
                                         placeholder='Phone Number'
                                         value={contactPhone}
                                         onChange={(e) =>
@@ -805,61 +815,65 @@ const EventByIdScreen = ({ history, match }) => {
                         <ListGroup variant='flush'>
                           {eventContacts && eventContacts.length !== 0
                             ? eventContacts.map((eventContact, index) => (
-                                <>
-                                  <ListGroup.Item key={index}>
-                                    <Row>
-                                      <Col md={4}>Position :</Col>
-                                      <Col>{eventContact.positionName}</Col>
-                                    </Row>
+                                <ListGroup.Item key={index}>
+                                  <Row>
+                                    <Col md={4}>Position :</Col>
+                                    <Col>{eventContact.positionName}</Col>
+                                  </Row>
 
-                                    <Row>
-                                      <Col md={4}>Name :</Col>
-                                      <Col>{eventContact.contactName}</Col>
-                                    </Row>
+                                  <Row>
+                                    <Col md={4}>Name :</Col>
+                                    <Col>{eventContact.contactName}</Col>
+                                  </Row>
 
-                                    <Row>
-                                      <Col md={4}>Email :</Col>
-                                      <Col>{eventContact.contactEmail}</Col>
-                                    </Row>
+                                  <Row>
+                                    <Col md={4}>Email :</Col>
+                                    <Col>
+                                      <a
+                                        href={`mailTo: ${eventContact.contactEmail}`}
+                                      >
+                                        {eventContact.contactEmail}
+                                      </a>
+                                    </Col>
+                                  </Row>
 
-                                    <Row>
-                                      <Col md={4}>Phone :</Col>
-                                      <Col>
-                                        <a
-                                          href={`tel: ${eventContact.contactPhone}`}
+                                  <Row>
+                                    <Col md={4}>Phone :</Col>
+                                    <Col>
+                                      <a
+                                        href={`tel: ${eventContact.contactPhone}`}
+                                      >
+                                        {eventContact.contactPhone}
+                                      </a>
+                                    </Col>
+                                  </Row>
+
+                                  {userInfo &&
+                                    (userInfo.userRole === 'systemAdmin' ||
+                                      userInfo.userRole === 'admin') && (
+                                      <div className='text-center'>
+                                        <span
+                                          onClick={() =>
+                                            editEventContactHandler(
+                                              eventContact.eventContactId
+                                            )
+                                          }
                                         >
-                                          {eventContact.contactPhone}
-                                        </a>
-                                      </Col>
-                                    </Row>
+                                          <i className='far fa-edit action mr-2'></i>
+                                        </span>
 
-                                    {userInfo &&
-                                      (userInfo.userRole === 'systemAdmin' ||
-                                        userInfo.userRole === 'admin') && (
-                                        <div className='text-center'>
-                                          <span
-                                            onClick={() =>
-                                              editEventContactHandler(
-                                                eventContact.eventContactId
-                                              )
-                                            }
-                                          >
-                                            <i className='far fa-edit action mr-2'></i>
-                                          </span>
-
-                                          <span
-                                            onClick={() =>
-                                              deleteEventContactHandler(
-                                                eventContact.eventContactId
-                                              )
-                                            }
-                                          >
-                                            <i className='fas fa-trash action'></i>
-                                          </span>
-                                        </div>
-                                      )}
-                                  </ListGroup.Item>
-                                </>
+                                        <span
+                                          onClick={() =>
+                                            deleteEventContactHandler(
+                                              eventContact.eventContactId
+                                            )
+                                          }
+                                        >
+                                          <i className='fas fa-trash action'></i>
+                                        </span>
+                                      </div>
+                                    )}
+                                </ListGroup.Item>
                               ))
                             : null}{' '}
                         </ListGroup>

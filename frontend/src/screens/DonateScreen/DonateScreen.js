@@ -110,7 +110,7 @@ const DonateScreen = ({ history }) => {
       setSdkReady(true);
     }
     // }
-  }, [history, dispatch, userInfo, addDonation, donateResulte]);
+  }, [history, dispatch, userInfo, checkChapter, addDonation, donateResulte]);
 
   const donationTypeChangeHandler = (e) => {
     // e.preventDefault();
@@ -164,6 +164,7 @@ const DonateScreen = ({ history }) => {
                 <Link
                   className='btn btn-outline-info btn-sm btn-block rounded'
                   onClick={() => setAddDonation(!addDonation)}
+                  to=''
                 >
                   Make Donation
                 </Link>

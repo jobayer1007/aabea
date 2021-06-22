@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Card, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import parse from 'html-react-parser';
 
 import Sidebar from '../../components/Sidebar/Sidebar';
@@ -33,9 +31,10 @@ const HelpContactScreen = ({ history }) => {
   const [helpFor, setHelpFor] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
-  const [profilePicture, setProfilePicture] = useState('');
+  // const [profilePicture, setProfilePicture] = useState('');
   const [isTrue, setIsTrue] = useState(true);
   const [id, setId] = useState('');
+  // const [helpId, setHelpId] = useState('');
 
   const helpContactsRef = useRef();
 
@@ -51,7 +50,7 @@ const HelpContactScreen = ({ history }) => {
   const { loading: helpNewLoading, error: helpNewError, success } = helpNew;
 
   const helpById = useSelector((state) => state.helpById);
-  const { success: helpByIdSuccess, help } = helpById;
+  const { success: helpByIdSuccess, helpContact } = helpById;
 
   const helpUpdate = useSelector((state) => state.helpUpdate);
   const { success: helpUpdateSuccess } = helpUpdate;
@@ -59,7 +58,7 @@ const HelpContactScreen = ({ history }) => {
   const helpDelete = useSelector((state) => state.helpDelete);
   const { success: successDelete } = helpDelete;
 
-  const checkChapter = window.location.host.split('.')[0];
+  const checkChapter = window.location.host;
 
   useEffect(() => {
     if (
@@ -75,7 +74,7 @@ const HelpContactScreen = ({ history }) => {
     if (success || helpUpdateSuccess) {
       setAddHelp(false);
       setEditHelp(false);
-
+      console.log(success);
       setMemberId('');
       setHelpFor('');
       setContactEmail('');
@@ -88,20 +87,23 @@ const HelpContactScreen = ({ history }) => {
       setAddHelp(true);
       setEditHelp(true);
 
-      setMemberId(help.memberId);
-      setHelpFor(help.helpFor);
-      setContactEmail(help.contactEmail);
-      setContactPhone(help.contactPhone);
-      setIsTrue(help.isTrue);
-      setId(help.helpConatctId);
+      setMemberId(helpContact.memberId);
+      setHelpFor(helpContact.helpFor);
+      setContactEmail(helpContact.contactEmail);
+      setContactPhone(helpContact.contactPhone);
+      setIsTrue(helpContact.isTrue);
+      setId(helpContact.helpContactId);
+      // console.log('after help by id success, id: ' + id);
+      // console.log('after help by id success, helpId: ' + helpId);
     }
   }, [
     dispatch,
     history,
     userInfo,
+    checkChapter,
     success,
     helpByIdSuccess,
-    help,
+    helpContact,
     helpUpdateSuccess,
     successDelete,
   ]);
@@ -110,7 +112,7 @@ const HelpContactScreen = ({ history }) => {
     const id = helpContactsRef.current[rowIndex].helpContactId;
     dispatch({ type: HELP_CONTACT_UPDATE_BY_ID_RESET });
     // console.log(rowIndex);
-    // console.log(id);
+    console.log(id);
     dispatch(getHelpById(id));
   };
 
@@ -139,13 +141,14 @@ const HelpContactScreen = ({ history }) => {
     e.preventDefault();
 
     if (editHelp) {
+      // console.log('after update submit, id: ' + id);
       dispatch(
         updateHelpById(
           memberId,
           helpFor,
           contactEmail,
           contactPhone,
-          profilePicture,
+
           isTrue,
           id
         )
@@ -185,11 +188,11 @@ const HelpContactScreen = ({ history }) => {
       accessor: 'contactPhone',
       Filter: ColumnFilter,
     },
-    {
-      Header: 'Available',
-      accessor: 'isTrue',
-      Filter: ColumnFilter,
-    },
+    // {
+    //   Header: 'Available',
+    //   accessor: 'isTrue',
+    //   Filter: ColumnFilter,
+    // },
 
     {
       Header: 'Actions',
@@ -245,6 +248,7 @@ const HelpContactScreen = ({ history }) => {
                     <Link
                       className='btn btn-outline-info btn-sm btn-block rounded'
                       onClick={addNewHelp}
+                      to=''
                     >
                       New contact for help
                     </Link>

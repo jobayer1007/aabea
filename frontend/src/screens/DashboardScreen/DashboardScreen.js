@@ -89,7 +89,6 @@ const DashboardScreen = ({ history }) => {
                             src={user.profilePicture}
                             alt='Profile Picture'
                             // style={{ height: '171px', width: '180px' }}
-                            roundedCircle
                           />
                           <ListGroup variant='flush'>
                             <ListGroup.Item>

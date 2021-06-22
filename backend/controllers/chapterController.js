@@ -191,7 +191,7 @@ exports.getChapterBySubDomain = asyncHandler(async (req, res) => {
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
   });
-  console.log(chapter);
+
   if (chapter && chapter.length !== 0) {
     res.json(chapter);
   } else {
@@ -363,12 +363,12 @@ exports.deleteDonationType = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const donationType = await models.DonationType.findOne({
-    where: { dnationTypeId: id },
+    where: { donationTypeId: id },
   });
 
   if (donationType) {
     models.DonationType.destroy({
-      where: { dnationTypeId: id },
+      where: { donationTypeId: id },
     })
       .then((num) => {
         if (num == 1) {

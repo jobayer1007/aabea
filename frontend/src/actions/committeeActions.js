@@ -77,7 +77,7 @@ export const allCMembers = (checkChapter) => async (dispatch) => {
       config
     );
 
-    console.log(data);
+    // console.log(data);
     dispatch({
       type: COMMITTEE_MEMBER_ALL_SUCCESS,
       payload: data,

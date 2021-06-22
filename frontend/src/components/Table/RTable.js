@@ -12,8 +12,8 @@ import { Checkbox } from './CheckBox';
 import GlobalFilter from './GlobalFilter';
 
 const RTable = ({ users, COLUMNS }) => {
-  const data = useMemo(() => users, []);
-  const columns = useMemo(() => COLUMNS, []);
+  const data = useMemo(() => users, [users]);
+  const columns = useMemo(() => COLUMNS, [COLUMNS]);
 
   const {
     getTableProps,
@@ -60,9 +60,9 @@ const RTable = ({ users, COLUMNS }) => {
       });
     }
   );
-  console.log({
-    selectedFlatRows: selectedFlatRows.map((row) => row.original),
-  });
+  // console.log({
+  //   selectedFlatRows: selectedFlatRows.map((row) => row.original),
+  // });
 
   const { globalFilter, pageIndex, pageSize } = state;
 

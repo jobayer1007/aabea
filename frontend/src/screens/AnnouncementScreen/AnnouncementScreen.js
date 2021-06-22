@@ -94,6 +94,7 @@ const AnnouncementScreen = ({ history }) => {
     dispatch,
     history,
     userInfo,
+    checkChapter,
     success,
     announcementByIdSuccess,
     announcement,
@@ -104,8 +105,8 @@ const AnnouncementScreen = ({ history }) => {
   const editAnnouncementHandler = (rowIndex) => {
     const id = announcementsRef.current[rowIndex].announcementId;
     dispatch({ type: ANNOUNCEMENT_UPDATE_BY_ID_RESET });
-    console.log(rowIndex);
-    console.log(id);
+    // console.log(rowIndex);
+    // console.log(id);
     dispatch(getAnnouncementById(id));
   };
 

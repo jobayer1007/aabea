@@ -44,11 +44,7 @@ const ChapterScreen = ({ history }) => {
   chaptersRef.current = chapters;
 
   const chapterRegister = useSelector((state) => state.chapterRegister);
-  const {
-    loading: chapterRegisterLoading,
-    error: chapterRegisterError,
-    success,
-  } = chapterRegister;
+  const { error: chapterRegisterError, success } = chapterRegister;
 
   const chapterById = useSelector((state) => state.chapterById);
   const { success: chapterByIdSuccess, chapter } = chapterById;

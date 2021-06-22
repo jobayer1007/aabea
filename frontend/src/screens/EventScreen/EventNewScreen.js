@@ -51,10 +51,10 @@ const EventNewScreen = ({ location, history }) => {
         }
       );
     } else if (error) {
-      console.log(error);
+      // console.log(error);
       swal('Error!', error, 'error');
     }
-  }, [dispatch, userInfo, history, success, error]);
+  }, [dispatch, userInfo, history, success, newCreatedEvent, error]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -150,6 +150,7 @@ const EventNewScreen = ({ location, history }) => {
                         placeholder='Enter Your Start Date'
                         value={eventStartDate}
                         onChange={(e) => setEventStartDate(e.target.value)}
+                        min={new Date().toISOString().split('T')[0]}
                       ></Form.Control>
                     </Form.Group>
 
@@ -161,6 +162,7 @@ const EventNewScreen = ({ location, history }) => {
                         placeholder='Enter The End Date'
                         value={eventEndDate}
                         onChange={(e) => setEventEndDate(e.target.value)}
+                        min={eventStartDate}
                       ></Form.Control>
                     </Form.Group>
 

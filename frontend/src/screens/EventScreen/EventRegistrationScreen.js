@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import {
   Form,
@@ -13,19 +12,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 import swal from 'sweetalert';
-import { PayPalButton } from 'react-paypal-button-v2';
-import { registerEvent, getEventById } from '../../actions/eventActions';
+import { getEventById } from '../../actions/eventActions';
 import { addToCart } from '../../actions/cartAction';
 import { CART_RESET } from '../../constants/cartConstants';
 
 const EventRegisterScreen = ({ match, history }) => {
   const { id } = match.params;
 
-  const [sdkReady, setSdkReady] = useState(false);
   const [mInit, setMInit] = useState('Mr');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  // const [eventName, setEventName] = useState('');
   const [isMember, setIsMember] = useState(false);
   const [memberId, setMemberId] = useState('');
   const [email, setEmail] = useState('');
@@ -43,9 +39,7 @@ const EventRegisterScreen = ({ match, history }) => {
   const { loading, error, event } = eventById;
 
   const cart = useSelector((state) => state.cart);
-  const { success, cartItems, error: cartError } = cart;
-
-  const checkChapter = window.location.host;
+  const { success, error: cartError } = cart;
 
   useEffect(() => {
     // console.log(id);
@@ -65,33 +59,6 @@ const EventRegisterScreen = ({ match, history }) => {
     if (success) {
       history.push(`/event/registration/payment`);
     }
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const addPaypalScript = async () => {
-      const { data: clientId } = await axios.get(
-        `/api/chapters/paypal/${checkChapter}`,
-        config
-      );
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
-      script.async = true;
-      script.onload = () => {
-        setSdkReady(true);
-      };
-      document.body.appendChild(script);
-    };
-
-    if (!window.paypal) {
-      addPaypalScript();
-    } else {
-      setSdkReady(true);
-    }
   }, [
     dispatch,
     id,
@@ -105,26 +72,6 @@ const EventRegisterScreen = ({ match, history }) => {
   // const submitHandler = (paymentResult) => {
 
   // };
-
-  const successPaymentHandler = (paymentResult) => {
-    console.log(paymentResult);
-    // dispatch(
-    //   registerEvent(
-    //     id,
-    //     event.eventName,
-    //     mInit,
-    //     firstName,
-    //     lastName,
-    //     isMember,
-    //     memberId,
-    //     email,
-    //     phone,
-    //     numberOfAdults,
-    //     numberOfMinors,
-    //     paymentResult
-    //   )
-    // );
-  };
 
   const submitHandler = (e) => {
     e.preventDefault();

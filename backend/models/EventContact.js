@@ -41,7 +41,7 @@ const EventContact = (sequelize, DataTypes) =>
     },
 
     contactEmail: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING(50),
       allowNull: false,
       required: true,
       validate: {
@@ -50,7 +50,7 @@ const EventContact = (sequelize, DataTypes) =>
     },
 
     contactPhone: {
-      type: DataTypes.STRING(12),
+      type: DataTypes.STRING(20),
       required: true,
       allowNull: false,
     },

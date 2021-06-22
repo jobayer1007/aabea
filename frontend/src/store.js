@@ -150,6 +150,12 @@ import {
   linkUpdateReducer,
 } from './reducers/quickLinkReducers';
 import { cartReducer } from './reducers/cartReducers';
+import {
+  documentAllReducer,
+  documentByIdReducer,
+  documentDeleteReducer,
+  documentNewReducer,
+} from './reducers/documentReducers';
 
 const reducer = combineReducers({
   userRegister: userRegisterReducer,
@@ -294,11 +300,16 @@ const reducer = combineReducers({
   linkById: linkByIdReducer,
   linkUpdate: linkUpdateReducer,
   linkDelete: linkDeleteReducer,
+
+  documentNew: documentNewReducer,
+  documentAll: documentAllReducer,
+  documentById: documentByIdReducer,
+  documentDelete: documentDeleteReducer,
 });
 
-const cartItemsFromStorage = localStorage.getItem('cartItems')
-  ? JSON.parse(localStorage.getItem('cartItems'))
-  : null;
+// const cartItemsFromStorage = localStorage.getItem('cartItems')
+//   ? JSON.parse(localStorage.getItem('cartItems'))
+//   : null;
 
 const userInfoFromStorage = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo'))

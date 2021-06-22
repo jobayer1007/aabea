@@ -69,7 +69,7 @@ const ImagesScreen = ({ history }) => {
   const { success: successDelete } = imageDelete;
 
   const eventAll = useSelector((state) => state.eventAll);
-  const { loading: eventAllLoading, error: eventAllError, events } = eventAll;
+  const { events } = eventAll;
 
   useEffect(() => {
     if (
@@ -93,7 +93,13 @@ const ImagesScreen = ({ history }) => {
       setImage('');
       dispatch({ type: IMAGE_BY_ID_RESET });
     }
-  }, [dispatch, history, userInfo, success, successDelete]);
+  }, [dispatch, history, userInfo, checkChapter, success, successDelete]);
+
+  const addNewImage = (e) => {
+    e.preventDefault();
+
+    setAddImage(!addImage);
+  };
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
@@ -164,7 +170,8 @@ const ImagesScreen = ({ history }) => {
                   <Card.Header className='text-center' as='h2'>
                     <Link
                       className='btn btn-outline-info btn-sm btn-block rounded'
-                      onClick={() => setAddImage(!addImage)}
+                      onClick={addNewImage}
+                      to=''
                     >
                       Add Image
                     </Link>

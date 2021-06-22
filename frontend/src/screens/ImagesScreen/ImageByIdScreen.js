@@ -1,14 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Card, Carousel, Col, Image, ListGroup, Row } from 'react-bootstrap';
+import { Card, Col, Image, ListGroup, Row } from 'react-bootstrap';
 import Loader from '../../components/Loader';
 import Message from '../../components/Message';
-import {
-  getHomeScreenImage,
-  getImageByEvent,
-  getImageById,
-} from '../../actions/imageActions';
+import { getImageByEvent, getImageById } from '../../actions/imageActions';
 
 const ImageByIdScreen = ({ match, history }) => {
   const id = match.params.id;
@@ -29,7 +25,7 @@ const ImageByIdScreen = ({ match, history }) => {
   useEffect(() => {
     dispatch(getImageById(id));
     dispatch(getImageByEvent(checkChapter));
-  }, [dispatch, id]);
+  }, [dispatch, id, checkChapter]);
 
   return (
     <>
@@ -47,7 +43,7 @@ const ImageByIdScreen = ({ match, history }) => {
                     {image.imageDescription}
                   </Card.Header>
                   <Image
-                    src={image.image}
+                    src={image.image} // api/uploads/pdf-file
                     alt={image.image}
                     fluid
                     rounded

@@ -17,7 +17,7 @@ const PauseOnHover = () => {
 
   useEffect(() => {
     dispatch(getNavbarImage(checkChapter));
-  }, [dispatch]);
+  }, [dispatch, checkChapter]);
 
   var settings = {
     dots: false,

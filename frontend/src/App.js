@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 import Footer from './components/Footer';
 import Header from './components/Header/Header';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
-import LoginScreen from './screens/LoginScreen';
+import LoginScreen from './screens/LoginScreen/LoginScreen';
 import RegisterScreen from './screens/RegistrationScreen/RegisterScreen';
 import DashboardScreen from './screens/DashboardScreen/DashboardScreen';
 import UserListScreen from './screens/UserListScreen';
@@ -45,12 +45,13 @@ import BlogScreen from './screens/BlogScreen/BlogScreen';
 import CreateBlogScreen from './screens/BlogScreen/CreateBlogScreen';
 import BlogScreenById from './screens/BlogScreen/BlogScreenById';
 import DonationTypeScreen from './screens/DonationTypeScreen/DonationTypeScreen';
-import RegisterScreen_New from './screens/RegistrationScreen/RegistrationScreen_New';
 import ImageByEventScreen from './screens/ImageByEventScreen/ImageByEventScreen';
 import HelpContactScreen from './screens/HelpContactScreen/HelpContactScreen';
 import QuickLinkScreen from './screens/QuickLinkScreen/QuickLinkScreen';
 import ImageByIdScreen from './screens/ImagesScreen/ImageByIdScreen';
 import EventRegistrationPayment from './screens/EventScreen/EventRegistrationPayment';
+import UploadScreen from './screens/UploadScreen/UploadScreen';
+import Document from './screens/UploadScreen/Document';
 
 const App = () => {
   return (
@@ -66,7 +67,6 @@ const App = () => {
               path='/password/reset/:id/:token'
               component={PasswordUpdateScreen}
             />
-            <Route path='/registernew' component={RegisterScreen_New} />
             <Route path='/register' component={RegisterScreen} />
             <Route path='/activate/:hash' component={EmailActivationScreen} />
             <Route path='/dashboardScreen' component={UserListScreen} />
@@ -96,6 +96,8 @@ const App = () => {
             <Route path='/training' component={TrainingScreen} />
             <Route path='/committiees' component={CommittieesScreen} />
             <Route path='/committee/:id' component={CommitteeMemberScreen} />
+            <Route path='/documents' component={UploadScreen} />
+            <Route path='/doc/:id' component={Document} />
             <Route path='/members' component={MembersScreen} />
             <Route path='/emails' component={EmailScreen} />
             <Route path='/events' component={EventScreen} />

@@ -85,6 +85,7 @@ const SettingScreen = ({ history }) => {
     dispatch,
     history,
     userInfo,
+    checkChapter,
     chapterSettingsNewSuccess,
     chapterSettingsUpdateSuccess,
     chapterSettingsNewError,
@@ -348,6 +349,7 @@ const SettingScreen = ({ history }) => {
                           <Link
                             className='btn btn-outline-warning btn-sm btn-block rounded'
                             onClick={addNewSettings}
+                            to=''
                           >
                             Cancel
                           </Link>
@@ -359,6 +361,7 @@ const SettingScreen = ({ history }) => {
                           <Link
                             className='btn btn-outline-info btn-sm btn-block  rounded'
                             onClick={updateSettingsHandler}
+                            to=''
                           >
                             Update
                           </Link>
@@ -368,6 +371,7 @@ const SettingScreen = ({ history }) => {
                           <Link
                             className='btn btn-outline-danger btn-sm btn-block  rounded'
                             onClick={cancelHandler}
+                            to=''
                           >
                             Cancel
                           </Link>
@@ -379,6 +383,7 @@ const SettingScreen = ({ history }) => {
                           <Link
                             className='btn btn-outline-warning btn-sm btn-block  rounded'
                             onClick={editSettingsHandler}
+                            to=''
                           >
                             Edit
                           </Link>
@@ -392,6 +397,7 @@ const SettingScreen = ({ history }) => {
                   <Link
                     className='btn btn-outline-warning btn-sm btn-block rounded'
                     onClick={addNewSettings}
+                    to=''
                   >
                     Chapter settings has not been created yet. Please create
                     chapter settings. To create settings click here.

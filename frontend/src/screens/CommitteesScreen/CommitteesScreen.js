@@ -114,6 +114,7 @@ const CommitteeScreen = ({ history }) => {
     dispatch,
     history,
     userInfo,
+    checkChapter,
     success,
     cMemberNewError,
     cMemberUpdateError,
@@ -215,8 +216,8 @@ const CommitteeScreen = ({ history }) => {
                         <Card.Header className='text-center text-info' as='h3'>
                           <Link
                             className='btn btn-outline-info btn-sm btn-block rounded'
-                            // onClick={() => setAddAnnouncement(!addAnnouncement)}
                             onClick={addNewCMember}
+                            to=''
                           >
                             New Committee Member
                           </Link>

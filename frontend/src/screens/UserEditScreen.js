@@ -138,7 +138,7 @@ const UserEditScreen = ({ match, history }) => {
 
   return (
     <>
-      {userInfo.userRole === 'systemAdmin' ? (
+      {userInfo && userInfo.userRole === 'systemAdmin' ? (
         <Link
           className='btn btn-light my-3 btn-sm btn-outline-success'
           to='/members'

@@ -164,14 +164,6 @@ const ProfileScreen = ({ history }) => {
 
                       <Card.Header>Certificate</Card.Header>
                       <Card.Img src={user.certificates} variant='top' />
-                      {/* <Document
-                        src={samplePDF}
-                        // src={require('/uploads/image-1616636214274.pdf')}
-                      ></Document> */}
-                      {/* <Image
-                      src={pendingUser.certificate}
-                      alt={pendingUser.firstName}
-                    /> */}
                     </Col>
                   </Row>
                 </Card.Body>

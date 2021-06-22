@@ -583,7 +583,9 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
 
         profilePicture: req.body.profilePicture || user.profilePicture,
         certificates: req.body.certificates || user.certificates,
-        // password: bcrypt.hashSync(req.body.password, 10) || user.password,
+        password: req.body.password
+          ? bcrypt.hashSync(req.body.password, 10)
+          : user.password,
         // userRole: req.body.userRole || user.userRole,
       };
 
@@ -609,6 +611,7 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
         status,
         profilePicture,
         certificates,
+        password,
       } = data;
 
       // First, we start a transaction and save it into a variable
@@ -647,6 +650,7 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
           await models.User.update(
             {
               userName: firstName + ' ' + lastName,
+              password,
             },
             { where: { memberId: req.user.memberId, userRole: 'admin' } },
             { transaction: t }
@@ -656,6 +660,7 @@ exports.updateUserProfile = asyncHandler(async (req, res) => {
         await models.User.update(
           {
             userName: firstName + ' ' + lastName,
+            password,
           },
           { where: { memberId: req.user.memberId, userRole: 'member' } },
           { transaction: t }
@@ -844,6 +849,19 @@ exports.deleteUser = asyncHandler(async (req, res) => {
 
       if (cMember) {
         models.Committee.destroy(
+          {
+            where: { memberId: id },
+          },
+          { transaction: t }
+        );
+      }
+
+      const helpContact = await models.HelpContact.findOne({
+        where: { memberId: id },
+      });
+
+      if (helpContact) {
+        models.HelpContact.destroy(
           {
             where: { memberId: id },
           },

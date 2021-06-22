@@ -114,8 +114,9 @@ exports.getHelpContactById = asyncHandler(async (req, res) => {
 // @route   PUT /api/Helps/:id
 // @access  Private/Admin || systemAdmin || Committee Member
 exports.updateHelpContactById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
   const helpContact = await models.HelpContact.findOne({
-    where: { helpContactId: req.params.id },
+    where: { helpContactId: id },
   });
 
   if (helpContact) {
@@ -127,10 +128,11 @@ exports.updateHelpContactById = asyncHandler(async (req, res) => {
       const data = {
         memberId: req.body.memberId || helpContact.memberId,
         helpFor: req.body.helpFor || helpContact.helpFor,
-        contactName: member.mInit + member.firstName + member.lastName,
+        contactName:
+          member.mInit + ' ' + member.firstName + ' ' + member.lastName,
         contactEmail: req.body.contactEmail || helpContact.contactEmail,
         contactPhone: req.body.contactPhone || helpContact.contactPhone,
-        profilePicture: req.body.profilePicture || helpContact.profilePicture,
+        profilePicture: member.profilePicture || helpContact.profilePicture,
         isTrue: req.body.isTrue || helpContact.isTrue,
       };
 

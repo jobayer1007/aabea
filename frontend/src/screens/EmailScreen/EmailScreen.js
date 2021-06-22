@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-// import DecoupledEditor from '@ckeditor/ckeditor5-editor-decoupled';
 // import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
+// import DecoupledEditor from '@ckeditor/ckeditor5-editor-decoupled';
 import parse from 'html-react-parser';
 
 import Sidebar from '../../components/Sidebar/Sidebar';
@@ -280,13 +280,6 @@ const EmailScreen = ({ history }) => {
                                   setBody(data);
                                 }}
                               />
-                              {/* <Form.Control
-                                as='textarea'
-                                rows='3'
-                                placeholder='Please Enter The Announcement'
-                                value={body}
-                                onChange={(e) => setBody(e.target.value)}
-                              ></Form.Control> */}
                             </Form.Group>
 
                             <Button type='submit' variant='info' block>

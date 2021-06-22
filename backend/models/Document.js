@@ -32,13 +32,6 @@ const Document = (sequelize, DataTypes) =>
       notEmpty: true,
     },
 
-    uploadDate: {
-      type: DataTypes.DATE,
-      required: true,
-      allowNull: false,
-      notEmpty: true,
-    },
-
     document: {
       type: DataTypes.STRING,
       required: true,
