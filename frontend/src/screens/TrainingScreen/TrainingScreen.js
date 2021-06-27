@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import Sidebar from '../../components/Sidebar/Sidebar';
 // import { listUsers, deleteUser } from '../actions/userActions';
 
-const TrainingScreen = () => {
+const TrainingScreen = ({ history }) => {
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  useEffect(() => {
+    if (!userInfo) {
+      history.push('/login');
+    }
+  }, [history, userInfo]);
+
   return (
     <>
       <Row className='content'>
@@ -25,6 +35,7 @@ const TrainingScreen = () => {
             <Card.Header as='h5' className='text-info'>
               Training Screen
             </Card.Header>
+            <Card.Body>This page is under construction!</Card.Body>
           </Card>
         </Col>
       </Row>

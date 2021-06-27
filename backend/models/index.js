@@ -183,11 +183,11 @@ db.Member.hasMany(db.User, { foreignKey: 'memberId' });
 db.User.belongsTo(db.Member, { foreignKey: 'memberId' });
 // // db.Member.hasMany(db.User);
 
-db.Payment.belongsTo(db.Member, { foreignKey: 'memberId' });
 db.Member.hasMany(db.Payment, { foreignKey: 'memberId' });
+db.Payment.belongsTo(db.Member, { foreignKey: 'memberId' });
 
-db.Donation.belongsTo(db.Member, { foreignKey: 'memberId' });
 db.Member.hasMany(db.Donation, { foreignKey: 'memberId' });
+db.Donation.belongsTo(db.Member, { foreignKey: 'memberId' });
 
 // COMMITTEE
 db.Chapter.hasMany(db.Committee, { foreignKey: 'chapterId' });

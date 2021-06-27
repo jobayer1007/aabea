@@ -120,9 +120,9 @@ const Header = () => {
               </LinkContainer>
               {userInfo && (
                 <>
-                  <LinkContainer to='/training'>
+                  {/* <LinkContainer to='/training'>
                     <Nav.Link>Training</Nav.Link>
-                  </LinkContainer>
+                  </LinkContainer> */}
                   <LinkContainer to='/payment'>
                     <Nav.Link>Payment</Nav.Link>
                   </LinkContainer>

@@ -234,10 +234,11 @@ const PaymentTypeScreen = ({ history }) => {
 
                               <td> {paymentType.paymentTypeAmount}</td>
 
-                              {(userInfo.userRole === 'systemAdmin' ||
-                                userInfo.userRole === 'admin') && (
-                                <td>
-                                  {/* <LinkContainer
+                              {userInfo &&
+                                (userInfo.userRole === 'systemAdmin' ||
+                                  userInfo.userRole === 'admin') && (
+                                  <td>
+                                    {/* <LinkContainer
                                     to={`/paymentType/${paymentType.paymentTypeId}/edit`}
                                   >
                                     <Button variant='light' className='btn-sm'>
@@ -245,20 +246,20 @@ const PaymentTypeScreen = ({ history }) => {
                                     </Button>
                                   </LinkContainer> */}
 
-                                  <span
-                                    onClick={() =>
-                                      deletePaymentTypeHandler(
-                                        paymentType.paymentTypeId
-                                      )
-                                    }
-                                  >
-                                    <i
-                                      className='fas fa-trash action ml-2'
-                                      style={{ color: 'red' }}
-                                    ></i>
-                                  </span>
-                                </td>
-                              )}
+                                    <span
+                                      onClick={() =>
+                                        deletePaymentTypeHandler(
+                                          paymentType.paymentTypeId
+                                        )
+                                      }
+                                    >
+                                      <i
+                                        className='fas fa-trash action ml-2'
+                                        style={{ color: 'red' }}
+                                      ></i>
+                                    </span>
+                                  </td>
+                                )}
                             </tr>
                           ))}
                         </tbody>

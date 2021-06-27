@@ -35,7 +35,6 @@ const UserPendingApproveScreen = ({ match, history }) => {
         history.push('/members');
       } else {
         if (!pendingUser.pendingId || pendingUser.pendingId !== pendingId) {
-          console.log(pendingId);
           dispatch(getPendingUserDetails(pendingId));
         }
       }

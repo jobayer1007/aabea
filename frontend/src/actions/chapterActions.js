@@ -10,9 +10,15 @@ import {
   CHAPTER_DETAILS_REQUEST,
   CHAPTER_DETAILS_RESET,
   CHAPTER_DETAILS_SUCCESS,
+  CHAPTER_DONATIONS_FAIL,
+  CHAPTER_DONATIONS_REQUEST,
+  CHAPTER_DONATIONS_SUCCESS,
   CHAPTER_LIST_FAIL,
   CHAPTER_LIST_REQUEST,
   CHAPTER_LIST_SUCCESS,
+  CHAPTER_PAYMENTS_FAIL,
+  CHAPTER_PAYMENTS_REQUEST,
+  CHAPTER_PAYMENTS_SUCCESS,
   CHAPTER_REGISTER_FAIL,
   CHAPTER_REGISTER_REQUEST,
   CHAPTER_REGISTER_SUCCESS,
@@ -393,3 +399,79 @@ export const getChapterBySubDomain = (checkChapter) => async (dispatch) => {
     });
   }
 };
+
+//////////////////// Chapter Payments//////////////////////////
+export const getChapterPayments =
+  (checkChapter) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CHAPTER_PAYMENTS_REQUEST,
+      });
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.get(
+        `/api/chapters/payments/${checkChapter}`,
+        config
+      );
+
+      dispatch({
+        type: CHAPTER_PAYMENTS_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: CHAPTER_PAYMENTS_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+//////////////////// Chapter Donations//////////////////////////
+export const getChapterDonations =
+  (checkChapter) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CHAPTER_DONATIONS_REQUEST,
+      });
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.get(
+        `/api/chapters/donations/${checkChapter}`,
+        config
+      );
+
+      dispatch({
+        type: CHAPTER_DONATIONS_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: CHAPTER_DONATIONS_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };

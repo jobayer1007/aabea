@@ -43,9 +43,9 @@ const Chapter = (sequelize, DataTypes) =>
       allowNull: false,
     },
     createdBy: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      notEmpty: true,
+      type: DataTypes.STRING,
+      // allowNull: false,
+      // notEmpty: true,
     },
 
     lastUpdatedBy: {

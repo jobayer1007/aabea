@@ -51,6 +51,7 @@ exports.getLinks = asyncHandler(async (req, res) => {
   if (chapter) {
     const links = await models.Link.findAll({
       where: { chapterId: chapter.chapterId },
+      order: [['createdAt', 'DESC']],
     });
 
     if (links) {

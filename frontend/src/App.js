@@ -52,6 +52,7 @@ import ImageByIdScreen from './screens/ImagesScreen/ImageByIdScreen';
 import EventRegistrationPayment from './screens/EventScreen/EventRegistrationPayment';
 import UploadScreen from './screens/UploadScreen/UploadScreen';
 import Document from './screens/UploadScreen/Document';
+import EmailViewScreen from './screens/EmailScreen/EmailViewScreen';
 
 const App = () => {
   return (
@@ -100,6 +101,7 @@ const App = () => {
             <Route path='/doc/:id' component={Document} />
             <Route path='/members' component={MembersScreen} />
             <Route path='/emails' component={EmailScreen} />
+            <Route path='/email/:id' component={EmailViewScreen} />
             <Route path='/events' component={EventScreen} />
             <Route path='/event/register/:id' component={EventRegisterScreen} />
             <Route

@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const path = require('path');
 
 exports.sendConfirmationEmail = function ({
   fromAdmin,
@@ -397,3 +398,84 @@ exports.sendGuestDonationConfirmationEmail = function ({
     });
   });
 };
+
+// ////////////////////////Send email/////////////////////
+
+exports.sendEmail = function ({
+  fromAdmin,
+  pass,
+  emailReceipent,
+  emailTitle,
+  emailBody,
+  attachments,
+  domain,
+}) {
+  return new Promise((res, rej) => {
+    const transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      auth: {
+        user: fromAdmin,
+        pass: pass,
+      },
+    });
+
+    const files = attachments.map((attachment) => {
+      console.log(path.join(`the file path is : ${attachment}`));
+      console.log(path.join(path.resolve(), `${attachment}`));
+      console.log(
+        path.join(path.resolve().split('/backend')[0], `${attachment}`)
+      );
+      console.log(`filename: ${attachment.split('/image-')[1]}`);
+      return {
+        filename: `${attachment.split('/image-')[1]}`,
+        path: `/home/aabea/apps/aabea-app${attachment}`,
+      };
+    });
+    // path: `/home/aabea/apps/aabea-app${attachment}`,
+
+    const message = {
+      from: fromAdmin,
+      to: emailReceipent,
+      // to: process.env.GOOGLE_USER,
+      subject: `${emailTitle}`,
+      html: `
+        ${emailBody}
+      `,
+      attachments: files,
+      // {
+      //   path: path.join(path.resolve(), `${attachments}`),
+      // },
+      // {
+      //   path: path.join(path.resolve(), `${attachments}`),
+      // },
+
+      // [
+      //   {
+      //     filename: 'text1.txt',
+      //     content: 'hello world!',
+      //   },
+      // ],
+    };
+
+    transporter.sendMail(message, function (err, info) {
+      if (err) {
+        rej(err);
+      } else {
+        res(info);
+      }
+    });
+  });
+};
+
+////////reference for bcc
+// const mailData = {
+//   from: 'xyz@xyz.com',
+//   to: 'recipient@xyz.com',
+//   bcc: 'bcc@xyz.com',
+//   subject: 'Sample Mail',
+//   html: text,
+//   envelope: {
+//       from: 'xyz@xyz.com',
+//       to: 'recipient@xyz.com'
+//   }
+// }

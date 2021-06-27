@@ -10,6 +10,7 @@ import {
 } from '../constants/userConstants';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
+import swal from 'sweetalert';
 
 const UserEditScreen = ({ match, history }) => {
   const id = match.params.id;
@@ -79,13 +80,19 @@ const UserEditScreen = ({ match, history }) => {
           setCertificates(user.certificates);
         }
       }
+      if (errorUpdate) {
+        swal('Error!', errorUpdate, 'error').then((value) => {
+          dispatch({ type: USER_UPDATE_RESET });
+          history.push('/members');
+        });
+      }
     } else {
       history.push('/login');
     }
 
     // }
     // }
-  }, [dispatch, userInfo, id, history, user, successUpdate]);
+  }, [dispatch, userInfo, id, history, user, successUpdate, errorUpdate]);
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];

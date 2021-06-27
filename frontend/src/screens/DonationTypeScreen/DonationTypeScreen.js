@@ -230,23 +230,24 @@ const DonationTypeScreen = ({ history }) => {
 
                               <td> {donationType.donationTypeDescription}</td>
 
-                              {(userInfo.userRole === 'systemAdmin' ||
-                                userInfo.userRole === 'admin') && (
-                                <td>
-                                  <span
-                                    onClick={() =>
-                                      deleteDonationTypeHandler(
-                                        donationType.donationTypeId
-                                      )
-                                    }
-                                  >
-                                    <i
-                                      className='fas fa-trash action ml-2'
-                                      style={{ color: 'red' }}
-                                    ></i>
-                                  </span>
-                                </td>
-                              )}
+                              {userInfo &&
+                                (userInfo.userRole === 'systemAdmin' ||
+                                  userInfo.userRole === 'admin') && (
+                                  <td>
+                                    <span
+                                      onClick={() =>
+                                        deleteDonationTypeHandler(
+                                          donationType.donationTypeId
+                                        )
+                                      }
+                                    >
+                                      <i
+                                        className='fas fa-trash action ml-2'
+                                        style={{ color: 'red' }}
+                                      ></i>
+                                    </span>
+                                  </td>
+                                )}
                             </tr>
                           ))}
                         </tbody>

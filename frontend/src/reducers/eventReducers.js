@@ -179,7 +179,7 @@ export const eventContactUpdateReducer = (state = {}, action) => {
     case EVENT_CONTACT_UPDATE_BY_ID_REQUEST:
       return { loading: true };
     case EVENT_CONTACT_UPDATE_BY_ID_SUCCESS:
-      return { loading: false, success: true, eventContact: action.payload };
+      return { loading: false, success: action.payload };
     case EVENT_CONTACT_UPDATE_BY_ID_FAIL:
       return { loading: false, error: action.payload };
     case EVENT_CONTACT_UPDATE_BY_ID_RESET:

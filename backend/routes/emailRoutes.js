@@ -9,7 +9,7 @@ const { protect, admin } = require('../middleware/authMiddleware');
 
 // Email/////////////////////////////////////////////////
 router.route('/').post(protect, admin, sendNewEmail);
-router.route('/').get(protect, admin, getAllEmails);
+router.route('/chapter/:checkChapter').get(protect, admin, getAllEmails);
 router.route('/:id').get(protect, admin, getEmailById);
 
 module.exports = router;

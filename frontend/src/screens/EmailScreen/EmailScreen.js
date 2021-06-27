@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col, Card, Form, Button, InputGroup } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -14,18 +15,26 @@ import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 import ColumnFilter from '../../components/Table/ColumnFilter';
 import RTable from '../../components/Table/RTable';
-import { allEmails, getEmailById } from '../../actions/emailActions';
+import { allEmails, getEmailById, newEmail } from '../../actions/emailActions';
 import { EMAIL_NEW_RESET } from '../../constants/emailConstants';
+import { listUsers } from '../../actions/userActions';
+import { allCMembers } from '../../actions/committeeActions';
+import swal from 'sweetalert';
+import UploadFiles from '../../components/FileUpload/UploadFiles';
 
 const EmailScreen = ({ history }) => {
   const dispatch = useDispatch();
+  const checkChapter = window.location.host;
 
   const [addEmail, setAddEmail] = useState(false);
-  // const [editAnnouncement, setEditAnnouncement] = useState(false);
+  const [emailReceipent, setEmailReceipent] = useState([]);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   // const [id, setId] = useState('');
   const [selected, setSelected] = useState('');
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState([]);
 
   const emailsRef = useRef();
 
@@ -40,14 +49,15 @@ const EmailScreen = ({ history }) => {
   const emailNew = useSelector((state) => state.emailNew);
   const { loading: emailNewLoading, error: emailNewError, success } = emailNew;
 
-  const emailById = useSelector((state) => state.emailById);
-  const { email } = emailById;
+  const userList = useSelector((state) => state.userList);
+  const { loading: userListLoading, error: userListError, users } = userList;
 
-  // const announcementUpdate = useSelector((state) => state.announcementUpdate);
-  // const { success: announcementUpdateSuccess } = announcementUpdate;
-
-  // const announcementDelete = useSelector((state) => state.announcementDelete);
-  // const { success: successDelete } = announcementDelete;
+  const cMemberAll = useSelector((state) => state.cMemberAll);
+  const {
+    loading: cMemberAllLoading,
+    error: cMemberAllError,
+    cMembers,
+  } = cMemberAll;
 
   useEffect(() => {
     if (
@@ -55,56 +65,127 @@ const EmailScreen = ({ history }) => {
       (userInfo.userRole === 'systemAdmin' || userInfo.userRole === 'admin')
     ) {
       // setId(userInfo.memberId);
-      dispatch(allEmails());
+      dispatch(allEmails(checkChapter));
+      dispatch(listUsers(checkChapter));
+      dispatch(allCMembers(checkChapter));
       dispatch({ type: EMAIL_NEW_RESET });
     } else {
       history.push('/login');
     }
     if (success) {
-      setAddEmail(false);
-
-      setTitle('');
-      setBody('');
-      setSelected('');
+      swal('Success!', success, 'success').then((value) => {
+        setAddEmail(false);
+        setTitle('');
+        setBody('');
+        setUploadedFiles([]);
+        setMessage([]);
+        setSelected('');
+      });
+    } else if (emailNewError) {
+      swal('Error!', emailNewError, 'error');
     }
-  }, [dispatch, history, userInfo, success, email]);
+
+    if (selected === 'allMember') {
+      if (users && users.length !== 0) {
+        let addresses = [];
+        users.forEach((user, index) => {
+          addresses.push(user.member.primaryEmail);
+        });
+        setEmailReceipent(addresses);
+      }
+    } else if (selected === 'allCommitteeMember') {
+      if (cMembers && cMembers.length !== 0) {
+        let addresses = [];
+        cMembers.forEach((cMember, index) => {
+          addresses.push(cMember.member.primaryEmail);
+        });
+        setEmailReceipent(addresses);
+      }
+    }
+  }, [
+    dispatch,
+    history,
+    checkChapter,
+    userInfo,
+    success,
+    emailNewError,
+
+    selected,
+  ]);
 
   const viewEmailHandler = (rowIndex) => {
     const id = emailsRef.current[rowIndex].emailId;
-    console.log(rowIndex);
-    console.log(id);
-    dispatch(getEmailById(id));
+
+    history.push(`/email/${id}`, '_blank');
   };
 
   const addNewEmail = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     setAddEmail(!addEmail);
+    setEmailReceipent([]);
     setTitle('');
     setBody('');
+    setUploadedFiles([]);
+    setMessage([]);
     setSelected('');
   };
 
   const handleSelect = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
 
     setSelected(e.target.value);
-    console.log(selected);
+  };
+
+  const customAddressHandler = (e) => {
+    e.preventDefault();
+
+    if (emailReceipent.length !== 0) {
+      setEmailReceipent([emailReceipent + ',' + e.target.value]);
+    } else {
+      setEmailReceipent([e.target.value]);
+    }
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
 
-    console.log('Sent clicked');
-    console.log(selected);
+    dispatch(
+      newEmail({ emailReceipent, title, body, uploadedFiles, checkChapter })
+    );
+  };
 
-    // if (editAnnouncement) {
-    //   dispatch(updateAnnouncementById(id, title, body));
-    // } else {
-    //   setId(userInfo.memberId);
-    //   // console.log(id);
-    //   dispatch(newAnnouncement(title, body, id));
-    // }
+  const SentEmails = ({ values }) => {
+    // Loop through the array and create a badge-like component instead of a comma-separated string
+    return (
+      <>
+        {values.map((sentEmail, idx) => {
+          return (
+            <span key={idx} className='badge'>
+              {sentEmail}
+            </span>
+          );
+        })}
+      </>
+    );
+  };
+
+  const SentAttachments = ({ values }) => {
+    // Loop through the array and create a badge-like component instead of a comma-separated string
+    return (
+      <>
+        {values.map((SentAttachment, idx) => {
+          return (
+            // <span key={idx} className='badge'>
+            //   {SentAttachment}
+            // </span>
+            <a href={SentAttachment} className='badge' target='_blank'>
+              {SentAttachment.split('/image-')[1]}
+            </a>
+          );
+        })}
+      </>
+    );
   };
 
   const columnsAdmin = [
@@ -127,8 +208,9 @@ const EmailScreen = ({ history }) => {
     },
     {
       Header: 'To',
-      accessor: 'to',
+      accessor: 'sentTo',
       Filter: ColumnFilter,
+      Cell: ({ cell: { value } }) => <SentEmails values={value} />,
     },
     {
       Header: 'Date',
@@ -137,6 +219,12 @@ const EmailScreen = ({ history }) => {
       Cell: ({ value }) => {
         return format(new Date(value), 'dd/mm/yyyy');
       },
+    },
+    {
+      Header: 'Attachment/s',
+      accessor: 'attachments',
+      Filter: ColumnFilter,
+      Cell: ({ cell: { value } }) => <SentAttachments values={value} />,
     },
 
     {
@@ -155,6 +243,50 @@ const EmailScreen = ({ history }) => {
       },
     },
   ];
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files;
+
+    let uploads = [];
+    for (let i = 0; i < file.length; i++) {
+      const formData = new FormData();
+      formData.append(`image`, file[i]);
+      setUploading(true);
+
+      try {
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        };
+
+        const { data } = await axios.post('/api/upload', formData, config);
+        console.log(data);
+        uploadedFiles.push(data);
+        setUploading(false);
+
+        setMessage((prevMessage) => [
+          ...prevMessage,
+          'Uploaded the file successfully: ' + file[i].name,
+        ]);
+      } catch (error) {
+        console.error(error);
+        setUploading(false);
+        setMessage((prevMessage) => [
+          ...prevMessage,
+          'Could not upload the file: ' + file[i].name,
+        ]);
+      }
+    }
+    // if (uploadedFiles.length !== 0) {
+    //   setUploadedFiles([uploadedFiles + ',' + { uploads }]);
+    //   // uploadedFiles.push(uploads);
+    // } else {
+    //   // uploadedFiles.push(uploads);
+    //   setUploadedFiles(uploads);
+    // }
+  };
+  console.log(uploadedFiles);
 
   return (
     <>
@@ -220,6 +352,7 @@ const EmailScreen = ({ history }) => {
                                   value={selected}
                                   onChange={handleSelect}
                                 >
+                                  <option value=''>Please Select</option>
                                   <option value='allMember'>All Member</option>
                                   <option value='allCommitteeMember'>
                                     All Committee Member
@@ -231,38 +364,41 @@ const EmailScreen = ({ history }) => {
                                 </Form.Control.Feedback>
                               </InputGroup>
 
-                              {/* <ButtonGroup> */}
-                              {/* <DropdownButton
-                                as={ButtonGroup}
-                                title='Please select'
-                                id='bg-nested-dropdown'
-                                variant='info'
-                                className='btn btn-sm rounded'
-                                onSelect={handleSelect}
-                              >
-                                <Dropdown.Item eventKey='allMember'>
-                                  All Member
-                                </Dropdown.Item>
-                                <Dropdown.Item eventKey='allCommitteeMember'>
-                                  All Committee Member
-                                </Dropdown.Item>
-                                <Dropdown.Item eventKey='custom'>
-                                  Single/Few Member/s
-                                </Dropdown.Item>
-                              </DropdownButton> */}
-                              {/* </ButtonGroup> */}
+                              {selected && selected === 'custom' ? (
+                                <Form.Group controlId='custom'>
+                                  <Form.Label>Receipent</Form.Label>
+                                  <Form.Control
+                                    as='select'
+                                    onChange={customAddressHandler}
+                                  >
+                                    <option>Please select reciepent</option>
+                                    {users &&
+                                      users.length !== 0 &&
+                                      users.map((user, index) => (
+                                        <option key={index} value={user.email}>
+                                          {user.userName}
+                                        </option>
+                                      ))}
+                                  </Form.Control>
+                                </Form.Group>
+                              ) : null}
 
+                              <Form.Label>Address</Form.Label>
                               <Form.Control
+                                required
                                 type='text'
                                 placeholder='Address'
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
+                                value={emailReceipent}
+                                onChange={(e) =>
+                                  setEmailReceipent([e.target.value])
+                                }
                               ></Form.Control>
                             </Form.Group>
 
                             <Form.Group controlId='title'>
                               <Form.Label>Title</Form.Label>
                               <Form.Control
+                                required
                                 type='text'
                                 placeholder='Please Enter A Title..'
                                 value={title}
@@ -273,6 +409,7 @@ const EmailScreen = ({ history }) => {
                             <Form.Group controlId='body'>
                               <Form.Label>Mail</Form.Label>
                               <CKEditor
+                                required
                                 editor={ClassicEditor}
                                 data={body}
                                 onChange={(e, editor) => {
@@ -281,6 +418,39 @@ const EmailScreen = ({ history }) => {
                                 }}
                               />
                             </Form.Group>
+
+                            <Form.Group controlId='attachments'>
+                              <Form.Label>Attachment/s</Form.Label>
+                              {/* <Form.Control
+                                type='text'
+                                placeholder='Enter image url..'
+                                value={uploadedFiles}
+                                onChange={(e) =>
+                                  setUploadedFiles(e.target.value)
+                                }
+                              ></Form.Control> */}
+                              <Form.File
+                                custom
+                                id='image-file'
+                                label='Choose File'
+                                multiple
+                                onChange={uploadFileHandler}
+                              ></Form.File>
+                              {uploading && <Loader />}
+                            </Form.Group>
+
+                            {message.length > 0 && (
+                              <div
+                                className='alert alert-secondary'
+                                role='alert'
+                              >
+                                <ul>
+                                  {message.map((item, i) => {
+                                    return <li key={i}>{item}</li>;
+                                  })}
+                                </ul>
+                              </div>
+                            )}
 
                             <Button type='submit' variant='info' block>
                               Send

@@ -34,6 +34,14 @@ import {
   CHAPTER_UPDATE_SUCCESS,
   CHAPTER_UPDATE_FAIL,
   CHAPTER_UPDATE_RESET,
+  CHAPTER_PAYMENTS_REQUEST,
+  CHAPTER_PAYMENTS_SUCCESS,
+  CHAPTER_PAYMENTS_FAIL,
+  CHAPTER_PAYMENTS_RESET,
+  CHAPTER_DONATIONS_REQUEST,
+  CHAPTER_DONATIONS_SUCCESS,
+  CHAPTER_DONATIONS_FAIL,
+  CHAPTER_DONATIONS_RESET,
 } from '../constants/chapterConstants';
 
 export const chapterRegisterReducer = (state = {}, action) => {
@@ -173,6 +181,44 @@ export const chapterBySubDomainReducer = (
     case CHAPTER_BY_SUBDOMAIN_FAIL:
       return { loading: false, error: action.payload };
     case CHAPTER_BY_SUBDOMAIN_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+//////////////////////// CHAPTER PAYMENTS//////////////////////////
+export const chapterPaymentAllReducer = (
+  state = { allPayments: {} },
+  action
+) => {
+  switch (action.type) {
+    case CHAPTER_PAYMENTS_REQUEST:
+      return { ...state, loading: true };
+    case CHAPTER_PAYMENTS_SUCCESS:
+      return { loading: false, success: true, allPayments: action.payload };
+    case CHAPTER_PAYMENTS_FAIL:
+      return { loading: false, error: action.payload };
+    case CHAPTER_PAYMENTS_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+//////////////////////// CHAPTER DONATIONS//////////////////////////
+export const chapterDonationAllReducer = (
+  state = { allDonations: {} },
+  action
+) => {
+  switch (action.type) {
+    case CHAPTER_DONATIONS_REQUEST:
+      return { ...state, loading: true };
+    case CHAPTER_DONATIONS_SUCCESS:
+      return { loading: false, success: true, allDonations: action.payload };
+    case CHAPTER_DONATIONS_FAIL:
+      return { loading: false, error: action.payload };
+    case CHAPTER_DONATIONS_RESET:
       return {};
     default:
       return state;

@@ -103,6 +103,7 @@ exports.getAllEvents = asyncHandler(async (req, res) => {
     const events = await models.Event.findAll(
       {
         where: { chapterId: chapter.chapterId },
+        order: [['createdAt', 'DESC']],
       },
       { include: models.EventImageGallery },
       { include: models.EventContact }
@@ -381,9 +382,9 @@ exports.updateEventContactById = asyncHandler(async (req, res) => {
       );
 
       if (updatedEContact == 1) {
-        res.json({ message: 'Event Contact updated successfully' });
+        res.json('Event Contact updated successfully');
       } else {
-        res.send({ message: 'Event Contact update unsuccessful' });
+        res.send('Event Contact update unsuccessful');
       }
     } else {
       res.status(401);

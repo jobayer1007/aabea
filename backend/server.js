@@ -59,7 +59,7 @@ app.get('/api/config/captchaClient', (req, res) =>
 // sequelize
 //   .sync({
 //     force: syncStatus,
-//     // alter: true,
+//     alter: true,
 //   })
 //   .then(() => {
 //     //   //if  (syncStatus) {

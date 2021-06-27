@@ -64,6 +64,7 @@ import {
   USER_PAY_SUCCESS,
   USER_PENDING_DELETE_FAIL,
   USER_PENDING_DELETE_REQUEST,
+  USER_PENDING_DELETE_RESET,
   USER_PENDING_DELETE_SUCCESS,
   USER_PENDING_DETAILS_FAIL,
   USER_PENDING_DETAILS_REQUEST,
@@ -182,15 +183,7 @@ export const userListReducer = (state = { users: [] }, action) => {
       return { loading: true };
     case USER_LIST_SUCCESS:
       return { loading: false, success: true, users: action.payload };
-    // case ADMIN_LIST:
-    //   return {
-    //     admins: action.payload.filter((user) => {
-    //       const regex = new RegExp(`admin`, 'gi');
-    //       return (
-    //         user.userRole.match(regex) || user.userRole.match('systemAdmin')
-    //       );
-    //     }),
-    //   };
+
     case USER_LIST_FAIL:
       return { loading: false, error: action.payload };
     case USER_LIST_RESET:
@@ -221,7 +214,7 @@ export const userDeleteReducer = (state = {}, action) => {
     case USER_DELETE_REQUEST:
       return { loading: true };
     case USER_DELETE_SUCCESS:
-      return { loading: false, success: true };
+      return { loading: false, success: action.payload };
     case USER_DELETE_FAIL:
       return { loading: false, error: action.payload };
     case USER_DELETE_RESET:
@@ -398,10 +391,11 @@ export const userPendingDeleteReducer = (state = {}, action) => {
     case USER_PENDING_DELETE_REQUEST:
       return { loading: true };
     case USER_PENDING_DELETE_SUCCESS:
-      return { loading: false, success: true };
+      return { loading: false, success: action.payload };
     case USER_PENDING_DELETE_FAIL:
       return { loading: false, error: action.payload };
-
+    case USER_PENDING_DELETE_RESET:
+      return {};
     default:
       return state;
   }
@@ -446,7 +440,7 @@ export const userDeleteAdminReducer = (state = {}, action) => {
     case USER_DELETE_ADMIN_REQUEST:
       return { loading: true };
     case USER_DELETE_ADMIN_SUCCESS:
-      return { loading: false, success: true };
+      return { loading: false, success: action.payload };
     case USER_DELETE_ADMIN_FAIL:
       return { loading: false, error: action.payload };
 

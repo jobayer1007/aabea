@@ -53,7 +53,9 @@ const RegisterScreen = ({ location, history }) => {
       });
     } else if (error) {
       console.log(error);
-      swal('Error!', error, 'error');
+      swal('Error!', error, 'error').then((value) => {
+        dispatch({ type: USER_REGISTER_RESET });
+      });
     }
   }, [dispatch, history, success, redirect, error]);
 
@@ -354,12 +356,11 @@ const RegisterScreen = ({ location, history }) => {
                   <Form.Group as={Col} md='10' controlId='certificate'>
                     <Form.File
                       id='image-file'
-                      label='Choose File'
-                      custom
+                      // label='Choose File'
                       onChange={uploadFileHandler}
                     ></Form.File>
                     {uploading && <Loader />}
-                    <Form.Control
+                    {/* <Form.Control
                       required
                       type='text'
                       // placeholder='Enter your last certificate url..'
@@ -368,7 +369,7 @@ const RegisterScreen = ({ location, history }) => {
                     ></Form.Control>
                     <Form.Control.Feedback type='invalid'>
                       **Required
-                    </Form.Control.Feedback>
+                    </Form.Control.Feedback> */}
                   </Form.Group>
 
                   <Form.Group as={Col} md='2'>

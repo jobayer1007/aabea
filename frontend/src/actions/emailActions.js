@@ -44,7 +44,7 @@ export const newEmail = (email) => async (dispatch, getState) => {
   }
 };
 
-export const allEmails = () => async (dispatch, getState) => {
+export const allEmails = (checkChapter) => async (dispatch, getState) => {
   try {
     dispatch({
       type: EMAIL_ALL_REQUEST,
@@ -60,7 +60,10 @@ export const allEmails = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/emails`, config);
+    const { data } = await axios.get(
+      `/api/emails/chapter/${checkChapter}`,
+      config
+    );
 
     dispatch({
       type: EMAIL_ALL_SUCCESS,

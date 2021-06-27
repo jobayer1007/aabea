@@ -118,6 +118,7 @@ exports.getBlogs = asyncHandler(async (req, res) => {
   if (chapter) {
     const blogs = await models.Blog.findAll({
       where: { chapterId: chapter.chapterId },
+      order: [['createdAt', 'DESC']],
     });
     res.json(blogs);
   } else {

@@ -36,13 +36,14 @@ const Document = ({ history, match }) => {
             </a> */}
             {/* <hr /> */}
             <iframe
-              id='viewer'
-              style={{ width: '100%', height: '700px' }}
+              // id='viewer'
+              style={{ width: '100%', height: '80vh' }}
               //comment this src at server
-              src={window.URL.createObjectURL(
-                new Blob([blobDocument], { type: 'application/pdf' })
-              )}
-              // src={blobDocument.document} // Uncomment at server
+              // src={window.URL.createObjectURL(
+              //   new Blob([blobDocument], { type: 'application/pdf' })
+              // )}
+
+              src={blobDocument.document} // Uncomment at server
             >
               last added
             </iframe>

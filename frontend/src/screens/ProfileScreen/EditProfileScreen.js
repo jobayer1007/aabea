@@ -114,6 +114,28 @@ const EditProfileScreen = ({ match, history }) => {
     }
   };
 
+  const uploadCertificateHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+    setUploading(true);
+
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+
+      const { data } = await axios.post('/api/upload', formData, config);
+      setCertificates(data);
+      setUploading(false);
+    } catch (error) {
+      console.error(error);
+      setUploading(false);
+    }
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
 
@@ -501,19 +523,42 @@ const EditProfileScreen = ({ match, history }) => {
                           <Col md={3}>Profile Picture:</Col>
                           <Col>
                             <Form.Group controlId='profilePicture'>
-                              <Form.Control
+                              {/* <Form.Control
                                 type='text'
                                 placeholder='Enter image url..'
                                 value={profilePicture}
                                 onChange={(e) =>
                                   setProfilePicture(e.target.value)
                                 }
-                              ></Form.Control>
+                              ></Form.Control> */}
                               <Form.File
                                 id='image-file'
-                                label='Choose File'
-                                custom
+                                // label='Choose File'
+                                // custom
                                 onChange={uploadFileHandler}
+                              ></Form.File>
+                              {uploading && <Loader />}
+                            </Form.Group>
+                          </Col>
+                        </Row>
+
+                        <Row>
+                          <Col md={3}>Certificate:</Col>
+                          <Col>
+                            <Form.Group controlId='certificate'>
+                              {/* <Form.Control
+                                type='text'
+                                placeholder='Enter image url..'
+                                value={certificates}
+                                onChange={(e) =>
+                                  setCertificates(e.target.value)
+                                }
+                              ></Form.Control> */}
+                              <Form.File
+                                id='image-file'
+                                // label='Choose File'
+                                // custom
+                                onChange={uploadCertificateHandler}
                               ></Form.File>
                               {uploading && <Loader />}
                             </Form.Group>

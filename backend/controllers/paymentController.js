@@ -32,41 +32,6 @@ const sequelize = new Sequelize(
   }
 );
 
-// // @desc    Get loggedIn user PaymentS      ///////////////////////////////////////////////
-// // @route   GET /api/users/payment
-// // @access  Private
-// exports.getUserPaymentDetails = asyncHandler(async (req, res) => {
-//   const user = await models.User.findOne({
-//     where: { memberId: req.user.memberId },
-//   });
-//   // console.log(user);
-//   if (user) {
-//     const member = await models.Member.findOne({
-//       where: { memberId: req.user.memberId },
-//     });
-//     if (member) {
-//       const payments = await models.Payment.findAll({
-//         where: { memberId: req.user.memberId },
-//       });
-
-//       if (payments && payments.length !== 0) {
-//         res.json(payments);
-//       } else {
-//         res.status(404);
-//         throw new Error('No Payment Found');
-//       }
-
-//       // res.status(201).json({ isPaid: member.isPaid });
-//     } else {
-//       res.status(401);
-//       throw new Error('Member not found');
-//     }
-//   } else {
-//     res.status(401);
-//     throw new Error('User not found');
-//   }
-// });
-
 ////////////////////////////////////////////////////////////////////////
 // @desc    Get loggedIn user PaymentS      ///////////////////////////////////////////////
 // @route   GET /api/users/payment
@@ -238,6 +203,35 @@ exports.updatePaymentToPaid = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    GET Chapter's All Payment     ///////////////////////////////////////////////
+// @route   GET /api/chapters/payments/:checkChapter
+// @access  Private/SystemAdmin || admin
+exports.getAllPayments = asyncHandler(async (req, res) => {
+  // Find Chapter
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  //   subDomain = checkChapter.split('.')[0];
+  // }
+  const { checkChapter } = req.params;
+  const subDomain = checkChapter.split('.')[0];
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+  const payments = await models.Payment.findAll({
+    include: models.Member,
+
+    where: { chapterId: chapter.chapterId },
+  });
+  if (payments && payments.length !== 0) {
+    res.json(payments);
+  } else {
+    res.status(404);
+    throw new Error('No payments');
+  }
+});
+
 // @desc    Update Donate to Paid     ///////////////////////////////////////////////
 // @route   POST /api/users/:id/donate
 // @access  Private
@@ -325,13 +319,13 @@ exports.guestDonation = asyncHandler(async (req, res) => {
     paymentResult,
   } = req.body;
 
-  let subDomain;
-  if (process.env.NODE_ENV === 'development') {
-    subDomain = 'bd'; // at dev only
-  } else {
-    subDomain = checkChapter.split('.')[0];
-  }
-  // const subDomain = checkChapter.split('.')[0];
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  // subDomain = 'bd'; // at dev only
+  // } else {
+  // subDomain = checkChapter.split('.')[0];
+  // }
+  const subDomain = checkChapter.split('.')[0];
 
   const chapter = await models.Chapter.findOne({
     where: { subDomain: subDomain },
@@ -431,5 +425,34 @@ exports.guestDonation = asyncHandler(async (req, res) => {
   } else {
     res.status(401);
     throw new Error('Sorry Invalid chapter.');
+  }
+});
+
+// @desc    GET Chapter's All Donation     ///////////////////////////////////////////////
+// @route   GET /api/chapters/donations/:checkChapter
+// @access  Private/SystemAdmin || admin
+exports.getAllDonations = asyncHandler(async (req, res) => {
+  // Find Chapter
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  //   subDomain = checkChapter.split('.')[0];
+  // }
+  const { checkChapter } = req.params;
+  const subDomain = checkChapter.split('.')[0];
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+  const donations = await models.Donation.findAll({
+    include: models.Member,
+
+    where: { chapterId: chapter.chapterId },
+  });
+  if (donations && donations.length !== 0) {
+    res.json(donations);
+  } else {
+    res.status(404);
+    throw new Error('No donations');
   }
 });

@@ -33,6 +33,10 @@ const {
   updateChapterById,
   getPaypalId,
 } = require('../controllers/chapterController');
+const {
+  getAllPayments,
+  getAllDonations,
+} = require('../controllers/paymentController');
 const { protect, admin, systemAdmin } = require('../middleware/authMiddleware');
 
 // Settings///////////////////////////////////////////////////////
@@ -52,12 +56,18 @@ router
   .get(protect, getPaymentTypes);
 router.route('/paymentType/:id').delete(deletePaymentType);
 
+// Chapter All Payments //////////////////////////////////////////
+router.route('/payments/:checkChapter').get(protect, admin, getAllPayments);
+
 // Donation Type/////////////////////////////////////////////////
 router
   .route('/donationType')
   .post(protect, admin, createNewDonationType)
   .get(getDonationTypes);
 router.route('/donationType/:id').delete(deleteDonationType);
+
+// Chapter All Donations //////////////////////////////////////////
+router.route('/donations/:checkChapter').get(protect, admin, getAllDonations);
 
 // Mission/////////////////////////////////////////////////
 router.route('/mission').post(protect, createMission).get(getMission);

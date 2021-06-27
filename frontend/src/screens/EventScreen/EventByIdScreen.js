@@ -35,6 +35,7 @@ import {
 import swal from 'sweetalert';
 import RTable from '../../components/Table/RTable';
 import ColumnFilter from '../../components/Table/ColumnFilter';
+import { listUsers } from '../../actions/userActions';
 
 const EventByIdScreen = ({ history, match }) => {
   const id = match.params.id;
@@ -66,6 +67,9 @@ const EventByIdScreen = ({ history, match }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const userList = useSelector((state) => state.userList);
+  const { loading: userListLoading, error: userListError, users } = userList;
+
   const eventById = useSelector((state) => state.eventById);
   const { loading, error, event } = eventById;
 
@@ -90,7 +94,8 @@ const EventByIdScreen = ({ history, match }) => {
   const { success: eventContactByIdSuccess, eventContact } = eventContactById;
 
   const eventContactUpdate = useSelector((state) => state.eventContactUpdate);
-  const { success: eventContactUpdateSuccess } = eventContactUpdate;
+  const { error: eventContactUpdateError, success: eventContactUpdateSuccess } =
+    eventContactUpdate;
 
   const eventContactDelete = useSelector((state) => state.eventContactDelete);
   const { success: successDelete } = eventContactDelete;
@@ -103,27 +108,29 @@ const EventByIdScreen = ({ history, match }) => {
   const { error: eventUnpublishError, success: eventUnpublishSuccess } =
     eventUnpublish;
 
+  const checkChapter = window.location.host;
+
   useEffect(() => {
     dispatch(getEventById(id));
     dispatch(eventAllContact(id));
 
     if (userInfo) {
       dispatch({ type: EVENT_CONTACT_NEW_RESET });
+      dispatch({ type: EVENT_CONTACT_UPDATE_BY_ID_RESET });
 
       if (
         userInfo.userRole === 'admin' ||
         userInfo.userRole === 'systemAdmin'
       ) {
+        dispatch(listUsers(checkChapter));
+
         setColumnsAdmin([
           {
             Header: 'Registration Id',
             accessor: 'registrationId',
             Filter: ColumnFilter,
           },
-          // {
-          //   Header: 'Name',
-          //   accessor: 'userName',
-          // },
+
           {
             Header: 'First Name',
             accessor: 'firstName',
@@ -164,54 +171,28 @@ const EventByIdScreen = ({ history, match }) => {
             accessor: 'eventPayment.amount',
             Filter: ColumnFilter,
           },
-
-          // {
-          //   Header: 'Actions',
-          //   accessor: 'actions',
-          //   Cell: (props) => {
-          //     const rowIdx = props.row.id;
-          //     return (
-          //       <>
-          //         <span onClick={() => editUserHandler(rowIdx)}>
-          //           <i
-          //             className='far fa-edit action'
-          //             style={{ color: '#4285F4' }}
-          //           ></i>
-          //         </span>
-
-          //         <Link
-          //           className='btn btn-outline-warning btn-sm ml-2 rounded'
-          //           onClick={() => createAdminHandler(rowIdx)}
-          //         >
-          //           Make admin
-          //         </Link>
-
-          //         <span onClick={() => deleteUserHandler(rowIdx)}>
-          //           <i
-          //             className='fas fa-trash action ml-2'
-          //             style={{ color: 'red' }}
-          //           ></i>
-          //         </span>
-          //       </>
-          //     );
-          //   },
-          // },
         ]);
       }
     }
 
     if (success || eventContactUpdateSuccess) {
-      setAddEventContact(false);
-      setEditEventContact(false);
+      swal('Success!', success || eventContactUpdateSuccess, 'success').then(
+        (value) => {
+          setAddEventContact(false);
+          setEditEventContact(false);
 
-      setEventContactId('');
-      setMemberId('');
-      setPositionName('');
-      setContactEmail('');
-      setContactPhone('');
-      dispatch({ type: EVENT_CONTACT_NEW_RESET });
+          setEventContactId('');
+          setMemberId('');
+          setPositionName('');
+          setContactEmail('');
+          setContactPhone('');
+          dispatch({ type: EVENT_CONTACT_NEW_RESET });
 
-      dispatch({ type: EVENT_CONTACT_BY_ID_RESET });
+          dispatch({ type: EVENT_CONTACT_BY_ID_RESET });
+        }
+      );
+    } else if (eventContactNewError || eventContactUpdateError) {
+      swal('Error!', eventContactNewError || eventContactUpdateError, 'error');
     }
 
     if (eventPublishSuccess || eventUnpublishSuccess) {
@@ -243,9 +224,12 @@ const EventByIdScreen = ({ history, match }) => {
     dispatch,
     history,
     userInfo,
+    checkChapter,
     id,
     success,
     eventUpdateSuccess,
+    eventContactNewError,
+    eventContactUpdateError,
     eventContactByIdSuccess,
     eventContact,
     eventContactUpdateSuccess,
@@ -267,6 +251,14 @@ const EventByIdScreen = ({ history, match }) => {
     setEditEventContact(false);
     dispatch({ type: EVENT_CONTACT_BY_ID_RESET });
     dispatch({ type: EVENT_CONTACT_NEW_RESET });
+  };
+
+  const memberIdHandler = (e) => {
+    e.preventDefault();
+
+    setMemberId(e.target.value.split(',')[0]);
+    setContactEmail(e.target.value.split(',')[1]);
+    setContactPhone(e.target.value.split(',')[2]);
   };
 
   const submitHandler = (e) => {
@@ -312,28 +304,21 @@ const EventByIdScreen = ({ history, match }) => {
     setEventDescription(event.eventDescription);
     setEventStartDate(new Date(event.eventDate[0].value));
     setEventEndDate(new Date(event.eventDate[1].value));
-    // setEventStartTime();
-    // setEventEndTime();
+
     setEventAddress(event.eventAddress);
     setAdultFee(event.adultFee);
     setMinorFee(event.minorFee);
     setCap(event.cap);
-    // dispatch({ type: EVENT_CONTACT_UPDATE_BY_ID_RESET });
-    // console.log(rowIndex);
-    // console.log(id);
-    // dispatch(getEventContactById(id));
   };
 
   const updateEventHandler = (e) => {
     e.preventDefault();
 
     setEditEvent(!editEvent);
-    console.log(eventName);
     const eventDate = [
       { value: new Date(eventStartDate) },
       { value: new Date(eventEndDate) },
     ];
-    console.log(eventDate);
 
     dispatch(
       updateEventById(
@@ -733,18 +718,28 @@ const EventByIdScreen = ({ history, match }) => {
                                       ></Form.Control>
                                     </Form.Group>
 
-                                    <Form.Group controlId='title'>
+                                    <Form.Group controlId='memberId'>
                                       <Form.Label>Member Id</Form.Label>
                                       <Form.Control
-                                        required
-                                        type='number'
-                                        min='0'
-                                        placeholder='ID'
-                                        value={memberId}
-                                        onChange={(e) =>
-                                          setMemberId(e.target.value)
-                                        }
-                                      ></Form.Control>
+                                        as='select'
+                                        onChange={memberIdHandler}
+                                      >
+                                        <option>Select member Id</option>
+                                        {users &&
+                                          users.length !== 0 &&
+                                          users.map((user, index) => (
+                                            <option
+                                              key={index}
+                                              value={[
+                                                user.memberId,
+                                                user.email,
+                                                user.member.primaryPhone,
+                                              ]}
+                                            >
+                                              {user.memberId}
+                                            </option>
+                                          ))}
+                                      </Form.Control>
                                     </Form.Group>
 
                                     <Form.Group controlId='title'>

@@ -104,7 +104,7 @@ const LoginScreen = ({ location, history }) => {
     e.preventDefault();
 
     // Dispatch Login
-    dispatch(login(userRole, email, password));
+    dispatch(login(userRole, email, password, checkChapter));
   };
 
   return (

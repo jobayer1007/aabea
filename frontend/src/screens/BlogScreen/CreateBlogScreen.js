@@ -131,16 +131,16 @@ const CreateBlogScreen = ({ history }) => {
                     <Form.Label>Picture</Form.Label>
                   </Form.Group>
                   <Form.Group as={Col} md='10' controlId='photo'>
-                    <Form.Control
+                    {/* <Form.Control
                       type='text'
                       // placeholder='Enter your last certificate url..'
                       value={photoId}
                       onChange={(e) => setPhotoId(e.target.value)}
-                    ></Form.Control>
+                    ></Form.Control> */}
                     <Form.File
                       id='image-file'
-                      label='Choose File'
-                      custom
+                      // label='Choose File'
+                      // custom
                       onChange={uploadFileHandler}
                     ></Form.File>
                     {uploading && <Loader />}

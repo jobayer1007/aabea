@@ -52,6 +52,7 @@ exports.getAnnouncements = asyncHandler(async (req, res) => {
   if (chapter) {
     const announcements = await models.Announcement.findAll({
       where: { chapterId: chapter.chapterId },
+      order: [['createdAt', 'DESC']],
     });
     if (announcements && announcements.length !== 0) {
       res.send(announcements);

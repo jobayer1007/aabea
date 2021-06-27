@@ -102,7 +102,7 @@ export const getDocumentById = (id) => async (dispatch) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      responseType: 'arraybuffer', //Comment it in Server
+      // responseType: 'arraybuffer', //Comment it in Server
     };
 
     const { data } = await axios.get(

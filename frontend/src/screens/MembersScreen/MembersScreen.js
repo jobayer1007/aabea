@@ -20,7 +20,10 @@ import RTable from '../../components/Table/RTable';
 import ColumnFilter from '../../components/Table/ColumnFilter';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
-import { USER_DELETE_RESET } from '../../constants/userConstants';
+import {
+  USER_DELETE_RESET,
+  USER_PENDING_DELETE_RESET,
+} from '../../constants/userConstants';
 
 const MembersScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -50,7 +53,7 @@ const MembersScreen = ({ history }) => {
     users: allUserList,
   } = userAllList;
 
-  usersRef.current = allUserList;
+  usersRef.current = users;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -66,7 +69,8 @@ const MembersScreen = ({ history }) => {
   const { success: successAdmin } = userCreateAdmin;
 
   const userDeleteAdmin = useSelector((state) => state.userDeleteAdmin);
-  const { success: successDeleteAdmin } = userDeleteAdmin;
+  const { error: errorDeleteAdmin, success: successDeleteAdmin } =
+    userDeleteAdmin;
 
   const checkChapter = window.location.host;
 
@@ -94,22 +98,22 @@ const MembersScreen = ({ history }) => {
           // },
           {
             Header: 'First Name',
-            accessor: 'member.firstName',
+            accessor: 'firstName',
             Filter: ColumnFilter,
           },
           {
             Header: 'Last Name',
-            accessor: 'member.lastName',
+            accessor: 'lastName',
             Filter: ColumnFilter,
           },
           {
             Header: 'City',
-            accessor: 'member.city',
+            accessor: 'city',
             Filter: ColumnFilter,
           },
           {
             Header: 'State',
-            accessor: 'member.state',
+            accessor: 'state',
             Filter: ColumnFilter,
           },
 
@@ -130,7 +134,7 @@ const MembersScreen = ({ history }) => {
                   <Link
                     className='btn btn-outline-warning btn-sm ml-2 rounded'
                     onClick={() => createAdminHandler(rowIdx)}
-                    to=''
+                    to='#'
                   >
                     Make admin
                   </Link>
@@ -159,22 +163,22 @@ const MembersScreen = ({ history }) => {
           // },
           {
             Header: 'First Name',
-            accessor: 'member.firstName',
+            accessor: 'firstName',
             Filter: ColumnFilter,
           },
           {
             Header: 'Last Name',
-            accessor: 'member.lastName',
+            accessor: 'lastName',
             Filter: ColumnFilter,
           },
           {
             Header: 'City',
-            accessor: 'member.city',
+            accessor: 'city',
             Filter: ColumnFilter,
           },
           {
             Header: 'State',
-            accessor: 'member.state',
+            accessor: 'state',
             Filter: ColumnFilter,
           },
         ]);
@@ -212,15 +216,32 @@ const MembersScreen = ({ history }) => {
         },
       ]);
 
-      if (successDelete) {
-        swal('Success!', successDelete, 'success').then((value) => {
+      if (successDelete || successUserPendingDelete) {
+        swal(
+          'Success!',
+          successDelete || successUserPendingDelete,
+          'success'
+        ).then((value) => {
           dispatch({ type: USER_DELETE_RESET });
+          dispatch({ type: USER_PENDING_DELETE_RESET });
         });
       }
+      // if (successUserPendingDelete) {
+      //   swal('Success!', successUserPendingDelete, 'success').then((value) => {
+      //     dispatch({ type: USER_PENDING_DELETE_RESET });
+      //   });
+      // }
 
-      if (errorDelete || errorUserPendingDelete) {
-        swal('Error!', errorDelete || errorUserPendingDelete, 'error');
+      if (errorDelete || errorUserPendingDelete || errorDeleteAdmin) {
+        swal(
+          'Error!',
+          errorDelete || errorUserPendingDelete || errorDeleteAdmin,
+          'error'
+        );
       }
+      // if (errorUserPendingDelete) {
+      //   swal('Error!', errorUserPendingDelete, 'error');
+      // }
     } else {
       history.push('/login');
     }
@@ -233,6 +254,7 @@ const MembersScreen = ({ history }) => {
     successUserPendingDelete,
     successAdmin,
     successDeleteAdmin,
+    errorDeleteAdmin,
     errorDelete,
     errorUserPendingDelete,
     // editUserHandler,
@@ -485,62 +507,57 @@ const MembersScreen = ({ history }) => {
                           </tr>
                         </thead>
 
-                        <tbody>
+                        <>
                           {users &&
                             users.map((user, index) => (
-                              <tr key={index}>
-                                {(user.userRole === 'admin' ||
-                                  user.userRole === 'systemAdmin') && (
-                                  <>
-                                    <td>{user.memberId}</td>
-                                    {/* <td>
+                              <tbody key={index}>
+                                {user.users &&
+                                  user.users.map((itm, index) => (
+                                    <tr key={index}>
+                                      {(itm.userRole === 'admin' ||
+                                        itm.userRole === 'systemAdmin') && (
+                                        <>
+                                          <td>{itm.memberId}</td>
+                                          {/* <td>
                                       {' '}
                                       <Image src={user.member.firstName} />
                                     </td> */}
-                                    <td> {user.userName}</td>
-                                    <td>
-                                      <a href={`mailto: ${user.email}`}>
-                                        {user.email}
-                                      </a>
-                                    </td>
-                                    <td>{user.member.primaryPhone}</td>
+                                          <td> {itm.userName}</td>
+                                          <td>
+                                            <a href={`mailto: ${itm.email}`}>
+                                              {itm.email}
+                                            </a>
+                                          </td>
+                                          <td>{itm.primaryPhone}</td>
 
-                                    {(userInfo.userRole === 'systemAdmin' ||
-                                      userInfo.userRole === 'admin') &&
-                                      (users.userRole === 'member' ? (
-                                        <td>
-                                          <Button
-                                            variant='warning'
-                                            className='btn-sm'
-                                            onClick={() =>
-                                              createAdminHandler(user.memberId)
-                                            }
-                                          >
-                                            {' '}
-                                            Make ADMIN
-                                            {/* <i className='fas fa-trash'></i> */}
-                                          </Button>{' '}
-                                        </td>
-                                      ) : (
-                                        <td>
-                                          <Button
-                                            variant='success'
-                                            className='btn-sm'
-                                            onClick={() =>
-                                              deleteAdminHandler(user.memberId)
-                                            }
-                                          >
-                                            {' '}
-                                            Remove Admin
-                                            {/* <i className='fas fa-trash'></i> */}
-                                          </Button>
-                                        </td>
-                                      ))}
-                                  </>
-                                )}
-                              </tr>
+                                          {(userInfo.userRole ===
+                                            'systemAdmin' ||
+                                            userInfo.userRole === 'admin') &&
+                                            (itm.userRole === 'admin' ||
+                                            itm.userRole === 'systemAdmin' ? (
+                                              <td>
+                                                <Button
+                                                  variant='success'
+                                                  className='btn-sm'
+                                                  onClick={() =>
+                                                    deleteAdminHandler(
+                                                      user.memberId
+                                                    )
+                                                  }
+                                                >
+                                                  {' '}
+                                                  Remove Admin
+                                                  {/* <i className='fas fa-trash'></i> */}
+                                                </Button>
+                                              </td>
+                                            ) : null)}
+                                        </>
+                                      )}
+                                    </tr>
+                                  ))}
+                              </tbody>
                             ))}
-                        </tbody>
+                        </>
                       </Table>
                     )}
                   </>

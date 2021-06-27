@@ -1,5 +1,24 @@
+const Sequelize = require('sequelize');
 const asyncHandler = require('express-async-handler');
 const models = require('../models/index');
+const { sendEmail } = require('./mailer');
+
+const sequelize = new Sequelize(
+  process.env.PG_DATABASE,
+  process.env.PG_USER,
+  process.env.PG_PASSWORD,
+  {
+    host: 'localhost',
+    dialect: 'postgres',
+
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+  }
+);
 
 ///////////////////////////////////////////Email////////////////////////////////////////////////
 
@@ -7,39 +26,86 @@ const models = require('../models/index');
 // @route   POST /api/emails
 // @access  Private/SystemAdmin || Admin
 exports.sendNewEmail = asyncHandler(async (req, res) => {
-  console.log('email sent');
-  // const { title, body, id } = req.body;
+  const chapterSetting = await models.ChapterSettings.findOne({
+    where: { chapterId: req.user.chapterId },
+  });
 
-  // const user = await models.User.findOne({ where: { memberId: id } });
-  // if (user) {
-  //   const newAnnouncement = await models.Announcement.create({
-  //     title,
-  //     body,
-  //     chapterId: user.chapterId,
-  //     createdby: user.memberId,
-  //   });
-  //   if (newAnnouncement) {
-  //     res.json('New Announcement Created Successfully');
-  //   } else {
-  //     res.status(400);
-  //     throw new Error('Encountered problem while creating new Announcement');
-  //   }
-  // } else {
-  //   res.status(400);
-  //   throw new Error('Encountered problem while creating new Announcements');
-  // }
+  if (chapterSetting) {
+    const t = await sequelize.transaction();
+    try {
+      await await models.Email.create(
+        {
+          title: req.body.title,
+          body: req.body.body,
+          sendBy: req.user.userName,
+          sentTo: req.body.emailReceipent,
+          attachments: req.body.uploadedFiles,
+          chapterId: req.user.chapterId,
+        },
+        { transaction: t }
+      );
+
+      await sendEmail(
+        {
+          fromAdmin: chapterSetting.chapterEmail,
+          pass: chapterSetting.password,
+          emailReceipent: req.body.emailReceipent,
+          emailTitle: req.body.title,
+          emailBody: req.body.body,
+          attachments: req.body.uploadedFiles,
+          domain: req.body.checkChapter,
+        },
+        { transaction: t }
+      );
+
+      await t.commit();
+      res.send('email sent successfully');
+    } catch (error) {
+      console.log(error);
+      await t.rollback();
+      res.status(400);
+      throw new Error(
+        'Something Went Wrong with email sent, Please contact the system admin' +
+          error
+      );
+    }
+  } else {
+    res.status(400);
+    throw new Error('Invalid Chapter Reference');
+  }
 });
 
 // @desc    GET all Emails     ///////////////////////////////////////////////
-// @route   GET /api/emails
+// @route   GET /api/emails/chapter/:checkChapter
 // @access  Private/SystemAdmin || Admin
 exports.getAllEmails = asyncHandler(async (req, res) => {
-  const emails = await models.Email.findAll();
-  if (emails && emails.length !== 0) {
-    res.json(emails);
+  // Find Chapter
+  // let subDomain;
+  // if (process.env.NODE_ENV === 'development') {
+  //   subDomain = 'bd'; // at dev only
+  // } else {
+  //   subDomain = checkChapter.split('.')[0];
+  // }
+  const { checkChapter } = req.params;
+  const subDomain = checkChapter.split('.')[0];
+  const chapter = await models.Chapter.findOne({
+    where: { subDomain: subDomain },
+  });
+
+  if (chapter) {
+    const emails = await models.Email.findAll({
+      where: { chapterId: chapter.chapterId },
+      order: [['createdAt', 'DESC']],
+    });
+    if (emails && emails.length !== 0) {
+      res.json(emails);
+    } else {
+      res.status(404);
+      throw new Error('No Email');
+    }
   } else {
     res.status(404);
-    throw new Error('No Email');
+    throw new Error('Invalid chapter reference!');
   }
 });
 

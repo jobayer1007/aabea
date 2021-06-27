@@ -130,6 +130,7 @@ exports.getAllImages = asyncHandler(async (req, res) => {
       // include: models.Event,
       // include: { model: Event, include: EventImageGallery },
       where: { chapterId: chapter.chapterId },
+      order: [['createdAt', 'DESC']],
     });
     if (images && images.length !== 0) {
       res.json(images);
@@ -164,6 +165,7 @@ exports.getAllNavbarImages = asyncHandler(async (req, res) => {
   if (chapter) {
     const images = await models.ImageLibrary.findAll({
       where: { chapterId: chapter.chapterId, imageName: 'navbarImage' },
+      order: [['createdAt', 'DESC']],
     });
     if (images && images.length !== 0) {
       res.json(images);
@@ -242,6 +244,7 @@ exports.getAllImagesByEvent = asyncHandler(async (req, res) => {
     const eventGallery = await models.Event.findAll({
       include: models.EventImageGallery,
       where: { chapterId: chapter.chapterId },
+      order: [['createdAt', 'DESC']],
     });
     if (eventGallery && eventGallery.length !== 0) {
       res.json(eventGallery);

@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
+import Donations from '../../components/Chapter/Donations';
+
 import {
   getUserDonationDetails,
   donateUser,
@@ -110,7 +112,7 @@ const DonateScreen = ({ history }) => {
       setSdkReady(true);
     }
     // }
-  }, [history, dispatch, userInfo, checkChapter, addDonation, donateResulte]);
+  }, [history, dispatch, userInfo, checkChapter, donateResulte]);
 
   const donationTypeChangeHandler = (e) => {
     // e.preventDefault();
@@ -159,155 +161,171 @@ const DonateScreen = ({ history }) => {
             id='page-content-wrapper'
             className='m-0 p-1'
           >
-            <Card border='info' className='mb-2'>
-              <Card.Header className='text-center' as='h2'>
-                <Link
-                  className='btn btn-outline-info btn-sm btn-block rounded'
-                  onClick={() => setAddDonation(!addDonation)}
-                  to=''
-                >
-                  Make Donation
-                </Link>
-              </Card.Header>
-              <Card.Body>
-                {addDonation
-                  ? (errorDonate && (
-                      <Message variant='danger'>{errorDonate}</Message>
-                    )) ||
-                    (loadingDonate && <Loader />) ||
-                    (successDonate ? (
-                      <Message variant='success'>{successDonate}</Message>
-                    ) : (
-                      <Row>
-                        <Col md={8}>
-                          <Form>
-                            <ListGroup variant='flush'>
-                              <ListGroup.Item>
-                                <Row>
-                                  <Col md={3}>Name:</Col>
-                                  <Col>
-                                    {user.mInit} {user.firstName}{' '}
-                                    {user.lastName}
-                                  </Col>
-                                </Row>
-                              </ListGroup.Item>
+            {userInfo.userRole === 'admin' ||
+            userInfo.userRole === 'systemAdmin' ? (
+              <>
+                <Donations />
+              </>
+            ) : (
+              <>
+                <Card border='info' className='mb-2'>
+                  <Card.Header className='text-center' as='h2'>
+                    <Link
+                      className='btn btn-outline-info btn-sm btn-block rounded'
+                      onClick={() => setAddDonation(!addDonation)}
+                    >
+                      Make Donation
+                    </Link>
+                  </Card.Header>
+                  <Card.Body>
+                    {addDonation
+                      ? (errorDonate && (
+                          <Message variant='danger'>{errorDonate}</Message>
+                        )) ||
+                        (loadingDonate && <Loader />) ||
+                        (successDonate ? (
+                          <Message variant='success'>{successDonate}</Message>
+                        ) : (
+                          <Row>
+                            <Col md={8}>
+                              <Form>
+                                <ListGroup variant='flush'>
+                                  <ListGroup.Item>
+                                    <Row>
+                                      <Col md={3}>Name:</Col>
+                                      <Col>
+                                        {user.mInit} {user.firstName}{' '}
+                                        {user.lastName}
+                                      </Col>
+                                    </Row>
+                                  </ListGroup.Item>
 
-                              <ListGroup.Item>
-                                <Row>
-                                  <Col md={3}>E-mail:</Col>
+                                  <ListGroup.Item>
+                                    <Row>
+                                      <Col md={3}>E-mail:</Col>
 
-                                  <Col>{user.primaryEmail}</Col>
-                                </Row>
-                              </ListGroup.Item>
-                            </ListGroup>
-                            {loadingDonationTypes ? (
-                              <Loader />
-                            ) : errorDonationTypes ? (
-                              <Message variant='danger'>
-                                {errorDonationTypes}
-                              </Message>
-                            ) : (
-                              donationTypes &&
-                              donationTypes.length !== 0 && (
-                                <Form.Group>
-                                  <label>Donation Cause</label>
+                                      <Col>{user.primaryEmail}</Col>
+                                    </Row>
+                                  </ListGroup.Item>
+                                </ListGroup>
+                                {loadingDonationTypes ? (
+                                  <Loader />
+                                ) : errorDonationTypes ? (
+                                  <Message variant='danger'>
+                                    {errorDonationTypes}
+                                  </Message>
+                                ) : (
+                                  donationTypes &&
+                                  donationTypes.length !== 0 && (
+                                    <Form.Group>
+                                      <label>Donation Cause</label>
+                                      <Form.Control
+                                        as='select'
+                                        onChange={donationTypeChangeHandler}
+                                      >
+                                        <option>Select cause</option>
+                                        {donationTypes.map(
+                                          (donationType, index) => (
+                                            <option
+                                              key={index}
+                                              value={
+                                                donationType.donationTypeName
+                                              }
+                                            >
+                                              {donationType.donationTypeName}
+                                            </option>
+                                          )
+                                        )}
+                                      </Form.Control>
+                                    </Form.Group>
+                                  )
+                                )}
+
+                                <Form.Group controlId='donateAmount'>
+                                  <Form.Label>Donate Amount</Form.Label>
                                   <Form.Control
-                                    as='select'
-                                    onChange={donationTypeChangeHandler}
-                                  >
-                                    <option>Select cause</option>
-                                    {donationTypes.map(
-                                      (donationType, index) => (
-                                        <option
-                                          key={index}
-                                          value={donationType.donationTypeName}
-                                        >
-                                          {donationType.donationTypeName}
-                                        </option>
-                                      )
-                                    )}
-                                  </Form.Control>
+                                    type='number'
+                                    placeholder='Please Enter Donation Amount'
+                                    min='5'
+                                    value={donateAmount}
+                                    onChange={(e) =>
+                                      setDonateAmount(e.target.value)
+                                    }
+                                  ></Form.Control>
                                 </Form.Group>
-                              )
-                            )}
-
-                            <Form.Group controlId='donateAmount'>
-                              <Form.Label>Donate Amount</Form.Label>
-                              <Form.Control
-                                type='number'
-                                placeholder='Please Enter Donation Amount'
-                                min='5'
-                                value={donateAmount}
-                                onChange={(e) =>
-                                  setDonateAmount(e.target.value)
-                                }
-                              ></Form.Control>
-                            </Form.Group>
-                          </Form>
-                        </Col>
-                        <Col md={4}>
-                          <ListGroup variant='flush'>
-                            <ListGroup.Item>
-                              <Row>
-                                <Col>Donation Cause</Col>
-                                <Col>{donationTypeName}</Col>
-                              </Row>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                              <Row>
-                                <Col>Donation Amount</Col>
-                                <Col>${donateAmount}</Col>
-                              </Row>
-                            </ListGroup.Item>
-                            <ListGroup.Item>
-                              {loadingDonate && <Loader />}
-                              {!sdkReady ? (
-                                <Loader />
-                              ) : (
-                                <PayPalButton
-                                  amount={donateAmount}
-                                  onSuccess={successDonationHandler}
-                                />
-                              )}
-                            </ListGroup.Item>
-                          </ListGroup>
-                        </Col>
-                      </Row>
-                    ))
-                  : null}
-              </Card.Body>
-            </Card>
-            <Card className='text-center' border='info'>
-              <Card.Header as='h3' className='text-info'>
-                Donation
-              </Card.Header>
-              {donateLoading ? (
-                <Loader />
-              ) : donateErrors ? (
-                <Message variant='danger'>{donateErrors}</Message>
-              ) : (
-                <Table striped bordered hover responsive className='table-sm'>
-                  <thead>
-                    <tr>
-                      {/* <th>ID</th> */}
-                      <th>Donation Type</th>
-                      <th>Amount</th>
-                      <th>Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {donations.map((donation) => (
-                      <tr key={donation.payerId}>
-                        {/* <td>{donation.memberId}</td> */}
-                        <td>{donation.donationType}</td>
-                        <td>{donation.amount}</td>
-                        <td>{donation.donationDate.substring(0, 10)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              )}
-            </Card>
+                              </Form>
+                            </Col>
+                            <Col md={4}>
+                              <ListGroup variant='flush'>
+                                <ListGroup.Item>
+                                  <Row>
+                                    <Col>Donation Cause</Col>
+                                    <Col>{donationTypeName}</Col>
+                                  </Row>
+                                </ListGroup.Item>
+                                <ListGroup.Item>
+                                  <Row>
+                                    <Col>Donation Amount</Col>
+                                    <Col>${donateAmount}</Col>
+                                  </Row>
+                                </ListGroup.Item>
+                                <ListGroup.Item>
+                                  {loadingDonate && <Loader />}
+                                  {!sdkReady ? (
+                                    <Loader />
+                                  ) : (
+                                    <PayPalButton
+                                      amount={donateAmount}
+                                      onSuccess={successDonationHandler}
+                                    />
+                                  )}
+                                </ListGroup.Item>
+                              </ListGroup>
+                            </Col>
+                          </Row>
+                        ))
+                      : null}
+                  </Card.Body>
+                </Card>
+                <Card className='text-center' border='info'>
+                  <Card.Header as='h3' className='text-info'>
+                    Donation
+                  </Card.Header>
+                  {donateLoading ? (
+                    <Loader />
+                  ) : donateErrors ? (
+                    <Message variant='danger'>{donateErrors}</Message>
+                  ) : (
+                    <Table
+                      striped
+                      bordered
+                      hover
+                      responsive
+                      className='table-sm'
+                    >
+                      <thead>
+                        <tr>
+                          {/* <th>ID</th> */}
+                          <th>Donation Type</th>
+                          <th>Amount</th>
+                          <th>Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {donations.map((donation, index) => (
+                          <tr key={index}>
+                            {/* <td>{donation.memberId}</td> */}
+                            <td>{donation.donationType}</td>
+                            <td>{donation.amount}</td>
+                            <td>{donation.donationDate.substring(0, 10)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  )}
+                </Card>
+              </>
+            )}
           </Col>
         </>
       ) : (

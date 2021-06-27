@@ -88,7 +88,7 @@ const Member = (sequelize, DataTypes) =>
     },
 
     status: {
-      type: DataTypes.ENUM(15),
+      type: DataTypes.ENUM,
       defaultValue: 'inactive',
       values: ['active', 'pending', 'inactive'],
     },

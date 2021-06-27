@@ -184,7 +184,7 @@ const Sidebar = () => {
           </LinkContainer>
         </Card.Title>
 
-        <Card.Title>
+        {/* <Card.Title>
           <LinkContainer to='/training'>
             <Link
               className='btn btn-outline-info btn-sm btn-block rounded'
@@ -193,7 +193,7 @@ const Sidebar = () => {
               Training
             </Link>
           </LinkContainer>
-        </Card.Title>
+        </Card.Title> */}
 
         <Card.Title>
           <LinkContainer to='/committiees'>

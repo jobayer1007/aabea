@@ -28,13 +28,15 @@ const Email = (sequelize, DataTypes) =>
       notEmpty: true,
       allowNull: false,
     },
-    to: {
-      type: DataTypes.STRING,
+
+    sentTo: {
+      type: DataTypes.ARRAY(Sequelize.TEXT),
       // required: true,
       // allowNull: false,
     },
-    sentTo: {
-      type: DataTypes.STRING,
+
+    attachments: {
+      type: DataTypes.ARRAY(Sequelize.TEXT),
       // required: true,
       // allowNull: false,
     },

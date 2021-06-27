@@ -38,6 +38,11 @@ const User = (sequelize, DataTypes) =>
       notEmpty: true,
       required: true,
     },
+    primaryPhone: {
+      type: DataTypes.STRING(20),
+      // required: true,
+      // allowNull: false,
+    },
     userRole: {
       type: DataTypes.ENUM,
       required: true,

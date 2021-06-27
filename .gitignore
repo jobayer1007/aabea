@@ -24,7 +24,19 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-aabea.conf
-dc.aabea.conf
-mi.aabea.conf
-ny.aabea.conf
+aabea.conf //
+dc.aabea.conf //
+mi.aabea.conf //
+ny.aabea.conf //
+ne.aabea.conf //         
+sv.aabea.conf //  sudo certbot --nginx -d sv.garbalife.com -d www.sv.garbalife.com
+sc.aabea.conf //  sudo certbot --nginx -d sc.garbalife.com -d www.sc.garbalife.com
+tx.aabea.conf //  sudo certbot --nginx -d tx.garbalife.com -d www.tx.garbalife.com
+atlanta.aabea.conf //   sudo certbot --nginx -d atlanta.garbalife.com -d www.atlanta.garbalife.com
+az.aabea.conf //   sudo certbot --nginx -d az.garbalife.com -d www.az.garbalife.com
+
+
+
+
+
+

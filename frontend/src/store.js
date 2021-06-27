@@ -30,7 +30,9 @@ import {
   chapterByIdReducer,
   chapterBySubDomainReducer,
   chapterDeleteReducer,
+  chapterDonationAllReducer,
   chapterListReducer,
+  chapterPaymentAllReducer,
   chapterRegisterReducer,
   chapterSettingsNewReducer,
   chapterSettingsReducer,
@@ -262,8 +264,9 @@ const reducer = combineReducers({
   chapterSettingsNew: chapterSettingsNewReducer,
   chapterSettingsAll: chapterSettingsReducer,
   chapterSettingsUpdate: chapterSettingsUpdateReducer,
-
   chapterBySubDomain: chapterBySubDomainReducer,
+  chapterPaymentAll: chapterPaymentAllReducer,
+  chapterDonationAll: chapterDonationAllReducer,
 
   emailNew: emailNewReducer,
   emailAll: emailAllReducer,

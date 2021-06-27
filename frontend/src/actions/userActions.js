@@ -79,40 +79,41 @@ import {
   USER_VERIFY_EMAIL_RESEND_SUCCESS,
 } from '../constants/userConstants';
 
-export const login = (userRole, email, password) => async (dispatch) => {
-  try {
-    dispatch({
-      type: USER_LOGIN_REQUEST,
-    });
+export const login =
+  (userRole, email, password, checkChapter) => async (dispatch) => {
+    try {
+      dispatch({
+        type: USER_LOGIN_REQUEST,
+      });
 
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-    const { data } = await axios.post(
-      '/api/users/login',
-      { userRole, email, password },
-      config
-    );
+      const { data } = await axios.post(
+        '/api/users/login',
+        { userRole, email, password, checkChapter },
+        config
+      );
 
-    dispatch({
-      type: USER_LOGIN_SUCCESS,
-      payload: data,
-    });
+      dispatch({
+        type: USER_LOGIN_SUCCESS,
+        payload: data,
+      });
 
-    localStorage.setItem('userInfo', JSON.stringify(data));
-  } catch (error) {
-    dispatch({
-      type: USER_LOGIN_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      localStorage.setItem('userInfo', JSON.stringify(data));
+    } catch (error) {
+      dispatch({
+        type: USER_LOGIN_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const logout = () => (dispatch) => {
   localStorage.removeItem('userInfo');
@@ -398,9 +399,9 @@ export const deleteUser = (id) => async (dispatch, getState) => {
       },
     };
 
-    await axios.delete(`/api/users/${id}`, config);
+    const { data } = await axios.delete(`/api/users/${id}`, config);
 
-    dispatch({ type: USER_DELETE_SUCCESS });
+    dispatch({ type: USER_DELETE_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
       type: USER_DELETE_FAIL,
@@ -819,7 +820,6 @@ export const approveUser = (id) => async (dispatch, getState) => {
   }
 };
 
-// not yet employed
 export const deletePendingUser = (id) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -835,9 +835,9 @@ export const deletePendingUser = (id) => async (dispatch, getState) => {
       },
     };
 
-    await axios.delete(`/api/users/${id}`, config);
+    const { data } = await axios.delete(`/api/users/${id}/pending`, config);
 
-    dispatch({ type: USER_PENDING_DELETE_SUCCESS });
+    dispatch({ type: USER_PENDING_DELETE_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
       type: USER_PENDING_DELETE_FAIL,
@@ -897,9 +897,9 @@ export const deleteAdminUser = (id) => async (dispatch, getState) => {
       },
     };
 
-    await axios.delete(`/api/users/${id}/admin`, config);
+    const { data } = await axios.delete(`/api/users/${id}/admin`, config);
 
-    dispatch({ type: USER_DELETE_ADMIN_SUCCESS });
+    dispatch({ type: USER_DELETE_ADMIN_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
       type: USER_DELETE_ADMIN_FAIL,

@@ -26,6 +26,7 @@ const {
   sendPasswordResetEmail,
   receiveNewPassword,
   getAllUsers,
+  deletePendingUser,
 } = require('../controllers/userController');
 const {
   getUserPaymentDetails,
@@ -55,7 +56,8 @@ router.route('/pending/chapter/:checkChapter').get(protect, getPendingUsers);
 router
   .route('/:id/pending')
   .get(protect, getPendingUserById)
-  .post(protect, admin, approveUser);
+  .post(protect, admin, approveUser)
+  .delete(protect, admin, deletePendingUser);
 router
   .route('/:id/admin')
   .post(protect, admin, createAdminUser)

@@ -163,7 +163,14 @@ const ProfileScreen = ({ history }) => {
                       <Card.Img src={user.profilePicture} variant='top' />
 
                       <Card.Header>Certificate</Card.Header>
-                      <Card.Img src={user.certificates} variant='top' />
+                      <iframe
+                        // id='viewer'
+                        style={{ width: '100%', height: '300px' }}
+                        src={user.certificates}
+                        fluid
+                      >
+                        last added
+                      </iframe>
                     </Col>
                   </Row>
                 </Card.Body>

@@ -14,18 +14,18 @@ import {
   payUser,
 } from '../../actions/userActions';
 import { USER_PAY_RESET } from '../../constants/userConstants';
-// import { listUsers, deleteUser } from '../actions/userActions';
 import { listPaymentTypes } from '../../actions/paymentTypeActions';
 import Sidebar from '../../components/Sidebar/Sidebar';
+import Payments from '../../components/Chapter/Payments';
 
 const PaymentScreen = ({ history }) => {
   const [sdkReady, setSdkReady] = useState(false);
+
   const dispatch = useDispatch();
 
   const [paymentTypeName, setPaymentTypeName] = useState('');
   const [paymentTypeAmount, setPaymentTypeAmount] = useState('');
   const [qty, setQty] = useState(1);
-  // const [totalPayment, setTotalPayment] = useState(0);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -57,7 +57,6 @@ const PaymentScreen = ({ history }) => {
       history.push('/login');
     } else {
       dispatch(getUserProfile());
-
       dispatch(listPaymentTypes());
       dispatch(getUserPaymentDetails());
 
@@ -87,7 +86,7 @@ const PaymentScreen = ({ history }) => {
           dispatch({ type: USER_PAY_RESET });
         });
       } else if (errorPay) {
-        console.log(errorPay);
+        // console.log(errorPay);
         swal('Error!', errorPay, 'error').then(() => {
           dispatch({ type: USER_PAY_RESET });
         });
@@ -118,12 +117,7 @@ const PaymentScreen = ({ history }) => {
     // e.preventDefault();
 
     setQty(e.target.value);
-    // setTotalPayment(paymentTypeAmount * qty);
   };
-  // console.log(paymentTypeAmount);
-  // console.log(paymentTypeName);
-  // console.log(qty);
-  // console.log(totalPayment);
 
   return (
     <>
@@ -143,51 +137,80 @@ const PaymentScreen = ({ history }) => {
           className='m-0 p-0'
         >
           <>
-            <Row>
-              <Col md={8} className='mb-2 p-1'>
-                <Card>
-                  <h3 className='text-info text-center'>Payment</h3>
-                  {loadingPaymentTypes ? (
-                    <Loader />
-                  ) : errorPaymentTypes ? (
-                    <Message variant='danger'>{paymentErrors}</Message>
-                  ) : (
-                    <>
-                      <ListGroup variant='flush'>
-                        <ListGroup.Item>
-                          <label>Payment Type</label>
-                          <Form.Control
-                            as='select'
-                            onChange={paymentTypeChangeHandler}
-                          >
-                            <option>Select Payment Type</option>
-                            {paymentTypes.map((paymentType, index) => (
-                              <option
-                                key={index}
-                                value={[
-                                  paymentType.paymentTypeName,
-                                  paymentType.paymentTypeAmount,
-                                ]}
+            {userInfo &&
+            (userInfo.userRole === 'admin' ||
+              userInfo.userRole === 'systemAdmin') ? (
+              <>
+                <Payments />
+              </>
+            ) : (
+              <>
+                <Row>
+                  <Col md={8} className='mb-2 p-1'>
+                    <Card>
+                      <h3 className='text-info text-center'>Payment</h3>
+                      {loadingPaymentTypes ? (
+                        <Loader />
+                      ) : errorPaymentTypes ? (
+                        <Message variant='danger'>{paymentErrors}</Message>
+                      ) : (
+                        <>
+                          <ListGroup variant='flush'>
+                            <ListGroup.Item>
+                              <label>Payment Type</label>
+                              <Form.Control
+                                as='select'
+                                onChange={paymentTypeChangeHandler}
                               >
-                                {paymentType.paymentTypeName}
-                              </option>
-                            ))}
-                          </Form.Control>
-                        </ListGroup.Item>
+                                <option>Select Payment Type</option>
+                                {paymentTypes.map((paymentType, index) => (
+                                  <option
+                                    key={index}
+                                    value={[
+                                      paymentType.paymentTypeName,
+                                      paymentType.paymentTypeAmount,
+                                    ]}
+                                  >
+                                    {paymentType.paymentTypeName}
+                                  </option>
+                                ))}
+                              </Form.Control>
+                            </ListGroup.Item>
 
-                        <ListGroup.Item>
-                          {paymentTypeName === 'nominationFee' ? (
-                            <>
-                              {user && user.status === 'inactive' ? (
-                                <Message variant='danger'>
-                                  Please Pay your registration fee first to
-                                  activate your account
-                                </Message>
+                            <ListGroup.Item>
+                              {paymentTypeName === 'nominationFee' ? (
+                                <>
+                                  {user && user.status === 'inactive' ? (
+                                    <Message variant='danger'>
+                                      Please Pay your registration fee first to
+                                      activate your account
+                                    </Message>
+                                  ) : (
+                                    <>
+                                      <label>Please Select Year</label>
+                                      <Form.Control
+                                        as='select'
+                                        value={qty}
+                                        onChange={qtyChangeHandler}
+                                        // onChange={(e) => setQty(e.target.value)}
+                                      >
+                                        <option>
+                                          Select Number of Years for Payment
+                                        </option>
+
+                                        <option value={1}>1</option>
+                                      </Form.Control>
+                                    </>
+                                  )}
+                                </>
                               ) : (
                                 <>
-                                  <label>Please Select Year</label>
+                                  <label>Number of Years</label>
                                   <Form.Control
                                     as='select'
+                                    // type='number'
+                                    // min='1'
+                                    placeholder='Please enter number of years of payment'
                                     value={qty}
                                     onChange={qtyChangeHandler}
                                     // onChange={(e) => setQty(e.target.value)}
@@ -197,126 +220,109 @@ const PaymentScreen = ({ history }) => {
                                     </option>
 
                                     <option value={1}>1</option>
+                                    <option value={2}>2</option>
+                                    <option value={3}>3</option>
+                                    <option value={4}>4</option>
+                                    <option value={5}>5</option>
+                                    <option value={6}>6</option>
+                                    <option value={7}>7</option>
+                                    <option value={8}>8</option>
+                                    <option value={9}>9</option>
+                                    <option value={10}>10</option>
                                   </Form.Control>
                                 </>
                               )}
-                            </>
-                          ) : (
-                            <>
-                              <label>Number of Years</label>
-                              <Form.Control
-                                as='select'
-                                // type='number'
-                                // min='1'
-                                placeholder='Please enter number of years of payment'
-                                value={qty}
-                                onChange={qtyChangeHandler}
-                                // onChange={(e) => setQty(e.target.value)}
-                              >
-                                <option>
-                                  Select Number of Years for Payment
-                                </option>
+                            </ListGroup.Item>
+                          </ListGroup>
+                        </>
+                      )}
+                      <>
+                        <Card.Header as='h5' className='text-info text-center'>
+                          Payments
+                        </Card.Header>
+                        {paymentLoading ? (
+                          <Loader />
+                        ) : paymentErrors ? (
+                          <Message variant='danger'>{paymentErrors}</Message>
+                        ) : (
+                          <Table
+                            striped
+                            bordered
+                            hover
+                            responsive
+                            className='table-sm'
+                          >
+                            <thead>
+                              <tr>
+                                <th>ID</th>
+                                <th>Payment Type</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Year</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {payments.map((payment, index) => (
+                                <tr key={index}>
+                                  <td>{payment.paymentId}</td>
+                                  <td>{payment.paymentType}</td>
+                                  <td>{payment.amount}</td>
+                                  <td>
+                                    {payment.paymentDate.substring(0, 10)}
+                                  </td>
+                                  <td>{payment.year}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </Table>
+                        )}
+                      </>
+                    </Card>
+                  </Col>
 
-                                <option value={1}>1</option>
-                                <option value={2}>2</option>
-                                <option value={3}>3</option>
-                                <option value={4}>4</option>
-                                <option value={5}>5</option>
-                                <option value={6}>6</option>
-                                <option value={7}>7</option>
-                                <option value={8}>8</option>
-                                <option value={9}>9</option>
-                                <option value={10}>10</option>
-                              </Form.Control>
-                            </>
+                  <Col md={4} className='mb-2 p-1'>
+                    <Card>
+                      <ListGroup variant='flush'>
+                        <ListGroup.Item>
+                          <h5 className='text-info'>Payment Summary</h5>
+                        </ListGroup.Item>
+
+                        <ListGroup.Item>
+                          <Row>
+                            <Col>Payment Type:</Col>
+                            <Col>{paymentTypeName}</Col>
+                          </Row>
+                        </ListGroup.Item>
+
+                        <ListGroup.Item>
+                          <Row>
+                            <Col>Payment Year</Col>
+                            <Col>{qty}</Col>
+                          </Row>
+                        </ListGroup.Item>
+
+                        <ListGroup.Item>
+                          <Row>
+                            <Col>Total</Col>
+                            <Col>${paymentTypeAmount * qty}</Col>
+                          </Row>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                          {!sdkReady ? (
+                            <Loader />
+                          ) : (
+                            <PayPalButton
+                              amount={paymentTypeAmount * qty}
+                              onSuccess={successPaymentHandler}
+                            />
                           )}
                         </ListGroup.Item>
                       </ListGroup>
-                    </>
-                  )}
-                  <>
-                    <Card.Header as='h5' className='text-info text-center'>
-                      Payments
-                    </Card.Header>
-                    {paymentLoading ? (
-                      <Loader />
-                    ) : paymentErrors ? (
-                      <Message variant='danger'>{paymentErrors}</Message>
-                    ) : (
-                      <Table
-                        striped
-                        bordered
-                        hover
-                        responsive
-                        className='table-sm'
-                      >
-                        <thead>
-                          <tr>
-                            <th>ID</th>
-                            <th>Payment Type</th>
-                            <th>Amount</th>
-                            <th>Date</th>
-                            <th>Year</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {payments.map((payment, index) => (
-                            <tr key={index}>
-                              <td>{payment.paymentId}</td>
-                              <td>{payment.paymentType}</td>
-                              <td>{payment.amount}</td>
-                              <td>{payment.paymentDate.substring(0, 10)}</td>
-                              <td>{payment.year}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </Table>
-                    )}
-                  </>
-                </Card>
-              </Col>
-
-              <Col md={4} className='mb-2 p-1'>
-                <Card>
-                  <ListGroup variant='flush'>
-                    <ListGroup.Item>
-                      <h5 className='text-info'>Payment Summary</h5>
-                    </ListGroup.Item>
-
-                    <ListGroup.Item>
-                      <Row>
-                        <Col>Payment Type:</Col>
-                        <Col>{paymentTypeName}</Col>
-                      </Row>
-                    </ListGroup.Item>
-
-                    <ListGroup.Item>
-                      <Row>
-                        <Col>Payment Year</Col>
-                        <Col>{qty}</Col>
-                      </Row>
-                    </ListGroup.Item>
-
-                    <ListGroup.Item>
-                      <Row>
-                        <Col>Total</Col>
-                        <Col>${paymentTypeAmount * qty}</Col>
-                      </Row>
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      {!sdkReady ? (
-                        <Loader />
-                      ) : (
-                        <PayPalButton
-                          amount={paymentTypeAmount * qty}
-                          onSuccess={successPaymentHandler}
-                        />
-                      )}
-                    </ListGroup.Item>
-                  </ListGroup>
-                </Card>
-              </Col>
-            </Row>
+                    </Card>
+                  </Col>
+                </Row>
+              </>
+            )}
           </>
         </Col>
         {/* Payment History End */}
